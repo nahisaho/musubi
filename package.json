@@ -1,6 +1,6 @@
 {
   "name": "musubi-sdd",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Ultimate Specification Driven Development Tool with 25 Claude Code Skills",
   "main": "src/index.js",
   "bin": {
