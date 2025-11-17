@@ -26,8 +26,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
-      - name: Check formatting
-        run: npx prettier --check .
+      - run: npm run format:check
 
   test:
     name: Jest Tests
