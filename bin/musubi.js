@@ -39,7 +39,7 @@ aliasFlags.forEach(flag => {
   initCommand.option(`--${flag}`, `Select agent: ${flag}`);
 });
 
-initCommand.action((options) => {
+initCommand.action(async (options) => {
   const agentKey = detectAgentFromFlags(options);
   const agent = getAgentDefinition(agentKey);
 
@@ -47,7 +47,8 @@ initCommand.action((options) => {
   console.log(chalk.gray(`Description: ${agent.description}\n`));
 
   // Delegate to musubi-init.js with agent info
-  require('./musubi-init.js')(agent, agentKey);
+  const initMain = require('./musubi-init.js');
+  await initMain(agent, agentKey);
 });
 
 // ============================================================================

@@ -86,7 +86,7 @@ async function main(agent, agentKey) {
   ];
 
   // Skills selection is only for Claude Code (Skills API exclusive)
-  if (agent.features.hasSkills) {
+  if (agentKey === 'claude-code' && agent.layout.skillsDir) {
     prompts.push({
       type: 'checkbox',
       name: 'skills',
@@ -149,8 +149,8 @@ async function main(agent, agentKey) {
     console.log(chalk.gray(`  Created ${dir}/`));
   }
 
-  // Install skills (Claude Code only)
-  if (agent.features.hasSkills && answers.skills) {
+  // Install skills (Claude Code only - Skills API)
+  if (agentKey === 'claude-code' && agent.layout.skillsDir && answers.skills) {
     const skillGroups = {
       core: ['orchestrator', 'steering', 'constitution-enforcer'],
       requirements: ['requirements-analyst', 'project-manager', 'change-impact-analyzer'],
@@ -221,6 +221,11 @@ async function main(agent, agentKey) {
 }
 
 async function copySkill(skillName, agent) {
+  // Only Claude Code has skillsDir (Skills API)
+  if (!agent.layout.skillsDir) {
+    return; // Skip for agents without Skills API support
+  }
+  
   const srcDir = path.join(AGENTS_TEMPLATE_DIR, 'claude-code', 'skills', skillName);
   const destDir = path.join(agent.layout.skillsDir, skillName);
   await fs.copy(srcDir, destDir);
