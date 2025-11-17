@@ -47,6 +47,7 @@ Before beginning work, **ALWAYS** read the following files if they exist in the 
 These files contain the project's "memory" - shared context that ensures consistency across all agents. If these files don't exist, you can proceed with the task, but if they exist, reading them is **MANDATORY** to understand the project context.
 
 **Why This Matters:**
+
 - ✅ Ensures your work aligns with existing architecture patterns
 - ✅ Uses the correct technology stack and frameworks
 - ✅ Understands business context and product goals
@@ -54,12 +55,14 @@ These files contain the project's "memory" - shared context that ensures consist
 - ✅ Reduces need to re-explain project context in every session
 
 **When steering files exist:**
+
 1. Read all three files (`structure.md`, `tech.md`, `product.md`)
 2. Understand the project context
 3. Apply this knowledge to your work
 4. Follow established patterns and conventions
 
 **When steering files don't exist:**
+
 - You can proceed with the task without them
 - Consider suggesting the user run `@steering` to bootstrap project memory
 
@@ -68,6 +71,7 @@ These files contain the project's "memory" - shared context that ensures consist
 **CRITICAL: 英語版と日本語版の両方を必ず作成**
 
 ### Document Creation
+
 1. **Primary Language**: Create all documentation in **English** first
 2. **Translation**: **REQUIRED** - After completing the English version, **ALWAYS** create a Japanese translation
 3. **Both versions are MANDATORY** - Never skip the Japanese version
@@ -87,21 +91,23 @@ These files contain the project's "memory" - shared context that ensures consist
 5. **ファイルパスを指定する際は、常に `.md` を使用（`.ja.md` は使用しない）**
 
 **参照例:**
+
 ```
 ✅ 正しい: requirements/srs/srs-project-v1.0.md
 ❌ 間違い: requirements/srs/srs-project-v1.0.ja.md
 
-✅ 正しい: architecture/architecture-design-project-20251111.md  
+✅ 正しい: architecture/architecture-design-project-20251111.md
 ❌ 間違い: architecture/architecture-design-project-20251111.ja.md
 ```
 
 **理由:**
+
 - 英語版がプライマリドキュメントであり、他のドキュメントから参照される基準
 - エージェント間の連携で一貫性を保つため
 - コードやシステム内での参照を統一するため
 
-
 ### Example Workflow
+
 ```
 1. Create: design-document.md (English) ✅ REQUIRED
 2. Translate: design-document.ja.md (Japanese) ✅ REQUIRED
@@ -109,32 +115,36 @@ These files contain the project's "memory" - shared context that ensures consist
 ```
 
 ### Document Generation Order
+
 For each deliverable:
+
 1. Generate English version (`.md`)
 2. Immediately generate Japanese version (`.ja.md`)
 3. Update progress report with both files
 4. Move to next deliverable
 
 **禁止事項:**
+
 - ❌ 英語版のみを作成して日本語版をスキップする
 - ❌ すべての英語版を作成してから後で日本語版をまとめて作成する
 - ❌ ユーザーに日本語版が必要か確認する（常に必須）
 
 **📋 Requirements Documentation:**
 EARS形式の要件ドキュメントが存在する場合は参照してください：
+
 - `docs/requirements/srs/` - Software Requirements Specification
 - `docs/requirements/functional/` - 機能要件
 - `docs/requirements/non-functional/` - 非機能要件
 - `docs/requirements/user-stories/` - ユーザーストーリー
 
-要件ドキュメントを参照することで、プロジェクトの要求事項を正確に理解し、traceabilityを確保できます。
----
+## 要件ドキュメントを参照することで、プロジェクトの要求事項を正確に理解し、traceabilityを確保できます。
 
 ## 4. Interactive Dialogue Flow (5 Phases)
 
 **CRITICAL: 1問1答の徹底**
 
 **絶対に守るべきルール:**
+
 - **必ず1つの質問のみ**をして、ユーザーの回答を待つ
 - 複数の質問を一度にしてはいけない（【質問 X-1】【質問 X-2】のような形式は禁止）
 - ユーザーが回答してから次の質問に進む
@@ -158,6 +168,7 @@ EARS形式の要件ドキュメントが存在する場合は参照してくだ�
 ```
 
 **質問リスト (1問ずつ順次実行)**:
+
 1. プロジェクト名、目的、現在のフェーズ
 2. プロジェクトのスコープ（主要機能、成果物）
 3. スケジュール制約（開始日、終了日、マイルストーン）
@@ -402,6 +413,7 @@ ECサイトリニューアル
 ユーザーが承認後、**各ドキュメントを順番に生成**:
 
 **Step 1: プロジェクト計画書 - 英語版**
+
 ```
 🤖 [1/12] プロジェクト計画書英語版を生成しています...
 
@@ -412,6 +424,7 @@ ECサイトリニューアル
 ```
 
 **Step 2: WBS - 英語版**
+
 ```
 🤖 [2/12] WBS英語版を生成しています...
 
@@ -422,6 +435,7 @@ ECサイトリニューアル
 ```
 
 **Step 3: スケジュール・ガントチャート - 英語版**
+
 ```
 🤖 [3/12] スケジュール・ガントチャート英語版を生成しています...
 
@@ -432,6 +446,7 @@ ECサイトリニューアル
 ```
 
 **Step 4: リスク管理台帳 - 英語版**
+
 ```
 🤖 [4/12] リスク管理台帳英語版を生成しています...
 
@@ -442,6 +457,7 @@ ECサイトリニューアル
 ```
 
 **Step 5: ステータスレポート - 英語版**
+
 ```
 🤖 [5/12] ステータスレポート英語版を生成しています...
 
@@ -452,6 +468,7 @@ ECサイトリニューアル
 ```
 
 **Step 6: プロジェクト完了レポート - 英語版**
+
 ```
 🤖 [6/12] プロジェクト完了レポート英語版を生成しています...
 
@@ -462,6 +479,7 @@ ECサイトリニューアル
 ```
 
 **Step 7: プロジェクト計画書 - 日本語版**
+
 ```
 🤖 [7/12] プロジェクト計画書日本語版を生成しています...
 
@@ -472,6 +490,7 @@ ECサイトリニューアル
 ```
 
 **Step 8: WBS - 日本語版**
+
 ```
 🤖 [8/12] WBS日本語版を生成しています...
 
@@ -482,6 +501,7 @@ ECサイトリニューアル
 ```
 
 **Step 9: スケジュール・ガントチャート - 日本語版**
+
 ```
 🤖 [9/12] スケジュール・ガントチャート日本語版を生成しています...
 
@@ -492,6 +512,7 @@ ECサイトリニューアル
 ```
 
 **Step 10: リスク管理台帳 - 日本語版**
+
 ```
 🤖 [10/12] リスク管理台帳日本語版を生成しています...
 
@@ -502,6 +523,7 @@ ECサイトリニューアル
 ```
 
 **Step 11: ステータスレポート - 日本語版**
+
 ```
 🤖 [11/12] ステータスレポート日本語版を生成しています...
 
@@ -512,6 +534,7 @@ ECサイトリニューアル
 ```
 
 **Step 12: プロジェクト完了レポート - 日本語版**
+
 ```
 🤖 [12/12] プロジェクト完了レポート日本語版を生成しています...
 
@@ -522,6 +545,7 @@ ECサイトリニューアル
 ```
 
 **最終ステップ: すべて完了**
+
 ```
 🤖 ✨ すべての成果物の生成が完了しました！
 
@@ -553,6 +577,7 @@ ECサイトリニューアル
 ```
 
 **段階的生成のメリット:**
+
 - ✅ 各ドキュメント保存後に進捗が見える
 - ✅ エラーが発生しても部分的な成果物が残る
 - ✅ 大きなドキュメントでもメモリ効率が良い
@@ -569,6 +594,7 @@ ECサイトリニューアル
 ```
 
 **更新対象ファイル:**
+
 - `steering/product.md` (英語版)
 - `steering/product.ja.md` (日本語版)
 
@@ -584,6 +610,7 @@ Project Managerの成果物から以下の情報を抽出し、`steering/product
 - **Success Criteria**: プロジェクト成功の基準
 
 **更新方法:**
+
 1. 既存の `steering/product.md` を読み込む（存在する場合）
 2. 今回の成果物から重要な情報を抽出
 3. product.md の「Project Management」セクションに追記または更新
@@ -604,12 +631,14 @@ Project Managerの成果物から以下の情報を抽出し、`steering/product
 ```
 
 **更新例:**
+
 ```markdown
 ## Project Management
 
 **Timeline**: March 1, 2025 - August 31, 2025 (6 months)
 
 **Key Milestones**:
+
 1. **M1: Requirements & Design Complete** - April 15, 2025
    - SRS v1.0 finalized
    - Architecture design approved
@@ -631,6 +660,7 @@ Project Managerの成果物から以下の情報を抽出し、`steering/product
    - Production deployment with monitoring
 
 **Key Risks** (Top 5):
+
 1. **Third-party API Dependency** (High Risk, High Impact)
    - Mitigation: Fallback mechanisms, caching, alternative providers
 
@@ -647,6 +677,7 @@ Project Managerの成果物から以下の情報を抽出し、`steering/product
    - Mitigation: Regular security audits, automated scanning, penetration testing
 
 **Stakeholders**:
+
 - **Product Owner**: Jane Smith (jane@company.com) - Final decision maker
 - **Development Team**: 5 engineers (2 frontend, 2 backend, 1 full-stack)
 - **QA Team**: 2 QA engineers
@@ -654,12 +685,14 @@ Project Managerの成果物から以下の情報を抽出し、`steering/product
 - **External Stakeholders**: Payment gateway vendor, hosting provider
 
 **Project Constraints**:
+
 - **Budget**: $150,000 total (development, infrastructure, third-party services)
 - **Team Size**: 8-10 people (including part-time resources)
 - **Technology**: Must use TypeScript, React, Node.js (existing team expertise)
 - **Compliance**: GDPR compliance required for EU customers
 
 **Success Criteria**:
+
 1. Launch by August 31, 2025 with all MVP features
 2. 95% test coverage for critical paths
 3. Page load time < 2 seconds (95th percentile)
@@ -678,20 +711,27 @@ Project Managerの成果物から以下の情報を抽出し、`steering/product
 # プロジェクト計画書
 
 ## 1. プロジェクト概要
+
 - プロジェクト名
 - 目的・ゴール
 - 期間
 - 予算
 
 ## 2. スコープ
+
 - 含まれるもの
 - 含まれないもの
 
 ## 3. WBS
+
 ## 4. スケジュール (ガントチャート)
+
 ## 5. リソース計画
+
 ## 6. リスク管理計画
+
 ## 7. コミュニケーション計画
+
 ## 8. 品質管理計画
 ```
 

@@ -10,9 +10,9 @@
 
 ## Document Control
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{DATE}} | {{AUTHOR}} | Initial draft |
+| Version | Date     | Author     | Changes       |
+| ------- | -------- | ---------- | ------------- |
+| 1.0     | {{DATE}} | {{AUTHOR}} | Initial draft |
 
 ---
 
@@ -25,10 +25,12 @@
 ### Scope
 
 **In Scope**:
+
 - [Item 1]
 - [Item 2]
 
 **Out of Scope**:
+
 - [Item 1]
 - [Item 2]
 
@@ -40,12 +42,12 @@
 
 ## Stakeholders
 
-| Role | Name | Responsibilities |
-|------|------|------------------|
-| Product Owner | [Name] | Requirements approval |
-| Tech Lead | [Name] | Technical feasibility |
-| QA Lead | [Name] | Test planning |
-| Development Team | [Names] | Implementation |
+| Role             | Name    | Responsibilities      |
+| ---------------- | ------- | --------------------- |
+| Product Owner    | [Name]  | Requirements approval |
+| Tech Lead        | [Name]  | Technical feasibility |
+| QA Lead          | [Name]  | Test planning         |
+| Development Team | [Names] | Implementation        |
 
 ---
 
@@ -56,11 +58,13 @@
 [EARS Pattern Statement - choose one of the 5 patterns:]
 
 **Pattern: Ubiquitous**
+
 ```
 The [system] SHALL [requirement].
 ```
 
 **Pattern: Event-Driven**
+
 ```
 WHEN [event or condition],
 THEN the [system] SHALL [response]
@@ -68,12 +72,14 @@ AND the system SHALL [additional response].
 ```
 
 **Pattern: State-Driven**
+
 ```
 WHILE [state or condition],
 the [system] SHALL [response].
 ```
 
 **Pattern: Unwanted Behavior**
+
 ```
 IF [unwanted condition or error],
 THEN the [system] SHALL [response]
@@ -81,17 +87,20 @@ AND the system SHALL [error handling].
 ```
 
 **Pattern: Optional Feature**
+
 ```
 WHERE [feature or configuration is enabled],
 the [system] SHALL [response].
 ```
 
 **Acceptance Criteria**:
+
 - [Testable criterion 1]
 - [Testable criterion 2]
 - [Testable criterion 3]
 
 **Priority**: [P0/P1/P2/P3]
+
 - P0 = Critical (launch blocker)
 - P1 = High (required for launch)
 - P2 = Medium (nice to have)
@@ -100,18 +109,22 @@ the [system] SHALL [response].
 **Status**: [Draft/Approved/Implemented/Tested/Deployed]
 
 **Traceability**:
+
 - Design: [Reference to design.md section]
 - Code: [file-path:line-number]
 - Tests: [test-file:line-number]
 
 **Dependencies**:
+
 - [REQ-XXX-NNN] - [Description]
 
 **Assumptions**:
+
 - [Assumption 1]
 - [Assumption 2]
 
 **Constraints**:
+
 - [Constraint 1]
 - [Constraint 2]
 
@@ -130,6 +143,7 @@ the [system] SHALL [response].
 The {{COMPONENT}} SHALL respond within [X]ms for [Y]% of requests.
 
 **Acceptance Criteria**:
+
 - 95th percentile < [X]ms
 - 99th percentile < [Y]ms
 - Tested with [Z] concurrent users
@@ -145,6 +159,7 @@ The {{COMPONENT}} SHALL respond within [X]ms for [Y]% of requests.
 The {{COMPONENT}} SHALL prevent [security threat].
 
 **Acceptance Criteria**:
+
 - OWASP Top 10 vulnerabilities mitigated
 - Input validation on all user inputs
 - Output encoding for XSS prevention
@@ -161,6 +176,7 @@ The {{COMPONENT}} SHALL prevent [security threat].
 The {{COMPONENT}} SHALL support [X] concurrent users.
 
 **Acceptance Criteria**:
+
 - Load tested with [X] concurrent users
 - No degradation in performance
 - Horizontal scaling supported
@@ -176,6 +192,7 @@ The {{COMPONENT}} SHALL support [X] concurrent users.
 The {{COMPONENT}} SHALL maintain [X]% uptime.
 
 **Acceptance Criteria**:
+
 - 99.9% uptime SLA
 - Health check endpoint available
 - Graceful degradation on dependency failure
@@ -191,6 +208,7 @@ The {{COMPONENT}} SHALL maintain [X]% uptime.
 The {{COMPONENT}} SHALL follow [coding standards].
 
 **Acceptance Criteria**:
+
 - Code review passed
 - SOLID principles followed
 - Test coverage ≥ 80%
@@ -210,10 +228,12 @@ The {{COMPONENT}} SHALL follow [coding standards].
 **So that** [benefit].
 
 **Acceptance Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 
 **Maps to Requirements**:
+
 - REQ-{{COMPONENT}}-001
 - REQ-{{COMPONENT}}-002
 
@@ -227,29 +247,35 @@ The {{COMPONENT}} SHALL follow [coding standards].
 **Goal**: [What the actor wants to achieve]
 
 **Preconditions**:
+
 - [Precondition 1]
 - [Precondition 2]
 
 **Main Flow**:
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
 
 **Postconditions**:
+
 - [Postcondition 1]
 - [Postcondition 2]
 
 **Alternative Flows**:
+
 - **Alt 1**: [Description]
   1. [Step 1]
   2. [Step 2]
 
 **Exception Flows**:
+
 - **Exc 1**: [Error condition]
   1. [Step 1]
   2. [Step 2]
 
 **Maps to Requirements**:
+
 - REQ-{{COMPONENT}}-001
 - REQ-{{COMPONENT}}-003
 
@@ -257,14 +283,15 @@ The {{COMPONENT}} SHALL follow [coding standards].
 
 ## Requirements Coverage Matrix
 
-| Requirement ID | Priority | Design | Code | Tests | Status |
-|----------------|----------|--------|------|-------|--------|
-| REQ-{{COMPONENT}}-001 | P0 | design.md#section | src/file.ts:45 | tests/file.test.ts:23 | Draft |
-| REQ-{{COMPONENT}}-002 | P0 | design.md#section | src/file.ts:89 | tests/file.test.ts:67 | Draft |
-| REQ-PERF-001 | P0 | design.md#performance | - | - | Draft |
-| REQ-SEC-001 | P0 | design.md#security | - | - | Draft |
+| Requirement ID        | Priority | Design                | Code           | Tests                 | Status |
+| --------------------- | -------- | --------------------- | -------------- | --------------------- | ------ |
+| REQ-{{COMPONENT}}-001 | P0       | design.md#section     | src/file.ts:45 | tests/file.test.ts:23 | Draft  |
+| REQ-{{COMPONENT}}-002 | P0       | design.md#section     | src/file.ts:89 | tests/file.test.ts:67 | Draft  |
+| REQ-PERF-001          | P0       | design.md#performance | -              | -                     | Draft  |
+| REQ-SEC-001           | P0       | design.md#security    | -              | -                     | Draft  |
 
 **Coverage Summary**:
+
 - Total Requirements: [N]
 - Requirements with Design: [N] ([%]%)
 - Requirements with Code: [N] ([%]%)
@@ -275,8 +302,8 @@ The {{COMPONENT}} SHALL follow [coding standards].
 
 ## Glossary
 
-| Term | Definition |
-|------|------------|
+| Term     | Definition   |
+| -------- | ------------ |
 | [Term 1] | [Definition] |
 | [Term 2] | [Definition] |
 
@@ -293,13 +320,13 @@ The {{COMPONENT}} SHALL follow [coding standards].
 
 ## Appendix A: EARS Pattern Quick Reference
 
-| Pattern | Keyword | Use Case |
-|---------|---------|----------|
-| Ubiquitous | `The [system] SHALL` | Always-active functionality |
-| Event-Driven | `WHEN ... THEN` | Triggered by events |
-| State-Driven | `WHILE ... SHALL` | Active during state |
-| Unwanted | `IF ... THEN` | Error handling |
-| Optional | `WHERE ... SHALL` | Feature flags |
+| Pattern      | Keyword              | Use Case                    |
+| ------------ | -------------------- | --------------------------- |
+| Ubiquitous   | `The [system] SHALL` | Always-active functionality |
+| Event-Driven | `WHEN ... THEN`      | Triggered by events         |
+| State-Driven | `WHILE ... SHALL`    | Active during state         |
+| Unwanted     | `IF ... THEN`        | Error handling              |
+| Optional     | `WHERE ... SHALL`    | Feature flags               |
 
 ---
 
@@ -312,6 +339,7 @@ This requirements document complies with:
 - ✅ **Article VI**: Business context from steering/product.md
 
 **Validation**:
+
 ```bash
 @constitution-enforcer validate requirements.md
 ```
@@ -321,6 +349,7 @@ This requirements document complies with:
 ## Appendix C: Change Log
 
 ### Version 1.1 (Planned)
+
 - [Planned change 1]
 - [Planned change 2]
 

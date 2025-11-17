@@ -273,7 +273,7 @@ const result = await authService.login(credentials);
 ```typescript
 // ❌ WRONG: Library imports from application
 // Libraries must NOT depend on application code
-import { AuthContext } from '@/app/contexts/auth';  // Violation!
+import { AuthContext } from '@/app/contexts/auth'; // Violation!
 ```
 
 ### Service → Repository Pattern
@@ -307,6 +307,7 @@ export class UserRepository {
 ### Deployment Units
 
 **Projects** (independently deployable):
+
 1. {{PROJECT_NAME}} - Main application
 
 > ⚠️ **Simplicity Gate (Article VII)**: Maximum 3 projects initially.
@@ -372,6 +373,7 @@ locales/
 **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
 **Example**:
+
 ```
 feat(auth): implement user login (REQ-AUTH-001)
 
@@ -397,6 +399,7 @@ This structure enforces:
 ## Changelog
 
 ### Version 1.1 (Planned)
+
 - [Future changes]
 
 ---

@@ -10,9 +10,9 @@
 
 ## Document Control
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{DATE}} | {{AUTHOR}} | Initial draft |
+| Version | Date     | Author     | Changes       |
+| ------- | -------- | ---------- | ------------- |
+| 1.0     | {{DATE}} | {{AUTHOR}} | Initial draft |
 
 ---
 
@@ -25,6 +25,7 @@
 ### Scope
 
 This design covers:
+
 - Architecture and component design
 - API contracts
 - Database schema
@@ -46,6 +47,7 @@ This design implements requirements from: [requirements.md](requirements.md)
 - **Product Context**: [steering/product.md](../../steering/product.md)
 
 **Key Alignments**:
+
 - Architecture pattern: [e.g., microservices, monolith, library-first]
 - Primary language: [e.g., TypeScript, Python, Go]
 - Framework: [e.g., Next.js, FastAPI, Express]
@@ -84,6 +86,7 @@ This design implements requirements from: [requirements.md](requirements.md)
 ```
 
 **External Dependencies**:
+
 - [External System 1]: [Purpose]
 - [External System 2]: [Purpose]
 
@@ -116,6 +119,7 @@ This design implements requirements from: [requirements.md](requirements.md)
 ```
 
 **Containers**:
+
 1. **Web Application**: [Technology, purpose]
 2. **API Server**: [Technology, purpose]
 3. **Database**: [Technology, purpose]
@@ -148,6 +152,7 @@ This design implements requirements from: [requirements.md](requirements.md)
 ```
 
 **Components**:
+
 1. **{{COMPONENT}} Controller**: REST API endpoints
 2. **{{COMPONENT}} Service**: Business logic
 3. **{{COMPONENT}} Repository**: Data access
@@ -158,15 +163,16 @@ This design implements requirements from: [requirements.md](requirements.md)
 
 ### Architecture → Requirements Matrix
 
-| Component | Requirements Implemented | Design Rationale |
-|-----------|-------------------------|------------------|
-| {{COMPONENT}} Service | REQ-{{COMPONENT}}-001, REQ-{{COMPONENT}}-002 | Business logic encapsulation |
-| {{COMPONENT}} Controller | REQ-{{COMPONENT}}-003 | API exposure |
-| Database Schema | REQ-{{COMPONENT}}-004 | Data persistence |
-| Authentication Middleware | REQ-SEC-001 | Security enforcement |
-| Caching Layer | REQ-PERF-001 | Performance optimization |
+| Component                 | Requirements Implemented                     | Design Rationale             |
+| ------------------------- | -------------------------------------------- | ---------------------------- |
+| {{COMPONENT}} Service     | REQ-{{COMPONENT}}-001, REQ-{{COMPONENT}}-002 | Business logic encapsulation |
+| {{COMPONENT}} Controller  | REQ-{{COMPONENT}}-003                        | API exposure                 |
+| Database Schema           | REQ-{{COMPONENT}}-004                        | Data persistence             |
+| Authentication Middleware | REQ-SEC-001                                  | Security enforcement         |
+| Caching Layer             | REQ-PERF-001                                 | Performance optimization     |
 
 **Coverage**:
+
 - ✅ All functional requirements mapped
 - ✅ All non-functional requirements addressed
 - ✅ 100% requirements coverage
@@ -184,6 +190,7 @@ This design implements requirements from: [requirements.md](requirements.md)
 **Maps to Requirements**: REQ-{{COMPONENT}}-001
 
 **Request**:
+
 ```http
 POST /api/{{resource}}
 Content-Type: application/json
@@ -196,14 +203,16 @@ Authorization: Bearer {token}
 ```
 
 **Request Schema**:
+
 ```typescript
 interface CreateResourceRequest {
-  field1: string;  // Required, max 255 chars
-  field2: number;  // Required, positive integer
+  field1: string; // Required, max 255 chars
+  field2: number; // Required, positive integer
 }
 ```
 
 **Response (Success)**:
+
 ```http
 HTTP/1.1 201 Created
 Content-Type: application/json
@@ -217,6 +226,7 @@ Content-Type: application/json
 ```
 
 **Response (Error)**:
+
 ```http
 HTTP/1.1 400 Bad Request
 Content-Type: application/json
@@ -233,6 +243,7 @@ Content-Type: application/json
 ```
 
 **Status Codes**:
+
 - 201: Resource created successfully
 - 400: Invalid request (validation failed)
 - 401: Unauthorized (missing/invalid token)
@@ -240,6 +251,7 @@ Content-Type: application/json
 - 500: Internal server error
 
 **Acceptance Criteria** (from REQ-{{COMPONENT}}-001):
+
 - ✅ Validates request schema
 - ✅ Returns 201 on success
 - ✅ Returns resource ID
@@ -254,12 +266,14 @@ Content-Type: application/json
 **Maps to Requirements**: REQ-{{COMPONENT}}-002
 
 **Request**:
+
 ```http
 GET /api/{{resource}}/550e8400-e29b-41d4-a716-446655440000
 Authorization: Bearer {token}
 ```
 
 **Response (Success)**:
+
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
@@ -274,6 +288,7 @@ Content-Type: application/json
 ```
 
 **Response (Not Found)**:
+
 ```http
 HTTP/1.1 404 Not Found
 Content-Type: application/json
@@ -285,6 +300,7 @@ Content-Type: application/json
 ```
 
 **Status Codes**:
+
 - 200: Resource found
 - 401: Unauthorized
 - 404: Resource not found
@@ -297,6 +313,7 @@ Content-Type: application/json
 See [openapi.yaml](./openapi.yaml) for complete API specification.
 
 **Generation Command**:
+
 ```bash
 # Generate OpenAPI spec
 @api-designer generate openapi for {{FEATURE_NAME}}
@@ -334,22 +351,24 @@ See [openapi.yaml](./openapi.yaml) for complete API specification.
 
 **Columns**:
 
-| Column | Type | Constraints | Description |
-|--------|------|-------------|-------------|
-| id | UUID | PRIMARY KEY | Unique identifier |
-| user_id | UUID | FOREIGN KEY (users.id), NOT NULL | Owner reference |
-| field1 | VARCHAR(255) | NOT NULL | [Description] |
-| field2 | INTEGER | NOT NULL, CHECK (field2 > 0) | [Description] |
-| created_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Creation timestamp |
-| updated_at | TIMESTAMP | NOT NULL, DEFAULT NOW() | Update timestamp |
+| Column     | Type         | Constraints                      | Description        |
+| ---------- | ------------ | -------------------------------- | ------------------ |
+| id         | UUID         | PRIMARY KEY                      | Unique identifier  |
+| user_id    | UUID         | FOREIGN KEY (users.id), NOT NULL | Owner reference    |
+| field1     | VARCHAR(255) | NOT NULL                         | [Description]      |
+| field2     | INTEGER      | NOT NULL, CHECK (field2 > 0)     | [Description]      |
+| created_at | TIMESTAMP    | NOT NULL, DEFAULT NOW()          | Creation timestamp |
+| updated_at | TIMESTAMP    | NOT NULL, DEFAULT NOW()          | Update timestamp   |
 
 **Indexes**:
+
 - PRIMARY KEY: `id`
 - INDEX: `user_id` (for lookups by user)
 - INDEX: `created_at` (for sorting)
 - UNIQUE: `user_id, field1` (business constraint)
 
 **DDL**:
+
 ```sql
 CREATE TABLE {{resource}} (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -372,15 +391,18 @@ CREATE UNIQUE INDEX idx_{{resource}}_user_field1 ON {{resource}}(user_id, field1
 **Maps to Requirements**: REQ-MAINT-001
 
 **Initial Migration** (Greenfield):
+
 ```sql
 -- migrations/001_create_{{resource}}_table.sql
 [DDL from above]
 ```
 
 **Migration Tools**:
+
 - [e.g., Prisma Migrate, TypeORM migrations, Alembic]
 
 **Rollback Strategy**:
+
 ```sql
 -- migrations/001_create_{{resource}}_table.down.sql
 DROP TABLE {{resource}};
@@ -395,11 +417,13 @@ DROP TABLE {{resource}};
 **Maps to Requirements**: REQ-{{COMPONENT}}-001, REQ-{{COMPONENT}}-002
 
 **Responsibilities**:
+
 - Business logic for {{resource}} operations
 - Validation
 - Error handling
 
 **Interface**:
+
 ```typescript
 interface {{COMPONENT}}Service {
   create(data: CreateResourceDTO): Promise<Resource>;
@@ -410,6 +434,7 @@ interface {{COMPONENT}}Service {
 ```
 
 **Implementation**:
+
 ```typescript
 // src/services/{{component}}.service.ts
 
@@ -444,11 +469,13 @@ export class {{COMPONENT}}Service implements {{COMPONENT}}Service {
 **Maps to Requirements**: REQ-{{COMPONENT}}-004
 
 **Responsibilities**:
+
 - Data access layer
 - Database queries
 - Transaction management
 
 **Interface**:
+
 ```typescript
 interface {{COMPONENT}}Repository {
   create(data: CreateResourceDTO): Promise<Resource>;
@@ -474,12 +501,14 @@ interface {{COMPONENT}}Repository {
 **Rate Limit**: 1000 requests/hour
 
 **Request**:
+
 ```http
 GET /v1/endpoint
 X-API-Key: {api_key}
 ```
 
 **Error Handling**:
+
 - Retry with exponential backoff (3 attempts)
 - Circuit breaker after 5 consecutive failures
 - Fallback to cached data if available
@@ -566,6 +595,7 @@ X-API-Key: {api_key}
 **Docker Image**: `{{org}}/{{project}}:{{version}}`
 
 **Dockerfile**:
+
 ```dockerfile
 FROM node:20-alpine
 WORKDIR /app
@@ -578,12 +608,12 @@ CMD ["npm", "start"]
 
 ### Environment Variables
 
-| Variable | Description | Example |
-|----------|-------------|---------|
+| Variable     | Description                  | Example                             |
+| ------------ | ---------------------------- | ----------------------------------- |
 | DATABASE_URL | PostgreSQL connection string | postgresql://user:pass@host:5432/db |
-| REDIS_URL | Redis connection string | redis://host:6379 |
-| JWT_SECRET | JWT signing secret | [secret] |
-| API_KEY | External API key | [key] |
+| REDIS_URL    | Redis connection string      | redis://host:6379                   |
+| JWT_SECRET   | JWT signing secret           | [secret]                            |
+| API_KEY      | External API key             | [key]                               |
 
 ---
 
@@ -661,12 +691,14 @@ We need a database for storing {{resource}} data with ACID guarantees.
 Use PostgreSQL 15+ as the primary database.
 
 **Consequences**:
+
 - ✅ ACID transactions
 - ✅ Rich data types (JSONB, UUID)
 - ✅ Strong ecosystem
 - ❌ Requires relational schema design
 
 **Alternatives Considered**:
+
 - MongoDB: Rejected (ACID guarantees less strict)
 - MySQL: Rejected (less feature-rich than PostgreSQL)
 
@@ -684,11 +716,13 @@ We need stateless authentication for API.
 Use JWT tokens stored in HTTP-only cookies.
 
 **Consequences**:
+
 - ✅ Stateless authentication
 - ✅ Scalable (no session storage)
 - ❌ Token revocation requires blocklist
 
 **Alternatives Considered**:
+
 - Session-based auth: Rejected (requires session storage)
 - OAuth 2.0: Deferred to future iteration
 
@@ -696,11 +730,11 @@ Use JWT tokens stored in HTTP-only cookies.
 
 ## Risk Assessment
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Database performance degradation | Medium | High | Implement caching, indexing, monitoring |
-| External API unavailability | High | Medium | Circuit breaker, fallback to cache |
-| Security vulnerability | Low | Critical | Regular security audits, OWASP Top 10 |
+| Risk                             | Probability | Impact   | Mitigation                              |
+| -------------------------------- | ----------- | -------- | --------------------------------------- |
+| Database performance degradation | Medium      | High     | Implement caching, indexing, monitoring |
+| External API unavailability      | High        | Medium   | Circuit breaker, fallback to cache      |
+| Security vulnerability           | Low         | Critical | Regular security audits, OWASP Top 10   |
 
 ---
 
@@ -723,11 +757,13 @@ Use JWT tokens stored in HTTP-only cookies.
 ## Validation
 
 **Constitutional Validation**:
+
 ```bash
 @constitution-enforcer validate design.md
 ```
 
 **Requirements Coverage Validation**:
+
 ```bash
 @traceability-auditor validate requirements.md design.md
 ```

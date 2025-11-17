@@ -34,7 +34,7 @@ const AGENTS_TEMPLATE_DIR = path.join(TEMPLATE_DIR, 'agents');
 async function main(agent, agentKey) {
   // Dynamic import for inquirer (ESM module)
   const inquirer = await import('inquirer');
-  
+
   // If called directly without agent parameter, default to Claude Code
   if (!agent) {
     const { getAgentDefinition } = require('../src/agents/registry');
@@ -53,8 +53,8 @@ async function main(agent, agentKey) {
         type: 'confirm',
         name: 'overwrite',
         message: `MUSUBI for ${agent.label} is already initialized. Overwrite?`,
-        default: false
-      }
+        default: false,
+      },
     ]);
 
     if (!overwrite) {
@@ -69,20 +69,20 @@ async function main(agent, agentKey) {
       type: 'input',
       name: 'projectName',
       message: 'Project name:',
-      default: path.basename(process.cwd())
+      default: path.basename(process.cwd()),
     },
     {
       type: 'input',
       name: 'description',
       message: 'Project description:',
-      default: 'A software project using MUSUBI SDD'
+      default: 'A software project using MUSUBI SDD',
     },
     {
       type: 'list',
       name: 'projectType',
       message: 'Project type:',
-      choices: ['Greenfield (0→1)', 'Brownfield (1→n)', 'Both']
-    }
+      choices: ['Greenfield (0→1)', 'Brownfield (1→n)', 'Both'],
+    },
   ];
 
   // Skills selection is only for Claude Code (Skills API exclusive)
@@ -92,15 +92,43 @@ async function main(agent, agentKey) {
       name: 'skills',
       message: 'Select skills to install (all recommended):',
       choices: [
-        { name: 'Core (orchestrator, steering, constitution-enforcer)', value: 'core', checked: true },
-        { name: 'Requirements & Planning (requirements-analyst, project-manager, change-impact-analyzer)', value: 'requirements', checked: true },
-        { name: 'Architecture & Design (system-architect, api-designer, database-schema-designer, ui-ux-designer)', value: 'architecture', checked: true },
+        {
+          name: 'Core (orchestrator, steering, constitution-enforcer)',
+          value: 'core',
+          checked: true,
+        },
+        {
+          name: 'Requirements & Planning (requirements-analyst, project-manager, change-impact-analyzer)',
+          value: 'requirements',
+          checked: true,
+        },
+        {
+          name: 'Architecture & Design (system-architect, api-designer, database-schema-designer, ui-ux-designer)',
+          value: 'architecture',
+          checked: true,
+        },
         { name: 'Development (software-developer)', value: 'development', checked: true },
-        { name: 'Quality & Review (test-engineer, code-reviewer, bug-hunter, quality-assurance, traceability-auditor)', value: 'quality', checked: true },
-        { name: 'Security & Performance (security-auditor, performance-optimizer)', value: 'security', checked: true },
-        { name: 'Infrastructure (devops-engineer, cloud-architect, database-administrator, site-reliability-engineer, release-coordinator)', value: 'infrastructure', checked: true },
-        { name: 'Documentation (technical-writer, ai-ml-engineer)', value: 'documentation', checked: true }
-      ]
+        {
+          name: 'Quality & Review (test-engineer, code-reviewer, bug-hunter, quality-assurance, traceability-auditor)',
+          value: 'quality',
+          checked: true,
+        },
+        {
+          name: 'Security & Performance (security-auditor, performance-optimizer)',
+          value: 'security',
+          checked: true,
+        },
+        {
+          name: 'Infrastructure (devops-engineer, cloud-architect, database-administrator, site-reliability-engineer, release-coordinator)',
+          value: 'infrastructure',
+          checked: true,
+        },
+        {
+          name: 'Documentation (technical-writer, ai-ml-engineer)',
+          value: 'documentation',
+          checked: true,
+        },
+      ],
     });
   }
 
@@ -109,13 +137,13 @@ async function main(agent, agentKey) {
       type: 'confirm',
       name: 'createSteering',
       message: 'Generate initial steering context?',
-      default: true
+      default: true,
     },
     {
       type: 'confirm',
       name: 'createConstitution',
       message: 'Create constitutional governance?',
-      default: true
+      default: true,
     }
   );
 
@@ -130,7 +158,7 @@ async function main(agent, agentKey) {
     'templates',
     'storage/specs',
     'storage/changes',
-    'storage/features'
+    'storage/features',
   ];
 
   // Add agent-specific directories
@@ -154,12 +182,29 @@ async function main(agent, agentKey) {
     const skillGroups = {
       core: ['orchestrator', 'steering', 'constitution-enforcer'],
       requirements: ['requirements-analyst', 'project-manager', 'change-impact-analyzer'],
-      architecture: ['system-architect', 'api-designer', 'database-schema-designer', 'ui-ux-designer'],
+      architecture: [
+        'system-architect',
+        'api-designer',
+        'database-schema-designer',
+        'ui-ux-designer',
+      ],
       development: ['software-developer'],
-      quality: ['test-engineer', 'code-reviewer', 'bug-hunter', 'quality-assurance', 'traceability-auditor'],
+      quality: [
+        'test-engineer',
+        'code-reviewer',
+        'bug-hunter',
+        'quality-assurance',
+        'traceability-auditor',
+      ],
       security: ['security-auditor', 'performance-optimizer'],
-      infrastructure: ['devops-engineer', 'cloud-architect', 'database-administrator', 'site-reliability-engineer', 'release-coordinator'],
-      documentation: ['technical-writer', 'ai-ml-engineer']
+      infrastructure: [
+        'devops-engineer',
+        'cloud-architect',
+        'database-administrator',
+        'site-reliability-engineer',
+        'release-coordinator',
+      ],
+      documentation: ['technical-writer', 'ai-ml-engineer'],
     };
 
     let skillCount = 0;
@@ -176,8 +221,12 @@ async function main(agent, agentKey) {
   // Install commands/prompts/workflows
   if (agent.features.hasCommands) {
     await copyCommands(agent, agentKey);
-    const commandType = agentKey === 'github-copilot' || agentKey === 'codex' ? 'prompts' :
-      agentKey === 'windsurf' ? 'workflows' : 'commands';
+    const commandType =
+      agentKey === 'github-copilot' || agentKey === 'codex'
+        ? 'prompts'
+        : agentKey === 'windsurf'
+          ? 'workflows'
+          : 'commands';
     console.log(chalk.green(`  Installed ${commandType}`));
   }
 
@@ -225,7 +274,7 @@ async function copySkill(skillName, agent) {
   if (!agent.layout.skillsDir) {
     return; // Skip for agents without Skills API support
   }
-  
+
   const srcDir = path.join(AGENTS_TEMPLATE_DIR, 'claude-code', 'skills', skillName);
   const destDir = path.join(agent.layout.skillsDir, skillName);
   await fs.copy(srcDir, destDir);
@@ -252,18 +301,19 @@ async function copyAgentsFile(agent) {
   if (destFile === 'GEMINI.md') {
     // Read shared AGENTS.md
     const agentsContent = await fs.readFile(sharedAgentsFile, 'utf8');
-    
+
     // Read existing GEMINI.md template if exists
     const geminiTemplate = path.join(AGENTS_TEMPLATE_DIR, 'gemini-cli', 'GEMINI.md');
     let geminiContent = '';
     if (fs.existsSync(geminiTemplate)) {
       geminiContent = await fs.readFile(geminiTemplate, 'utf8');
     } else {
-      geminiContent = '# Gemini CLI - MUSUBI Configuration\n\n' +
-                      'This file configures Gemini CLI for MUSUBI SDD.\n\n' +
-                      '---\n\n';
+      geminiContent =
+        '# Gemini CLI - MUSUBI Configuration\n\n' +
+        'This file configures Gemini CLI for MUSUBI SDD.\n\n' +
+        '---\n\n';
     }
-    
+
     // Append AGENTS.md content
     geminiContent += agentsContent;
     await fs.writeFile(destFile, geminiContent);
@@ -296,20 +346,25 @@ async function createConstitution() {
 }
 
 async function createReadme(answers, agent, agentKey) {
-  const skillsSection = agent.features.hasSkills && answers.skills
-    ? `This project uses **MUSUBI** (Ultimate Specification Driven Development) with ${answers.skills.length} skill groups.
+  const skillsSection =
+    agent.features.hasSkills && answers.skills
+      ? `This project uses **MUSUBI** (Ultimate Specification Driven Development) with ${answers.skills.length} skill groups.
 
 ### Available Skills
 
 Check \`${agent.layout.skillsDir}/\` directory for all installed skills.
 
 `
-    : `This project uses **MUSUBI** (Ultimate Specification Driven Development).
+      : `This project uses **MUSUBI** (Ultimate Specification Driven Development).
 
 `;
 
-  const commandType = agentKey === 'github-copilot' || agentKey === 'codex' ? 'Prompts' :
-    agentKey === 'windsurf' ? 'Workflows' : 'Commands';
+  const commandType =
+    agentKey === 'github-copilot' || agentKey === 'codex'
+      ? 'Prompts'
+      : agentKey === 'windsurf'
+        ? 'Workflows'
+        : 'Commands';
 
   const readme = `# MUSUBI - ${answers.projectName}
 

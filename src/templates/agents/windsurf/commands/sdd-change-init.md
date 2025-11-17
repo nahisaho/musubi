@@ -36,6 +36,7 @@ steering/tech.md         # Current technology stack
 ```
 
 **Extract**:
+
 - Current architecture patterns
 - Existing components
 - Technology stack
@@ -60,6 +61,7 @@ ls storage/specs/*design.md
 ```
 
 **Document Current State**:
+
 - What exists now?
 - What components are affected?
 - What dependencies exist?
@@ -72,7 +74,9 @@ ls storage/specs/*design.md
 **Methods**:
 
 #### A. Stakeholder Interview
+
 Use `AskUserQuestion` tool to ask:
+
 - Why is this change needed?
 - What problem does it solve?
 - What are the business drivers?
@@ -81,7 +85,9 @@ Use `AskUserQuestion` tool to ask:
 - What is the timeline/deadline?
 
 #### B. Impact Analysis
+
 Identify affected areas:
+
 - [ ] Frontend components
 - [ ] Backend services
 - [ ] Database schema
@@ -97,10 +103,12 @@ Identify affected areas:
 Use template from `templates/change-proposal.md`:
 
 **Structure**:
+
 ```markdown
 # Change Proposal: {{CHANGE_NAME}}
 
 ## Metadata
+
 - **Change ID**: CHG-{{NUMBER}}
 - **Status**: Proposed
 - **Created**: {{DATE}}
@@ -109,16 +117,21 @@ Use template from `templates/change-proposal.md`:
 - **Type**: Feature | Enhancement | Refactor | Bug Fix | Migration
 
 ## Executive Summary
+
 [2-3 sentences describing the change and its business value]
 
 ## Current State
+
 ### Existing Functionality
+
 [What exists now]
 
 ### Problems/Limitations
+
 [What problems does this change solve]
 
 ### Affected Components
+
 - Component A (lib/component-a/)
 - Component B (src/services/component-b/)
 - Database: users table
@@ -129,6 +142,7 @@ Use template from `templates/change-proposal.md`:
 ### ADDED Requirements
 
 #### REQ-NEW-001: [New Requirement Title]
+
 [EARS Pattern]
 
 **Justification**: Why this is needed
@@ -174,24 +188,28 @@ Use template from `templates/change-proposal.md`:
 ## Impact Analysis
 
 ### Breaking Changes
-| Change | Component | Severity | Mitigation |
-|--------|-----------|----------|------------|
-| API schema change | /api/auth | High | Version API, 6-month deprecation |
-| Database column removal | users.remember_token | Medium | Data migration script |
+
+| Change                  | Component            | Severity | Mitigation                       |
+| ----------------------- | -------------------- | -------- | -------------------------------- |
+| API schema change       | /api/auth            | High     | Version API, 6-month deprecation |
+| Database column removal | users.remember_token | Medium   | Data migration script            |
 
 ### Dependencies
+
 - [ ] Requires library upgrade: prisma@5.0 → 6.0
 - [ ] Requires new service: Redis for session storage
 - [ ] Affects: mobile app (API changes)
 - [ ] Affects: partner integrations (webhook schema)
 
 ### Risks
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
-| Data loss during migration | Low | High | Backup + rollback plan |
-| Performance degradation | Medium | Medium | Load testing before deploy |
+
+| Risk                       | Probability | Impact | Mitigation                 |
+| -------------------------- | ----------- | ------ | -------------------------- |
+| Data loss during migration | Low         | High   | Backup + rollback plan     |
+| Performance degradation    | Medium      | Medium | Load testing before deploy |
 
 ### Testing Requirements
+
 - [ ] Unit tests for new functions
 - [ ] Integration tests for modified APIs
 - [ ] E2E tests for user workflows
@@ -202,30 +220,35 @@ Use template from `templates/change-proposal.md`:
 ## Implementation Plan
 
 ### Phase 1: Preparation (Week 1)
+
 - [ ] Create feature flag: `enable_{{feature}}`
 - [ ] Set up monitoring/alerts
 - [ ] Write migration scripts
 - [ ] Update CI/CD pipeline
 
 ### Phase 2: Development (Week 2-3)
+
 - [ ] Implement new requirements (library-first)
 - [ ] Modify existing code
 - [ ] Write tests (80%+ coverage)
 - [ ] Update documentation
 
 ### Phase 3: Testing (Week 4)
+
 - [ ] QA testing
 - [ ] Performance testing
 - [ ] Security review
 - [ ] Stakeholder demo
 
 ### Phase 4: Deployment (Week 5)
+
 - [ ] Deploy to staging
 - [ ] Run smoke tests
 - [ ] Deploy to production (canary: 5% → 50% → 100%)
 - [ ] Monitor metrics
 
 ### Phase 5: Cleanup (Week 6)
+
 - [ ] Remove feature flag (after 2 weeks stable)
 - [ ] Archive old code
 - [ ] Update steering files
@@ -233,12 +256,14 @@ Use template from `templates/change-proposal.md`:
 ## Rollback Plan
 
 ### Trigger Conditions
+
 - Error rate > 1%
 - P95 latency > 500ms
 - Critical bug reported
 - Data inconsistency detected
 
 ### Rollback Steps
+
 1. Disable feature flag
 2. Revert database migration (run rollback script)
 3. Deploy previous version
@@ -246,12 +271,14 @@ Use template from `templates/change-proposal.md`:
 5. Communicate to stakeholders
 
 ### Rollback Time
+
 - Estimated: 15 minutes
 - Tested: Yes/No
 
 ## Success Metrics
 
 ### Acceptance Criteria
+
 - [ ] All requirements implemented
 - [ ] Test coverage ≥ 80%
 - [ ] No P0/P1 bugs
@@ -259,6 +286,7 @@ Use template from `templates/change-proposal.md`:
 - [ ] Security audit passed
 
 ### KPIs
+
 - Response time: < 200ms (P95)
 - Error rate: < 0.1%
 - User adoption: 50% within 1 month
@@ -267,14 +295,16 @@ Use template from `templates/change-proposal.md`:
 ## Communication Plan
 
 ### Stakeholders
-| Stakeholder | Communication | Timing |
-|-------------|---------------|--------|
-| Engineering team | Kickoff meeting | Week 1 Day 1 |
-| Product team | Weekly updates | Every Monday |
-| Customers | Email notification | 2 weeks before launch |
-| Support team | Training session | 1 week before launch |
+
+| Stakeholder      | Communication      | Timing                |
+| ---------------- | ------------------ | --------------------- |
+| Engineering team | Kickoff meeting    | Week 1 Day 1          |
+| Product team     | Weekly updates     | Every Monday          |
+| Customers        | Email notification | 2 weeks before launch |
+| Support team     | Training session   | 1 week before launch  |
 
 ### Documentation Updates
+
 - [ ] API documentation
 - [ ] User guide
 - [ ] Migration guide
@@ -284,29 +314,34 @@ Use template from `templates/change-proposal.md`:
 ## Constitutional Compliance
 
 ### Article IV: EARS Format
+
 - [ ] All new requirements use EARS patterns
 - [ ] No ambiguous keywords (SHOULD, MUST, MAY)
 
 ### Article V: Traceability
+
 - [ ] Change ID assigned (CHG-NNN)
 - [ ] All requirements have IDs
 - [ ] Links to affected components
 
 ### Article I & II: Library-First + CLI
+
 - [ ] New features implemented in lib/
 - [ ] CLI interface available
 
 ## Appendix
 
 ### References
+
 - Original requirements: `storage/specs/{{feature}}-requirements.md`
 - Current design: `storage/specs/{{feature}}-design.md`
 - Related issues: #123, #456
 
 ### Change History
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{DATE}} | {{AUTHOR}} | Initial proposal |
+
+| Version | Date     | Author     | Changes          |
+| ------- | -------- | ---------- | ---------------- |
+| 1.0     | {{DATE}} | {{AUTHOR}} | Initial proposal |
 ```
 
 ---
@@ -316,10 +351,12 @@ Use template from `templates/change-proposal.md`:
 **Format**: `CHG-[NUMBER]`
 
 **Examples**:
+
 - `CHG-001` - First change proposal
 - `CHG-042` - 42nd change proposal
 
 **Rules**:
+
 - All uppercase
 - Sequential numbering starting from 001
 - Unique across entire project
@@ -330,6 +367,7 @@ Use template from `templates/change-proposal.md`:
 ### 6. Categorize Change Type
 
 **Types**:
+
 - **Feature**: New user-facing functionality
 - **Enhancement**: Improvement to existing feature
 - **Refactor**: Code restructuring (no behavior change)
@@ -339,6 +377,7 @@ Use template from `templates/change-proposal.md`:
 - **Security**: Security enhancement
 
 **Priority**:
+
 - **P0**: Critical, blocking production issue
 - **P1**: High priority, needed for next release
 - **P2**: Medium priority, nice to have
@@ -350,35 +389,41 @@ Use template from `templates/change-proposal.md`:
 
 **Assess Breaking Changes**:
 
-```markdown
+````markdown
 ### Breaking Changes Assessment
 
 #### API Changes
+
 - **Endpoint**: `/api/auth/login`
 - **Change**: Add required field `device_id`
 - **Breaking**: Yes
 - **Affected**: Mobile app, web app, partner integrations
-- **Mitigation**: 
+- **Mitigation**:
   - Version API: `/v2/auth/login`
   - Deprecation period: 6 months
   - Communication: Email all partners 3 months before sunset
 
 #### Database Changes
+
 - **Table**: `users`
 - **Change**: Remove column `remember_token`
 - **Breaking**: Yes
 - **Affected**: Session management, remember me feature
 - **Migration**:
+
   ```sql
   -- Backup data
-  CREATE TABLE users_remember_token_backup AS 
+  CREATE TABLE users_remember_token_backup AS
   SELECT id, remember_token FROM users WHERE remember_token IS NOT NULL;
-  
+
   -- Remove column
   ALTER TABLE users DROP COLUMN remember_token;
   ```
+````
+
 - **Rollback**: Restore from backup table
-```
+
+````
 
 **Dependency Analysis**:
 - List all affected services/components
@@ -398,7 +443,7 @@ Use template from `templates/change-proposal.md`:
 | REQ-NEW-001: 2FA | lib/auth/ | - | ADD |
 | REQ-AUTH-001: Password | lib/auth/password.ts | REQ-AUTH-001 | MODIFY |
 | REQ-AUTH-015: Remember Me | lib/auth/session.ts | REQ-AUTH-015 | REMOVE |
-```
+````
 
 ---
 
@@ -413,17 +458,20 @@ Save to: `storage/changes/{{change-name}}-proposal.md`
 Save to: `storage/changes/{{change-name}}-proposal.ja.md`
 
 **File Naming**:
+
 - Use kebab-case
 - Include change name
 - Add `-proposal` suffix
 - Add `.ja` before `.md` for Japanese version
 
 **Examples**:
+
 - `storage/changes/add-2fa-proposal.md` (English)
 - `storage/changes/add-2fa-proposal.ja.md` (Japanese)
 
 **Update Change Log**:
 Add entry to `storage/changes/change-log.md`:
+
 ```markdown
 | CHG-042 | add-2fa | Proposed | 2025-11-17 | Two-factor authentication |
 ```
@@ -440,15 +488,18 @@ Present summary to user:
 **Change**: {{CHANGE_NAME}}
 **Change ID**: CHG-{{NUMBER}}
 **Files**:
+
 - English: storage/changes/{{change-name}}-proposal.md
 - Japanese: storage/changes/{{change-name}}-proposal.ja.md
 
 ### Summary:
+
 - **Type**: {{TYPE}}
 - **Priority**: {{PRIORITY}}
 - **Status**: Proposed
 
 ### Impact:
+
 - **ADDED Requirements**: [N]
 - **MODIFIED Requirements**: [N]
 - **REMOVED Requirements**: [N]
@@ -456,17 +507,20 @@ Present summary to user:
 - **Affected Components**: [N]
 
 ### Timeline:
+
 - **Development**: [X] weeks
 - **Testing**: [X] weeks
 - **Deployment**: [X] weeks
 - **Total**: [X] weeks
 
 ### Risks:
+
 - High: [N]
 - Medium: [N]
 - Low: [N]
 
 ### Next Steps:
+
 1. Review proposal with stakeholders
 2. Get approval from product/engineering leads
 3. Run impact analysis: `#sdd-change-apply {{change-name}}`
@@ -478,6 +532,7 @@ Present summary to user:
 ## Example Execution
 
 ### User Command:
+
 ```bash
 #sdd-change-init add-2fa
 ```
@@ -490,12 +545,14 @@ Present summary to user:
    - `steering/product.md` → B2B SaaS, security critical
 
 2. **Analyze Existing**:
+
    ```bash
    grep -r "authentication" src/
    # Found: lib/auth/password.ts, lib/auth/session.ts
    ```
 
 3. **Ask User**:
+
    ```
    Questions about 2FA implementation:
    1. 2FA methods: SMS, TOTP (Google Authenticator), both?
@@ -505,26 +562,28 @@ Present summary to user:
    ```
 
 4. **Generate Proposal**:
+
    ```markdown
    # Change Proposal: add-2fa
-   
+
    ## ADDED Requirements
-   
+
    ### REQ-NEW-001: TOTP Generation
+
    WHEN a user enables 2FA,
    THEN the system SHALL generate a TOTP secret
    AND the system SHALL display QR code
    AND the system SHALL require verification code.
-   
+
    ## MODIFIED Requirements
-   
+
    ### REQ-AUTH-001: Login Flow (MODIFIED)
-   
+
    **Previous**: Email + password → session
    **New**: Email + password → (if 2FA enabled) → OTP → session
-   
+
    **Breaking Change**: No (backward compatible)
-   
+
    [... more details ...]
    ```
 
@@ -557,20 +616,26 @@ Before completing, verify:
 ## Edge Cases
 
 ### No Existing Requirements
+
 If no requirements docs exist:
+
 ```markdown
 ⚠️ **No existing requirements found**
 
 This appears to be a greenfield project. Consider using:
+
 - `#sdd-requirements {{feature}}` for new features
 
 Use change proposals for:
+
 - Modifying existing documented features
 - Refactoring existing code
 ```
 
 ### Change Already Exists
+
 If `storage/changes/{{change-name}}-proposal.md` exists:
+
 - Read existing file
 - Ask user: Update existing or create new version?
 - If update: Increment version number

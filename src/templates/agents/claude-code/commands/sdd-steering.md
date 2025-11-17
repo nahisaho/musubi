@@ -11,6 +11,7 @@ You are executing the `/sdd-steering` command to generate or update the project'
 ### What is Steering?
 
 Steering provides **project memory** for all Claude Code skills. It consists of 3 core files that document:
+
 1. **structure.md** - Architecture patterns, directory structure, naming conventions
 2. **tech.md** - Technology stack, frameworks, tools
 3. **product.md** - Business context, product goals, users
@@ -40,6 +41,7 @@ Steering provides **project memory** for all Claude Code skills. It consists of 
 ## Mode 1: Bootstrap (First Time)
 
 ### Detection
+
 - `steering/` directory doesn't exist OR
 - `steering/structure.md`, `steering/tech.md`, `steering/product.md` don't exist
 
@@ -117,16 +119,19 @@ Steering provides **project memory** for all Claude Code skills. It consists of 
 ### Output
 
 Present summary:
+
 ```markdown
 ## ✅ Steering Bootstrap Complete
 
 Created steering files:
+
 - steering/structure.md (+ .ja.md)
 - steering/tech.md (+ .ja.md)
 - steering/product.md (+ .ja.md)
 - steering/rules/ (constitution, workflow, EARS)
 
 ### Key Findings:
+
 - **Architecture**: [detected pattern]
 - **Tech Stack**: [primary technologies]
 - **Product**: [inferred purpose]
@@ -139,6 +144,7 @@ Please review the generated files and adjust as needed.
 ## Mode 2: Sync (Update Existing)
 
 ### Detection
+
 - Steering files exist
 - Codebase may have changed since last steering update
 
@@ -168,18 +174,22 @@ Please review the generated files and adjust as needed.
    - Ensure both versions stay synchronized
 
 5. **Generate Sync Report**:
+
    ```markdown
    ## 🔄 Steering Sync Report
 
    ### Changes Detected:
+
    - [Change 1]
    - [Change 2]
 
    ### Updated Files:
+
    - steering/structure.md (+ .ja.md)
    - steering/tech.md (+ .ja.md)
 
    ### No Changes:
+
    - steering/product.md (still accurate)
    ```
 
@@ -188,6 +198,7 @@ Please review the generated files and adjust as needed.
 ## Mode 3: Review (User-Initiated Review)
 
 ### Detection
+
 - User explicitly asks to review steering
 - OR user wants to improve steering
 
@@ -214,9 +225,11 @@ Please review the generated files and adjust as needed.
 ## Constitutional Compliance
 
 This command supports **Article VI: Project Memory**:
+
 > All skills SHALL consult project memory (steering files) before making decisions.
 
 By maintaining accurate steering files, all skills can:
+
 - Make context-aware decisions
 - Follow established patterns
 - Align with product goals
@@ -232,6 +245,7 @@ By maintaining accurate steering files, all skills can:
 ## ✅ Steering Bootstrap Complete
 
 ### Structure (steering/structure.md)
+
 - **Architecture**: Library-first monorepo
 - **Pattern**: Each feature as independent library in `lib/`
 - **App Integration**: Next.js app in `app/`
@@ -241,6 +255,7 @@ By maintaining accurate steering files, all skills can:
   - `tests/` - Integration tests
 
 ### Tech Stack (steering/tech.md)
+
 - **Language**: TypeScript 5.3
 - **Framework**: Next.js 14 (App Router)
 - **Database**: PostgreSQL 15 with Prisma ORM
@@ -249,6 +264,7 @@ By maintaining accurate steering files, all skills can:
 - **CI/CD**: GitHub Actions
 
 ### Product (steering/product.md)
+
 - **Vision**: SaaS authentication platform
 - **Users**: B2B SaaS companies
 - **Core Features**: SSO, MFA, user management
@@ -260,15 +276,18 @@ By maintaining accurate steering files, all skills can:
 ## 🔄 Steering Sync Report
 
 ### Changes Detected:
+
 1. **New Technology**: Redis added for caching
 2. **Architecture Evolution**: Added background job processing
 3. **New Component**: `lib/notifications/` added
 
 ### Updated:
+
 - ✅ steering/tech.md - Added Redis 7.0, BullMQ
 - ✅ steering/structure.md - Documented background jobs pattern
 
 ### No Changes:
+
 - steering/product.md - Product vision unchanged
 ```
 
@@ -279,6 +298,7 @@ By maintaining accurate steering files, all skills can:
 Use these tools extensively:
 
 1. **Glob**: Find all source files, configs
+
    ```
    pattern: "**/*.ts"
    pattern: "**/package.json"
@@ -286,6 +306,7 @@ Use these tools extensively:
    ```
 
 2. **Grep**: Analyze code patterns
+
    ```
    pattern: "import.*from"
    pattern: "export.*class"
@@ -325,6 +346,7 @@ After generating/updating steering:
 ## Next Steps After Steering
 
 Once steering is complete, users can:
+
 1. Review and adjust steering files manually
 2. Proceed with requirements analysis: `/sdd-requirements [feature]`
 3. Use any skill (they will now have project context)

@@ -269,11 +269,13 @@ This document defines the 9 Constitutional Articles that govern all development 
 **Phase -1 Gate**: Requires `system-architect` + `software-developer` approval for abstraction layers.
 
 **Example Violations**:
+
 - Creating `MyDatabase` wrapper around Prisma/TypeORM
 - Building custom `HttpClient` wrapper around axios/fetch
 - Implementing custom `Logger` abstraction over framework logging
 
 **Valid Abstractions**:
+
 - Multi-framework support (e.g., database library supporting Prisma AND TypeORM)
 - Domain-specific abstractions (e.g., `PaymentGateway` interface with multiple providers)
 
@@ -320,6 +322,7 @@ This document defines the 9 Constitutional Articles that govern all development 
 ### Gate Triggers
 
 Gates are triggered when:
+
 - Project count exceeds 3 (Article VII)
 - Custom abstraction layers proposed (Article VIII)
 - EARS requirements incomplete (Article IV)
@@ -335,12 +338,12 @@ Gates are triggered when:
 
 ### Required Reviewers
 
-| Gate | Required Skills | Stakeholders |
-|------|----------------|--------------|
-| Simplicity (Article VII) | `system-architect`, `project-manager` | Tech lead, Product owner |
-| Anti-Abstraction (Article VIII) | `system-architect`, `software-developer` | Tech lead, Senior engineer |
-| EARS Compliance (Article IV) | `requirements-analyst` | Product owner, QA lead |
-| Traceability (Article V) | `traceability-auditor` | QA lead, Compliance officer |
+| Gate                            | Required Skills                          | Stakeholders                |
+| ------------------------------- | ---------------------------------------- | --------------------------- |
+| Simplicity (Article VII)        | `system-architect`, `project-manager`    | Tech lead, Product owner    |
+| Anti-Abstraction (Article VIII) | `system-architect`, `software-developer` | Tech lead, Senior engineer  |
+| EARS Compliance (Article IV)    | `requirements-analyst`                   | Product owner, QA lead      |
+| Traceability (Article V)        | `traceability-auditor`                   | QA lead, Compliance officer |
 
 ---
 
@@ -358,12 +361,12 @@ The `constitution-enforcer` skill automatically validates compliance:
 
 ### Validation Stages
 
-| Stage | Articles Validated | Trigger |
-|-------|-------------------|---------|
-| Requirements | IV, V | Before design |
-| Design | I, II, VI, VII, VIII | Before tasks |
-| Implementation | III, V | Before commit |
-| Testing | III, V, IX | Before deployment |
+| Stage          | Articles Validated   | Trigger           |
+| -------------- | -------------------- | ----------------- |
+| Requirements   | IV, V                | Before design     |
+| Design         | I, II, VI, VII, VIII | Before tasks      |
+| Implementation | III, V               | Before commit     |
+| Testing        | III, V, IX           | Before deployment |
 
 ### Violation Response
 
@@ -385,23 +388,24 @@ The `constitution-enforcer` skill automatically validates compliance:
 5. Communication to all team members
 
 **Version History**:
+
 - v1.0 (Initial) - 9 Articles established
 
 ---
 
 ## Summary
 
-| Article | Principle | Enforced By |
-|---------|-----------|-------------|
-| I | Library-First | `constitution-enforcer` |
-| II | CLI Interface | `constitution-enforcer` |
-| III | Test-First | `constitution-enforcer`, `test-engineer` |
-| IV | EARS Format | `constitution-enforcer`, `requirements-analyst` |
-| V | Traceability | `traceability-auditor` |
-| VI | Project Memory | All skills (steering system) |
-| VII | Simplicity Gate | `constitution-enforcer` (Phase -1) |
-| VIII | Anti-Abstraction | `constitution-enforcer` (Phase -1) |
-| IX | Integration Testing | `test-engineer` |
+| Article | Principle           | Enforced By                                     |
+| ------- | ------------------- | ----------------------------------------------- |
+| I       | Library-First       | `constitution-enforcer`                         |
+| II      | CLI Interface       | `constitution-enforcer`                         |
+| III     | Test-First          | `constitution-enforcer`, `test-engineer`        |
+| IV      | EARS Format         | `constitution-enforcer`, `requirements-analyst` |
+| V       | Traceability        | `traceability-auditor`                          |
+| VI      | Project Memory      | All skills (steering system)                    |
+| VII     | Simplicity Gate     | `constitution-enforcer` (Phase -1)              |
+| VIII    | Anti-Abstraction    | `constitution-enforcer` (Phase -1)              |
+| IX      | Integration Testing | `test-engineer`                                 |
 
 ---
 

@@ -34,6 +34,7 @@ storage/changes/{{change-name}}-proposal.md
 ```
 
 **Extract**:
+
 - ADDED requirements
 - MODIFIED requirements
 - REMOVED requirements
@@ -42,6 +43,7 @@ storage/changes/{{change-name}}-proposal.md
 - Success metrics
 
 **Verify Approval**:
+
 - Status must be "Approved" (not "Proposed" or "Rejected")
 - If not approved, abort and notify user
 
@@ -67,7 +69,7 @@ steering/tech.md         # Technology stack
 
 export const FEATURE_FLAGS = {
   // ... existing flags ...
-  
+
   enable_{{feature}}: {
     enabled: false,  // Start disabled
     description: '{{CHANGE_DESCRIPTION}}',
@@ -77,6 +79,7 @@ export const FEATURE_FLAGS = {
 ```
 
 **Update Configuration**:
+
 ```typescript
 // lib/feature-flags/config.ts
 
@@ -84,10 +87,10 @@ export function isFeatureEnabled(flag: keyof typeof FEATURE_FLAGS): boolean {
   if (process.env.NODE_ENV === 'test') {
     return true; // Always enabled in tests
   }
-  
+
   const config = FEATURE_FLAGS[flag];
   if (!config.enabled) return false;
-  
+
   // Gradual rollout logic
   return Math.random() * 100 < config.rolloutPercentage;
 }
@@ -118,6 +121,7 @@ touch lib/{{feature}}/cli.ts  # Article II: CLI Interface Mandate
 **Test-First (Article III)**:
 
 1. **RED**: Write failing test
+
 ```typescript
 // lib/{{feature}}/{{feature}}.test.ts
 
@@ -128,10 +132,10 @@ describe('{{FeatureName}}', () => {
   it('should {{requirement}}', () => {
     // Arrange
     const input = {{test-input}};
-    
+
     // Act
     const result = new {{FeatureName}}().{{method}}(input);
-    
+
     // Assert
     expect(result).toEqual({{expected-output}});
   });
@@ -139,6 +143,7 @@ describe('{{FeatureName}}', () => {
 ```
 
 2. **GREEN**: Implement to pass test
+
 ```typescript
 // lib/{{feature}}/{{feature}}.ts
 
@@ -181,11 +186,13 @@ program.parse();
 ```
 
 **Make executable**:
+
 ```bash
 chmod +x lib/{{feature}}/cli.ts
 ```
 
 **Add to package.json**:
+
 ```json
 {
   "bin": {
@@ -213,10 +220,10 @@ export async function POST(req: NextRequest) {
       { status: 403 }
     );
   }
-  
+
   const body = await req.json();
   const feature = new {{FeatureName}}();
-  
+
   try {
     const result = await feature.{{method}}(body);
     return NextResponse.json(result);
@@ -251,7 +258,7 @@ describe('{{Component}} - Modified Behavior', () => {
   it('should {{new-behavior}}', () => {
     // Test new behavior
   });
-  
+
   it('should maintain backward compatibility', () => {
     // Test old behavior still works (if applicable)
   });
@@ -267,12 +274,12 @@ export class {{Component}} {
   {{method}}(input: {{InputType}}): {{OutputType}} {
     // NEW: Updated logic
     {{new-implementation}}
-    
+
     // Maintain backward compatibility
     if ({{legacy-condition}}) {
       return {{legacy-behavior}};
     }
-    
+
     return {{new-behavior}};
   }
 }
@@ -324,29 +331,33 @@ if (process.env.NODE_ENV !== 'production') {
 
 #### Step 6.3: Update Documentation
 
-```markdown
+````markdown
 ## Migration Guide: {{DEPRECATED_FEATURE}}
 
 ### Timeline
+
 - **Deprecation**: {{DATE}}
 - **End of Life**: {{EOL_DATE}} ({{DAYS}} days notice)
 
 ### Migration Steps
 
 1. Replace old code:
+
    ```typescript
    // ❌ OLD (deprecated)
    {{old-code}}
-   
+
    // ✅ NEW (recommended)
    {{new-code}}
    ```
+````
 
 2. Update imports:
+
    ```typescript
    // ❌ OLD
    import { {{old-import}} } from '{{old-path}}';
-   
+
    // ✅ NEW
    import { {{new-import}} } from '{{new-path}}';
    ```
@@ -355,8 +366,10 @@ if (process.env.NODE_ENV !== 'production') {
 4. Deploy
 
 ### Breaking Changes
+
 {{list-of-breaking-changes}}
-```
+
+````
 
 ---
 
@@ -369,7 +382,7 @@ if (process.env.NODE_ENV !== 'production') {
 ```bash
 # Prisma example
 npx prisma migrate dev --name {{change-name}}
-```
+````
 
 #### Step 7.2: Write Migration Script
 
@@ -423,6 +436,7 @@ npm run db:verify
 ### 8. Write Tests (Article III & IX)
 
 **Test Coverage Requirements**:
+
 - Minimum 80% code coverage
 - Integration tests (Article IX) over unit tests
 
@@ -436,11 +450,11 @@ describe('{{FeatureName}}', () => {
     it('should handle valid input', () => {
       // Happy path
     });
-    
+
     it('should reject invalid input', () => {
       // Error handling
     });
-    
+
     it('should handle edge cases', () => {
       // Boundary conditions
     });
@@ -458,7 +472,7 @@ import { PrismaClient } from '@prisma/client';
 
 describe('{{FeatureName}} Integration Tests', () => {
   let prisma: PrismaClient;
-  
+
   beforeAll(async () => {
     // Use REAL database (test database)
     prisma = new PrismaClient({
@@ -467,24 +481,24 @@ describe('{{FeatureName}} Integration Tests', () => {
       }
     });
   });
-  
+
   afterAll(async () => {
     await prisma.$disconnect();
   });
-  
+
   it('should {{requirement}} with real database', async () => {
     // Arrange: Set up test data
     const testData = await prisma.{{model}}.create({
       data: {{test-data}}
     });
-    
+
     // Act: Execute feature
     const feature = new {{FeatureName}}(prisma);
     const result = await feature.{{method}}(testData.id);
-    
+
     // Assert: Verify result
     expect(result).toBeDefined();
-    
+
     // Cleanup
     await prisma.{{model}}.delete({ where: { id: testData.id } });
   });
@@ -502,11 +516,11 @@ test.describe('{{Feature}} E2E Tests', () => {
   test('should complete {{workflow}}', async ({ page }) => {
     // Navigate
     await page.goto('/{{feature}}');
-    
+
     // Interact
     await page.fill('input[name="{{field}}"]', '{{value}}');
     await page.click('button[type="submit"]');
-    
+
     // Assert
     await expect(page.locator('.success-message')).toBeVisible();
   });
@@ -522,13 +536,14 @@ test.describe('{{Feature}} E2E Tests', () => {
 ```markdown
 ## Traceability Matrix: {{CHANGE_NAME}}
 
-| Requirement ID | Design | Implementation | Tests | Status |
-|----------------|--------|----------------|-------|--------|
-| REQ-NEW-001 | Section 4.1 | lib/{{feature}}/{{file}}.ts:L25 | {{feature}}.test.ts:L40 | ✅ |
-| REQ-AUTH-001 (MOD) | Section 7.2 | lib/auth/password.ts:L15 | password.test.ts:L30 | ✅ |
-| REQ-AUTH-015 (REM) | - | Deprecated | - | ⚠️ |
+| Requirement ID     | Design      | Implementation                  | Tests                   | Status |
+| ------------------ | ----------- | ------------------------------- | ----------------------- | ------ |
+| REQ-NEW-001        | Section 4.1 | lib/{{feature}}/{{file}}.ts:L25 | {{feature}}.test.ts:L40 | ✅     |
+| REQ-AUTH-001 (MOD) | Section 7.2 | lib/auth/password.ts:L15        | password.test.ts:L30    | ✅     |
+| REQ-AUTH-015 (REM) | -           | Deprecated                      | -                       | ⚠️     |
 
 ### Coverage
+
 - Total Requirements: 15
 - Implemented: 13 (87%)
 - Tested: 13 (100% of implemented)
@@ -578,6 +593,7 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 ## Components
 
 ### {{Feature}} (Added: {{DATE}})
+
 - **Location**: `lib/{{feature}}/`
 - **Purpose**: {{DESCRIPTION}}
 - **Pattern**: {{PATTERN}}
@@ -590,6 +606,7 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 ## Technology Stack
 
 ### New Dependencies ({{CHANGE_NAME}})
+
 - `{{package}}@{{version}}` - {{PURPOSE}}
 ```
 
@@ -603,6 +620,7 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 # Implementation Report: {{CHANGE_NAME}}
 
 ## Metadata
+
 - **Change ID**: CHG-{{NUMBER}}
 - **Status**: Implemented
 - **Implemented**: {{DATE}}
@@ -611,27 +629,32 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 ## Changes Applied
 
 ### ADDED
+
 - [ ] lib/{{feature}}/ - Core library ✅
 - [ ] lib/{{feature}}/cli.ts - CLI interface ✅
 - [ ] lib/{{feature}}/{{feature}}.test.ts - Tests ✅
 - [ ] app/api/{{feature}}/route.ts - API endpoint ✅
 
 ### MODIFIED
+
 - [ ] lib/auth/password.ts - Updated hashing ✅
 - [ ] lib/auth/password.test.ts - Updated tests ✅
 
 ### REMOVED
+
 - [ ] lib/auth/remember-me.ts - Deprecated (EOL: {{DATE}}) ⚠️
 
 ## Test Results
 
 ### Coverage
+
 - Unit Tests: 45 passed
 - Integration Tests: 12 passed
 - E2E Tests: 5 passed
 - **Coverage**: 87% (target: 80%) ✅
 
 ### Performance
+
 - P95 latency: 145ms (target: <200ms) ✅
 - Throughput: 1250 req/s (target: >1000) ✅
 
@@ -666,6 +689,7 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 ```
 
 **Save To**:
+
 - English: `storage/changes/{{change-name}}-implementation.md`
 - Japanese: `storage/changes/{{change-name}}-implementation.ja.md`
 
@@ -680,6 +704,7 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 **Change ID**: CHG-{{NUMBER}}
 
 ### Implementation Summary:
+
 - **Files Added**: [N]
 - **Files Modified**: [N]
 - **Files Deprecated**: [N]
@@ -687,20 +712,24 @@ ls -la lib/{{feature}}/*.integration.test.ts  # Must exist
 - **Test Coverage**: XX%
 
 ### Constitutional Compliance:
+
 - ✅ All 9 articles verified
 
 ### Quality Metrics:
+
 - ✅ Tests: [N] passed, 0 failed
 - ✅ Coverage: XX% (>= 80%)
 - ✅ Performance: Within SLA
 - ✅ Security: Audit passed
 
 ### Deployment Status:
+
 - Feature flag: Created (disabled)
 - Staging: Not deployed
 - Production: Not deployed
 
 ### Next Steps:
+
 1. Review implementation
 2. Merge PR
 3. Deploy to staging

@@ -15,7 +15,7 @@
     "lint": "eslint bin/ src/ tests/",
     "lint:fix": "eslint bin/ src/ tests/ --fix",
     "format": "prettier --write bin/ src/ tests/",
-    "format:check": "prettier --check bin/ src/ tests/"
+    "format:check": "prettier --check 'bin/**/*.js' 'src/**/*.js' 'tests/**/*.js'"
   },
   "keywords": [
     "specification-driven-development",

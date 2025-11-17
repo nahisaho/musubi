@@ -1,261 +1,537 @@
 # Technology Stack
 
+**Project**: musubi
+**Last Updated**: 2025-11-17
+**Version**: 1.0
+
+---
+
 ## Overview
-This document defines the technology choices, framework decisions, and technical constraints for this project. All development must align with these technical decisions.
 
-**Last Updated**: 2025-01-16 by @steering
+This document defines the approved technology stack for musubi. All development MUST use these technologies unless explicitly approved via Phase -1 Gate (Article VIII: Anti-Abstraction).
 
-## Core Technologies
+---
+
+## Primary Technologies
 
 ### Programming Languages
-**Primary Language**: JavaScript (Node.js)
-- **Version**: Node.js >=18.0.0
-- **Module System**: CommonJS with dynamic ESM imports
-- **Justification**: 
-  - Universal availability in Node.js ecosystem
-  - CLI tools benefit from CommonJS compatibility
-  - Dynamic import() enables ESM dependency support (inquirer v9)
 
-**No TypeScript**: JavaScript-only for maximum compatibility
-- CLI tools prioritize simplicity and distribution
-- No transpilation step required
-- Direct execution with Node.js
+| Language | Version | Usage | Notes |
+|----------|---------|-------|-------|
+| {{PRIMARY_LANGUAGE}} | {{VERSION}} | Primary application language | [Notes] |
+| SQL | PostgreSQL 15+ | Database queries | Via Prisma ORM |
+| TypeScript | 5.0+ | Type definitions | Strict mode enabled |
 
-## Framework & Libraries
+### Runtime Environment
 
-### CLI Framework
-**Primary Framework**: commander ^11.0.0
-- **Purpose**: Command-line interface parsing and routing
-- **Features**: Subcommands, flags, help text generation
-- **Usage**: `musubi init`, `musubi status`, `musubi validate`, `musubi info`
+- **Node.js**: {{NODE_VERSION}}+ (LTS)
+- **Package Manager**: npm {{NPM_VERSION}}+ / pnpm {{PNPM_VERSION}}+
 
-### Terminal Styling
-**Library**: chalk ^4.1.2 (CommonJS version)
-- **Purpose**: Colored terminal output, ANSI formatting
-- **Why v4**: ESM-only v5 incompatible with CommonJS
-- **Usage**: Success (green), warnings (yellow), errors (red), info (blue)
+---
 
-### Interactive Prompts
-**Library**: inquirer ^9.0.0 (ESM-only)
-- **Purpose**: Interactive CLI prompts (agent selection, project type, skill selection)
-- **Import Pattern**: Dynamic ESM import
-  ```javascript
-  const inquirer = await import('inquirer');
-  await inquirer.default.prompt([...]);
-  ```
-- **Features**: Checkboxes, list selection, confirmation, input validation
+## Frontend Stack
 
-### File System Utilities
-**Library**: fs-extra ^11.0.0
-- **Purpose**: Enhanced file operations (copy, ensure directories, JSON read/write)
-- **Usage**: Template copying from `src/templates/` to user projects
-- **Advantages**: Promise-based API, automatic directory creation
+### Framework
 
-## Development Tools
+**Primary Framework**: {{FRONTEND_FRAMEWORK}}
 
-### Package Management
-- **Package Manager**: npm (bundled with Node.js)
-- **Version**: npm 10.x (comes with Node.js 18+)
-- **Lock File**: package-lock.json (committed to repository)
-- **Registry**: npmjs.org (public npm registry)
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{FRONTEND_FRAMEWORK}} | {{VERSION}} | [Purpose] |
+| React | 18+ | UI library (if using Next.js/Remix) |
+| TypeScript | 5.0+ | Type safety |
+
+### UI Components
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| {{UI_LIBRARY}} | {{VERSION}} | Component library |
+| Tailwind CSS | 3.0+ | Utility-first CSS |
+| shadcn/ui | Latest | Component primitives |
+
+### State Management
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| {{STATE_LIBRARY}} | {{VERSION}} | [Global state / Server state] |
+| React Context | Built-in | Local state |
+| React Query | 5.0+ | Server state (if applicable) |
+
+### Form Handling
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| React Hook Form | 7.0+ | Form management |
+| Zod | 3.0+ | Schema validation |
+
+---
+
+## Backend Stack
+
+### Framework
+
+**Primary Framework**: {{BACKEND_FRAMEWORK}}
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{BACKEND_FRAMEWORK}} | {{VERSION}} | API server |
+| Express | 4.0+ | Web framework (if using Node.js) |
+| Next.js API Routes | 14+ | Serverless API (if using Next.js) |
+
+### API Technologies
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| REST | - | Primary API style |
+| GraphQL | (Optional) | Complex data fetching |
+| OpenAPI | 3.0+ | API specification |
+
+---
+
+## Database Stack
+
+### Primary Database
+
+**Database**: {{DATABASE}}
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{DATABASE}} | {{VERSION}} | Primary data store |
+| Prisma | 5.0+ | ORM and migrations |
+
+### Database Schema
+
+```prisma
+// Example schema structure
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+### Caching Layer
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Redis | 7.0+ | Session storage, caching |
+| In-memory cache | - | Development only |
+
+---
+
+## Authentication & Authorization
+
+### Authentication
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{AUTH_METHOD}} | {{VERSION}} | User authentication |
+| bcrypt | 5.0+ | Password hashing (cost factor 12) |
+| JWT | - | Session tokens |
+
+**Password Requirements**:
+- Hashing: bcrypt with cost factor 12 (Article III: Security)
+- Minimum length: 12 characters
+- Complexity: Uppercase, lowercase, number, special char
+
+### Authorization
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| RBAC | - | Role-Based Access Control |
+| CASL | 6.0+ | Authorization library (optional) |
+
+---
+
+## Testing Stack
+
+### Test Frameworks
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{TEST_FRAMEWORK}} | {{VERSION}} | Unit testing |
+| Jest | 29+ | Test runner (if using JavaScript/TypeScript) |
+| Vitest | 1.0+ | Fast test runner (alternative to Jest) |
+
+### Testing Libraries
+
+| Library | Version | Purpose |
+|---------|---------|---------|
+| React Testing Library | 14+ | Component testing |
+| Supertest | 6.0+ | API testing |
+| Playwright | 1.40+ | E2E testing |
+| Testing Library | Latest | DOM testing utilities |
+
+### Test Databases
+
+- **Integration Tests**: Real PostgreSQL (Docker container)
+- **Unit Tests**: Mocked repository layer
+- **E2E Tests**: Dedicated test database
+
+**Docker Compose** for test services:
+```yaml
+services:
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    ports:
+      - "5432:5432"
+
+  test-redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+```
+
+**Constitutional Compliance (Article IX)**:
+- Integration tests MUST use real database
+- Integration tests MUST use real cache
+- Mocks only for external APIs without test environments
+
+---
+
+## Build & Development Tools
 
 ### Build Tools
-**No Build Step Required** - Direct JavaScript execution
-- No bundler (CLI tool, not web application)
-- No transpiler (JavaScript, not TypeScript)
-- **Task Runner**: npm scripts only
 
+| Tool | Version | Purpose |
+|------|---------|---------|
+| {{BUILD_TOOL}} | {{VERSION}} | Build system |
+| esbuild | Latest | Fast bundler |
+| Turbo | Latest | Monorepo build system |
+
+### Code Quality
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| ESLint | 8.0+ | JavaScript/TypeScript linting |
+| Prettier | 3.0+ | Code formatting |
+| TypeScript | 5.0+ | Type checking |
+| Husky | 8.0+ | Git hooks |
+| lint-staged | 14.0+ | Pre-commit linting |
+
+**ESLint Configuration**:
 ```json
 {
-  "scripts": {
-    "test": "jest",
-    "lint": "eslint .",
-    "format": "prettier --write ."
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn"
   }
 }
 ```
 
-### Testing
-**Unit Testing**: jest ^29.0.0
-- **Test Files**: `tests/*.test.js`
-- **Test Coverage Target**: 80% (Constitutional Article III)
-- **Test Runner**: `npm test`
+---
 
-**No Integration/E2E Tests Yet**
-- Future: Integration tests for full `musubi init` workflow
-- Future: Snapshot tests for template validation
+## CI/CD Stack
 
-### Code Quality
-- **Linter**: eslint ^8.50.0
-  - JavaScript standard rules
-  - Node.js environment
-- **Formatter**: prettier ^3.0.0
-  - Single quotes, no semicolons
-  - 100 character line width
-- **Pre-commit Hooks**: Not configured yet (future: husky + lint-staged)
+### CI/CD Platform
 
-## Deployment & Infrastructure
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{CI_CD_PLATFORM}} | - | Continuous Integration/Deployment |
+| GitHub Actions | - | CI/CD workflows |
+| GitLab CI | - | Alternative CI/CD |
 
-### Hosting
-**Platform**: npm Registry (npmjs.org)
-- **Package Name**: musubi-sdd
-- **Distribution**: Public npm package
-- **Installation**: `npx musubi-sdd` (on-demand) or `npm install -g musubi-sdd`
-- **Registry URL**: https://www.npmjs.com/package/musubi-sdd
+### Deployment
 
-**No Application Hosting** - MUSUBI is a CLI tool, not a hosted service
-- Users run locally via npx/npm
-- No servers, containers, or cloud infrastructure
-- Distribution through npm ecosystem only
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Docker | 24.0+ | Containerization |
+| Docker Compose | 2.0+ | Multi-container apps (dev) |
+| Kubernetes | 1.28+ | Container orchestration (prod) |
 
-### CI/CD
-**Pipeline**: GitHub Actions (future)
-- **Current**: Manual publish workflow
-  1. Update version in package.json
-  2. `npm publish`
-  3. `git tag vX.Y.Z`
-  4. `git push origin main --tags`
-- **Future**: Automated CI/CD pipeline
-  - Automated testing on PR
-  - Automated publish on version tag
-  - Automated changelog generation
+---
 
-### Monitoring & Logging
-**No Monitoring Infrastructure** - CLI tool runs locally
-- Users see output in their own terminals
-- No centralized logging
-- No application monitoring (Sentry, DataDog not applicable)
-- **Error handling**: All errors shown to user via chalk-colored output
+## Cloud Infrastructure
 
-## Technical Constraints
+### Cloud Provider
 
-### Performance Requirements
-**Not Applicable** - MUSUBI is a CLI tool for local file operations
-- Template copying: < 1 second (small files)
-- Interactive prompts: Instant user feedback
-- No network latency (except initial npx download from npm)
+**Primary Provider**: {{CLOUD_PROVIDER}}
 
-### Platform Support
-- **Node.js Version**: >=18.0.0 (engines requirement in package.json)
-- **Operating Systems**: Linux, macOS, Windows (wherever Node.js runs)
-- **Shell**: bash, zsh, PowerShell, cmd (any terminal)
-- **No Browser Requirement**: CLI tool, not web application
+| Service | Purpose |
+|---------|---------|
+| {{COMPUTE_SERVICE}} | Application hosting |
+| {{DATABASE_SERVICE}} | Managed database |
+| {{STORAGE_SERVICE}} | Object storage |
+| {{CACHE_SERVICE}} | Managed Redis |
 
-### Security Requirements
-**Minimal Security Concerns** - Local CLI tool
-- No authentication/authorization (local file operations)
-- No data encryption (templates are public)
-- No secret management (no secrets in MUSUBI itself)
-- Users manage their own project security after template installation
+### Infrastructure as Code
 
-## Third-Party Services
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{IAC_TOOL}} | {{VERSION}} | Infrastructure provisioning |
+| Terraform | 1.6+ | Cloud infrastructure |
+| Bicep | Latest | Azure infrastructure |
 
-### Required Services
-**npm Registry** (npmjs.org)
-- **Purpose**: Package distribution and versioning
-- **Cost**: Free for public packages
-- **Dependency**: MUSUBI cannot function without npm ecosystem
+---
 
-**No Other External Services**
-- No databases
-- No APIs
-- No cloud services
-- No authentication services
+## Monitoring & Observability
 
-## Technology Decisions & ADRs
+### Logging
 
-### Architecture Decision Records
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{LOGGING_TOOL}} | {{VERSION}} | Log aggregation |
+| Winston | 3.0+ | Application logging (Node.js) |
+| Pino | 8.0+ | Fast logging (alternative) |
 
-1. **Decision**: Use CommonJS instead of ESM
-   - **Reason**: Better compatibility with older Node.js versions, simpler distribution
-   - **Alternatives**: Pure ESM (would require Node.js 14+, more breaking changes)
-   - **Date**: 2024 (original implementation)
-   - **Status**: Active
+**Log Format**: JSON
 
-2. **Decision**: Dynamic import() for inquirer v9
-   - **Reason**: inquirer v9 is ESM-only, but we want to keep CLI in CommonJS
-   - **Alternatives**: Downgrade to inquirer v8 (CommonJS), convert entire CLI to ESM
-   - **Date**: 2025-01 (v0.1.2 bug fix)
-   - **Status**: Active
-
-3. **Decision**: chalk v4 instead of v5
-   - **Reason**: v5 is pure ESM, incompatible with CommonJS CLI
-   - **Alternatives**: Migrate entire CLI to ESM
-   - **Date**: 2024 (original implementation)
-   - **Status**: Active
-
-4. **Decision**: Template-based distribution (copy, not symlink)
-   - **Reason**: Users need to customize templates after installation
-   - **Alternatives**: Symlink to node_modules (no customization), Git submodules (complex)
-   - **Date**: 2024 (original design)
-   - **Status**: Active
-
-5. **Decision**: Support both Markdown and TOML formats
-   - **Reason**: Gemini CLI requires TOML, others use Markdown
-   - **Alternatives**: Markdown-only (exclude Gemini CLI), generate TOML from Markdown
-   - **Date**: 2024 (Gemini CLI support)
-   - **Status**: Active
-
-## Deprecated Technologies
-
-**None Currently** - MUSUBI is a new project with deliberate technology choices.
-
-Future considerations:
-- If migrating to TypeScript, document migration plan here
-- If upgrading to inquirer v10+, document ESM migration strategy
-- If adding new dependencies, document rationale and alternatives
-
-## Development Environment Setup
-
-### Prerequisites
-```bash
-# Required installations
-Node.js 18+ (LTS recommended)
-npm 10+ (bundled with Node.js 18)
-git (for version control)
+```typescript
+// Example log entry
+{
+  "timestamp": "2025-11-16T10:00:00Z",
+  "level": "info",
+  "message": "User logged in",
+  "context": {
+    "userId": "uuid",
+    "ip": "192.168.1.1"
+  },
+  "traceId": "trace-id"
+}
 ```
 
-### Quick Start for MUSUBI Development
-```bash
-# Clone repository
-git clone https://github.com/nahisaho/musubi.git
-cd musubi
+### Monitoring
 
-# Install dependencies
-npm install
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{MONITORING_TOOL}} | {{VERSION}} | Application monitoring |
+| Prometheus | 2.0+ | Metrics collection |
+| Grafana | 10.0+ | Metrics visualization |
 
-# Run tests
-npm test
+### Tracing
 
-# Try CLI locally
-node bin/musubi.js --version
-node bin/musubi-init.js  # Interactive prompts
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| {{TRACING_TOOL}} | {{VERSION}} | Distributed tracing |
+| OpenTelemetry | Latest | Tracing standard |
+| Jaeger | 1.50+ | Tracing backend |
 
-# Link for global testing
-npm link
-musubi --version
+### Error Tracking
 
-# Unlink when done
-npm unlink -g musubi-sdd
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Sentry | Latest | Error tracking and reporting |
+
+---
+
+## Documentation Tools
+
+### API Documentation
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| OpenAPI/Swagger | 3.0+ | REST API documentation |
+| GraphQL Playground | - | GraphQL API explorer |
+| Postman | Latest | API testing and docs |
+
+### Code Documentation
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| TSDoc | - | TypeScript documentation |
+| JSDoc | - | JavaScript documentation |
+| Storybook | 7.0+ | Component documentation |
+
+---
+
+## Development Tools
+
+### Code Editors
+
+- **Recommended**: Visual Studio Code
+- **Extensions**:
+  - ESLint
+  - Prettier
+  - TypeScript
+  - Prisma
+  - Tailwind CSS IntelliSense
+
+### Database Tools
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Prisma Studio | Built-in | Database GUI |
+| pgAdmin | 4.0+ | PostgreSQL admin |
+| TablePlus | Latest | Multi-database client |
+
+### API Testing
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| Postman | Latest | API testing |
+| Insomnia | Latest | REST/GraphQL client |
+| curl | - | Command-line API testing |
+
+---
+
+## Security Tools
+
+### Security Scanning
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| npm audit | Built-in | Dependency vulnerability scanning |
+| Snyk | Latest | Continuous security monitoring |
+| OWASP ZAP | Latest | Security testing |
+
+### Secrets Management
+
+| Tool | Version | Purpose |
+|------|---------|---------|
+| {{SECRETS_TOOL}} | {{VERSION}} | Secrets management |
+| .env files | - | Local development secrets |
+| AWS Secrets Manager | - | Production secrets (AWS) |
+| Azure Key Vault | - | Production secrets (Azure) |
+
+---
+
+## Package Management
+
+### Dependency Management
+
+```json
+// package.json structure
+{
+  "name": "musubi",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "jest",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    // Production dependencies
+  },
+  "devDependencies": {
+    // Development dependencies
+  }
+}
 ```
 
-### Publishing Workflow
-```bash
-# 1. Update version
-npm version patch  # or minor, major
+### Version Pinning
 
-# 2. Test locally
-npx . init --claude
+- **Exact Versions**: Critical dependencies (database drivers, auth libraries)
+- **Caret Ranges**: UI libraries, utilities (`^1.2.3`)
+- **Lock Files**: Commit `package-lock.json` / `pnpm-lock.yaml`
 
-# 3. Publish to npm
-npm publish
+---
 
-# 4. Push to GitHub
-git push origin main --tags
+## Framework-Specific Configurations
+
+### {{PRIMARY_FRAMEWORK}} Configuration
+
+[Include framework-specific configuration details]
+
+**Example for Next.js**:
+```typescript
+// next.config.js
+const nextConfig = {
+  reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: false
+  },
+  eslint: {
+    ignoreDuringBuilds: false
+  },
+  experimental: {
+    serverActions: true
+  }
+};
+
+export default nextConfig;
 ```
 
 ---
 
-**Note**: This document describes MUSUBI's technology stack - a Node.js CLI tool with minimal dependencies. Update when adding new dependencies or changing build processes.
+## Anti-Abstraction Policy (Article VIII)
 
-**Last Updated**: 2025-01-16 by @steering
+**CRITICAL**: Use framework APIs directly. Do NOT create custom abstraction layers.
+
+### ✅ Allowed
+
+```typescript
+// Use Prisma directly
+const user = await prisma.user.findUnique({ where: { id } });
+
+// Use bcrypt directly
+const hash = await bcrypt.hash(password, 12);
+
+// Use Next.js API routes directly
+export async function POST(request: Request) { ... }
+```
+
+### ❌ Prohibited (Without Phase -1 Gate Approval)
+
+```typescript
+// ❌ Custom database wrapper
+class MyDatabase {
+  async find(id: string) { ... }  // Wrapping Prisma
+}
+
+// ❌ Custom HTTP client
+class MyHttpClient {
+  async get(url: string) { ... }  // Wrapping fetch
+}
+```
+
+**Exception**: Multi-framework support or justified architectural need requires Phase -1 Gate approval with:
+1. Multi-framework justification
+2. Team expertise analysis
+3. Migration path documentation
+4. Approval from @system-architect + @software-developer
+
+---
+
+## Technology Selection Criteria
+
+When evaluating new technologies:
+
+1. **Community Support**: Active maintenance, large community
+2. **Documentation**: Comprehensive, up-to-date
+3. **Type Safety**: TypeScript support preferred
+4. **Performance**: Benchmarked performance metrics
+5. **Security**: Regular security updates
+6. **License**: Compatible with project (MIT, Apache 2.0 preferred)
+7. **Team Expertise**: Team familiarity with technology
+8. **Constitutional Alignment**: Supports Library-First, Test-First principles
+
+---
+
+## Deprecated Technologies
+
+| Technology | Deprecated Date | Replacement | Migration Deadline |
+|------------|----------------|-------------|-------------------|
+| [Old Tech] | [Date] | [New Tech] | [Date] |
+
+---
+
+## Changelog
+
+### Version 1.1 (Planned)
+- [Planned technology updates]
+
+---
+
+**Last Updated**: 2025-11-17
+**Maintained By**: {{MAINTAINER}}

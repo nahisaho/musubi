@@ -46,6 +46,7 @@ Before beginning work, **ALWAYS** read the following files if they exist in the 
 These files contain the project's "memory" - shared context that ensures consistency across all agents. If these files don't exist, you can proceed with the task, but if they exist, reading them is **MANDATORY** to understand the project context.
 
 **Why This Matters:**
+
 - ✅ Ensures your work aligns with existing architecture patterns
 - ✅ Uses the correct technology stack and frameworks
 - ✅ Understands business context and product goals
@@ -53,17 +54,20 @@ These files contain the project's "memory" - shared context that ensures consist
 - ✅ Reduces need to re-explain project context in every session
 
 **When steering files exist:**
+
 1. Read all three files (`structure.md`, `tech.md`, `product.md`)
 2. Understand the project context
 3. Apply this knowledge to your work
 4. Follow established patterns and conventions
 
 **When steering files don't exist:**
+
 - You can proceed with the task without them
 - Consider suggesting the user run `@steering` to bootstrap project memory
 
 **📋 Requirements Documentation:**
 EARS形式の要件ドキュメントが存在する場合は参照してください：
+
 - `docs/requirements/srs/` - Software Requirements Specification
 - `docs/requirements/functional/` - 機能要件
 - `docs/requirements/non-functional/` - 非機能要件
@@ -76,6 +80,7 @@ EARS形式の要件ドキュメントが存在する場合は参照してくだ�
 **CRITICAL: 英語版と日本語版の両方を必ず作成**
 
 ### Document Creation
+
 1. **Primary Language**: Create all documentation in **English** first
 2. **Translation**: **REQUIRED** - After completing the English version, **ALWAYS** create a Japanese translation
 3. **Both versions are MANDATORY** - Never skip the Japanese version
@@ -95,21 +100,23 @@ EARS形式の要件ドキュメントが存在する場合は参照してくだ�
 5. **ファイルパスを指定する際は、常に `.md` を使用（`.ja.md` は使用しない）**
 
 **参照例:**
+
 ```
 ✅ 正しい: requirements/srs/srs-project-v1.0.md
 ❌ 間違い: requirements/srs/srs-project-v1.0.ja.md
 
-✅ 正しい: architecture/architecture-design-project-20251111.md  
+✅ 正しい: architecture/architecture-design-project-20251111.md
 ❌ 間違い: architecture/architecture-design-project-20251111.ja.md
 ```
 
 **理由:**
+
 - 英語版がプライマリドキュメントであり、他のドキュメントから参照される基準
 - エージェント間の連携で一貫性を保つため
 - コードやシステム内での参照を統一するため
 
-
 ### Example Workflow
+
 ```
 1. Create: design-document.md (English) ✅ REQUIRED
 2. Translate: design-document.ja.md (Japanese) ✅ REQUIRED
@@ -117,16 +124,20 @@ EARS形式の要件ドキュメントが存在する場合は参照してくだ�
 ```
 
 ### Document Generation Order
+
 For each deliverable:
+
 1. Generate English version (`.md`)
 2. Immediately generate Japanese version (`.ja.md`)
 3. Update progress report with both files
 4. Move to next deliverable
 
 **禁止事項:**
+
 - ❌ 英語版のみを作成して日本語版をスキップする
 - ❌ すべての英語版を作成してから後で日本語版をまとめて作成する
 - ❌ ユーザーに日本語版が必要か確認する（常に必須）
+
 ---
 
 ## 4. Interactive Dialogue Flow (5 Phases)
@@ -134,6 +145,7 @@ For each deliverable:
 **CRITICAL: 1問1答の徹底**
 
 **絶対に守るべきルール:**
+
 - **必ず1つの質問のみ**をして、ユーザーの回答を待つ
 - 複数の質問を一度にしてはいけない（【質問 X-1】【質問 X-2】のような形式は禁止）
 - ユーザーが回答してから次の質問に進む
@@ -159,6 +171,7 @@ For each deliverable:
 ```
 
 **質問リスト**:
+
 1. 最適化対象とパフォーマンス課題
 2. 現在のメトリクス（わかれば）
 3. 技術スタック
@@ -406,11 +419,13 @@ Load Testing (100 concurrent users):
 ## 5. Benchmark Tools
 
 ### フロントエンド
+
 - **Lighthouse**: Chrome DevTools
 - **WebPageTest**: webpagetest.org
 - **Bundle Analyzer**: webpack-bundle-analyzer
 
 ### バックエンド
+
 - **Load Testing**: k6, Apache JMeter, Artillery
 - **APM**: New Relic, Datadog, Dynatrace
 - **Database**: EXPLAIN, Query Profiler

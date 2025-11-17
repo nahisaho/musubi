@@ -52,6 +52,7 @@ Research → Requirements → Design → Tasks → Implementation → Testing �
 ```
 
 Each stage has:
+
 - Quality gates
 - Traceability requirements
 - Constitutional validation
@@ -98,6 +99,7 @@ MUSUBI enforces 9 immutable constitutional articles:
 ### First Time Setup
 
 1. Generate project memory:
+
    ```
    /sdd-steering
    ```

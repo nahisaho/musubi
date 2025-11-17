@@ -213,6 +213,7 @@ Use `templates/requirements.md` template.
 ### Phase -1 Gates
 
 Trigger gates if:
+
 - Project count > 3 (Article VII)
 - Custom abstraction layers proposed (Article VIII)
 
@@ -564,6 +565,7 @@ git commit -m "refactor: improve authentication logic (REQ-AUTH-001)"
 ### Greenfield (0→1)
 
 Full 8-stage workflow for new projects:
+
 ```
 Research → Requirements → Design → Tasks → Implementation → Testing → Deployment → Monitoring
 ```
@@ -571,12 +573,14 @@ Research → Requirements → Design → Tasks → Implementation → Testing �
 ### Brownfield (1→n)
 
 For changes to existing projects:
+
 ```
 Research (change analysis) → Requirements (delta spec) →
 Design (impact analysis) → Tasks → Implementation → Testing → Deployment → Monitoring
 ```
 
 **Skills for Brownfield**:
+
 - `@change-impact-analyzer` - Analyze ADDED/MODIFIED/REMOVED requirements
 - `@traceability-auditor` - Validate existing coverage before changes
 
@@ -584,16 +588,16 @@ Design (impact analysis) → Tasks → Implementation → Testing → Deployment
 
 ## Stage Summary Table
 
-| Stage | Skills | Deliverables | Constitutional Articles |
-|-------|--------|--------------|------------------------|
-| 1. Research | requirements-analyst, system-architect, technical-writer | research.md | VI |
-| 2. Requirements | requirements-analyst, project-manager, change-impact-analyzer | requirements.md, changes.md | IV, V, VI |
-| 3. Design | system-architect, api-designer, database-schema-designer, ui-ux-designer | design.md, C4, ADR, API specs | I, II, V, VI, VII, VIII |
-| 4. Tasks | project-manager, software-developer, test-engineer | tasks.md, test plan | V, VI |
-| 5. Implementation | software-developer, test-engineer, code-reviewer | source code, tests, CLI | I, II, III, V, VI |
-| 6. Testing | test-engineer, quality-assurance, traceability-auditor | test reports, coverage | III, V, IX |
-| 7. Deployment | devops-engineer, cloud-architect, release-coordinator, site-reliability-engineer | IaC, CI/CD, runbooks | VI |
-| 8. Monitoring | site-reliability-engineer, performance-optimizer, bug-hunter | SLO/SLI, dashboards, alerts | VI |
+| Stage             | Skills                                                                           | Deliverables                  | Constitutional Articles |
+| ----------------- | -------------------------------------------------------------------------------- | ----------------------------- | ----------------------- |
+| 1. Research       | requirements-analyst, system-architect, technical-writer                         | research.md                   | VI                      |
+| 2. Requirements   | requirements-analyst, project-manager, change-impact-analyzer                    | requirements.md, changes.md   | IV, V, VI               |
+| 3. Design         | system-architect, api-designer, database-schema-designer, ui-ux-designer         | design.md, C4, ADR, API specs | I, II, V, VI, VII, VIII |
+| 4. Tasks          | project-manager, software-developer, test-engineer                               | tasks.md, test plan           | V, VI                   |
+| 5. Implementation | software-developer, test-engineer, code-reviewer                                 | source code, tests, CLI       | I, II, III, V, VI       |
+| 6. Testing        | test-engineer, quality-assurance, traceability-auditor                           | test reports, coverage        | III, V, IX              |
+| 7. Deployment     | devops-engineer, cloud-architect, release-coordinator, site-reliability-engineer | IaC, CI/CD, runbooks          | VI                      |
+| 8. Monitoring     | site-reliability-engineer, performance-optimizer, bug-hunter                     | SLO/SLI, dashboards, alerts   | VI                      |
 
 ---
 

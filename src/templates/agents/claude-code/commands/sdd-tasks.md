@@ -44,6 +44,7 @@ steering/product.md
 ### 2. Verify Prerequisites
 
 **Check design file exists**:
+
 ```markdown
 ❌ **Error**: Design document not found
 
@@ -55,6 +56,7 @@ Tasks cannot be created without design (Article V: Traceability).
 ```
 
 **Check requirements file exists**:
+
 ```markdown
 ❌ **Error**: Requirements document not found
 
@@ -73,7 +75,7 @@ Use template from `templates/tasks.md`.
 
 Each task follows this format:
 
-```markdown
+````markdown
 ### TASK-XXX: [Task Title]
 
 **Priority**: P0/P1/P2/P3
@@ -86,18 +88,22 @@ Each task follows this format:
 [Clear description of what needs to be done]
 
 **Requirements Coverage**:
+
 - REQ-XXX-NNN: [Requirement title]
 - REQ-XXX-NNN: [Requirement title]
 
 **Acceptance Criteria**:
+
 - [ ] [Testable criterion 1]
 - [ ] [Testable criterion 2]
 - [ ] [Testable criterion 3]
 
 **Dependencies**:
+
 - TASK-XXX: [Dependency description]
 
 **Test-First Checklist** (Article III):
+
 - [ ] Tests written BEFORE implementation
 - [ ] Red: Failing test committed
 - [ ] Green: Minimal implementation passes test
@@ -107,11 +113,14 @@ Each task follows this format:
 [File paths, code snippets, technical details]
 
 **Validation**:
+
 ```bash
 # Commands to verify task completion
 npm test src/{{file}}.test.ts
 ```
-```
+````
+
+````
 
 ---
 
@@ -213,7 +222,7 @@ describe('REQ-AUTH-001: User Login', () => {
     expect(result).toHaveProperty('sessionToken');
   });
 });
-```
+````
 
 ---
 
@@ -229,9 +238,11 @@ Implement minimal code to pass tests from TASK-002.
 **Test-First Phase**: 💚 GREEN (Passing Tests)
 
 **Requirements Coverage**:
+
 - REQ-AUTH-001: User login functionality
 
 **Acceptance Criteria**:
+
 - [ ] AuthService class implemented
 - [ ] login() method implemented
 - [ ] All tests from TASK-002 PASS
@@ -239,9 +250,11 @@ Implement minimal code to pass tests from TASK-002.
 - [ ] Git commit: `feat: implement REQ-AUTH-001 (user login)`
 
 **Dependencies**:
+
 - TASK-002: Tests must exist first
 
 **Implementation Notes**:
+
 ```typescript
 // lib/auth/src/service.ts
 export class AuthService {
@@ -251,7 +264,7 @@ export class AuthService {
   async login(credentials: LoginRequest): Promise<LoginResponse> {
     // Minimal implementation to pass tests
     const user = await this.repository.findByEmail(credentials.email);
-    if (!user || !await this.verifyPassword(credentials.password, user.passwordHash)) {
+    if (!user || !(await this.verifyPassword(credentials.password, user.passwordHash))) {
       throw new UnauthorizedError('Invalid credentials');
     }
     const session = await this.createSession(user.id);
@@ -274,6 +287,7 @@ Refactor AuthService for better design while keeping tests green.
 **Test-First Phase**: 💙 BLUE (Refactoring)
 
 **Acceptance Criteria**:
+
 - [ ] Code follows SOLID principles
 - [ ] No code duplication
 - [ ] Proper error handling
@@ -282,14 +296,17 @@ Refactor AuthService for better design while keeping tests green.
 - [ ] Git commit: `refactor: improve auth service design`
 
 **Dependencies**:
+
 - TASK-003: Implementation must be complete
 
 **Implementation Notes**:
+
 - Extract password verification to separate class
 - Improve error messages
 - Add logging
 - Add input validation
-```
+
+````
 
 ---
 
@@ -312,9 +329,10 @@ Create **Requirements Coverage Matrix**:
 - Total Requirements: [N]
 - Requirements with Tasks: [N] ([%]%)
 - **Coverage Goal**: 100% ✅
-```
+````
 
 **Validation**:
+
 - [ ] All requirements have corresponding tasks
 - [ ] All P0 requirements have P0 tasks
 - [ ] No orphan tasks (tasks without requirements)
@@ -327,18 +345,19 @@ Show task execution order:
 
 ```markdown
 ## Task Dependencies Graph
-
 ```
+
 TASK-001 (Project Structure)
-    ├── TASK-002 (Tests - RED)
-    │       └── TASK-003 (Implementation - GREEN)
-    │               ├── TASK-004 (Refactor - BLUE)
-    │               ├── TASK-006 (CLI)
-    │               └── TASK-007 (API)
-    │                       └── TASK-008 (Integration Tests)
-    │                               └── TASK-010 (Security)
-    └── TASK-005 (Repository)
-            └── TASK-003 (Implementation)
+├── TASK-002 (Tests - RED)
+│ └── TASK-003 (Implementation - GREEN)
+│ ├── TASK-004 (Refactor - BLUE)
+│ ├── TASK-006 (CLI)
+│ └── TASK-007 (API)
+│ └── TASK-008 (Integration Tests)
+│ └── TASK-010 (Security)
+└── TASK-005 (Repository)
+└── TASK-003 (Implementation)
+
 ```
 
 **Critical Path**: TASK-001 → TASK-002 → TASK-003 → TASK-007 → TASK-008
@@ -354,9 +373,11 @@ Break tasks into sprints:
 ## Sprint Planning
 
 ### Sprint 1 (P0 Core Functionality)
+
 **Goal**: Implement core {{feature}} functionality
 
 **Tasks**:
+
 - TASK-001: Project structure (3 points)
 - TASK-002: Tests for REQ-001 (2 points)
 - TASK-003: Implement REQ-001 (5 points)
@@ -372,9 +393,11 @@ Break tasks into sprints:
 ---
 
 ### Sprint 2 (P1 Production Readiness)
+
 **Goal**: Make {{feature}} production-ready
 
 **Tasks**:
+
 - TASK-008: Integration tests (5 points)
 - TASK-009: Caching (3 points)
 - TASK-010: Security audit (3 points)
@@ -389,6 +412,7 @@ Break tasks into sprints:
 ### 9. Estimate Effort
 
 Use **Fibonacci sequence** for story points:
+
 - 1 point = Trivial (1-2 hours)
 - 2 points = Small (2-4 hours)
 - 3 points = Medium (4-8 hours)
@@ -397,6 +421,7 @@ Use **Fibonacci sequence** for story points:
 - 13 points = Huge (3-5 days) - consider splitting
 
 **Estimation Guidelines**:
+
 - Include time for testing
 - Include time for code review
 - Include time for refactoring
@@ -408,44 +433,52 @@ Use **Fibonacci sequence** for story points:
 
 At end of document:
 
-```markdown
+````markdown
 ## Constitutional Compliance Validation
 
 Before marking feature complete, verify:
 
 ### Article I: Library-First ✅
+
 - [ ] All features implemented in `lib/{{feature}}/`
 - [ ] Library has independent test suite
 - [ ] Library exports public API
 
 ### Article II: CLI Interface ✅
+
 - [ ] CLI interface implemented
 - [ ] All major operations exposed
 - [ ] Help text provided
 
 ### Article III: Test-First ✅
+
 - [ ] Tests written BEFORE implementation
 - [ ] Git history shows Red-Green-Blue cycle
 - [ ] All tests passing
 
 ### Article V: Traceability ✅
+
 - [ ] All requirements mapped to tasks
 - [ ] All tasks mapped to code
 - [ ] All code mapped to tests
 - [ ] 100% coverage achieved
 
 ### Article IX: Integration Testing ✅
+
 - [ ] Integration tests use real database
 - [ ] Integration tests use real cache
 - [ ] Mocks justified (if used)
 
 **Validation Commands**:
+
 ```bash
 @traceability-auditor validate requirements.md tasks.md src/
 @constitution-enforcer validate src/
 @code-reviewer review src/
 ```
-```
+````
+
+````
 
 ---
 
@@ -524,17 +557,19 @@ TASK-001 → TASK-002 → TASK-003 → TASK-007 → TASK-008
 2. Allocate tasks to developers
 3. Begin Sprint 1 implementation
 4. OR use orchestrator: `@orchestrator implement {{feature-name}}`
-```
+````
 
 ---
 
 ## Tool Usage
 
 ### Required:
+
 - **Read**: Design, requirements, steering files
 - **Write**: Task breakdown document
 
 ### Optional:
+
 - **AskUserQuestion**: Get team capacity, sprint length
 
 ---

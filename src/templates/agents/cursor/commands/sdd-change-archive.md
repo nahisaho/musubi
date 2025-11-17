@@ -34,6 +34,7 @@ storage/changes/{{change-name}}-implementation.md
 ```
 
 **Verify Status**:
+
 - Implementation report exists
 - All requirements implemented
 - Tests passing
@@ -42,10 +43,12 @@ storage/changes/{{change-name}}-implementation.md
 - Monitoring shows stable metrics
 
 **If Not Complete**:
+
 ```markdown
 ⚠️ **Change not ready for archival**
 
 Status Check:
+
 - [ ] Implementation complete
 - [ ] Tests passing
 - [ ] Deployed to production
@@ -65,21 +68,25 @@ Please complete all steps before archiving.
 ## Final Metrics: {{CHANGE_NAME}}
 
 ### Deployment
+
 - **Deployed**: {{DATE}}
 - **Rollout Complete**: {{DATE}}
 - **Stable Period**: {{DAYS}} days
 
 ### Performance
+
 - **P95 Latency**: {{VALUE}}ms (target: <200ms) ✅
 - **Error Rate**: {{VALUE}}% (target: <0.1%) ✅
 - **Throughput**: {{VALUE}} req/s ✅
 
 ### Adoption
+
 - **User Adoption**: {{PERCENTAGE}}%
 - **Feature Usage**: {{COUNT}} uses/day
 - **Customer Feedback**: NPS {{SCORE}}
 
 ### Quality
+
 - **Bugs Found**: {{COUNT}}
   - P0: 0
   - P1: {{COUNT}}
@@ -88,6 +95,7 @@ Please complete all steps before archiving.
 - **Rollbacks**: {{COUNT}}
 
 ### Cost
+
 - **Development Time**: {{HOURS}} hours
 - **Infrastructure Cost**: ${{AMOUNT}}/month
 - **ROI**: {{PERCENTAGE}}% (projected)
@@ -103,6 +111,7 @@ Please complete all steps before archiving.
 <!-- storage/changes/{{change-name}}-proposal.md -->
 
 ## Metadata
+
 - **Change ID**: CHG-{{NUMBER}}
 - **Status**: ~~Proposed~~ → ~~Approved~~ → ~~Implemented~~ → **Archived**
 - **Created**: {{DATE}}
@@ -135,7 +144,6 @@ export const FEATURE_FLAGS = {
   //   description: '{{DESCRIPTION}}',
   //   rolloutPercentage: 100,
   // },
-  
   // ... other flags ...
 } as const;
 ```
@@ -153,6 +161,7 @@ if (!isFeatureEnabled('enable_{{feature}}')) {
 ```
 
 **Create Cleanup PR**:
+
 - Title: `chore: remove {{feature}} feature flag`
 - Description: Feature is stable, removing flag
 - Changes: Remove flag definition and all checks
@@ -167,6 +176,7 @@ if (!isFeatureEnabled('enable_{{feature}}')) {
 
 ```markdown
 Deprecation Timeline:
+
 - Deprecated: {{DATE}}
 - EOL Date: {{DATE}}
 - Days Passed: {{DAYS}}
@@ -183,6 +193,7 @@ Dear Users,
 This is a final notice that {{DEPRECATED_FEATURE}} will be removed on {{DATE}}.
 
 Timeline:
+
 - Deprecated: {{DEPRECATION_DATE}} ({{DAYS_SINCE}} days ago)
 - Final Warning: Today
 - Removal: {{REMOVAL_DATE}} ({{DAYS_UNTIL}} days)
@@ -209,40 +220,48 @@ git checkout main
 rm -rf lib/{{deprecated-feature}}/
 
 # Update imports
-grep -r "from '@/lib/{{deprecated-feature}}'" . 
+grep -r "from '@/lib/{{deprecated-feature}}'" .
 # Fix any remaining references
 ```
 
 #### Step 5.4: Document Removal
 
-```markdown
+````markdown
 <!-- storage/archive/{{deprecated-feature}}-removal.md -->
 
 # Deprecated Feature Removal: {{FEATURE}}
 
 ## Metadata
+
 - **Feature**: {{DEPRECATED_FEATURE}}
 - **Deprecated**: {{DEPRECATION_DATE}}
 - **Removed**: {{REMOVAL_DATE}}
 - **Archive Branch**: archive/{{deprecated-feature}}
 
 ## Reason for Removal
+
 {{REASON}}
 
 ## Migration Path
+
 {{MIGRATION_INSTRUCTIONS}}
 
 ## Impact
+
 - **Affected Users**: {{COUNT}}
 - **Breaking Changes**: Yes
 - **Alternative**: {{ALTERNATIVE}}
 
 ## Recovery
+
 If needed, restore from archive branch:
+
 ```bash
 git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ```
-```
+````
+
+````
 
 ---
 
@@ -268,7 +287,7 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 
 #### Removed
 - {{REMOVED_FEATURE}}: Removed after {{DAYS}}-day deprecation period
-```
+````
 
 **Update API Documentation** (if applicable):
 
@@ -280,12 +299,15 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 **Added**: {{DATE}} (CHG-{{NUMBER}})
 
 ### Description
+
 {{DESCRIPTION}}
 
 ### Request
+
 [...]
 
 ### Response
+
 [...]
 ```
 
@@ -301,6 +323,7 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ## Components
 
 ### {{Feature}}
+
 - **Location**: `lib/{{feature}}/`
 - **Purpose**: {{DESCRIPTION}}
 - **Pattern**: {{PATTERN}}
@@ -316,6 +339,7 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ## Dependencies
 
 ### Added (CHG-{{NUMBER}})
+
 - `{{package}}@{{version}}` - {{PURPOSE}}
 ```
 
@@ -327,6 +351,7 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ## Features
 
 ### {{Feature}}
+
 - **Description**: {{DESCRIPTION}}
 - **Users**: {{USER_TYPE}}
 - **Adoption**: {{PERCENTAGE}}%
@@ -339,10 +364,11 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 
 **Generate Archive Report**:
 
-```markdown
+````markdown
 # Archive Report: {{CHANGE_NAME}}
 
 ## Metadata
+
 - **Change ID**: CHG-{{NUMBER}}
 - **Status**: Archived
 - **Lifecycle**:
@@ -356,36 +382,44 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ## Summary
 
 ### What Was Changed
+
 **ADDED**:
+
 - lib/{{feature}}/ - {{DESCRIPTION}}
 - API: POST /api/{{feature}}
 - UI: /{{feature}} page
 
 **MODIFIED**:
+
 - lib/auth/password.ts - Updated hashing algorithm
 - Database: users table (added columns)
 
 **REMOVED**:
+
 - lib/auth/remember-me.ts - Deprecated feature
 
 ### Final Metrics
 
 #### Performance
+
 - **P95 Latency**: {{VALUE}}ms ✅
 - **Error Rate**: {{VALUE}}% ✅
 - **Uptime**: {{PERCENTAGE}}% ✅
 
 #### Adoption
+
 - **Active Users**: {{COUNT}}
 - **Daily Usage**: {{COUNT}} requests/day
 - **Customer Satisfaction**: NPS {{SCORE}}
 
 #### Quality
+
 - **Total Bugs**: {{COUNT}} (0 P0, {{N}} P1, {{N}} P2)
 - **Incidents**: {{COUNT}}
 - **Rollbacks**: {{COUNT}}
 
 #### Cost
+
 - **Development**: {{HOURS}} hours
 - **Infrastructure**: ${{AMOUNT}}/month
 - **ROI**: {{PERCENTAGE}}%
@@ -393,16 +427,19 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ### Lessons Learned
 
 #### What Went Well ✅
+
 - {{POSITIVE_POINT_1}}
 - {{POSITIVE_POINT_2}}
 - {{POSITIVE_POINT_3}}
 
 #### What Could Be Improved 📝
+
 - {{IMPROVEMENT_1}}
 - {{IMPROVEMENT_2}}
 - {{IMPROVEMENT_3}}
 
 #### Recommendations for Future Changes
+
 - {{RECOMMENDATION_1}}
 - {{RECOMMENDATION_2}}
 - {{RECOMMENDATION_3}}
@@ -410,13 +447,15 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ## Files
 
 ### Created
+
 - storage/changes/{{change-name}}-proposal.md
 - storage/changes/{{change-name}}-implementation.md
 - storage/changes/{{change-name}}-archive.md
-- lib/{{feature}}/* ({{N}} files)
-- tests/* ({{N}} test files)
+- lib/{{feature}}/\* ({{N}} files)
+- tests/\* ({{N}} test files)
 
 ### Modified
+
 - steering/structure.md
 - steering/tech.md
 - README.md
@@ -424,12 +463,14 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 - ({{N}} other files)
 
 ### Deleted
-- lib/{{deprecated-feature}}/* ({{N}} files)
+
+- lib/{{deprecated-feature}}/\* ({{N}} files)
 - Feature flag references ({{N}} locations)
 
 ## Archival Actions
 
 ### Completed
+
 - [x] Final metrics collected
 - [x] Change status updated to "Archived"
 - [x] Change log updated
@@ -444,12 +485,15 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 **Archive Branch**: `archive/{{change-name}}`
 
 **Restore Command**:
+
 ```bash
 # If rollback needed (unlikely)
 git checkout archive/{{change-name}}
 ```
+````
 
 **Deprecated Code Recovery**:
+
 ```bash
 # If removed code needs to be restored
 git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
@@ -476,7 +520,8 @@ git checkout archive/{{deprecated-feature}} -- lib/{{deprecated-feature}}/
 ---
 
 **Change successfully archived** ✅
-```
+
+````
 
 **Save To**:
 - English: `storage/changes/{{change-name}}-archive.md`
@@ -519,7 +564,7 @@ cat > storage/archive/{{YEAR}}/{{change-name}}/README.md <<EOF
 - **Duration**: {{DAYS}} days
 - **Status**: Successfully archived ✅
 EOF
-```
+````
 
 ---
 
@@ -532,6 +577,7 @@ EOF
 **Change ID**: CHG-{{NUMBER}}
 
 ### Lifecycle:
+
 - Proposed: {{DATE}}
 - Implemented: {{DATE}}
 - Deployed: {{DATE}}
@@ -539,6 +585,7 @@ EOF
 - **Total Duration**: {{DAYS}} days
 
 ### Final Status:
+
 - ✅ All requirements implemented
 - ✅ Tests passing ({{COVERAGE}}% coverage)
 - ✅ Production stable ({{DAYS}} days)
@@ -548,15 +595,18 @@ EOF
 - ✅ Steering updated
 
 ### Metrics:
+
 - **Performance**: Within SLA ✅
 - **Adoption**: {{PERCENTAGE}}%
 - **Satisfaction**: NPS {{SCORE}}
 - **Bugs**: {{COUNT}} total (0 critical)
 
 ### Files Archived:
+
 - storage/archive/{{YEAR}}/{{change-name}}/
 
 ### Lessons Learned:
+
 - {{TOP_LESSON_1}}
 - {{TOP_LESSON_2}}
 - {{TOP_LESSON_3}}
@@ -592,13 +642,16 @@ Before completing, verify:
 ## Edge Cases
 
 ### Change Not Deployed
+
 If change not yet in production:
+
 ```markdown
 ⚠️ **Cannot archive - not deployed**
 
 Current Status: {{STATUS}}
 
 Please complete:
+
 1. Deploy to production
 2. Enable feature flag
 3. Monitor for 2+ weeks
@@ -608,15 +661,19 @@ Use `#sdd-change-archive {{change-name}}` after deployment.
 ```
 
 ### Change Unstable
+
 If metrics show issues:
+
 ```markdown
 ⚠️ **Cannot archive - metrics below target**
 
 Metrics:
+
 - Error Rate: {{VALUE}}% (target: <0.1%) ❌
 - P95 Latency: {{VALUE}}ms (target: <200ms) ❌
 
 Please:
+
 1. Investigate issues
 2. Fix problems
 3. Monitor until stable

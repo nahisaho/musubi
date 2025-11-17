@@ -12,6 +12,7 @@
 EARS is a structured natural language format for writing unambiguous, testable requirements. All requirements in this project MUST use EARS patterns.
 
 **Benefits**:
+
 - Eliminates ambiguity
 - Improves testability
 - Enables traceability
@@ -31,9 +32,11 @@ EARS is a structured natural language format for writing unambiguous, testable r
 
 ```markdown
 ### REQ-AUTH-001: Password Hashing
+
 The authentication system SHALL hash passwords using bcrypt with cost factor 12.
 
 **Acceptance Criteria**:
+
 - Bcrypt algorithm used
 - Cost factor = 12
 - Passwords never stored in plaintext
@@ -41,9 +44,11 @@ The authentication system SHALL hash passwords using bcrypt with cost factor 12.
 
 ```markdown
 ### REQ-LOG-001: Logging Format
+
 The logging system SHALL output logs in JSON format.
 
 **Acceptance Criteria**:
+
 - All logs in valid JSON
 - Required fields: timestamp, level, message, context
 - ISO 8601 timestamps
@@ -61,12 +66,14 @@ The logging system SHALL output logs in JSON format.
 
 ```markdown
 ### REQ-AUTH-002: User Login
+
 WHEN a user provides valid credentials,
 THEN the authentication system SHALL authenticate the user
 AND the system SHALL create a session
 AND the system SHALL redirect to the dashboard.
 
 **Acceptance Criteria**:
+
 - Email and password validated
 - Session created with 24-hour expiry
 - Redirect to /dashboard
@@ -75,12 +82,14 @@ AND the system SHALL redirect to the dashboard.
 
 ```markdown
 ### REQ-NOTIFY-001: Order Confirmation
+
 WHEN an order is successfully placed,
 THEN the notification system SHALL send an email confirmation
 AND the system SHALL include order details
 AND the system SHALL include tracking number.
 
 **Acceptance Criteria**:
+
 - Email sent within 5 seconds
 - Contains order ID, items, total
 - Contains tracking number
@@ -99,10 +108,12 @@ AND the system SHALL include tracking number.
 
 ```markdown
 ### REQ-UI-001: Loading Indicator
+
 WHILE data is being fetched from the API,
 the UI SHALL display a loading spinner.
 
 **Acceptance Criteria**:
+
 - Spinner visible during API calls
 - Spinner hidden after response
 - Spinner positioned in content area
@@ -111,11 +122,13 @@ the UI SHALL display a loading spinner.
 
 ```markdown
 ### REQ-CACHE-001: Cache Invalidation
+
 WHILE a resource is in the cache,
 the caching system SHALL serve the cached version
 AND the system SHALL validate freshness based on TTL.
 
 **Acceptance Criteria**:
+
 - Cached resource served if TTL not exceeded
 - TTL checked on each request
 - Expired cache entries evicted
@@ -134,6 +147,7 @@ AND the system SHALL validate freshness based on TTL.
 
 ```markdown
 ### REQ-AUTH-003: Invalid Credentials
+
 IF a user provides invalid credentials,
 THEN the authentication system SHALL reject the login attempt
 AND the system SHALL return HTTP 401
@@ -141,6 +155,7 @@ AND the system SHALL log the failed attempt
 AND the system SHALL increment the rate limit counter.
 
 **Acceptance Criteria**:
+
 - HTTP 401 response with error message
 - Generic error message (no email/password specifics)
 - Failed attempt logged with timestamp and IP
@@ -149,12 +164,14 @@ AND the system SHALL increment the rate limit counter.
 
 ```markdown
 ### REQ-API-001: Request Timeout
+
 IF an API request exceeds 30 seconds,
 THEN the API gateway SHALL terminate the request
 AND the system SHALL return HTTP 504
 AND the system SHALL log the timeout event.
 
 **Acceptance Criteria**:
+
 - Request terminated at exactly 30 seconds
 - HTTP 504 Gateway Timeout response
 - Timeout logged with request ID and duration
@@ -173,12 +190,14 @@ AND the system SHALL log the timeout event.
 
 ```markdown
 ### REQ-FEATURE-001: Two-Factor Authentication
+
 WHERE two-factor authentication is enabled for a user,
 the authentication system SHALL require OTP verification
 AND the system SHALL send OTP via email or SMS
 AND the system SHALL validate OTP within 5 minutes.
 
 **Acceptance Criteria**:
+
 - OTP required only if 2FA enabled
 - OTP sent to user's configured channel
 - OTP expires after 5 minutes
@@ -188,12 +207,14 @@ AND the system SHALL validate OTP within 5 minutes.
 
 ```markdown
 ### REQ-DEBUG-001: Debug Mode Logging
+
 WHERE debug mode is enabled,
 the logging system SHALL output debug-level logs
 AND the system SHALL include stack traces
 AND the system SHALL log query execution times.
 
 **Acceptance Criteria**:
+
 - Debug logs only in debug mode
 - Stack traces included in error logs
 - Query times logged to milliseconds
@@ -212,6 +233,7 @@ AND the system SHALL log query execution times.
 [EARS Pattern Statement]
 
 **Acceptance Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 - [Criterion 3]
@@ -219,6 +241,7 @@ AND the system SHALL log query execution times.
 **Priority**: [P0/P1/P2/P3]
 **Status**: [Draft/Approved/Implemented/Tested]
 **Traceability**:
+
 - Design: [design-reference]
 - Code: [file-path:line-number]
 - Tests: [test-reference]
@@ -229,11 +252,13 @@ AND the system SHALL log query execution times.
 **Format**: `REQ-[COMPONENT]-[NUMBER]`
 
 **Examples**:
+
 - `REQ-AUTH-001` - Authentication component, requirement #1
 - `REQ-API-042` - API component, requirement #42
 - `REQ-DB-015` - Database component, requirement #15
 
 **Rules**:
+
 - All uppercase
 - Unique within project
 - Sequential numbering per component
@@ -242,10 +267,12 @@ AND the system SHALL log query execution times.
 ### Keywords
 
 **Mandatory Keywords**:
+
 - `SHALL` - Mandatory requirement
 - `SHALL NOT` - Mandatory prohibition
 
 **Conditional Keywords**:
+
 - `WHEN` - Event-driven
 - `WHILE` - State-driven
 - `IF` - Unwanted behavior
@@ -254,6 +281,7 @@ AND the system SHALL log query execution times.
 - `AND` - Additional consequence
 
 **Avoid**:
+
 - `SHOULD` - Ambiguous (mandatory or optional?)
 - `MAY` - Ambiguous (optional or allowed?)
 - `WILL` - Ambiguous (future intent or requirement?)
@@ -264,6 +292,7 @@ AND the system SHALL log query execution times.
 ## Acceptance Criteria
 
 Every requirement MUST have acceptance criteria that:
+
 - Are testable
 - Are measurable
 - Are unambiguous
@@ -271,6 +300,7 @@ Every requirement MUST have acceptance criteria that:
 - Specify expected behavior
 
 **Good Acceptance Criteria**:
+
 ```markdown
 - Response time < 200ms (95th percentile)
 - HTTP 200 response with valid JSON
@@ -279,6 +309,7 @@ Every requirement MUST have acceptance criteria that:
 ```
 
 **Bad Acceptance Criteria**:
+
 ```markdown
 - Fast response time (not measurable)
 - Returns success (ambiguous)
@@ -294,6 +325,7 @@ Every requirement MUST have acceptance criteria that:
 ## Feature: User Registration
 
 ### REQ-REG-001: Account Creation
+
 WHEN a user submits valid registration information,
 THEN the registration system SHALL create a new user account
 AND the system SHALL hash the password using bcrypt
@@ -301,6 +333,7 @@ AND the system SHALL send a verification email
 AND the system SHALL return HTTP 201 with user ID.
 
 **Acceptance Criteria**:
+
 - Email unique in database
 - Password hashed with bcrypt cost 12
 - Verification email sent within 5 seconds
@@ -311,6 +344,7 @@ AND the system SHALL return HTTP 201 with user ID.
 **Priority**: P0
 **Status**: Approved
 **Traceability**:
+
 - Design: design.md#user-registration-api
 - Code: src/auth/registration.ts:45-89
 - Tests: tests/auth/registration.test.ts:23-67
@@ -318,9 +352,11 @@ AND the system SHALL return HTTP 201 with user ID.
 ---
 
 ### REQ-REG-002: Email Validation
+
 The registration system SHALL validate email format using RFC 5322 regex.
 
 **Acceptance Criteria**:
+
 - Valid emails accepted (user@example.com)
 - Invalid emails rejected (user@, @example.com)
 - HTTP 400 response for invalid email
@@ -329,6 +365,7 @@ The registration system SHALL validate email format using RFC 5322 regex.
 **Priority**: P0
 **Status**: Approved
 **Traceability**:
+
 - Design: design.md#email-validation
 - Code: src/auth/validators.ts:12-23
 - Tests: tests/auth/validators.test.ts:45-78
@@ -336,12 +373,14 @@ The registration system SHALL validate email format using RFC 5322 regex.
 ---
 
 ### REQ-REG-003: Duplicate Email
+
 IF a user attempts to register with an existing email,
 THEN the registration system SHALL reject the registration
 AND the system SHALL return HTTP 409
 AND the system SHALL return error message "Email already registered".
 
 **Acceptance Criteria**:
+
 - Database uniqueness constraint on email column
 - HTTP 409 Conflict response
 - Error message exactly: "Email already registered"
@@ -351,6 +390,7 @@ AND the system SHALL return error message "Email already registered".
 **Priority**: P0
 **Status**: Approved
 **Traceability**:
+
 - Design: design.md#duplicate-email-handling
 - Code: src/auth/registration.ts:34-42
 - Tests: tests/auth/registration.test.ts:89-112
@@ -358,14 +398,17 @@ AND the system SHALL return error message "Email already registered".
 ---
 
 ### REQ-REG-004: Password Strength
+
 The registration system SHALL enforce password requirements:
+
 - Minimum 12 characters
 - At least 1 uppercase letter
 - At least 1 lowercase letter
 - At least 1 number
-- At least 1 special character (!@#$%^&*).
+- At least 1 special character (!@#$%^&\*).
 
 **Acceptance Criteria**:
+
 - Weak passwords rejected (HTTP 400)
 - Error message lists unmet requirements
 - Strong passwords accepted
@@ -374,6 +417,7 @@ The registration system SHALL enforce password requirements:
 **Priority**: P0
 **Status**: Approved
 **Traceability**:
+
 - Design: design.md#password-strength
 - Code: src/auth/validators.ts:34-56
 - Tests: tests/auth/validators.test.ts:112-167
@@ -381,12 +425,14 @@ The registration system SHALL enforce password requirements:
 ---
 
 ### REQ-REG-005: Email Verification
+
 WHERE email verification is enabled,
 the registration system SHALL require users to verify their email
 AND the system SHALL generate a verification token
 AND the system SHALL expire tokens after 24 hours.
 
 **Acceptance Criteria**:
+
 - Verification token generated (UUID v4)
 - Token stored in database with expiry
 - Verification email contains token link
@@ -398,6 +444,7 @@ AND the system SHALL expire tokens after 24 hours.
 **Priority**: P1
 **Status**: Approved
 **Traceability**:
+
 - Design: design.md#email-verification
 - Code: src/auth/verification.ts:23-89
 - Tests: tests/auth/verification.test.ts:34-123
@@ -433,6 +480,7 @@ AND the system SHALL expire tokens after 24 hours.
 
 ❌ **Bad**: System is fast and secure.
 ✅ **Good**:
+
 - Response time < 200ms (95th percentile)
 - Passwords hashed with bcrypt cost 12
 - HTTPS enforced
@@ -444,22 +492,28 @@ AND the system SHALL expire tokens after 24 hours.
 Every EARS requirement MUST be traceable to:
 
 ### Design (requirements.md → design.md)
+
 ```markdown
 **Traceability**:
+
 - Design: design.md#user-authentication-architecture
 - ADR: decisions/001-use-jwt-tokens.md
 ```
 
 ### Code (requirements.md → source code)
+
 ```markdown
 **Traceability**:
+
 - Code: src/auth/login.ts:45-89
 - Code: src/auth/jwt.ts:23-67
 ```
 
 ### Tests (requirements.md → test code)
+
 ```markdown
 **Traceability**:
+
 - Tests: tests/auth/login.test.ts:34-78
 - Tests: tests/integration/auth-flow.test.ts:112-156
 ```
@@ -473,6 +527,7 @@ Every EARS requirement MUST be traceable to:
 ### Functional Requirements
 
 Use event-driven or ubiquitous patterns:
+
 ```markdown
 WHEN user clicks "Submit", the form SHALL validate all fields.
 The API SHALL return JSON responses.
@@ -481,6 +536,7 @@ The API SHALL return JSON responses.
 ### Non-Functional Requirements
 
 Use ubiquitous or state-driven patterns:
+
 ```markdown
 The API SHALL respond within 200ms (95th percentile).
 WHILE processing payments, the system SHALL encrypt data using AES-256.
@@ -489,6 +545,7 @@ WHILE processing payments, the system SHALL encrypt data using AES-256.
 ### Security Requirements
 
 Use ubiquitous or unwanted behavior patterns:
+
 ```markdown
 The authentication system SHALL prevent SQL injection attacks.
 IF a user exceeds 5 failed login attempts, THEN the system SHALL lock the account.
@@ -497,10 +554,12 @@ IF a user exceeds 5 failed login attempts, THEN the system SHALL lock the accoun
 ### Performance Requirements
 
 Use ubiquitous with measurable criteria:
+
 ```markdown
 The search function SHALL return results within 100ms for queries up to 10 keywords.
 
 **Acceptance Criteria**:
+
 - 95th percentile < 100ms
 - 99th percentile < 200ms
 - Tested with 1000 concurrent users
@@ -516,6 +575,7 @@ The search function SHALL return results within 100ms for queries up to 10 keywo
 ## ADDED Requirements
 
 ### REQ-AUTH-042: Two-Factor Authentication (NEW)
+
 WHERE two-factor authentication is enabled,
 the authentication system SHALL require OTP verification.
 
@@ -558,13 +618,13 @@ The authentication system SHALL hash passwords using bcrypt with cost factor 12.
 
 ## Quick Reference
 
-| Pattern | Keyword | Use Case | Example |
-|---------|---------|----------|---------|
-| Ubiquitous | `The [system] SHALL` | Always-active functionality | The API SHALL authenticate requests |
-| Event-Driven | `WHEN ... THEN` | Triggered by events | WHEN user clicks Submit, THEN validate form |
-| State-Driven | `WHILE ... SHALL` | Active during state | WHILE loading, UI SHALL show spinner |
-| Unwanted | `IF ... THEN` | Error handling | IF timeout, THEN return HTTP 504 |
-| Optional | `WHERE ... SHALL` | Feature flags | WHERE 2FA enabled, SHALL require OTP |
+| Pattern      | Keyword              | Use Case                    | Example                                     |
+| ------------ | -------------------- | --------------------------- | ------------------------------------------- |
+| Ubiquitous   | `The [system] SHALL` | Always-active functionality | The API SHALL authenticate requests         |
+| Event-Driven | `WHEN ... THEN`      | Triggered by events         | WHEN user clicks Submit, THEN validate form |
+| State-Driven | `WHILE ... SHALL`    | Active during state         | WHILE loading, UI SHALL show spinner        |
+| Unwanted     | `IF ... THEN`        | Error handling              | IF timeout, THEN return HTTP 504            |
+| Optional     | `WHERE ... SHALL`    | Feature flags               | WHERE 2FA enabled, SHALL require OTP        |
 
 ---
 
@@ -577,6 +637,7 @@ The authentication system SHALL hash passwords using bcrypt with cost factor 12.
 ```
 
 **Checks**:
+
 - All requirements use EARS patterns
 - All requirements have IDs
 - All requirements have acceptance criteria
@@ -589,6 +650,7 @@ The authentication system SHALL hash passwords using bcrypt with cost factor 12.
 ```
 
 **Checks**:
+
 - All requirements mapped to design
 - All requirements mapped to code
 - All requirements mapped to tests
@@ -599,6 +661,7 @@ The authentication system SHALL hash passwords using bcrypt with cost factor 12.
 ## Summary
 
 **EARS Compliance Checklist**:
+
 - [ ] All requirements use one of 5 EARS patterns
 - [ ] All requirements have unique IDs (REQ-XXX-NNN)
 - [ ] All requirements use SHALL/SHALL NOT (not SHOULD/MUST/MAY)
