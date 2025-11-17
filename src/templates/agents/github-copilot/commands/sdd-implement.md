@@ -53,6 +53,7 @@ steering/product.md
 ### 2. Verify Prerequisites
 
 **Check task breakdown exists**:
+
 ```markdown
 ❌ **Error**: Task breakdown not found
 
@@ -64,6 +65,7 @@ Implementation requires task breakdown.
 ```
 
 **Check design exists**:
+
 ```markdown
 ❌ **Error**: Design document not found
 
@@ -80,6 +82,7 @@ Implementation requires design document.
 
 ```markdown
 Create todos for P0 tasks:
+
 1. TASK-001: Set Up Project Structure
 2. TASK-002: Write Tests for REQ-XXX-001 (RED)
 3. TASK-003: Implement [Component] (GREEN)
@@ -90,6 +93,7 @@ Create todos for P0 tasks:
 ```
 
 **Mark tasks as**:
+
 - `in_progress` when starting
 - `completed` when finished
 - Keep EXACTLY ONE task `in_progress` at a time
@@ -126,6 +130,7 @@ lib/{{feature}}/
 **Create files**:
 
 1. **lib/{{feature}}/package.json**:
+
 ```json
 {
   "name": "@{{project}}/{{feature}}",
@@ -145,6 +150,7 @@ lib/{{feature}}/
 ```
 
 2. **lib/{{feature}}/src/index.ts** (Public API):
+
 ```typescript
 // REQ-{{COMPONENT}}-001: Export public API
 export { {{COMPONENT}}Service } from './service';
@@ -157,6 +163,7 @@ export type {
 ```
 
 3. **lib/{{feature}}/src/types.ts**:
+
 ```typescript
 // REQ-{{COMPONENT}}-004: Define domain types
 export interface {{Resource}} {
@@ -244,12 +251,14 @@ describe('REQ-{{COMPONENT}}-001: [Requirement Title]', () => {
 ```
 
 **Run tests** (should FAIL):
+
 ```bash
 npm test lib/{{feature}}/tests/service.test.ts
 # Expected: Tests FAIL (service.ts doesn't exist yet)
 ```
 
 **Git commit**:
+
 ```bash
 git add lib/{{feature}}/tests/
 git commit -m "test: add failing tests for REQ-{{COMPONENT}}-001"
@@ -306,6 +315,7 @@ export class {{COMPONENT}}Service {
 ```
 
 **Create error classes**:
+
 ```typescript
 // lib/{{feature}}/src/errors.ts
 
@@ -325,12 +335,14 @@ export class NotFoundError extends Error {
 ```
 
 **Run tests** (should PASS):
+
 ```bash
 npm test lib/{{feature}}/tests/service.test.ts
 # Expected: Tests PASS ✅
 ```
 
 **Git commit**:
+
 ```bash
 git add lib/{{feature}}/src/
 git commit -m "feat: implement REQ-{{COMPONENT}}-001 ([requirement title])"
@@ -374,6 +386,7 @@ export class {{COMPONENT}}Service {
 ```
 
 **Extract validator**:
+
 ```typescript
 // lib/{{feature}}/src/validator.ts
 
@@ -399,12 +412,14 @@ export class {{COMPONENT}}Validator {
 ```
 
 **Run tests** (should STILL PASS):
+
 ```bash
 npm test lib/{{feature}}/tests/service.test.ts
 # Expected: Tests STILL PASS ✅
 ```
 
 **Git commit**:
+
 ```bash
 git add lib/{{feature}}/src/
 git commit -m "refactor: extract validator and improve {{component}} service"
@@ -417,6 +432,7 @@ git commit -m "refactor: extract validator and improve {{component}} service"
 #### TASK-005: Implement Database Repository
 
 **Create Prisma schema**:
+
 ```prisma
 // prisma/schema.prisma
 
@@ -432,11 +448,13 @@ model {{Resource}} {
 ```
 
 **Generate migration**:
+
 ```bash
 npx prisma migrate dev --name create_{{resource}}_table
 ```
 
 **Implement repository**:
+
 ```typescript
 // lib/{{feature}}/src/repository.ts
 
@@ -467,6 +485,7 @@ export class {{COMPONENT}}Repository {
 ```
 
 **Write integration tests** (Article IX: Real database):
+
 ```typescript
 // lib/{{feature}}/tests/integration.test.ts
 
@@ -511,6 +530,7 @@ describe('{{COMPONENT}}Repository Integration Tests', () => {
 ```
 
 **Run integration tests**:
+
 ```bash
 docker-compose up -d test-db
 npm test lib/{{feature}}/tests/integration.test.ts
@@ -583,6 +603,7 @@ program.parse();
 ```
 
 **Test CLI**:
+
 ```bash
 chmod +x lib/{{feature}}/cli.ts
 ./lib/{{feature}}/cli.ts --help
@@ -699,6 +720,7 @@ Run comprehensive validation:
 **Feature**: {{FEATURE_NAME}}
 
 ### Tasks Completed:
+
 - ✅ TASK-001: Project structure (Library-First)
 - ✅ TASK-002: Tests written (RED)
 - ✅ TASK-003: Implementation (GREEN)
@@ -708,11 +730,13 @@ Run comprehensive validation:
 - ✅ TASK-007: API endpoints
 
 ### Test Results:
+
 - Unit Tests: [N] passing
 - Integration Tests: [N] passing
 - Coverage: [%]% (target: 80%)
 
 ### Constitutional Compliance:
+
 - ✅ Article I: Implemented as library (lib/{{feature}}/)
 - ✅ Article II: CLI interface provided
 - ✅ Article III: Test-First followed (Red-Green-Blue)
@@ -720,14 +744,16 @@ Run comprehensive validation:
 - ✅ Article IX: Integration tests use real database
 
 ### Files Created:
+
 - lib/{{feature}}/src/service.ts
 - lib/{{feature}}/src/repository.ts
 - lib/{{feature}}/src/types.ts
 - lib/{{feature}}/cli.ts
-- lib/{{feature}}/tests/*.test.ts
+- lib/{{feature}}/tests/\*.test.ts
 - app/api/{{resource}}/route.ts
 
 ### Next Steps:
+
 1. Run full test suite
 2. Deploy to staging: `@devops-engineer deploy staging`
 3. Run acceptance tests
@@ -739,6 +765,7 @@ Run comprehensive validation:
 ## Tool Usage
 
 ### Required:
+
 - **Read**: Tasks, design, requirements, steering
 - **Write**: Create source files
 - **Edit**: Modify existing files
@@ -752,23 +779,28 @@ Run comprehensive validation:
 Throughout implementation, ensure:
 
 ### Article I: Library-First ✅
+
 - All code in `lib/{{feature}}/`
 - No application dependencies
 
 ### Article II: CLI Interface ✅
+
 - CLI commands implemented
 - Help text provided
 
 ### Article III: Test-First ✅
+
 - Tests written BEFORE code
 - Red-Green-Blue cycle
 - Git history proves it
 
 ### Article V: Traceability ✅
+
 - Code comments reference REQ-IDs
 - Commit messages reference REQ-IDs
 
 ### Article IX: Integration Testing ✅
+
 - Integration tests use real database
 - Docker Compose for test DB
 

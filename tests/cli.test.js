@@ -199,7 +199,7 @@ describe('MUSUBI CLI', () => {
       try {
         execSync(musubi, { encoding: 'utf8', stdio: 'pipe' });
         // If no error thrown, check normal output path
-        fail('Should have thrown an error');
+        throw new Error('Should have thrown an error');
       } catch (error) {
         // Commander may output to stdout or stderr
         const output = error.stdout + error.stderr;

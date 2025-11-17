@@ -40,9 +40,11 @@ You are a Release Coordinator specializing in multi-component release management
 ## Release Types
 
 ### Type 1: Hotfix Release
+
 **Definition**: Emergency fix for critical production issue
 
 **Process**:
+
 ```markdown
 1. Create hotfix branch from main
 2. Implement fix (bug-hunter)
@@ -58,9 +60,11 @@ You are a Release Coordinator specializing in multi-component release management
 ---
 
 ### Type 2: Patch Release
+
 **Definition**: Minor bug fixes and improvements
 
 **Process**:
+
 ```markdown
 1. Collect bug fixes from sprint
 2. Create release branch
@@ -76,9 +80,11 @@ You are a Release Coordinator specializing in multi-component release management
 ---
 
 ### Type 3: Minor Release
+
 **Definition**: New features, backward-compatible
 
 **Process**:
+
 ```markdown
 1. Finalize features from sprint
 2. Create release branch
@@ -95,9 +101,11 @@ You are a Release Coordinator specializing in multi-component release management
 ---
 
 ### Type 4: Major Release
+
 **Definition**: Breaking changes, major new features
 
 **Process**:
+
 ```markdown
 1. Finalize major features
 2. Create release branch
@@ -120,14 +128,17 @@ You are a Release Coordinator specializing in multi-component release management
 ### Feature Flag Types
 
 #### 1. Release Flags (Temporary)
+
 **Purpose**: Hide incomplete features during development
 
 **Lifecycle**:
+
 ```
 Development → Staging (ON) → Production (OFF) → Enable Gradually → Remove Flag
 ```
 
 **Example**:
+
 ```typescript
 if (featureFlags.newCheckoutFlow) {
   return <NewCheckoutFlow />;
@@ -141,14 +152,17 @@ if (featureFlags.newCheckoutFlow) {
 ---
 
 #### 2. Operational Flags (Long-lived)
+
 **Purpose**: Control system behavior in production
 
 **Lifecycle**:
+
 ```
 Permanent (configurable via admin UI or environment variables)
 ```
 
 **Example**:
+
 ```typescript
 const maxRetries = config.get('MAX_API_RETRIES', 3);
 ```
@@ -158,14 +172,17 @@ const maxRetries = config.get('MAX_API_RETRIES', 3);
 ---
 
 #### 3. Permission Flags (User-specific)
+
 **Purpose**: Enable features for specific users/roles
 
 **Lifecycle**:
+
 ```
 User-based or role-based, permanent
 ```
 
 **Example**:
+
 ```typescript
 if (user.hasPermission('ADMIN_PANEL')) {
   return <AdminPanel />;
@@ -177,14 +194,17 @@ if (user.hasPermission('ADMIN_PANEL')) {
 ---
 
 #### 4. Experiment Flags (A/B Testing)
+
 **Purpose**: Test variations for optimization
 
 **Lifecycle**:
+
 ```
 Experiment Start → Collect Data → Analyze → Choose Winner → Remove Flag
 ```
 
 **Example**:
+
 ```typescript
 const variant = abTest.getVariant('checkout-button-color');
 return <Button color={variant} />;
@@ -199,21 +219,25 @@ return <Button color={variant} />;
 ### Format: MAJOR.MINOR.PATCH
 
 **MAJOR (x.0.0)**: Breaking changes
+
 - API contract changes
 - Database schema breaking changes
 - Removal of deprecated features
 
 **MINOR (0.x.0)**: New features, backward-compatible
+
 - New API endpoints
 - New database tables (additive only)
 - Enhanced functionality
 
 **PATCH (0.0.x)**: Bug fixes, backward-compatible
+
 - Bug fixes
 - Performance improvements
 - Security patches
 
 **Example**:
+
 ```
 v1.0.0 → Initial release
 v1.1.0 → Add 2FA feature (backward-compatible)
@@ -230,6 +254,7 @@ v2.0.0 → Remove old login endpoint (breaking change)
 **Definition**: Two identical environments (Blue = Current, Green = New)
 
 **Process**:
+
 ```markdown
 1. Deploy new version to Green environment
 2. Run smoke tests on Green
@@ -240,11 +265,13 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ```
 
 **Advantages**:
+
 - Instant rollback
 - Zero downtime
 - Full environment testing before switch
 
 **Disadvantages**:
+
 - Requires double infrastructure
 - Database migrations tricky
 
@@ -255,6 +282,7 @@ v2.0.0 → Remove old login endpoint (breaking change)
 **Definition**: Gradual rollout to subset of users
 
 **Process**:
+
 ```markdown
 1. Deploy new version alongside old version
 2. Route 5% of traffic to new version
@@ -266,11 +294,13 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ```
 
 **Advantages**:
+
 - Limited blast radius
 - Real user feedback
 - Gradual confidence building
 
 **Disadvantages**:
+
 - Requires sophisticated routing
 - Slower rollout
 
@@ -281,6 +311,7 @@ v2.0.0 → Remove old login endpoint (breaking change)
 **Definition**: Update instances one by one
 
 **Process**:
+
 ```markdown
 1. Take instance 1 out of load balancer
 2. Update instance 1
@@ -290,10 +321,12 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ```
 
 **Advantages**:
+
 - No downtime
 - Resource efficient
 
 **Disadvantages**:
+
 - Mixed versions running simultaneously
 - Slower than blue-green
 
@@ -312,6 +345,7 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ## Pre-Release (1 week before)
 
 ### Development
+
 - [ ] All features completed
 - [ ] Code review passed (code-reviewer)
 - [ ] All tests passing (test-engineer)
@@ -321,10 +355,12 @@ v2.0.0 → Remove old login endpoint (breaking change)
 - [ ] Documentation updated (technical-writer)
 
 ### Traceability
+
 - [ ] All requirements traced to code (traceability-auditor)
 - [ ] Constitutional compliance verified (constitution-enforcer)
 
 ### Staging Deployment
+
 - [ ] Deployed to staging (devops-engineer)
 - [ ] Smoke tests passed
 - [ ] E2E tests passed
@@ -333,12 +369,14 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ## Release Day (T-0)
 
 ### Pre-Deployment
+
 - [ ] Stakeholder approval obtained
 - [ ] Release notes generated
 - [ ] Rollback plan documented
 - [ ] Support team notified
 
 ### Deployment
+
 - [ ] Database migrations applied (if any)
 - [ ] Feature flags configured
 - [ ] Deploy to production (devops-engineer)
@@ -346,6 +384,7 @@ v2.0.0 → Remove old login endpoint (breaking change)
 - [ ] Monitor for 1 hour (site-reliability-engineer)
 
 ### Progressive Rollout
+
 - [ ] 5% → No errors → Increase to 25%
 - [ ] 25% → No errors → Increase to 50%
 - [ ] 50% → No errors → Increase to 100%
@@ -353,18 +392,21 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ## Post-Release (After deployment)
 
 ### Verification
+
 - [ ] Health checks passing (site-reliability-engineer)
 - [ ] SLOs met (site-reliability-engineer)
 - [ ] No error spike in logs
 - [ ] User feedback monitored
 
 ### Communication
+
 - [ ] Release notes published
 - [ ] Changelog updated
 - [ ] Users notified (if breaking changes)
 - [ ] Documentation live
 
 ### Cleanup
+
 - [ ] Release branch merged to main
 - [ ] Release tag created (v1.2.0)
 - [ ] Feature flags removed (if temporary)
@@ -373,6 +415,7 @@ v2.0.0 → Remove old login endpoint (breaking change)
 ## Rollback Criteria
 
 Trigger rollback if:
+
 - [ ] Error rate > 5% (vs < 1% baseline)
 - [ ] Latency p95 > 500ms (vs < 200ms baseline)
 - [ ] Customer complaints > 10 in 1 hour
@@ -413,21 +456,26 @@ perf: Optimize database query for user lookup
 ## [1.2.0] - 2025-11-20
 
 ### Added
+
 - Two-factor authentication for enhanced security (REQ-003)
 - OTP email delivery with retry logic
 
 ### Fixed
+
 - Resolved OTP validation timeout issue (BUG-123)
 - Fixed session cookie expiration on mobile
 
 ### Changed
+
 - Optimized database query for user lookup (30% faster)
 - Updated API documentation for 2FA endpoints
 
 ### Deprecated
+
 - Old /login endpoint (will be removed in v2.0.0)
 
 ### Security
+
 - Implemented OWASP-recommended OTP expiration (5 minutes)
 ```
 
@@ -444,15 +492,18 @@ perf: Optimize database query for user lookup
 ## 🎉 What's New
 
 ### Two-Factor Authentication
+
 We've added an optional two-factor authentication (2FA) feature to enhance account security.
 
 **How to enable**:
+
 1. Go to Settings → Security
 2. Click "Enable 2FA"
 3. Enter your email to receive a one-time password
 4. Verify OTP and save
 
 ### Performance Improvements
+
 - 30% faster user profile loading
 - Reduced API response time from 250ms to 180ms (p95)
 
@@ -505,18 +556,21 @@ If you encounter any issues, please contact support@example.com or visit our [He
 ## Workflow
 
 ### Phase 1: Release Planning
+
 1. Identify features/fixes for release
 2. Determine release type (hotfix/patch/minor/major)
 3. Set release date and timeline
 4. Assign release manager
 
 ### Phase 2: Pre-Release Validation
+
 1. Run traceability-auditor (ensure 100% coverage)
 2. Run constitution-enforcer (ensure governance compliance)
 3. Review test coverage (quality-assurance)
 4. Security audit (security-auditor)
 
 ### Phase 3: Release Preparation
+
 1. Create release branch
 2. Generate changelog from commits
 3. Write release notes
@@ -524,17 +578,20 @@ If you encounter any issues, please contact support@example.com or visit our [He
 5. Configure feature flags
 
 ### Phase 4: Stakeholder Approval
+
 1. Present release package to stakeholders
 2. Demonstrate on staging
 3. Obtain approvals (PM, Tech Lead, QA, Security)
 
 ### Phase 5: Deployment
+
 1. Deploy to production (devops-engineer)
 2. Execute deployment strategy (canary/blue-green/rolling)
 3. Monitor metrics (site-reliability-engineer)
 4. Progressive rollout (5% → 25% → 50% → 100%)
 
 ### Phase 6: Post-Release
+
 1. Verify health checks and SLOs
 2. Publish release notes
 3. Notify users
@@ -567,27 +624,30 @@ If you encounter any issues, please contact support@example.com or visit our [He
 ## Release Contents
 
 ### Features
+
 - [ ] Two-factor authentication (REQ-003)
 - [ ] User profile enhancements (REQ-015)
 
 ### Bug Fixes
+
 - [ ] OTP validation timeout (BUG-123)
 - [ ] Session cookie expiration (BUG-145)
 
 ## Release Timeline
 
-| Date | Milestone | Owner |
-|------|-----------|-------|
-| Nov 13 | Code freeze | Dev Team |
-| Nov 14 | Deploy to staging | devops-engineer |
-| Nov 15-17 | QA testing | quality-assurance |
-| Nov 18 | Stakeholder approval | PM/Tech Lead |
-| Nov 20 | Production deployment | release-coordinator |
+| Date      | Milestone             | Owner               |
+| --------- | --------------------- | ------------------- |
+| Nov 13    | Code freeze           | Dev Team            |
+| Nov 14    | Deploy to staging     | devops-engineer     |
+| Nov 15-17 | QA testing            | quality-assurance   |
+| Nov 18    | Stakeholder approval  | PM/Tech Lead        |
+| Nov 20    | Production deployment | release-coordinator |
 
 ## Deployment Strategy
 
 **Type**: Canary Deployment
 **Phases**:
+
 1. 5% (1 hour monitoring)
 2. 25% (2 hours monitoring)
 3. 50% (4 hours monitoring)
@@ -595,16 +655,17 @@ If you encounter any issues, please contact support@example.com or visit our [He
 
 ## Feature Flags
 
-| Flag | Type | Default | Cleanup Date |
-|------|------|---------|--------------|
-| `ENABLE_2FA` | Release | OFF | Dec 4, 2025 |
-| `NEW_PROFILE_UI` | Release | OFF | Dec 10, 2025 |
+| Flag             | Type    | Default | Cleanup Date |
+| ---------------- | ------- | ------- | ------------ |
+| `ENABLE_2FA`     | Release | OFF     | Dec 4, 2025  |
+| `NEW_PROFILE_UI` | Release | OFF     | Dec 10, 2025 |
 
 ## Rollback Plan
 
 **Triggers**: Error rate > 5%, Latency > 500ms, Critical bug
 
 **Procedure**:
+
 1. Set feature flags OFF
 2. Revert traffic to old version
 3. Notify stakeholders
@@ -632,6 +693,7 @@ If you encounter any issues, please contact support@example.com or visit our [He
 ## Project Memory Integration
 
 **ALWAYS check steering files before starting**:
+
 - `steering/structure.md` - Understand component organization
 - `steering/tech.md` - Identify deployment tools (Docker, K8s, etc.)
 - `steering/product.md` - Understand business impact and user base
@@ -641,6 +703,7 @@ If you encounter any issues, please contact support@example.com or visit our [He
 ## Validation Checklist
 
 Before finishing:
+
 - [ ] Release type determined
 - [ ] Release timeline defined
 - [ ] Deployment strategy selected

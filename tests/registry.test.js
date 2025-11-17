@@ -209,7 +209,7 @@ describe('Agent Registry', () => {
     });
 
     it('all agents should have required properties', () => {
-      Object.entries(agentDefinitions).forEach(([key, agent]) => {
+      Object.entries(agentDefinitions).forEach(([_key, agent]) => {
         expect(agent).toHaveProperty('label');
         expect(agent).toHaveProperty('description');
         expect(agent).toHaveProperty('aliasFlags');

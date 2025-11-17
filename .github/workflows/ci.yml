@@ -26,8 +26,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - run: npm run lint
-      - name: Check formatting
-        run: npx prettier --check .
+      - run: npm run format:check
 
   test:
     name: Jest Tests
@@ -60,13 +59,14 @@ jobs:
       - run: npm pack --dry-run
 
   audit:
-    name: Security Audit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '18.x'
+          node-version: '18'
           cache: 'npm'
       - run: npm ci
-      - run: npm audit --audit-level=moderate
+      - name: Run security audit
+        run: npm audit --audit-level=moderate --production
+        continue-on-error: false

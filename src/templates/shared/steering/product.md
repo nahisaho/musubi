@@ -47,21 +47,25 @@
 #### User Persona 1: {{PERSONA_1_NAME}}
 
 **Demographics**:
+
 - **Role**: {{ROLE}}
 - **Organization Size**: {{ORG_SIZE}}
 - **Technical Level**: {{TECH_LEVEL}}
 
 **Goals**:
+
 - [Goal 1]
 - [Goal 2]
 - [Goal 3]
 
 **Pain Points**:
+
 - [Pain point 1]
 - [Pain point 2]
 - [Pain point 3]
 
 **Use Cases**:
+
 - [Use case 1]
 - [Use case 2]
 - [Use case 3]
@@ -71,19 +75,23 @@
 #### User Persona 2: {{PERSONA_2_NAME}}
 
 **Demographics**:
+
 - **Role**: {{ROLE}}
 - **Organization Size**: {{ORG_SIZE}}
 - **Technical Level**: {{TECH_LEVEL}}
 
 **Goals**:
+
 - [Goal 1]
 - [Goal 2]
 
 **Pain Points**:
+
 - [Pain point 1]
 - [Pain point 2]
 
 **Use Cases**:
+
 - [Use case 1]
 - [Use case 2]
 
@@ -113,14 +121,15 @@
 > Examples: SaaS subscription, One-time purchase, Freemium, Usage-based
 
 **Pricing Tiers** (if applicable):
+
 - **Free Tier**: [Features, limitations]
 - **Pro Tier**: ${{PRICE}}/month - [Features]
 - **Enterprise Tier**: Custom pricing - [Features]
 
 ### Competitive Landscape
 
-| Competitor | Strengths | Weaknesses | Our Differentiation |
-|------------|-----------|------------|---------------------|
+| Competitor       | Strengths   | Weaknesses   | Our Differentiation   |
+| ---------------- | ----------- | ------------ | --------------------- |
 | {{COMPETITOR_1}} | [Strengths] | [Weaknesses] | [How we're different] |
 | {{COMPETITOR_2}} | [Strengths] | [Weaknesses] | [How we're different] |
 
@@ -185,6 +194,7 @@
    - [Description]
 
 **Examples**:
+
 - **Simplicity First**: Favor simple solutions over complex ones
 - **User Empowerment**: Give users control and flexibility
 - **Speed & Performance**: Fast response times (< 200ms)
@@ -198,6 +208,7 @@
    - [How this guides UX decisions]
 
 **Examples**:
+
 - **Progressive Disclosure**: Show advanced features only when needed
 - **Accessibility First**: WCAG 2.1 AA compliance
 - **Mobile-First**: Design for mobile, enhance for desktop
@@ -210,31 +221,31 @@
 
 #### Business Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Monthly Active Users (MAU)** | {{MAU_TARGET}} | [How measured] |
-| **Monthly Recurring Revenue (MRR)** | ${{MRR_TARGET}} | [How measured] |
-| **Customer Acquisition Cost (CAC)** | ${{CAC_TARGET}} | [How measured] |
-| **Customer Lifetime Value (LTV)** | ${{LTV_TARGET}} | [How measured] |
-| **Churn Rate** | < {{CHURN_RATE}}% | [How measured] |
+| Metric                              | Target            | Measurement    |
+| ----------------------------------- | ----------------- | -------------- |
+| **Monthly Active Users (MAU)**      | {{MAU_TARGET}}    | [How measured] |
+| **Monthly Recurring Revenue (MRR)** | ${{MRR_TARGET}}   | [How measured] |
+| **Customer Acquisition Cost (CAC)** | ${{CAC_TARGET}}   | [How measured] |
+| **Customer Lifetime Value (LTV)**   | ${{LTV_TARGET}}   | [How measured] |
+| **Churn Rate**                      | < {{CHURN_RATE}}% | [How measured] |
 
 #### Product Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **Daily Active Users (DAU)** | {{DAU_TARGET}} | [How measured] |
-| **Feature Adoption Rate** | > {{ADOPTION_RATE}}% | [How measured] |
-| **User Retention (Day 7)** | > {{RETENTION_RATE}}% | [How measured] |
-| **Net Promoter Score (NPS)** | > {{NPS_TARGET}} | [How measured] |
+| Metric                       | Target                | Measurement    |
+| ---------------------------- | --------------------- | -------------- |
+| **Daily Active Users (DAU)** | {{DAU_TARGET}}        | [How measured] |
+| **Feature Adoption Rate**    | > {{ADOPTION_RATE}}%  | [How measured] |
+| **User Retention (Day 7)**   | > {{RETENTION_RATE}}% | [How measured] |
+| **Net Promoter Score (NPS)** | > {{NPS_TARGET}}      | [How measured] |
 
 #### Technical Metrics
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| **API Response Time (p95)** | < 200ms | Monitoring dashboard |
-| **Uptime** | 99.9% | Status page |
-| **Error Rate** | < 0.1% | Error tracking (Sentry) |
-| **Page Load Time** | < 2s | Web vitals |
+| Metric                      | Target  | Measurement             |
+| --------------------------- | ------- | ----------------------- |
+| **API Response Time (p95)** | < 200ms | Monitoring dashboard    |
+| **Uptime**                  | 99.9%   | Status page             |
+| **Error Rate**              | < 0.1%  | Error tracking (Sentry) |
+| **Page Load Time**          | < 2s    | Web vitals              |
 
 ---
 
@@ -245,11 +256,13 @@
 **Goal**: Launch minimum viable product
 
 **Features**:
+
 - [Feature 1]
 - [Feature 2]
 - [Feature 3]
 
 **Success Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 
@@ -260,11 +273,13 @@
 **Goal**: Achieve product-market fit
 
 **Features**:
+
 - [Feature 4]
 - [Feature 5]
 - [Feature 6]
 
 **Success Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 
@@ -275,11 +290,13 @@
 **Goal**: Scale to {{USER_TARGET}} users
 
 **Features**:
+
 - [Feature 7]
 - [Feature 8]
 - [Feature 9]
 
 **Success Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 
@@ -292,6 +309,7 @@
 **User Goal**: {{USER_GOAL}}
 
 **Steps**:
+
 1. User [action 1]
 2. System [response 1]
 3. User [action 2]
@@ -299,6 +317,7 @@
 5. User achieves [goal]
 
 **Success Criteria**:
+
 - User completes workflow in < {{TIME}} minutes
 - Success rate > {{SUCCESS_RATE}}%
 
@@ -309,11 +328,13 @@
 **User Goal**: {{USER_GOAL}}
 
 **Steps**:
+
 1. [Step 1]
 2. [Step 2]
 3. [Step 3]
 
 **Success Criteria**:
+
 - [Criterion 1]
 - [Criterion 2]
 
@@ -330,6 +351,7 @@ Key concepts and terminology used in this domain:
 3. **{{CONCEPT_3}}**: [Definition and importance]
 
 **Example for SaaS Authentication**:
+
 - **Identity Provider (IdP)**: Service that authenticates users
 - **Single Sign-On (SSO)**: One login for multiple applications
 - **Multi-Factor Authentication (MFA)**: Additional verification step
@@ -345,6 +367,7 @@ Key concepts and terminology used in this domain:
    - **Example**: [Example]
 
 **Example for E-commerce**:
+
 - **Inventory Reservation**: Reserved items held for 10 minutes during checkout
 - **Refund Window**: Refunds allowed within 30 days of purchase
 
@@ -379,21 +402,21 @@ Key concepts and terminology used in this domain:
 
 ### Internal Stakeholders
 
-| Role | Name | Responsibilities |
-|------|------|------------------|
-| **Product Owner** | {{PO_NAME}} | Vision, roadmap, priorities |
-| **Tech Lead** | {{TECH_LEAD_NAME}} | Architecture, technical decisions |
-| **Engineering Manager** | {{EM_NAME}} | Team management, delivery |
-| **QA Lead** | {{QA_LEAD_NAME}} | Quality assurance, testing |
-| **Design Lead** | {{DESIGN_LEAD_NAME}} | UX/UI design |
+| Role                    | Name                 | Responsibilities                  |
+| ----------------------- | -------------------- | --------------------------------- |
+| **Product Owner**       | {{PO_NAME}}          | Vision, roadmap, priorities       |
+| **Tech Lead**           | {{TECH_LEAD_NAME}}   | Architecture, technical decisions |
+| **Engineering Manager** | {{EM_NAME}}          | Team management, delivery         |
+| **QA Lead**             | {{QA_LEAD_NAME}}     | Quality assurance, testing        |
+| **Design Lead**         | {{DESIGN_LEAD_NAME}} | UX/UI design                      |
 
 ### External Stakeholders
 
-| Role | Name | Responsibilities |
-|------|------|------------------|
-| **Customer Advisory Board** | [Members] | Product feedback |
-| **Investors** | [Names] | Funding, strategic guidance |
-| **Partners** | [Companies] | Integration, co-marketing |
+| Role                        | Name        | Responsibilities            |
+| --------------------------- | ----------- | --------------------------- |
+| **Customer Advisory Board** | [Members]   | Product feedback            |
+| **Investors**               | [Names]     | Funding, strategic guidance |
+| **Partners**                | [Companies] | Integration, co-marketing   |
 
 ---
 
@@ -404,6 +427,7 @@ Key concepts and terminology used in this domain:
 **Target Launch Date**: {{LAUNCH_DATE}}
 
 **Launch Phases**:
+
 1. **Private Beta** ({{START_DATE}} - {{END_DATE}})
    - Invite-only, 50 beta users
    - Focus: Gather feedback, fix critical bugs
@@ -429,12 +453,13 @@ Key concepts and terminology used in this domain:
 
 ### Product Risks
 
-| Risk | Probability | Impact | Mitigation |
-|------|-------------|--------|------------|
+| Risk       | Probability     | Impact          | Mitigation            |
+| ---------- | --------------- | --------------- | --------------------- |
 | {{RISK_1}} | High/Medium/Low | High/Medium/Low | [Mitigation strategy] |
 | {{RISK_2}} | High/Medium/Low | High/Medium/Low | [Mitigation strategy] |
 
 **Example Risks**:
+
 - **Low adoption**: Users don't understand value → Clear onboarding, demos
 - **Performance issues**: System slow at scale → Load testing, optimization
 - **Security breach**: Data compromised → Security audit, penetration testing
@@ -452,12 +477,12 @@ Key concepts and terminology used in this domain:
 
 ### Support SLA
 
-| Tier | Response Time | Resolution Time |
-|------|---------------|-----------------|
-| **Critical (P0)** | < 1 hour | < 4 hours |
-| **High (P1)** | < 4 hours | < 24 hours |
-| **Medium (P2)** | < 24 hours | < 3 days |
-| **Low (P3)** | < 48 hours | Best effort |
+| Tier              | Response Time | Resolution Time |
+| ----------------- | ------------- | --------------- |
+| **Critical (P0)** | < 1 hour      | < 4 hours       |
+| **High (P1)**     | < 4 hours     | < 24 hours      |
+| **Medium (P2)**   | < 24 hours    | < 3 days        |
+| **Low (P3)**      | < 48 hours    | Best effort     |
 
 ---
 
@@ -470,12 +495,12 @@ Key concepts and terminology used in this domain:
 
 ### Events to Track
 
-| Event | Description | Purpose |
-|-------|-------------|---------|
-| `user_signup` | New user registration | Track acquisition |
-| `feature_used` | User uses core feature | Track engagement |
-| `payment_completed` | User completes payment | Track conversion |
-| `error_occurred` | User encounters error | Track reliability |
+| Event               | Description            | Purpose           |
+| ------------------- | ---------------------- | ----------------- |
+| `user_signup`       | New user registration  | Track acquisition |
+| `feature_used`      | User uses core feature | Track engagement  |
+| `payment_completed` | User completes payment | Track conversion  |
+| `error_occurred`    | User encounters error  | Track reliability |
 
 ---
 
@@ -500,11 +525,13 @@ Key concepts and terminology used in this domain:
 ### Data Collection
 
 **What data we collect**:
+
 - User account information (email, name)
 - Usage analytics (anonymized)
 - Error logs (for debugging)
 
 **What data we DON'T collect**:
+
 - [Sensitive data we avoid, e.g., passwords (only hashed), payment details (tokenized)]
 
 ### Privacy Policy
@@ -519,23 +546,24 @@ Key concepts and terminology used in this domain:
 
 ### Existing Integrations
 
-| Integration | Purpose | Priority |
-|-------------|---------|----------|
-| {{INTEGRATION_1}} | [Purpose] | P0 |
-| {{INTEGRATION_2}} | [Purpose] | P1 |
+| Integration       | Purpose   | Priority |
+| ----------------- | --------- | -------- |
+| {{INTEGRATION_1}} | [Purpose] | P0       |
+| {{INTEGRATION_2}} | [Purpose] | P1       |
 
 ### Planned Integrations
 
-| Integration | Purpose | Timeline |
-|-------------|---------|----------|
-| {{INTEGRATION_3}} | [Purpose] | Q2 2025 |
-| {{INTEGRATION_4}} | [Purpose] | Q3 2025 |
+| Integration       | Purpose   | Timeline |
+| ----------------- | --------- | -------- |
+| {{INTEGRATION_3}} | [Purpose] | Q2 2025  |
+| {{INTEGRATION_4}} | [Purpose] | Q3 2025  |
 
 ---
 
 ## Changelog
 
 ### Version 1.1 (Planned)
+
 - [Future product updates]
 
 ---

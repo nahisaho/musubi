@@ -52,6 +52,7 @@ Research → Requirements → Design → Tasks → Implementation → Testing �
 ```
 
 Each stage has:
+
 - Quality gates
 - Traceability requirements
 - Constitutional validation
@@ -68,6 +69,7 @@ THEN the system SHALL authenticate the user
 AND the system SHALL create a session.
 
 #### Scenario: Successful login
+
 - WHEN user enters correct email and password
 - THEN system SHALL verify credentials
 - AND system SHALL redirect to dashboard
@@ -103,6 +105,7 @@ MUSUBI enforces 9 immutable constitutional articles:
 ### First Time Setup
 
 1. Generate project memory:
+
    ```
    #sdd-steering
    ```

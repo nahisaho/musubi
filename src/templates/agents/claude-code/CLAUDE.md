@@ -15,25 +15,30 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development) configu
 ## 25 Skills Overview
 
 ### Orchestration & Management (3)
+
 - **@orchestrator** - Master coordinator for multi-skill workflows
 - **@steering** - Project memory manager (auto-updating context)
 - **@constitution-enforcer** - Governance validation (9 Articles + Phase -1 Gates)
 
 ### Requirements & Planning (3)
+
 - **@requirements-analyst** - EARS format requirements generation
 - **@project-manager** - Project planning, scheduling, risk management
 - **@change-impact-analyzer** - Brownfield change analysis
 
 ### Architecture & Design (4)
+
 - **@system-architect** - C4 model + ADR architecture design
 - **@api-designer** - REST/GraphQL/gRPC API design
 - **@database-schema-designer** - Database design, ER diagrams, DDL
 - **@ui-ux-designer** - UI/UX design, wireframes, prototypes
 
 ### Development (1)
+
 - **@software-developer** - Multi-language code implementation
 
 ### Quality & Review (5)
+
 - **@test-engineer** - Unit, integration, E2E testing with EARS mapping
 - **@code-reviewer** - Code review, SOLID principles
 - **@bug-hunter** - Bug investigation, root cause analysis
@@ -41,10 +46,12 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development) configu
 - **@traceability-auditor** - Requirements ↔ Code ↔ Test coverage validation
 
 ### Security & Performance (2)
+
 - **@security-auditor** - OWASP Top 10, vulnerability detection
 - **@performance-optimizer** - Performance analysis, optimization
 
 ### Infrastructure & Operations (5)
+
 - **@devops-engineer** - CI/CD pipelines, Docker/Kubernetes
 - **@cloud-architect** - AWS/Azure/GCP, IaC (Terraform/Bicep)
 - **@database-administrator** - Database operations, tuning
@@ -52,6 +59,7 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development) configu
 - **@release-coordinator** - Multi-component release management
 
 ### Documentation & Specialized (2)
+
 - **@technical-writer** - Technical documentation, API docs
 - **@ai-ml-engineer** - ML model development, MLOps
 
@@ -94,6 +102,7 @@ Research → Requirements → Design → Tasks → Implementation → Testing �
 ```
 
 Each stage has:
+
 - Dedicated skills
 - Quality gates
 - Traceability requirements
@@ -111,6 +120,7 @@ THEN the system SHALL authenticate the user
 AND the system SHALL create a session.
 
 #### Scenario: Successful login
+
 - WHEN user enters correct email and password
 - THEN system SHALL verify credentials
 - AND system SHALL redirect to dashboard
@@ -144,11 +154,13 @@ MUSUBI enforces 9 immutable constitutional articles:
 ### Files Generated Bilingually
 
 **Steering Context**:
+
 - `steering/structure.md` + `steering/structure.ja.md`
 - `steering/tech.md` + `steering/tech.ja.md`
 - `steering/product.md` + `steering/product.ja.md`
 
 **Specifications**:
+
 - `storage/specs/[feature]-requirements.md` + `.ja.md`
 - `storage/specs/[feature]-design.md` + `.ja.md`
 - `storage/specs/[feature]-tasks.md` + `.ja.md`
@@ -158,6 +170,7 @@ MUSUBI enforces 9 immutable constitutional articles:
 ### First Time Setup
 
 1. Generate project memory:
+
    ```
    /sdd-steering
    ```

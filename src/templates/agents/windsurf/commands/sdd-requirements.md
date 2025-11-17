@@ -36,6 +36,7 @@ steering/tech.md         # Technology stack
 ```
 
 **Extract**:
+
 - Target users
 - Product goals
 - Existing architecture patterns
@@ -48,7 +49,9 @@ steering/tech.md         # Technology stack
 **Methods** (use as appropriate):
 
 #### A. Stakeholder Interview (if user is available)
+
 Use `AskUserQuestion` tool to ask:
+
 - Who are the users of this feature?
 - What problem does this solve?
 - What are the critical workflows?
@@ -56,12 +59,14 @@ Use `AskUserQuestion` tool to ask:
 - Are there any constraints (performance, security, compliance)?
 
 #### B. Research Existing System (brownfield)
+
 - Search for existing implementation: `grep -r "{{feature}}" src/`
 - Read related code
 - Identify current behavior
 - Document what needs to change (delta spec)
 
 #### C. Infer from Context
+
 - Analyze steering/product.md for user types
 - Review existing requirements docs
 - Check for similar features in codebase
@@ -73,23 +78,28 @@ Use `AskUserQuestion` tool to ask:
 Use template from `templates/requirements.md`:
 
 **Structure**:
+
 ```markdown
 # Requirements Specification: {{FEATURE_NAME}}
 
 ## Overview
+
 - Purpose
 - Scope (in/out)
 - Business context (from steering/product.md)
 
 ## Stakeholders
+
 [Table of roles]
 
 ## Functional Requirements
 
 ### REQ-{{COMPONENT}}-001: [Title]
+
 [EARS Pattern - choose appropriate pattern]
 
 **Acceptance Criteria**:
+
 - [Testable criterion 1]
 - [Testable criterion 2]
 
@@ -102,11 +112,15 @@ Use template from `templates/requirements.md`:
 ## Non-Functional Requirements
 
 ### REQ-PERF-001: Performance
+
 ### REQ-SEC-001: Security
+
 ### REQ-SCALE-001: Scalability
+
 ### REQ-AVAIL-001: Availability
 
 ## Requirements Coverage Matrix
+
 [Initial table - will be filled during design/implementation]
 ```
 
@@ -118,17 +132,18 @@ Use template from `templates/requirements.md`:
 
 #### Pattern Selection Guide
 
-| Scenario | EARS Pattern | Example |
-|----------|--------------|---------|
-| Always-active feature | **Ubiquitous**: `The [system] SHALL` | The API SHALL authenticate all requests |
-| User action triggers | **Event-driven**: `WHEN ... THEN` | WHEN user clicks Submit, THEN validate form |
-| Continuous condition | **State-driven**: `WHILE ... SHALL` | WHILE loading, UI SHALL show spinner |
-| Error handling | **Unwanted**: `IF ... THEN` | IF timeout, THEN return HTTP 504 |
-| Feature flag | **Optional**: `WHERE ... SHALL` | WHERE 2FA enabled, SHALL require OTP |
+| Scenario              | EARS Pattern                         | Example                                     |
+| --------------------- | ------------------------------------ | ------------------------------------------- |
+| Always-active feature | **Ubiquitous**: `The [system] SHALL` | The API SHALL authenticate all requests     |
+| User action triggers  | **Event-driven**: `WHEN ... THEN`    | WHEN user clicks Submit, THEN validate form |
+| Continuous condition  | **State-driven**: `WHILE ... SHALL`  | WHILE loading, UI SHALL show spinner        |
+| Error handling        | **Unwanted**: `IF ... THEN`          | IF timeout, THEN return HTTP 504            |
+| Feature flag          | **Optional**: `WHERE ... SHALL`      | WHERE 2FA enabled, SHALL require OTP        |
 
 #### Requirements Quality Checklist
 
 Each requirement MUST have:
+
 - [ ] Unique ID (REQ-COMPONENT-NNN)
 - [ ] EARS pattern (one of 5)
 - [ ] Clear SHALL/SHALL NOT (not SHOULD/MUST/MAY)
@@ -143,11 +158,13 @@ Each requirement MUST have:
 **Format**: `REQ-[COMPONENT]-[NUMBER]`
 
 **Examples**:
+
 - `REQ-AUTH-001` - Authentication component
 - `REQ-PAY-001` - Payment component
 - `REQ-DASH-001` - Dashboard component
 
 **Rules**:
+
 - All uppercase
 - Sequential numbering starting from 001
 - Unique across entire project
@@ -161,34 +178,42 @@ Always include these categories:
 
 ```markdown
 ### REQ-PERF-001: Response Time
+
 The {{COMPONENT}} SHALL respond within 200ms for 95% of requests.
 
 **Acceptance Criteria**:
+
 - 95th percentile < 200ms
 - 99th percentile < 500ms
 - Tested with 1000 concurrent users
 
 ### REQ-SEC-001: OWASP Top 10
+
 The {{COMPONENT}} SHALL prevent OWASP Top 10 vulnerabilities.
 
 **Acceptance Criteria**:
+
 - Input validation on all inputs
 - Output encoding for XSS prevention
 - Parameterized queries (SQL injection prevention)
 - Authentication on protected endpoints
 
 ### REQ-SCALE-001: Concurrent Users
+
 The {{COMPONENT}} SHALL support 10,000 concurrent users.
 
 **Acceptance Criteria**:
+
 - Load tested with 10,000 users
 - No performance degradation
 - Horizontal scaling supported
 
 ### REQ-AVAIL-001: Uptime
+
 The {{COMPONENT}} SHALL maintain 99.9% uptime.
 
 **Acceptance Criteria**:
+
 - 99.9% uptime SLA
 - Health check endpoint
 - Graceful degradation on failure
@@ -204,6 +229,7 @@ If this is a change to existing system, add delta sections:
 ## ADDED Requirements
 
 ### REQ-AUTH-042: Two-Factor Authentication (NEW)
+
 WHERE two-factor authentication is enabled,
 the authentication system SHALL require OTP verification.
 
@@ -245,16 +271,19 @@ The authentication system SHALL hash passwords using bcrypt cost 12.
 Validate requirements against constitutional articles:
 
 #### Article IV: EARS Format
+
 - [ ] All requirements use EARS patterns
 - [ ] No ambiguous keywords (SHOULD, MUST, MAY)
 - [ ] All requirements have SHALL/SHALL NOT
 
 #### Article V: Traceability
+
 - [ ] All requirements have unique IDs
 - [ ] IDs follow REQ-XXX-NNN format
 - [ ] Requirement IDs never reused
 
 Run validation:
+
 ```bash
 @constitution-enforcer validate requirements.md
 ```
@@ -272,18 +301,21 @@ Save to: `storage/specs/{{feature-name}}-requirements.md`
 Save to: `storage/specs/{{feature-name}}-requirements.ja.md`
 
 **File Naming**:
+
 - Use kebab-case
 - Include feature name
 - Add `-requirements` suffix
 - Add `.ja` before `.md` for Japanese version
 
 **Examples**:
+
 - `storage/specs/authentication-requirements.md` (English)
 - `storage/specs/authentication-requirements.ja.md` (Japanese)
 - `storage/specs/payment-processing-requirements.md` (English)
 - `storage/specs/payment-processing-requirements.ja.md` (Japanese)
 
 **Generation Order**:
+
 1. Generate English version FIRST
 2. Then generate Japanese translation
 3. Ensure requirement IDs are identical in both versions
@@ -300,10 +332,12 @@ Present summary to user:
 
 **Feature**: {{FEATURE_NAME}}
 **Files**:
+
 - English: storage/specs/{{feature-name}}-requirements.md
 - Japanese: storage/specs/{{feature-name}}-requirements.ja.md
 
 ### Summary:
+
 - **Total Requirements**: [N]
   - P0 (Critical): [N]
   - P1 (High): [N]
@@ -311,6 +345,7 @@ Present summary to user:
   - P3 (Low): [N]
 
 ### Requirements Breakdown:
+
 - Functional: [N]
 - Non-Functional: [N]
   - Performance: [N]
@@ -319,6 +354,7 @@ Present summary to user:
   - Availability: [N]
 
 ### EARS Patterns Used:
+
 - Ubiquitous: [N]
 - Event-driven: [N]
 - State-driven: [N]
@@ -326,11 +362,13 @@ Present summary to user:
 - Optional feature: [N]
 
 ### Constitutional Compliance:
+
 - ✅ Article IV: All requirements in EARS format
 - ✅ Article V: Unique IDs assigned
 - ✅ Article VI: Aligned with steering context
 
 ### Next Steps:
+
 1. Review requirements with stakeholders
 2. Get approval
 3. Run design phase: `/sdd-design {{feature-name}}`
@@ -341,6 +379,7 @@ Present summary to user:
 ## Example Execution
 
 ### User Command:
+
 ```bash
 /sdd-requirements authentication
 ```
@@ -353,6 +392,7 @@ Present summary to user:
    - `steering/structure.md` → Pattern: Library-first
 
 2. **Ask User** (if needed):
+
    ```
    Questions about authentication feature:
    1. Authentication methods: Email/password, OAuth, SSO, or all?
@@ -361,15 +401,19 @@ Present summary to user:
    ```
 
 3. **Generate Requirements**:
+
    ```markdown
    ### REQ-AUTH-001: User Login
+
    WHEN a user provides valid credentials,
    THEN the authentication system SHALL authenticate the user
    AND the system SHALL create a session
    AND the system SHALL redirect to dashboard.
 
    ### REQ-AUTH-002: Password Strength
+
    The authentication system SHALL enforce password requirements:
+
    - Minimum 12 characters
    - At least 1 uppercase, 1 lowercase, 1 number, 1 special char
 
@@ -385,14 +429,16 @@ Present summary to user:
 ## Tool Usage
 
 ### Required Tools:
+
 - **Read**: Read steering files, existing specs
 - **Write**: Create requirements document
 - **AskUserQuestion**: Gather stakeholder input (if needed)
 - **Grep**: Search for existing implementations (brownfield)
 
 ### Optional Tools:
+
 - **WebSearch**: Research best practices (if needed)
-- **mcp__context7__get-library-docs**: Get framework documentation
+- **mcp**context7**get-library-docs**: Get framework documentation
 
 ---
 
@@ -415,20 +461,25 @@ Before completing, verify:
 ## Edge Cases
 
 ### No Steering Files
+
 If `steering/` doesn't exist:
+
 ```markdown
 ⚠️ **Steering files not found**
 
 Please run `/sdd-steering` first to generate project context.
 
 Steering provides critical context for requirements generation:
+
 - Product goals and users
 - Architecture patterns
 - Technology constraints
 ```
 
 ### Brownfield with Existing Requirements
+
 If `storage/specs/{{feature-name}}-requirements.md` exists:
+
 - Read existing file
 - Ask user: Update existing or create new version?
 - If update: Create delta specification (ADDED/MODIFIED/REMOVED)

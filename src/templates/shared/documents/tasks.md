@@ -10,9 +10,9 @@
 
 ## Document Control
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | {{DATE}} | {{AUTHOR}} | Initial task breakdown |
+| Version | Date     | Author     | Changes                |
+| ------- | -------- | ---------- | ---------------------- |
+| 1.0     | {{DATE}} | {{AUTHOR}} | Initial task breakdown |
 
 ---
 
@@ -32,15 +32,16 @@ This document breaks down the design into actionable implementation tasks with r
 
 ## Task Breakdown Summary
 
-| Priority | Total Tasks | Story Points | Estimated Hours |
-|----------|-------------|--------------|-----------------|
-| P0 (Critical) | [N] | [N] | [N] |
-| P1 (High) | [N] | [N] | [N] |
-| P2 (Medium) | [N] | [N] | [N] |
-| P3 (Low) | [N] | [N] | [N] |
-| **Total** | **[N]** | **[N]** | **[N]** |
+| Priority      | Total Tasks | Story Points | Estimated Hours |
+| ------------- | ----------- | ------------ | --------------- |
+| P0 (Critical) | [N]         | [N]          | [N]             |
+| P1 (High)     | [N]         | [N]          | [N]             |
+| P2 (Medium)   | [N]         | [N]          | [N]             |
+| P3 (Low)      | [N]         | [N]          | [N]             |
+| **Total**     | **[N]**     | **[N]**      | **[N]**         |
 
 **Sprint Allocation**:
+
 - Sprint 1: P0 tasks ([N] points)
 - Sprint 2: P1 tasks ([N] points)
 - Sprint 3: P2 tasks ([N] points)
@@ -51,7 +52,7 @@ This document breaks down the design into actionable implementation tasks with r
 
 Each task follows this structure:
 
-```markdown
+````markdown
 ### TASK-XXX: [Task Title]
 
 **Priority**: P0/P1/P2/P3
@@ -64,18 +65,22 @@ Each task follows this structure:
 [What needs to be done]
 
 **Requirements Coverage**:
+
 - REQ-XXX-NNN: [Requirement title]
 - REQ-XXX-NNN: [Requirement title]
 
 **Acceptance Criteria**:
+
 - [ ] [Testable criterion 1]
 - [ ] [Testable criterion 2]
 - [ ] [Testable criterion 3]
 
 **Dependencies**:
+
 - TASK-XXX: [Dependency description]
 
 **Test-First Checklist** (Article III):
+
 - [ ] Tests written BEFORE implementation
 - [ ] Red: Failing test committed
 - [ ] Green: Minimal implementation passes test
@@ -85,12 +90,15 @@ Each task follows this structure:
 [Technical details, file paths, code snippets]
 
 **Validation**:
+
 ```bash
 # Commands to verify completion
 npm test src/{{component}}.test.ts
 npm run lint src/{{component}}.ts
 ```
-```
+````
+
+````
 
 ---
 
@@ -135,9 +143,10 @@ lib/{{component}}/
 │   └── repository.test.ts
 ├── cli.ts                # CLI interface
 └── package.json          # Library metadata
-```
+````
 
 **Validation**:
+
 ```bash
 @constitution-enforcer validate lib/{{component}}/
 ```
@@ -156,9 +165,11 @@ lib/{{component}}/
 Write failing tests for REQ-{{COMPONENT}}-001 (Test-First / Red phase).
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-001: [Requirement title]
 
 **Acceptance Criteria**:
+
 - [ ] Test file created: `lib/{{component}}/tests/service.test.ts`
 - [ ] All acceptance criteria from REQ-{{COMPONENT}}-001 have tests
 - [ ] Tests fail (Red phase)
@@ -166,10 +177,12 @@ Write failing tests for REQ-{{COMPONENT}}-001 (Test-First / Red phase).
 - [ ] Git commit message: `test: add failing tests for REQ-{{COMPONENT}}-001`
 
 **Constitutional Compliance**:
+
 - ✅ **Article III**: Test-First (Red phase)
 - ✅ **Article V**: Tests reference requirement ID
 
 **Implementation Notes**:
+
 ```typescript
 // lib/{{component}}/tests/service.test.ts
 
@@ -197,9 +210,11 @@ describe('REQ-{{COMPONENT}}-001: [Requirement title]', () => {
 ```
 
 **Dependencies**:
+
 - TASK-001: Project structure must exist
 
 **Validation**:
+
 ```bash
 npm test lib/{{component}}/tests/service.test.ts
 # Should FAIL (Red phase)
@@ -219,9 +234,11 @@ npm test lib/{{component}}/tests/service.test.ts
 Implement minimal {{COMPONENT}} service to pass tests (Green phase).
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-001: [Requirement title]
 
 **Acceptance Criteria**:
+
 - [ ] Service class implemented
 - [ ] Business logic for create operation
 - [ ] Input validation
@@ -230,10 +247,12 @@ Implement minimal {{COMPONENT}} service to pass tests (Green phase).
 - [ ] Git commit message: `feat: implement REQ-{{COMPONENT}}-001`
 
 **Constitutional Compliance**:
+
 - ✅ **Article III**: Test-First (Green phase)
 - ✅ **Article V**: Code comments reference REQ-{{COMPONENT}}-001
 
 **Implementation Notes**:
+
 ```typescript
 // lib/{{component}}/src/service.ts
 
@@ -272,9 +291,11 @@ export class {{COMPONENT}}Service {
 ```
 
 **Dependencies**:
+
 - TASK-002: Tests must be written first
 
 **Validation**:
+
 ```bash
 npm test lib/{{component}}/tests/service.test.ts
 # Should PASS (Green phase)
@@ -294,9 +315,11 @@ npm test lib/{{component}}/tests/service.test.ts
 Refactor service code for better design (Blue phase).
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-001 (maintained)
 
 **Acceptance Criteria**:
+
 - [ ] Code follows SOLID principles
 - [ ] No duplication
 - [ ] Clear separation of concerns
@@ -305,18 +328,22 @@ Refactor service code for better design (Blue phase).
 - [ ] Git commit message: `refactor: improve {{component}} service`
 
 **Constitutional Compliance**:
+
 - ✅ **Article III**: Test-First (Blue phase)
 
 **Implementation Notes**:
+
 - Extract validation logic to separate validator class
 - Use dependency injection for repository
 - Add proper TypeScript types
 - Improve error messages
 
 **Dependencies**:
+
 - TASK-003: Implementation must be complete
 
 **Validation**:
+
 ```bash
 npm test lib/{{component}}/tests/service.test.ts
 # Should STILL PASS after refactoring
@@ -337,9 +364,11 @@ npm run lint lib/{{component}}/src/service.ts
 Implement database repository with Prisma/TypeORM.
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-004: Database schema
 
 **Acceptance Criteria**:
+
 - [ ] Repository interface defined
 - [ ] Prisma schema created
 - [ ] CRUD operations implemented
@@ -348,9 +377,11 @@ Implement database repository with Prisma/TypeORM.
 - [ ] Integration tests pass (real database)
 
 **Constitutional Compliance**:
+
 - ✅ **Article IX**: Integration tests use real database (Docker container)
 
 **Implementation Notes**:
+
 ```typescript
 // lib/{{component}}/src/repository.ts
 
@@ -376,6 +407,7 @@ export class {{COMPONENT}}Repository {
 ```
 
 **Test Setup** (Docker Compose):
+
 ```yaml
 services:
   test-db:
@@ -384,13 +416,15 @@ services:
       POSTGRES_PASSWORD: test
       POSTGRES_DB: test
     ports:
-      - "5432:5432"
+      - '5432:5432'
 ```
 
 **Dependencies**:
+
 - TASK-001: Project structure
 
 **Validation**:
+
 ```bash
 docker-compose up -d test-db
 npm test lib/{{component}}/tests/repository.test.ts
@@ -411,9 +445,11 @@ npm test lib/{{component}}/tests/repository.test.ts
 Implement CLI interface for {{component}} library (Article II).
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-001 (CLI exposure)
 
 **Acceptance Criteria**:
+
 - [ ] CLI entry point: `lib/{{component}}/cli.ts`
 - [ ] Commands: create, get, list, update, delete
 - [ ] Help text with --help flag
@@ -421,9 +457,11 @@ Implement CLI interface for {{component}} library (Article II).
 - [ ] CLI tests pass
 
 **Constitutional Compliance**:
+
 - ✅ **Article II**: CLI Interface Mandate
 
 **Implementation Notes**:
+
 ```typescript
 // lib/{{component}}/cli.ts
 #!/usr/bin/env node
@@ -457,9 +495,11 @@ program.parse();
 ```
 
 **Dependencies**:
+
 - TASK-003: Service implementation
 
 **Validation**:
+
 ```bash
 ./lib/{{component}}/cli.ts --help
 ./lib/{{component}}/cli.ts create --field1=test --field2=42
@@ -479,11 +519,13 @@ program.parse();
 Implement REST API endpoints for {{component}}.
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-001: Create endpoint
 - REQ-{{COMPONENT}}-002: Get endpoint
 - REQ-{{COMPONENT}}-003: List endpoint
 
 **Acceptance Criteria**:
+
 - [ ] POST /api/{{resource}} implemented
 - [ ] GET /api/{{resource}}/:id implemented
 - [ ] GET /api/{{resource}} implemented
@@ -492,6 +534,7 @@ Implement REST API endpoints for {{component}}.
 - [ ] API tests pass
 
 **Implementation Notes**:
+
 ```typescript
 // app/api/{{resource}}/route.ts
 
@@ -525,10 +568,12 @@ export async function GET(request: Request) {
 ```
 
 **Dependencies**:
+
 - TASK-003: Service implementation
 - TASK-005: Repository implementation
 
 **Validation**:
+
 ```bash
 npm run dev
 curl -X POST http://localhost:3000/api/{{resource}} \
@@ -552,9 +597,11 @@ curl -X POST http://localhost:3000/api/{{resource}} \
 Write integration tests using real database and services.
 
 **Requirements Coverage**:
+
 - REQ-{{COMPONENT}}-001 to REQ-{{COMPONENT}}-005 (all requirements)
 
 **Acceptance Criteria**:
+
 - [ ] Integration tests for all API endpoints
 - [ ] Tests use real PostgreSQL (Docker container)
 - [ ] Tests use real Redis cache
@@ -562,9 +609,11 @@ Write integration tests using real database and services.
 - [ ] Coverage ≥ 80%
 
 **Constitutional Compliance**:
+
 - ✅ **Article IX**: Integration-First Testing (real services)
 
 **Dependencies**:
+
 - TASK-007: API implementation
 
 ---
@@ -581,9 +630,11 @@ Write integration tests using real database and services.
 Add Redis caching for read operations.
 
 **Requirements Coverage**:
+
 - REQ-PERF-001: Performance optimization
 
 **Acceptance Criteria**:
+
 - [ ] Redis client configured
 - [ ] Cache-aside pattern implemented
 - [ ] TTL = 5 minutes
@@ -604,9 +655,11 @@ Add Redis caching for read operations.
 Perform security audit and fix vulnerabilities.
 
 **Requirements Coverage**:
+
 - REQ-SEC-001: Security requirements
 
 **Acceptance Criteria**:
+
 - [ ] OWASP Top 10 validated
 - [ ] Input validation on all endpoints
 - [ ] Output encoding for XSS prevention
@@ -615,6 +668,7 @@ Perform security audit and fix vulnerabilities.
 - [ ] Security audit report generated
 
 **Validation**:
+
 ```bash
 @security-auditor audit src/
 ```
@@ -635,9 +689,11 @@ Perform security audit and fix vulnerabilities.
 Add pagination to list endpoint.
 
 **Requirements Coverage**:
+
 - REQ-PERF-001 (performance enhancement)
 
 **Acceptance Criteria**:
+
 - [ ] Cursor-based pagination
 - [ ] Limit = 100 items per page
 - [ ] Next/previous page links
@@ -657,23 +713,25 @@ Add pagination to list endpoint.
 Create Grafana dashboards for monitoring.
 
 **Requirements Coverage**:
+
 - REQ-AVAIL-001: Monitoring setup
 
 ---
 
 ## Requirements Coverage Matrix
 
-| Requirement ID | Priority | Tasks | Test Coverage | Status |
-|----------------|----------|-------|---------------|--------|
-| REQ-{{COMPONENT}}-001 | P0 | TASK-002, TASK-003, TASK-004, TASK-007 | 95% | Not Started |
-| REQ-{{COMPONENT}}-002 | P0 | TASK-007 | 90% | Not Started |
-| REQ-{{COMPONENT}}-003 | P0 | TASK-007 | 90% | Not Started |
-| REQ-{{COMPONENT}}-004 | P0 | TASK-005 | 85% | Not Started |
-| REQ-PERF-001 | P1 | TASK-009, TASK-011 | 80% | Not Started |
-| REQ-SEC-001 | P1 | TASK-010 | 100% | Not Started |
-| REQ-AVAIL-001 | P2 | TASK-012 | N/A | Not Started |
+| Requirement ID        | Priority | Tasks                                  | Test Coverage | Status      |
+| --------------------- | -------- | -------------------------------------- | ------------- | ----------- |
+| REQ-{{COMPONENT}}-001 | P0       | TASK-002, TASK-003, TASK-004, TASK-007 | 95%           | Not Started |
+| REQ-{{COMPONENT}}-002 | P0       | TASK-007                               | 90%           | Not Started |
+| REQ-{{COMPONENT}}-003 | P0       | TASK-007                               | 90%           | Not Started |
+| REQ-{{COMPONENT}}-004 | P0       | TASK-005                               | 85%           | Not Started |
+| REQ-PERF-001          | P1       | TASK-009, TASK-011                     | 80%           | Not Started |
+| REQ-SEC-001           | P1       | TASK-010                               | 100%          | Not Started |
+| REQ-AVAIL-001         | P2       | TASK-012                               | N/A           | Not Started |
 
 **Coverage Summary**:
+
 - Total Requirements: [N]
 - Requirements with Tasks: [N] ([%]%)
 - **Coverage Goal**: 100%
@@ -738,6 +796,7 @@ TASK-001 (Project Structure)
 Before marking feature as complete:
 
 ### Constitutional Compliance
+
 - [ ] **Article I**: All features implemented as libraries
 - [ ] **Article II**: CLI interfaces provided
 - [ ] **Article III**: Test-First followed (check git history)
@@ -745,6 +804,7 @@ Before marking feature as complete:
 - [ ] **Article IX**: Integration tests use real services
 
 ### Quality Gates
+
 - [ ] All P0 tasks complete
 - [ ] All tests passing
 - [ ] Test coverage ≥ 80%
@@ -753,6 +813,7 @@ Before marking feature as complete:
 - [ ] Performance benchmarks met
 
 ### Validation Commands
+
 ```bash
 # Traceability validation
 @traceability-auditor validate requirements.md tasks.md src/

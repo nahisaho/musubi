@@ -10,16 +10,16 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 ## Quick Reference
 
-| Category | Agents |
-|----------|--------|
-| **Orchestration** (3) | @orchestrator, @steering, @constitution-enforcer |
-| **Requirements & Planning** (3) | @requirements-analyst, @project-manager, @change-impact-analyzer |
-| **Architecture & Design** (4) | @system-architect, @api-designer, @database-schema-designer, @ui-ux-designer |
-| **Development** (1) | @software-developer |
-| **Quality & Review** (5) | @test-engineer, @code-reviewer, @bug-hunter, @quality-assurance, @traceability-auditor |
-| **Security & Performance** (2) | @security-auditor, @performance-optimizer |
-| **Infrastructure** (5) | @devops-engineer, @cloud-architect, @database-administrator, @site-reliability-engineer, @release-coordinator |
-| **Documentation & Specialized** (2) | @technical-writer, @ai-ml-engineer |
+| Category                            | Agents                                                                                                        |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| **Orchestration** (3)               | @orchestrator, @steering, @constitution-enforcer                                                              |
+| **Requirements & Planning** (3)     | @requirements-analyst, @project-manager, @change-impact-analyzer                                              |
+| **Architecture & Design** (4)       | @system-architect, @api-designer, @database-schema-designer, @ui-ux-designer                                  |
+| **Development** (1)                 | @software-developer                                                                                           |
+| **Quality & Review** (5)            | @test-engineer, @code-reviewer, @bug-hunter, @quality-assurance, @traceability-auditor                        |
+| **Security & Performance** (2)      | @security-auditor, @performance-optimizer                                                                     |
+| **Infrastructure** (5)              | @devops-engineer, @cloud-architect, @database-administrator, @site-reliability-engineer, @release-coordinator |
+| **Documentation & Specialized** (2) | @technical-writer, @ai-ml-engineer                                                                            |
 
 ---
 
@@ -32,11 +32,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Documentation
 
 **Example Usage**:
+
 ```
 @ai-ml-engineer Implement recommendation system using collaborative filtering
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@ai-ml-engineer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -51,11 +53,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Architecture
 
 **Example Usage**:
+
 ```
 @api-designer Design RESTful API for blog platform with OpenAPI 3.0 spec
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@api-designer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -70,11 +74,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Quality
 
 **Example Usage**:
+
 ```
 @bug-hunter Investigate why users are getting 500 errors on checkout
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@bug-hunter` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -89,11 +95,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Requirements
 
 **Example Usage**:
+
 ```
 @change-impact-analyzer Analyze impact of changing authentication library to OAuth 2.0
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@change-impact-analyzer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -108,11 +116,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Infrastructure
 
 **Example Usage**:
+
 ```
 @cloud-architect Design AWS infrastructure with Terraform for high-availability web app
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@cloud-architect` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -127,11 +137,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Quality
 
 **Example Usage**:
+
 ```
 @code-reviewer Review this pull request for security issues and best practices
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@code-reviewer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -146,11 +158,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Orchestration
 
 **Example Usage**:
+
 ```
 @constitution-enforcer Check project for constitutional compliance violations
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@constitution-enforcer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -165,11 +179,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Infrastructure
 
 **Example Usage**:
+
 ```
 @database-administrator Optimize PostgreSQL performance and create backup strategy
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@database-administrator` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -184,11 +200,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Architecture
 
 **Example Usage**:
+
 ```
 @database-schema-designer Design normalized database schema for social media app
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@database-schema-designer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -203,11 +221,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Infrastructure
 
 **Example Usage**:
+
 ```
 @devops-engineer Create CI/CD pipeline with GitHub Actions and Docker deployment
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@devops-engineer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -222,11 +242,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Orchestration
 
 **Example Usage**:
+
 ```
 @orchestrator Implement user authentication feature from requirements to deployment
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@orchestrator` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -241,11 +263,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Security
 
 **Example Usage**:
+
 ```
 @performance-optimizer Optimize database queries causing slow page load times
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@performance-optimizer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -260,11 +284,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Requirements
 
 **Example Usage**:
+
 ```
 @project-manager Create project plan with WBS and Gantt chart for 3-month development
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@project-manager` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -279,11 +305,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Quality
 
 **Example Usage**:
+
 ```
 @quality-assurance Develop QA strategy and test plan for new feature release
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@quality-assurance` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -298,11 +326,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Infrastructure
 
 **Example Usage**:
+
 ```
 @release-coordinator Plan release strategy with rollback procedures and deployment windows
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@release-coordinator` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -317,11 +347,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Requirements
 
 **Example Usage**:
+
 ```
 @requirements-analyst Create EARS requirements for user registration with email verification
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@requirements-analyst` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -336,11 +368,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Security
 
 **Example Usage**:
+
 ```
 @security-auditor Audit authentication system for OWASP Top 10 vulnerabilities
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@security-auditor` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -355,11 +389,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Infrastructure
 
 **Example Usage**:
+
 ```
 @site-reliability-engineer Set up monitoring, alerting, and SLO tracking for production
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@site-reliability-engineer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -374,11 +410,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Development
 
 **Example Usage**:
+
 ```
 @software-developer Implement user login API with JWT authentication and unit tests
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@software-developer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -393,11 +431,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Orchestration
 
 **Example Usage**:
+
 ```
 @steering Analyze this codebase and generate project steering context
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@steering` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -412,11 +452,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Architecture
 
 **Example Usage**:
+
 ```
 @system-architect Design microservices architecture for e-commerce platform with C4 diagrams
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@system-architect` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -431,11 +473,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Documentation
 
 **Example Usage**:
+
 ```
 @technical-writer Write API documentation and user guide for REST API
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@technical-writer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -450,11 +494,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Quality
 
 **Example Usage**:
+
 ```
 @test-engineer Create comprehensive test suite for payment processing module
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@test-engineer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -469,11 +515,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Quality
 
 **Example Usage**:
+
 ```
 @traceability-auditor Verify requirements traceability from specs to tests
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@traceability-auditor` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -488,11 +536,13 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 **Category**: Architecture
 
 **Example Usage**:
+
 ```
 @ui-ux-designer Create wireframes and prototypes for mobile shopping app
 ```
 
 **Platform-Specific Usage**:
+
 - **Claude Code**: `@ui-ux-designer` (Skills API)
 - **Other Platforms**: Reference this AGENTS.md file and describe the agent's role in your request
 
@@ -519,6 +569,7 @@ Use `@constitution-enforcer` to validate compliance.
 ## Workflow Integration
 
 ### Greenfield Projects (New Development)
+
 ```
 1. @steering          → Generate project memory (structure.md, tech.md, product.md)
 2. @requirements-analyst → Create EARS requirements
@@ -534,6 +585,7 @@ Use `@constitution-enforcer` to validate compliance.
 ```
 
 ### Brownfield Projects (Existing Codebase)
+
 ```
 1. @change-impact-analyzer → Analyze change impact
 2. @requirements-analyst   → Document change requirements
@@ -545,6 +597,7 @@ Use `@constitution-enforcer` to validate compliance.
 ```
 
 ### Quick Tasks
+
 - **Bug Fixing**: @bug-hunter → @software-developer → @test-engineer
 - **Performance**: @performance-optimizer → @software-developer → @test-engineer
 - **Documentation**: @technical-writer
@@ -562,6 +615,7 @@ For complex tasks spanning multiple domains, use:
 ```
 
 The orchestrator will:
+
 1. Analyze the request
 2. Break down into subtasks
 3. Select appropriate agents
@@ -570,6 +624,7 @@ The orchestrator will:
 6. Ensure constitutional compliance
 
 **Example**:
+
 ```
 @orchestrator Implement a secure payment processing feature with API, database, tests, and deployment pipeline
 ```

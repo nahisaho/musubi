@@ -14,7 +14,11 @@ const { Command } = require('commander');
 const chalk = require('chalk');
 const fs = require('fs-extra');
 const path = require('path');
-const { detectAgentFromFlags, getAgentDefinition, getAllAliasFlags } = require('../src/agents/registry');
+const {
+  detectAgentFromFlags,
+  getAgentDefinition,
+  getAllAliasFlags,
+} = require('../src/agents/registry');
 
 const program = new Command();
 
@@ -29,9 +33,7 @@ program
 // ============================================================================
 // Command: init
 // ============================================================================
-const initCommand = program
-  .command('init')
-  .description('Initialize MUSUBI in current project');
+const initCommand = program.command('init').description('Initialize MUSUBI in current project');
 
 // Add all agent selection flags dynamically
 const aliasFlags = getAllAliasFlags();
@@ -39,7 +41,7 @@ aliasFlags.forEach(flag => {
   initCommand.option(`--${flag}`, `Select agent: ${flag}`);
 });
 
-initCommand.action(async (options) => {
+initCommand.action(async options => {
   const agentKey = detectAgentFromFlags(options);
   const agent = getAgentDefinition(agentKey);
 
@@ -78,7 +80,7 @@ program
     if (fs.existsSync(skillsDir)) {
       const skills = fs.readdirSync(skillsDir);
       console.log(chalk.white(`📁 Claude Code Skills: ${skills.length} installed`));
-      console.log(chalk.gray(`   Location: .claude/skills/\n`));
+      console.log(chalk.gray('   Location: .claude/skills/\n'));
     }
 
     // Check steering files
@@ -202,7 +204,8 @@ program
     console.log(chalk.white('\nArticle IV: EARS Requirements Format'));
     const specsDir = path.join(cwd, 'storage', 'specs');
     if (fs.existsSync(specsDir)) {
-      const requirementFiles = fs.readdirSync(specsDir)
+      const requirementFiles = fs
+        .readdirSync(specsDir)
         .filter(f => f.includes('requirements') && f.endsWith('.md'));
 
       if (requirementFiles.length > 0) {
@@ -224,9 +227,13 @@ program
         });
 
         if (earsCompliant === requirementFiles.length) {
-          console.log(chalk.green(`   ✅ All requirements use EARS format`));
+          console.log(chalk.green('   ✅ All requirements use EARS format'));
         } else {
-          console.log(chalk.yellow(`   ⚠️  ${earsCompliant}/${requirementFiles.length} documents have EARS patterns`));
+          console.log(
+            chalk.yellow(
+              `   ⚠️  ${earsCompliant}/${requirementFiles.length} documents have EARS patterns`
+            )
+          );
         }
       } else {
         console.log(chalk.gray('   ℹ️  No requirements documents found'));
@@ -300,12 +307,26 @@ program
 
     console.log(chalk.white('25 Claude Code Skills:'));
     console.log(chalk.gray('   Orchestration: orchestrator, steering, constitution-enforcer'));
-    console.log(chalk.gray('   Requirements: requirements-analyst, project-manager, change-impact-analyzer'));
-    console.log(chalk.gray('   Architecture: system-architect, api-designer, database-schema-designer, ui-ux-designer'));
+    console.log(
+      chalk.gray('   Requirements: requirements-analyst, project-manager, change-impact-analyzer')
+    );
+    console.log(
+      chalk.gray(
+        '   Architecture: system-architect, api-designer, database-schema-designer, ui-ux-designer'
+      )
+    );
     console.log(chalk.gray('   Development: software-developer'));
-    console.log(chalk.gray('   Quality: test-engineer, code-reviewer, bug-hunter, quality-assurance, traceability-auditor'));
+    console.log(
+      chalk.gray(
+        '   Quality: test-engineer, code-reviewer, bug-hunter, quality-assurance, traceability-auditor'
+      )
+    );
     console.log(chalk.gray('   Security: security-auditor, performance-optimizer'));
-    console.log(chalk.gray('   Infrastructure: devops-engineer, cloud-architect, database-administrator, site-reliability-engineer, release-coordinator'));
+    console.log(
+      chalk.gray(
+        '   Infrastructure: devops-engineer, cloud-architect, database-administrator, site-reliability-engineer, release-coordinator'
+      )
+    );
     console.log(chalk.gray('   Documentation: technical-writer, ai-ml-engineer\n'));
   });
 

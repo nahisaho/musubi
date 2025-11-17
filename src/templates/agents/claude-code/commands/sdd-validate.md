@@ -19,6 +19,7 @@ You are executing the `/sdd-validate [feature-name]` command to validate constit
 ### Your Task
 
 Perform comprehensive validation of the feature implementation against:
+
 1. Constitutional Articles (9 articles)
 2. Requirements coverage (100% traceability)
 3. Code quality standards
@@ -64,6 +65,7 @@ Validate each of the 9 Constitutional Articles:
 **Requirement**: All new features SHALL begin as independent libraries.
 
 **Validation Steps**:
+
 1. Check `lib/{{feature}}/` directory exists
 2. Verify library structure:
    - [ ] `lib/{{feature}}/src/` exists
@@ -75,34 +77,40 @@ Validate each of the 9 Constitutional Articles:
    - Library should only import from own `src/` or external packages
 
 **Example Output**:
+
 ```markdown
 ### Article I: Library-First Principle
 
 **Status**: ✅ PASS
 
 **Evidence**:
+
 - Library location: `lib/auth/`
 - Public API: `lib/auth/src/index.ts`
 - Independent tests: `lib/auth/tests/`
 - No application dependencies found
 
 **Files Checked**:
+
 - lib/auth/src/service.ts
 - lib/auth/src/repository.ts
 - lib/auth/src/index.ts
 ```
 
 **OR if violation**:
+
 ```markdown
 ### Article I: Library-First Principle
 
 **Status**: ❌ FAIL
 
 **Violations**:
+
 1. Feature implemented in `app/components/` instead of `lib/`
 2. Missing independent test suite
 
 **Required Actions**:
+
 - Move feature to `lib/{{feature}}/`
 - Create independent test suite
 - Expose public API via `src/index.ts`
@@ -115,6 +123,7 @@ Validate each of the 9 Constitutional Articles:
 **Requirement**: All libraries SHALL expose functionality through CLI interfaces.
 
 **Validation Steps**:
+
 1. Check `lib/{{feature}}/cli.ts` exists
 2. Verify CLI functionality:
    - [ ] Executable shebang (`#!/usr/bin/env node`)
@@ -127,18 +136,21 @@ Validate each of the 9 Constitutional Articles:
    ```
 
 **Example Output**:
-```markdown
+
+````markdown
 ### Article II: CLI Interface Mandate
 
 **Status**: ✅ PASS
 
 **Evidence**:
+
 - CLI file: `lib/auth/cli.ts`
 - Commands: create-user, login, logout, validate-session
 - Help text: ✅ Available via `--help`
 - Exit codes: ✅ Proper handling
 
 **CLI Test**:
+
 ```bash
 $ ./lib/auth/cli.ts --help
 Usage: auth [command] [options]
@@ -153,7 +165,9 @@ Options:
   -h, --help     Display help
   -v, --version  Display version
 ```
-```
+````
+
+````
 
 ---
 
@@ -165,7 +179,8 @@ Options:
 1. Check git history for Red-Green-Blue pattern:
    ```bash
    git log --oneline lib/{{feature}}/
-   ```
+````
+
 2. Verify test commits BEFORE implementation commits:
    - `test: add failing tests for REQ-XXX-001` (RED)
    - `feat: implement REQ-XXX-001` (GREEN)
@@ -176,6 +191,7 @@ Options:
    ```
 
 **Example Output**:
+
 ```markdown
 ### Article III: Test-First Imperative
 
@@ -183,9 +199,11 @@ Options:
 
 **Evidence from Git History**:
 ```
+
 abc123f test: add failing tests for REQ-AUTH-001
 def456g feat: implement REQ-AUTH-001 (user login)
 ghi789h refactor: extract validator from auth service
+
 ```
 
 **Red-Green-Blue Cycle**: ✅ Verified in git history
@@ -205,6 +223,7 @@ ghi789h refactor: extract validator from auth service
 **Requirement**: All requirements SHALL use EARS format.
 
 **Validation Steps**:
+
 1. Read `storage/specs/{{feature-name}}-requirements.md`
 2. Check each requirement for EARS pattern:
    - Ubiquitous: `The [system] SHALL`
@@ -221,7 +240,8 @@ ghi789h refactor: extract validator from auth service
    - [ ] Testable and measurable
 
 **Example Output**:
-```markdown
+
+````markdown
 ### Article IV: EARS Requirements Format
 
 **Status**: ✅ PASS
@@ -229,6 +249,7 @@ ghi789h refactor: extract validator from auth service
 **Requirements Checked**: 15
 
 **EARS Patterns Used**:
+
 - Ubiquitous: 5 requirements
 - Event-driven: 7 requirements
 - State-driven: 1 requirement
@@ -236,22 +257,29 @@ ghi789h refactor: extract validator from auth service
 - Optional feature: 0 requirements
 
 **Keyword Compliance**:
+
 - ✅ All requirements use SHALL/SHALL NOT
 - ✅ No ambiguous keywords found (SHOULD, MUST, MAY)
 
 **Sample Requirement**:
+
 ```markdown
 ### REQ-AUTH-001: User Login
+
 WHEN a user provides valid credentials,
 THEN the authentication system SHALL authenticate the user
 AND the system SHALL create a session.
 
 **Acceptance Criteria**:
+
 - Email and password validated
 - Session created with 24-hour expiry
 ```
+````
+
 ✅ Valid EARS format (Event-driven pattern)
-```
+
+````
 
 ---
 
@@ -292,25 +320,29 @@ AND the system SHALL create a session.
 - **Overall Coverage**: 100% ✅
 
 **Gap Analysis**: No gaps detected
-```
+````
 
 **OR if gaps detected**:
+
 ```markdown
 ### Article V: Traceability Mandate
 
 **Status**: ❌ FAIL
 
 **Gaps Detected**:
+
 1. REQ-AUTH-004: No test coverage found
 2. REQ-PERF-001: Not implemented in code
 3. REQ-SEC-002: Not mentioned in design
 
 **Coverage Summary**:
+
 - Requirements → Design: 4/5 (80%)
 - Requirements → Code: 4/5 (80%)
 - Requirements → Tests: 3/5 (60%) ❌
 
 **Required Actions**:
+
 - Add tests for REQ-AUTH-004
 - Implement REQ-PERF-001
 - Update design.md to cover REQ-SEC-002
@@ -323,6 +355,7 @@ AND the system SHALL create a session.
 **Requirement**: All skills SHALL consult project memory (steering files) before making decisions.
 
 **Validation Steps**:
+
 1. Verify steering files exist and are current
 2. Check if implementation aligns with steering:
    - Architecture pattern from `steering/structure.md`
@@ -330,6 +363,7 @@ AND the system SHALL create a session.
    - Product goals from `steering/product.md`
 
 **Example Output**:
+
 ```markdown
 ### Article VI: Project Memory
 
@@ -338,14 +372,17 @@ AND the system SHALL create a session.
 **Steering Alignment**:
 
 **Architecture (steering/structure.md)**:
+
 - Expected: Library-first pattern
 - Actual: ✅ Feature implemented as library (`lib/auth/`)
 
 **Technology Stack (steering/tech.md)**:
+
 - Expected: TypeScript, Next.js, PostgreSQL, Prisma
 - Actual: ✅ All technologies used correctly
 
 **Product Context (steering/product.md)**:
+
 - Product Goal: B2B SaaS authentication
 - Feature Alignment: ✅ Implements user authentication for B2B use case
 ```
@@ -357,10 +394,12 @@ AND the system SHALL create a session.
 **Requirement**: Projects SHALL start with maximum 3 sub-projects initially.
 
 **Validation Steps**:
+
 1. Count independently deployable projects
 2. If > 3, check for Phase -1 Gate approval in design.md
 
 **Example Output**:
+
 ```markdown
 ### Article VII: Simplicity Gate
 
@@ -369,6 +408,7 @@ AND the system SHALL create a session.
 **Project Count**: 1 (monorepo with libraries)
 
 **Projects**:
+
 1. Main application (Next.js with libraries)
 
 **Within Limit**: ✅ (≤ 3)
@@ -381,6 +421,7 @@ AND the system SHALL create a session.
 **Requirement**: Framework features SHALL be used directly without custom abstraction layers.
 
 **Validation Steps**:
+
 1. Search for custom abstraction layers:
    - Custom ORM wrappers
    - Custom HTTP client wrappers
@@ -388,12 +429,14 @@ AND the system SHALL create a session.
 2. If found, verify Phase -1 Gate approval with justification
 
 **Example Output**:
+
 ```markdown
 ### Article VIII: Anti-Abstraction Gate
 
 **Status**: ✅ PASS
 
 **Framework Usage Analysis**:
+
 - **ORM**: Uses Prisma directly ✅ (no custom wrapper)
 - **Password Hashing**: Uses bcrypt directly ✅
 - **HTTP**: Uses Next.js API routes directly ✅
@@ -403,17 +446,20 @@ AND the system SHALL create a session.
 ```
 
 **OR if violation**:
+
 ```markdown
 ### Article VIII: Anti-Abstraction Gate
 
 **Status**: ⚠️ WARNING
 
 **Custom Abstractions Detected**:
+
 1. `lib/database/wrapper.ts` - Custom Prisma wrapper
 
 **Phase -1 Gate Approval**: ❌ Not found in design.md
 
 **Required Actions**:
+
 - Justify abstraction with multi-framework support need
 - OR remove abstraction and use Prisma directly
 - Document in design.md ADR
@@ -427,6 +473,7 @@ AND the system SHALL create a session.
 **Requirement**: Integration tests SHALL use real services; mocks are discouraged.
 
 **Validation Steps**:
+
 1. Check integration tests use real services:
    - Real database (Docker, test schema)
    - Real cache (Redis test instance)
@@ -434,7 +481,8 @@ AND the system SHALL create a session.
 2. Verify mocks are justified
 
 **Example Output**:
-```markdown
+
+````markdown
 ### Article IX: Integration-First Testing
 
 **Status**: ✅ PASS
@@ -442,30 +490,38 @@ AND the system SHALL create a session.
 **Integration Tests Analysis**:
 
 **Database Tests**:
+
 - Uses: Real PostgreSQL (Docker Compose)
 - Evidence: `lib/auth/tests/integration.test.ts:12`
+
 ```typescript
 beforeAll(async () => {
   prisma = new PrismaClient({
-    datasourceUrl: process.env.TEST_DATABASE_URL  // Real DB
+    datasourceUrl: process.env.TEST_DATABASE_URL, // Real DB
   });
 });
 ```
+````
+
 - ✅ Real database confirmed
 
 **Cache Tests**:
+
 - Uses: Real Redis (Docker Compose)
 - ✅ Real cache confirmed
 
 **External API Tests**:
+
 - Payment API: Uses sandbox environment ✅
 - Email API: **Mock** ⚠️
   - Justification: No test environment available ✅
   - Documented in: `tests/README.md`
 
 **Mock Usage**: 1 justified mock found (Email API)
+
 - ✅ Justification documented
-```
+
+````
 
 ---
 
@@ -482,9 +538,10 @@ npx tsc --noEmit
 
 # Code review
 @code-reviewer review lib/{{feature}}/src/
-```
+````
 
 **Example Output**:
+
 ```markdown
 ## Code Quality Validation
 
@@ -493,6 +550,7 @@ npx tsc --noEmit
 **Code Review**: ✅ Passed
 
 **SOLID Principles**:
+
 - Single Responsibility: ✅ Each class has one responsibility
 - Open/Closed: ✅ Open for extension, closed for modification
 - Liskov Substitution: ✅ Proper inheritance
@@ -500,6 +558,7 @@ npx tsc --noEmit
 - Dependency Inversion: ✅ Depends on abstractions
 
 **Best Practices**:
+
 - ✅ Proper error handling
 - ✅ Input validation
 - ✅ No code duplication
@@ -516,10 +575,12 @@ npx tsc --noEmit
 ```
 
 **Example Output**:
+
 ```markdown
 ## Security Validation
 
 **OWASP Top 10 Check**:
+
 - ✅ A01: Broken Access Control - Auth middleware enforced
 - ✅ A02: Cryptographic Failures - bcrypt used (cost 12)
 - ✅ A03: Injection - Parameterized queries (Prisma ORM)
@@ -543,20 +604,24 @@ npx tsc --noEmit
 ```
 
 **Example Output**:
+
 ```markdown
 ## Performance Validation
 
 **Response Time** (from REQ-PERF-001):
+
 - Target: < 200ms (95th percentile)
 - Actual: 150ms (95th percentile) ✅
 - 99th percentile: 280ms ✅
 
 **Database Queries**:
+
 - N+1 queries: None detected ✅
 - Indexes: ✅ Properly indexed
 - Connection pooling: ✅ Configured (20 connections)
 
 **Caching**:
+
 - Redis cache: ✅ Implemented
 - Hit rate: 85%
 - TTL: 5 minutes
@@ -569,6 +634,7 @@ npx tsc --noEmit
 **Save to**: `storage/validation/{{feature-name}}-validation-report.md`
 
 **Report Structure**:
+
 ```markdown
 # Validation Report: {{FEATURE_NAME}}
 
@@ -646,6 +712,7 @@ npx tsc --noEmit
 ### Validation Summary:
 
 **Constitutional Compliance**:
+
 - ✅ Article I: Library-First
 - ✅ Article II: CLI Interface
 - ✅ Article III: Test-First
@@ -659,12 +726,14 @@ npx tsc --noEmit
 **Overall**: 9/9 ✅
 
 **Coverage**:
+
 - Requirements → Design: 100% ✅
 - Requirements → Code: 100% ✅
 - Requirements → Tests: 100% ✅
 - Test Coverage: 91.5% ✅ (target: 80%)
 
 **Quality**:
+
 - Linting: ✅ Pass
 - Type Checking: ✅ Pass
 - Code Review: ✅ Pass
@@ -674,6 +743,7 @@ npx tsc --noEmit
 **Production Readiness**: ✅ APPROVED
 
 ### Next Steps:
+
 1. Deploy to staging
 2. Run acceptance tests
 3. Get stakeholder sign-off
@@ -685,11 +755,13 @@ npx tsc --noEmit
 ## Tool Usage
 
 ### Required:
+
 - **Read**: All specification documents, source code, tests
 - **Grep**: Search for requirement IDs, patterns
 - **Bash**: Run tests, linters, coverage tools
 
 ### Skills to Invoke:
+
 - `@traceability-auditor`: Validate 100% coverage
 - `@code-reviewer`: Code quality review
 - `@security-auditor`: OWASP Top 10 validation

@@ -1,260 +1,405 @@
 # Project Structure
 
-## Overview
-This document defines the architectural patterns, directory organization, and code structure conventions for this project. It serves as the single source of truth for structural decisions.
-
-**Last Updated**: 2025-01-16 by @steering
-
-## Organization Philosophy
-
-**CLI-First Template Distribution System** - MUSUBI is a command-line tool that distributes SDD framework templates to multiple AI coding agent platforms through a centralized template management system.
-
-**Core Architectural Approach**:
-- **Template-based distribution**: Single source of truth in `src/templates/`
-- **Agent registry pattern**: Centralized agent definitions with metadata
-- **Format polymorphism**: Supports Markdown (6 agents) and TOML (1 agent)
-- **Bilingual documentation**: English (`.md`) primary, Japanese (`.ja.md`) translation
-- **Shared governance**: All agents use same `steering/` and `constitution/` files
-
-## Directory Structure
-
-### Root Level
-**Purpose**: CLI tool with templates for 7 AI coding agents
-
-```
-musubi/
-├── bin/                          # CLI entry points
-│   ├── musubi.js                 # Main CLI (musubi, musubi-sdd)
-│   └── musubi-init.js            # Interactive project initialization
-├── src/                          # Source code
-│   ├── agents/
-│   │   └── registry.js           # Agent definitions (7 agents)
-│   └── templates/                # Template source (copied to user projects)
-│       ├── agents/               # Agent-specific templates
-│       │   ├── claude-code/      # Skills API + Commands (Markdown)
-│       │   ├── github-copilot/   # Commands (Markdown)
-│       │   ├── cursor/           # Commands (Markdown)
-│       │   ├── gemini-cli/       # Commands (TOML)
-│       │   ├── codex/            # Commands (Markdown)
-│       │   ├── qwen-code/        # Commands (Markdown)
-│       │   └── windsurf/         # Commands (Markdown)
-│       └── shared/               # Shared templates (all agents)
-│           ├── constitution/     # 9 Constitutional Articles
-│           ├── steering/         # Project memory templates
-│           └── documents/        # Document templates
-├── steering/                     # MUSUBI's own project memory
-│   ├── structure.md              # This file
-│   ├── tech.md                   # Technology stack
-│   ├── product.md                # Product context
-│   ├── rules/                    # Governance rules
-│   └── templates/                # Document templates
-├── docs/                         # Documentation
-│   ├── Qiita/                    # Japanese article
-│   ├── requirements/             # MUSUBI requirements
-│   └── analysis/                 # Framework analysis
-├── orchestrator/                 # Multi-agent coordination reports
-├── References/                   # Source framework references
-└── tests/                        # Test suite
-```
-
-### CLI Architecture
-MUSUBI uses a command-based CLI architecture with dynamic agent selection:
-
-```
-bin/musubi.js
-  ├── init command      → bin/musubi-init.js (interactive setup)
-  ├── status command    → Shows project status
-  ├── validate command  → Quick constitutional checks
-  └── info command      → Version and agent information
-```
-
-### Template Distribution Pattern
-When user runs `npx musubi-sdd init --claude`:
-
-```
-1. Detect agent from flags (src/agents/registry.js)
-2. Copy templates from src/templates/agents/claude-code/
-3. Copy shared templates from src/templates/shared/
-4. Generate agent-specific guide (CLAUDE.md)
-5. Install to user project:
-   - .claude/skills/      (25 skills for Claude Code)
-   - .claude/commands/    (9 commands)
-   - steering/            (project memory)
-   - templates/           (document templates)
-   - storage/             (specs, changes, features)
-```
-
-## Naming Conventions
-
-### Files and Directories
-- **CLI executables**: `musubi.js`, `musubi-init.js` (kebab-case)
-- **Source files**: `registry.js` (kebab-case)
-- **Templates**: `sdd-*.md` for Markdown commands, `sdd-*.toml` for Gemini CLI
-- **Agent directories**: `claude-code/`, `github-copilot/`, `cursor/` (kebab-case)
-- **Skills**: `orchestrator/`, `requirements-analyst/` (kebab-case)
-- **Documentation**: English `.md` first, Japanese `.ja.md` translation
-
-### Command Naming (User-Facing)
-- **Slash commands**: `/sdd-steering`, `/sdd-requirements` (Cursor, Windsurf, Claude Code, Gemini, Qwen)
-- **Hash commands**: `#sdd-steering` (GitHub Copilot only)
-- **Namespace commands**: `/prompts:sdd-steering` (Codex CLI only)
-
-### Code Elements
-- **Functions**: camelCase (`getAgentDefinition`, `detectAgentFromFlags`)
-- **Constants**: camelCase for objects (`agentDefinitions`)
-- **Classes**: PascalCase (not used in this project)
-- **Environment variables**: UPPERCASE (`NODE_ENV`, `npm_package_version`)
-
-## Import Organization
-
-### Module System
-MUSUBI uses **CommonJS** with dynamic ESM imports for compatibility:
-```javascript
-// CommonJS (default)
-const { Command } = require('commander');
-const chalk = require('chalk');
-
-// Dynamic ESM import (for inquirer v9)
-const inquirer = await import('inquirer');
-await inquirer.default.prompt([...]);
-```
-
-### Import Order (in source files)
-1. Node.js built-ins (`fs`, `path`)
-2. External dependencies (`commander`, `chalk`, `fs-extra`)
-3. Internal modules (`src/agents/registry`)
-
-### Package.json Patterns
-- **bin entries**: `{ "musubi-sdd": "bin/musubi.js", "musubi": "bin/musubi.js" }`
-- **main**: `src/index.js` (not currently used, for future library API)
-- **files**: Whitelist pattern `["bin/", "src/", "README.md", "LICENSE"]`
-
-## Architectural Patterns
-
-### Key Architectural Decisions
-
-1. **CLI-First Distribution Model**
-   - **Context**: Need to support 7 different AI agents with minimal user friction
-   - **Decision**: Use npm-distributed CLI tool with `npx` support
-   - **Consequences**: 
-     - ✅ Easy installation (`npx musubi-sdd init`)
-     - ✅ Version management through npm
-     - ⚠️ Requires Node.js >=18.0.0
-
-2. **Template-Based Architecture**
-   - **Context**: Need consistent SDD framework across all agents
-   - **Decision**: Single source of truth in `src/templates/`, copied to user projects
-   - **Consequences**:
-     - ✅ Easy to maintain (update once, affects all installations)
-     - ✅ Users can customize after installation
-     - ⚠️ Updates require re-running `musubi init`
-
-3. **CommonJS with Dynamic ESM Imports**
-   - **Context**: inquirer v9 is pure ESM, but CLI needs CommonJS for compatibility
-   - **Decision**: Use CommonJS with dynamic `import()` for ESM dependencies
-   - **Consequences**:
-     - ✅ Compatible with older Node.js versions
-     - ✅ Gradual migration path
-     - ⚠️ Requires careful module loading (`inquirer.default.prompt()`)
-
-4. **Agent Registry Pattern**
-   - **Context**: Need to support multiple agents with different configurations
-   - **Decision**: Centralized `registry.js` with agent metadata
-   - **Consequences**:
-     - ✅ Single source of truth for agent definitions
-     - ✅ Easy to add new agents
-     - ✅ Dynamic CLI flag generation
-
-5. **Markdown + TOML Format Support**
-   - **Context**: Gemini CLI requires TOML format, others use Markdown
-   - **Decision**: Maintain parallel templates (`.md` and `.toml`)
-   - **Consequences**:
-     - ✅ Native format for each agent
-     - ⚠️ Need to maintain 2 formats (6 agents Markdown, 1 agent TOML)
-
-### Core Principles
-1. **Template Distribution**: Single source → multiple agent targets
-2. **Format Polymorphism**: Markdown default, TOML for specific agents
-3. **Agent Agnostic**: MUSUBI doesn't depend on any specific AI agent
-4. **Constitutional Governance**: 9 immutable articles enforced across all agents
-
-## File Size Guidelines
-
-- **CLI files**: bin/musubi.js (400+ lines - acceptable for CLI with multiple commands)
-- **Registry file**: src/agents/registry.js (200-300 lines - agent definitions)
-- **Template files**: sdd-*.md (300-500 lines - comprehensive prompts)
-- **Skills**: Varies by complexity (orchestrator > simple validators)
-
-MUSUBI prioritizes **completeness** over strict line limits for:
-- CLI command implementations (need full help text, validation)
-- Agent prompts (need detailed instructions, examples)
-- Constitutional articles (need complete governance rules)
-
-## Code Organization Best Practices
-
-1. **Agent Registry**: Centralized agent definitions in `src/agents/registry.js`
-   - All 7 agent configurations
-   - Dynamic flag generation
-   - Layout and command metadata
-
-2. **Template Organization**: Templates mirror user project structure
-   - `src/templates/agents/{agent}/` - Agent-specific files
-   - `src/templates/shared/` - Common files (all agents)
-   - Format variations: Markdown (default), TOML (Gemini CLI)
-
-3. **CLI Command Pattern**: Each command in separate section of bin/musubi.js
-   - init → delegates to bin/musubi-init.js
-   - status → checks project state
-   - validate → quick constitutional compliance
-   - info → version and agent information
-
-4. **Documentation Strategy**: Bilingual from day one
-   - English `.md` (primary, reference version)
-   - Japanese `.ja.md` (translation)
-   - Always update English first, then Japanese
-
-5. **Template Customization**: Users can modify after installation
-   - Templates copied to user project (not symlinked)
-   - Users own their copies
-   - Updates require re-running `musubi init`
-
-## Testing Structure
-
-```
-tests/
-├── cli.test.js             # CLI command tests
-└── (future: registry.test.js, template.test.js)
-```
-
-### Test Coverage Requirements (Constitutional Article III)
-- **Target**: 80% coverage
-- **Critical paths**: CLI commands, agent detection, template copying
-- **Test-First**: Red-Green-Blue cycle enforced
-
-### Test Strategy
-- **Unit tests**: registry.js functions (agent detection, flag parsing)
-- **Integration tests**: Full `musubi init` workflow
-- **Snapshot tests**: Template content validation (future)
-
-## Documentation
-
-- **README.md**: Project overview, quick start, agent support matrix
-- **README.ja.md**: Japanese translation
-- **CLAUDE.md**: Claude Code specific guide (in templates)
-- **AGENTS.md**: Generic agent guide (for non-Claude agents)
-- **GEMINI.md / QWEN.md**: Agent-specific guides (in templates)
-- **docs/Qiita/**: Japanese article about MUSUBI evolution
-- **docs/analysis/**: Framework comparison and design decisions
-- **steering/**: Project memory (structure, tech, product)
-
-### Documentation Principles
-1. **Bilingual First**: English primary, Japanese translation
-2. **Agent-Specific**: Tailored guides for each agent
-3. **Version in npm**: README and LICENSE included in package
-4. **Comprehensive Examples**: All CLI commands documented with examples
+**Project**: musubi
+**Last Updated**: 2025-11-17
+**Version**: 1.0
 
 ---
 
-**Note**: This document describes MUSUBI's actual architecture - a CLI tool that distributes SDD templates to 7 AI coding agents. Update this file when making architectural changes (e.g., adding new agents, changing template structure).
+## Architecture Pattern
 
-**Last Updated**: 2025-01-16 by @steering
+**Primary Pattern**: {{ARCHITECTURE_PATTERN}}
+
+> [Description of the architecture pattern used in this project]
+> Examples: Monorepo with Library-First, Microservices, Modular Monolith, Serverless
+
+---
+
+## Directory Organization
+
+### Root Structure
+
+```
+musubi/
+├── lib/                  # Reusable libraries (Article I: Library-First)
+├── app/                  # Application code (Next.js, etc.)
+├── api/                  # API routes/controllers
+├── components/           # UI components
+├── services/             # Business logic services
+├── tests/                # Test suites
+├── docs/                 # Documentation
+├── storage/              # SDD artifacts
+│   ├── specs/            # Requirements, design, tasks
+│   ├── changes/          # Delta specifications (brownfield)
+│   └── validation/       # Validation reports
+├── steering/             # Project memory (this directory)
+│   ├── structure.md      # This file
+│   ├── tech.md           # Technology stack
+│   ├── product.md        # Product context
+│   └── rules/            # Constitutional governance
+├── templates/            # Document templates
+└── [Other directories]
+```
+
+---
+
+## Library-First Pattern (Article I)
+
+All features begin as independent libraries in `lib/`.
+
+### Library Structure
+
+Each library follows this structure:
+
+```
+lib/{{feature}}/
+├── src/
+│   ├── index.ts          # Public API exports
+│   ├── service.ts        # Business logic
+│   ├── repository.ts     # Data access
+│   ├── types.ts          # TypeScript types
+│   ├── errors.ts         # Custom errors
+│   └── validators.ts     # Input validation
+├── tests/
+│   ├── service.test.ts   # Unit tests
+│   ├── repository.test.ts # Integration tests (real DB)
+│   └── integration.test.ts # E2E tests
+├── cli.ts                # CLI interface (Article II)
+├── package.json          # Library metadata
+├── tsconfig.json         # TypeScript config
+└── README.md             # Library documentation
+```
+
+### Library Guidelines
+
+- **Independence**: Libraries MUST NOT depend on application code
+- **Public API**: All exports via `src/index.ts`
+- **Testing**: Independent test suite
+- **CLI**: All libraries expose CLI interface (Article II)
+
+---
+
+## Application Structure
+
+### Application Organization
+
+```
+app/
+├── (auth)/               # Route groups (Next.js App Router)
+│   ├── login/
+│   │   └── page.tsx
+│   └── register/
+│       └── page.tsx
+├── dashboard/
+│   └── page.tsx
+├── api/                  # API routes
+│   ├── auth/
+│   │   └── route.ts
+│   └── users/
+│       └── route.ts
+├── layout.tsx            # Root layout
+└── page.tsx              # Home page
+```
+
+### Application Guidelines
+
+- **Library Usage**: Applications import from `lib/` modules
+- **Thin Controllers**: API routes delegate to library services
+- **No Business Logic**: Business logic belongs in libraries
+
+---
+
+## Component Organization
+
+### UI Components
+
+```
+components/
+├── ui/                   # Base UI components (shadcn/ui)
+│   ├── button.tsx
+│   ├── input.tsx
+│   └── card.tsx
+├── auth/                 # Feature-specific components
+│   ├── LoginForm.tsx
+│   └── RegisterForm.tsx
+├── dashboard/
+│   └── StatsCard.tsx
+└── shared/               # Shared components
+    ├── Header.tsx
+    └── Footer.tsx
+```
+
+### Component Guidelines
+
+- **Composition**: Prefer composition over props drilling
+- **Types**: All props typed with TypeScript
+- **Tests**: Component tests with React Testing Library
+
+---
+
+## Database Organization
+
+### Schema Organization
+
+```
+prisma/
+├── schema.prisma         # Prisma schema
+├── migrations/           # Database migrations
+│   ├── 001_create_users_table/
+│   │   └── migration.sql
+│   └── 002_create_sessions_table/
+│       └── migration.sql
+└── seed.ts               # Database seed data
+```
+
+### Database Guidelines
+
+- **Migrations**: All schema changes via migrations
+- **Naming**: snake_case for tables and columns
+- **Indexes**: Index foreign keys and frequently queried columns
+
+---
+
+## Test Organization
+
+### Test Structure
+
+```
+tests/
+├── unit/                 # Unit tests (per library)
+│   └── auth/
+│       └── service.test.ts
+├── integration/          # Integration tests (real services)
+│   └── auth/
+│       └── login.test.ts
+├── e2e/                  # End-to-end tests
+│   └── auth/
+│       └── user-flow.test.ts
+└── fixtures/             # Test data and fixtures
+    └── users.ts
+```
+
+### Test Guidelines
+
+- **Test-First**: Tests written BEFORE implementation (Article III)
+- **Real Services**: Integration tests use real DB/cache (Article IX)
+- **Coverage**: Minimum 80% coverage
+- **Naming**: `*.test.ts` for unit, `*.integration.test.ts` for integration
+
+---
+
+## Documentation Organization
+
+### Documentation Structure
+
+```
+docs/
+├── architecture/         # Architecture documentation
+│   ├── c4-diagrams/
+│   └── adr/              # Architecture Decision Records
+├── api/                  # API documentation
+│   ├── openapi.yaml
+│   └── graphql.schema
+├── guides/               # Developer guides
+│   ├── getting-started.md
+│   └── contributing.md
+└── runbooks/             # Operational runbooks
+    ├── deployment.md
+    └── troubleshooting.md
+```
+
+---
+
+## SDD Artifacts Organization
+
+### Storage Directory
+
+```
+storage/
+├── specs/                # Specifications
+│   ├── auth-requirements.md
+│   ├── auth-design.md
+│   ├── auth-tasks.md
+│   └── payment-requirements.md
+├── changes/              # Delta specifications (brownfield)
+│   ├── add-2fa.md
+│   └── upgrade-jwt.md
+├── features/             # Feature tracking
+│   ├── auth.json
+│   └── payment.json
+└── validation/           # Validation reports
+    ├── auth-validation-report.md
+    └── payment-validation-report.md
+```
+
+---
+
+## Naming Conventions
+
+### File Naming
+
+- **TypeScript**: `PascalCase.tsx` for components, `camelCase.ts` for utilities
+- **React Components**: `PascalCase.tsx` (e.g., `LoginForm.tsx`)
+- **Utilities**: `camelCase.ts` (e.g., `formatDate.ts`)
+- **Tests**: `*.test.ts` or `*.spec.ts`
+- **Constants**: `SCREAMING_SNAKE_CASE.ts` (e.g., `API_ENDPOINTS.ts`)
+
+### Directory Naming
+
+- **Features**: `kebab-case` (e.g., `user-management/`)
+- **Components**: `kebab-case` or `PascalCase` (consistent within project)
+
+### Variable Naming
+
+- **Variables**: `camelCase`
+- **Constants**: `SCREAMING_SNAKE_CASE`
+- **Types/Interfaces**: `PascalCase`
+- **Enums**: `PascalCase`
+
+---
+
+## Integration Patterns
+
+### Library → Application Integration
+
+```typescript
+// ✅ CORRECT: Application imports from library
+import { AuthService } from '@/lib/auth';
+
+const authService = new AuthService(repository);
+const result = await authService.login(credentials);
+```
+
+```typescript
+// ❌ WRONG: Library imports from application
+// Libraries must NOT depend on application code
+import { AuthContext } from '@/app/contexts/auth';  // Violation!
+```
+
+### Service → Repository Pattern
+
+```typescript
+// Service layer (business logic)
+export class AuthService {
+  constructor(private repository: UserRepository) {}
+
+  async login(credentials: LoginRequest): Promise<LoginResponse> {
+    // Business logic here
+    const user = await this.repository.findByEmail(credentials.email);
+    // ...
+  }
+}
+
+// Repository layer (data access)
+export class UserRepository {
+  constructor(private prisma: PrismaClient) {}
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+}
+```
+
+---
+
+## Deployment Structure
+
+### Deployment Units
+
+**Projects** (independently deployable):
+1. musubi - Main application
+
+> ⚠️ **Simplicity Gate (Article VII)**: Maximum 3 projects initially.
+> If adding more projects, document justification in Phase -1 Gate approval.
+
+### Environment Structure
+
+```
+environments/
+├── development/
+│   └── .env.development
+├── staging/
+│   └── .env.staging
+└── production/
+    └── .env.production
+```
+
+---
+
+## Multi-Language Support
+
+### Language Policy
+
+- **Primary Language**: English
+- **Documentation**: English first (`.md`), then Japanese (`.ja.md`)
+- **Code Comments**: English
+- **UI Strings**: i18n framework
+
+### i18n Organization
+
+```
+locales/
+├── en/
+│   ├── common.json
+│   └── auth.json
+└── ja/
+    ├── common.json
+    └── auth.json
+```
+
+---
+
+## Version Control
+
+### Branch Organization
+
+- `main` - Production branch
+- `develop` - Development branch
+- `feature/*` - Feature branches
+- `hotfix/*` - Hotfix branches
+- `release/*` - Release branches
+
+### Commit Message Convention
+
+```
+<type>(<scope>): <subject>
+
+<body>
+
+<footer>
+```
+
+**Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+
+**Example**:
+```
+feat(auth): implement user login (REQ-AUTH-001)
+
+Add login functionality with email and password authentication.
+Session created with 24-hour expiry.
+
+Closes REQ-AUTH-001
+```
+
+---
+
+## Constitutional Compliance
+
+This structure enforces:
+
+- **Article I**: Library-first pattern in `lib/`
+- **Article II**: CLI interfaces per library
+- **Article III**: Test structure supports Test-First
+- **Article VI**: Steering files maintain project memory
+
+---
+
+## Changelog
+
+### Version 1.1 (Planned)
+- [Future changes]
+
+---
+
+**Last Updated**: 2025-11-17
+**Maintained By**: {{MAINTAINER}}
