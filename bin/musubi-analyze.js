@@ -16,7 +16,7 @@ const fs = require('fs-extra');
 const path = require('path');
 const chalk = require('chalk');
 const { program } = require('commander');
-const glob = require('glob');
+const { glob } = require('glob');
 
 // ============================================================================
 // Configuration
