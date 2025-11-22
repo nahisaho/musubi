@@ -204,10 +204,11 @@ async function analyzeDirectoryStructure() {
   };
 
   // Glob for main directories (exclude node_modules, .git, etc.)
-  const dirs = await glob('*/', {
+  const dirsResult = await glob('*/', {
     ignore: ['node_modules/**', '.git/**', 'dist/**', 'build/**', '.vscode/**', '.idea/**'],
   });
 
+  const dirs = Array.isArray(dirsResult) ? dirsResult : [];
   analysis.directories = dirs.map(d => d.replace(/\/$/, ''));
 
   // Detect architecture patterns
@@ -215,7 +216,8 @@ async function analyzeDirectoryStructure() {
     analysis.patterns.push('src-based');
     
     // Check sub-patterns within src
-    const srcDirs = await glob('src/*/', { ignore: ['node_modules/**'] });
+    const srcDirsResult = await glob('src/*/', { ignore: ['node_modules/**'] });
+    const srcDirs = Array.isArray(srcDirsResult) ? srcDirsResult : [];
     
     if (srcDirs.includes('src/features/')) analysis.architecture = 'feature-first';
     else if (srcDirs.includes('src/components/')) analysis.architecture = 'component-based';
@@ -245,11 +247,12 @@ async function detectTechnologyStack(projectConfig) {
   };
 
   // Detect languages from file extensions
-  const files = await glob('**/*', {
+  const filesResult = await glob('**/*', {
     ignore: ['node_modules/**', '.git/**', 'dist/**', 'build/**'],
     nodir: true,
   });
 
+  const files = Array.isArray(filesResult) ? filesResult : [];
   const extensions = new Set(files.map(f => path.extname(f)).filter(Boolean));
 
   if (extensions.has('.js')) stack.languages.push('javascript');
