@@ -24,6 +24,7 @@ MUSUBI is a comprehensive SDD (Specification Driven Development) framework that 
 - 🔄 **Auto-Sync** - `musubi-sync` detects codebase changes and keeps steering docs current
 - 🔍 **Intelligent Code Analysis** - `musubi-analyze` provides quality metrics, complexity analysis, and technical debt detection
 - 🤝 **Team Collaboration** - `musubi-share` enables memory sharing, import/export, and multi-platform sync (v0.6.0)
+- ✅ **Constitutional Validation** - `musubi-validate` enforces 9 immutable governance articles with Phase -1 Gates (v0.7.0)
 - ✅ **Complete Traceability** - Requirements → Design → Code → Tests mapping
 - 🌐 **Bilingual Documentation** - All agent-generated documents created in both English and Japanese
 
@@ -99,6 +100,15 @@ musubi-analyze --output=report.md   # Save report
 # Share project memories with team (v0.6.0)
 musubi-share export                 # Export memories to JSON
 musubi-share import memories.json   # Import from teammate
+musubi-share sync --platform=copilot # Sync to specific platform
+
+# Validate constitutional compliance (v0.7.0)
+musubi-validate constitution        # Validate all 9 articles
+musubi-validate article 3           # Validate Test-First Imperative
+musubi-validate gates               # Validate Phase -1 Gates
+musubi-validate complexity          # Check complexity limits
+musubi-validate all -v              # Full validation with details
+```
 musubi-share sync                   # Sync across AI platforms
 musubi-share status                 # Show sharing status
 ```

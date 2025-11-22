@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.7.0] - 2025-11-23
+
+### Added
+- **Constitutional Governance System** - Enforce 9 immutable articles governing all development
+  - `musubi-validate constitution` - Validate all 9 Constitutional Articles
+  - `musubi-validate article <1-9>` - Validate specific article
+  - `musubi-validate gates` - Validate Phase -1 Gates (Simplicity, Anti-Abstraction)
+  - `musubi-validate complexity` - Validate complexity limits (modules ≤1500 lines, functions ≤50 lines)
+  - `musubi-validate all` - Run comprehensive validation (constitution + gates + complexity)
+  - Output formats: console (default), JSON, Markdown
+  - Verbose mode with detailed violation reports
+
+### Technical Details
+- **9 Constitutional Articles**:
+  - Article I: Library-First Principle
+  - Article II: CLI Interface Mandate
+  - Article III: Test-First Imperative (Red-Green-Blue cycle)
+  - Article IV: EARS Requirements Format
+  - Article V: Traceability Mandate (Requirements ↔ Design ↔ Code ↔ Tests)
+  - Article VI: Project Memory (Steering System)
+  - Article VII: Simplicity Gate (≤3 sub-projects initially)
+  - Article VIII: Anti-Abstraction Gate (use frameworks directly)
+  - Article IX: Integration-First Testing (real services, minimize mocks)
+- **Phase -1 Gates**: Pre-implementation validation checkpoints
+- **ConstitutionValidator**: Core validation engine (`src/validators/constitution.js`)
+- **Automated detection**: Project structure, test coverage, EARS patterns, complexity metrics
+- **Exit codes**: 0 (pass), 1 (fail) - CI/CD integration ready
+
+### Changed
+- **package.json**: Version bumped to 0.7.0
+- **bin/**: Added `musubi-validate.js` CLI command
+- **Phase 1 status**: Constitutional Governance System operational (Priority 1/P0 complete)
+
 ## [0.1.4] - 2025-11-17
 
 ### Fixed

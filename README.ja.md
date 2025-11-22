@@ -16,6 +16,11 @@ MUSUBIは、6つの主要フレームワークのベスト機能を統合した�
 - 📝 **EARS要件形式** - 完全なトレーサビリティを持つ明確な要件
 - 🔄 **差分仕様** - ブラウンフィールドおよびグリーンフィールドプロジェクト対応
 - 🧭 **自動更新プロジェクトメモリ** - ステアリングシステムがアーキテクチャ、技術スタック、製品コンテキストを維持
+- 🚀 **自動オンボーディング** - `musubi-onboard` が既存プロジェクトを分析し、ステアリングドキュメントを生成（2-5分）
+- 🔄 **自動同期** - `musubi-sync` がコードベースの変更を検出し、ステアリングドキュメントを最新に保つ
+- 🔍 **インテリジェントコード分析** - `musubi-analyze` が品質メトリクス、複雑度分析、技術的負債検出を提供
+- 🤝 **チーム連携** - `musubi-share` がメモリ共有、インポート/エクスポート、マルチプラットフォーム同期を実現（v0.6.0）
+- ✅ **憲法バリデーション** - `musubi-validate` が9つの不変ガバナンス条項とフェーズ-1ゲートを強制（v0.7.0）
 - ✅ **完全なトレーサビリティ** - 要件 → 設計 → コード → テストのマッピング
 - 🌐 **バイリンガルドキュメント** - すべてのエージェント生成ドキュメントは英語と日本語の両方で作成
 
@@ -72,6 +77,33 @@ npx musubi-sdd init --windsurf
 # またはグローバルインストール
 npm install -g musubi-sdd
 musubi init --claude    # または --copilot、--cursorなど
+
+# 既存プロジェクトのオンボーディング（自動分析）
+musubi-onboard
+
+# コードベースとステアリングドキュメントの同期
+musubi-sync
+musubi-sync --dry-run        # 変更のプレビュー
+musubi-sync --auto-approve   # 自動適用（CI/CD）
+
+# コード品質分析（v0.5.0）
+musubi-analyze                      # 完全分析
+musubi-analyze --type=quality       # 品質メトリクスのみ
+musubi-analyze --type=dependencies  # 依存関係のみ
+musubi-analyze --type=security      # セキュリティ監査
+musubi-analyze --output=report.md   # レポート保存
+
+# チームとプロジェクトメモリを共有（v0.6.0）
+musubi-share export                 # メモリをJSONにエクスポート
+musubi-share import memories.json   # チームメイトからインポート
+musubi-share sync --platform=copilot # 特定プラットフォームに同期
+
+# 憲法準拠の検証（v0.7.0）
+musubi-validate constitution        # 全9条項を検証
+musubi-validate article 3           # テストファースト原則を検証
+musubi-validate gates               # フェーズ-1ゲートを検証
+musubi-validate complexity          # 複雑度制限をチェック
+musubi-validate all -v              # 詳細付き完全検証
 ```
 
 ### プロジェクトタイプ
