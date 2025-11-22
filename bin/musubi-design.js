@@ -16,8 +16,19 @@
 
 const { Command } = require('commander');
 const chalk = require('chalk');
-const inquirer = require('inquirer');
 const DesignGenerator = require('../src/generators/design');
+
+let inquirer;
+
+/**
+ * Initialize inquirer (ESM module in v9+)
+ */
+async function getInquirer() {
+  if (!inquirer) {
+    inquirer = (await import('inquirer')).default;
+  }
+  return inquirer;
+}
 
 const program = new Command();
 
@@ -83,7 +94,8 @@ program
         if (files.length === 1) {
           designFile = files[0];
         } else {
-          const answer = await inquirer.prompt([{
+          const inquirerInst = await getInquirer();
+          const answer = await inquirerInst.prompt([{
             type: 'list',
             name: 'file',
             message: 'Select design file:',
@@ -94,7 +106,8 @@ program
       }
       
       // Interactive prompts for C4 diagram
-      const answers = await inquirer.prompt([
+      const inquirerInst2 = await getInquirer();
+      const answers = await inquirerInst2.prompt([
         {
           type: 'input',
           name: 'title',
@@ -157,7 +170,8 @@ program
         if (files.length === 1) {
           designFile = files[0];
         } else {
-          const answer = await inquirer.prompt([{
+          const inquirerInst = await getInquirer();
+          const answer = await inquirerInst.prompt([{
             type: 'list',
             name: 'file',
             message: 'Select design file:',
@@ -168,7 +182,8 @@ program
       }
       
       // Interactive prompts for ADR
-      const answers = await inquirer.prompt([
+      const inquirerInst2 = await getInquirer();
+      const answers = await inquirerInst2.prompt([
         {
           type: 'input',
           name: 'context',
