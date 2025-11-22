@@ -15,7 +15,7 @@ MUSUBIは、6つの主要フレームワークのベスト機能を統合した�
 - 📋 **憲法ガバナンス** - 9つの不変条項 + フェーズ-1ゲートによる品質保証
 - 📝 **EARS要件ジェネレーター** - 5つのEARSパターンで明確な要件を作成（v0.8.0）
 - 🏗️ **設計ドキュメントジェネレーター** - トレーサビリティ付きC4モデルとADRを作成（v0.8.2）
-- 🔄 **差分仕様** - ブラウンフィールドおよびグリーンフィールドプロジェクト対応
+- 🔄 **変更管理システム** - ブラウンフィールドプロジェクト向け差分仕様（v0.8.6）
 - 🧭 **自動更新プロジェクトメモリ** - ステアリングシステムがアーキテクチャ、技術スタック、製品コンテキストを維持
 - 🚀 **自動オンボーディング** - `musubi-onboard` が既存プロジェクトを分析し、ステアリングドキュメントを生成（2-5分）
 - 🔄 **自動同期** - `musubi-sync` がコードベースの変更を検出し、ステアリングドキュメントを最新に保つ
@@ -138,6 +138,15 @@ musubi-trace coverage --min-coverage 100        # 100%カバレッジ要求
 musubi-trace gaps                               # 孤立した要件/コード検出
 musubi-trace requirement REQ-AUTH-001           # 特定要件をトレース
 musubi-trace validate                           # 100%トレーサビリティ検証（第5条）
+
+# ブラウンフィールドプロジェクト向け変更管理（v0.8.6）
+musubi-change init CHANGE-001 --title "認証機能追加"  # 変更提案を作成
+musubi-change validate CHANGE-001 --verbose     # 差分仕様を検証
+musubi-change apply CHANGE-001 --dry-run        # 変更をプレビュー
+musubi-change apply CHANGE-001                  # コードベースに変更を適用
+musubi-change archive CHANGE-001                # specs/にアーカイブ
+musubi-change list --status pending             # 保留中の変更をリスト
+musubi-change list --format json                # JSON形式でリスト
 ```
 
 ### プロジェクトタイプ

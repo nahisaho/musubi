@@ -5,6 +5,59 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.6] - 2025-11-23
+
+### Added
+- **Delta Specification System** - Change management for brownfield projects
+  - `musubi-change init <change-id>` - Create change proposal with delta specification
+    - ADDED/MODIFIED/REMOVED/RENAMED requirement tracking
+    - Structured change template with impact analysis
+    - Traceability mapping (Requirements → Design → Code → Tests)
+  - `musubi-change apply <change-id>` - Apply change to codebase
+    - Dry-run mode for preview
+    - Validation before applying
+    - Statistics reporting (added/modified/removed/renamed counts)
+  - `musubi-change archive <change-id>` - Archive completed change
+    - Merge delta to canonical specs
+    - Move from storage/changes/ to specs/
+  - `musubi-change list` - List all change proposals
+    - Filter by status (pending/applied/archived)
+    - Table or JSON output formats
+  - `musubi-change validate <change-id>` - Validate delta format
+    - REQ-XXX-NNN pattern validation
+    - Detailed error reporting
+    - Verbose mode for statistics
+  - Change management workflow:
+    - Create proposal → Validate → Apply → Archive
+    - Impact analysis section (affected components, breaking changes, migration steps)
+    - Testing checklist (unit/integration/E2E coverage)
+    - Approval gates (technical/product/security review)
+  - Delta specification format:
+    - ADDED: New requirements/design/code
+    - MODIFIED: Changed requirements with before/after
+    - REMOVED: Deleted requirements with rationale
+    - RENAMED: Renamed requirements with mapping
+
+### Technical Details
+- **ChangeManager**: Core change management engine (src/managers/change.js)
+  - `initChange(changeId, options)` - Create change proposal from template
+  - `applyChange(changeId, options)` - Apply delta to codebase
+  - `archiveChange(changeId, options)` - Archive to specs/
+  - `listChanges(options)` - List all changes with filtering
+  - `validateChange(changeId, options)` - Validate delta format
+  - `parseDelta(file)` - Parse ADDED/MODIFIED/REMOVED/RENAMED sections
+  - `validateDelta(delta)` - Validate REQ-XXX-NNN patterns
+  - `mergeDeltaToSpecs(delta, specsDir)` - Merge changes to canonical specs
+- 14 new tests (199 total passing)
+  - Change initialization (create, duplicate detection, directory creation)
+  - Apply operations (dry-run, validation, statistics)
+  - Archive operations (move to specs, merge delta)
+  - List operations (all changes, filtering, sorting)
+  - Validation (valid delta, invalid IDs, statistics)
+  - Delta parsing (ADDED/MODIFIED/REMOVED/RENAMED sections)
+  - Template rendering
+- Phase 2 progress: 20% complete (Delta Specification System operational)
+
 ## [0.8.5] - 2025-11-23
 
 ### Added

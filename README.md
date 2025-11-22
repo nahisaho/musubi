@@ -19,7 +19,7 @@ MUSUBI is a comprehensive SDD (Specification Driven Development) framework that 
 - 📋 **Constitutional Governance** - 9 immutable articles + Phase -1 Gates for quality enforcement
 - 📝 **EARS Requirements Generator** - Create unambiguous requirements with 5 EARS patterns (v0.8.0)
 - 🏗️ **Design Document Generator** - Create C4 models and ADRs with traceability (v0.8.2)
-- 🔄 **Delta Specifications** - Brownfield and greenfield project support
+- 🔄 **Change Management System** - Delta specifications for brownfield projects (v0.8.6)
 - 🧭 **Auto-Updating Project Memory** - Steering system maintains architecture, tech stack, and product context
 - 🚀 **Automatic Onboarding** - `musubi-onboard` analyzes existing projects and generates steering docs (2-5 minutes)
 - 🔄 **Auto-Sync** - `musubi-sync` detects codebase changes and keeps steering docs current
@@ -142,6 +142,15 @@ musubi-trace coverage --min-coverage 100        # Require 100% coverage
 musubi-trace gaps                               # Detect orphaned requirements/code
 musubi-trace requirement REQ-AUTH-001           # Trace specific requirement
 musubi-trace validate                           # Validate 100% traceability (Article V)
+
+# Change management for brownfield projects (v0.8.6)
+musubi-change init CHANGE-001 --title "Add authentication"  # Create change proposal
+musubi-change validate CHANGE-001 --verbose     # Validate delta specification
+musubi-change apply CHANGE-001 --dry-run        # Preview changes
+musubi-change apply CHANGE-001                  # Apply changes to codebase
+musubi-change archive CHANGE-001                # Archive to specs/
+musubi-change list --status pending             # List pending changes
+musubi-change list --format json                # List in JSON format
 ```
 
 ### Project Types
