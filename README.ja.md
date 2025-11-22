@@ -120,6 +120,15 @@ musubi-design add-c4 container --format plantuml  # PlantUMLでコンテナ図�
 musubi-design add-adr "JWTトークン使用" # アーキテクチャ決定記録追加
 musubi-design validate                  # 設計完全性を検証
 musubi-design trace                     # 要件トレーサビリティ表示
+
+# 設計をタスクに分解（v0.8.4）
+musubi-tasks init "ユーザー認証"        # タスク分解を初期化
+musubi-tasks add "データベーススキーマ"  # インタラクティブにタスク追加
+musubi-tasks list                       # 全タスクリスト表示
+musubi-tasks list --priority P0         # 重要タスクのみ表示
+musubi-tasks update 001 "In Progress"   # タスクステータス更新
+musubi-tasks validate                   # タスク完全性を検証
+musubi-tasks graph                      # 依存関係グラフ表示
 ```
 
 ### プロジェクトタイプ

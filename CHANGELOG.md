@@ -5,6 +5,60 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.4] - 2025-11-22
+
+### Added
+- **Task Breakdown System** - Break design into actionable implementation tasks
+  - `musubi-tasks init <feature>` - Initialize task breakdown document
+  - `musubi-tasks add <title>` - Add task with interactive prompts
+  - `musubi-tasks list` - List all tasks with filtering
+  - `musubi-tasks update <id> <status>` - Update task status
+  - `musubi-tasks validate` - Validate task completeness
+  - `musubi-tasks graph` - Generate dependency graph
+  - P0-P3 priority system for sprint planning:
+    - P0: Critical - Launch blockers
+    - P1: High - Core features
+    - P2: Medium - Nice-to-haves
+    - P3: Low - Future enhancements
+  - Task attributes:
+    - Auto-numbered: TASK-001, TASK-002, TASK-003, etc.
+    - Story points (Fibonacci): 1/2/3/5/8/13
+    - Estimated hours
+    - Assignee, Status (Not Started/In Progress/Blocked/Testing/Complete)
+    - Requirements coverage (REQ-XXX-NNN links)
+    - Dependencies (TASK-XXX references)
+    - Acceptance criteria (testable checkboxes)
+  - Test-First checklist integration (Article III):
+    - Red: Tests written BEFORE implementation
+    - Green: Minimal implementation passes test
+    - Blue: Refactored with confidence
+  - Dependency management:
+    - Dependency graph generation (Mermaid/DOT format)
+    - Parallel execution planning
+    - Critical path detection
+    - Circular dependency detection
+  - Design-to-task traceability:
+    - Maps design references to tasks
+    - Shows requirements coverage per task
+  - Sprint planning support:
+    - Story point totals by priority
+    - Estimated hours by priority
+    - Parallel execution groups
+
+### Technical Details
+- **TasksGenerator**: Core engine (src/generators/tasks.js)
+  - `init(feature, options)` - Initialize task document
+  - `addTask(filePath, task)` - Add task with auto-numbering
+  - `list(options)` - List tasks with filtering
+  - `updateStatus(taskId, status)` - Update task status
+  - `validate(filePath)` - Validate task completeness
+  - `generateGraph(options)` - Generate dependency graph
+  - `generateMermaidGraph(tasks, dependencies)` - Mermaid format
+  - `generateDotGraph(tasks, dependencies)` - DOT format
+  - `calculateParallelGroups(tasks, dependencies)` - Parallel execution
+- **Tests**: 19 new tests (159 total passing)
+- **Article III Compliance**: Test-First checklist in every task template
+
 ## [0.8.2] - 2025-11-23
 
 ### Added

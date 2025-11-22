@@ -124,6 +124,15 @@ musubi-design add-c4 container --format plantuml # Add Container with PlantUML
 musubi-design add-adr "Use JWT for tokens"      # Add Architecture Decision
 musubi-design validate                          # Validate design completeness
 musubi-design trace                             # Show requirements traceability
+
+# Break down design into tasks (v0.8.4)
+musubi-tasks init "User Authentication"         # Initialize task breakdown
+musubi-tasks add "Database Schema"              # Add task interactively
+musubi-tasks list                               # List all tasks
+musubi-tasks list --priority P0                 # List critical tasks
+musubi-tasks update 001 "In Progress"           # Update task status
+musubi-tasks validate                           # Validate task completeness
+musubi-tasks graph                              # Show dependency graph
 ```
 
 ### Project Types
