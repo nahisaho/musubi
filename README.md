@@ -17,7 +17,7 @@ MUSUBI is a comprehensive SDD (Specification Driven Development) framework that 
   - GitHub Copilot & Cursor: AGENTS.md (official support)
   - Other 4 agents: AGENTS.md (compatible format)
 - 📋 **Constitutional Governance** - 9 immutable articles + Phase -1 Gates for quality enforcement
-- 📝 **EARS Requirements Format** - Unambiguous requirements with complete traceability
+- 📝 **EARS Requirements Generator** - Create unambiguous requirements with 5 EARS patterns (v0.8.0)
 - 🔄 **Delta Specifications** - Brownfield and greenfield project support
 - 🧭 **Auto-Updating Project Memory** - Steering system maintains architecture, tech stack, and product context
 - 🚀 **Automatic Onboarding** - `musubi-onboard` analyzes existing projects and generates steering docs (2-5 minutes)
@@ -108,9 +108,13 @@ musubi-validate article 3           # Validate Test-First Imperative
 musubi-validate gates               # Validate Phase -1 Gates
 musubi-validate complexity          # Check complexity limits
 musubi-validate all -v              # Full validation with details
-```
-musubi-share sync                   # Sync across AI platforms
-musubi-share status                 # Show sharing status
+
+# Create EARS requirements (v0.8.0)
+musubi-requirements init "User Authentication"  # Initialize requirements doc
+musubi-requirements add                         # Add requirement interactively
+musubi-requirements list                        # List all requirements
+musubi-requirements validate                    # Validate EARS format
+musubi-requirements trace                       # Show traceability matrix
 ```
 
 ### Project Types

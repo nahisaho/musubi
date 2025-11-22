@@ -5,6 +5,44 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.8.0] - 2025-11-23
+
+### Added
+- **EARS Requirements Generator** - Create unambiguous specifications following Article IV
+  - `musubi-requirements init <feature>` - Initialize requirements document from template
+  - `musubi-requirements add` - Add requirement with interactive EARS pattern selection
+  - `musubi-requirements list` - List all requirements in project
+  - `musubi-requirements validate` - Validate EARS format compliance
+  - `musubi-requirements trace` - Show requirements traceability matrix
+  - Support for all 5 EARS patterns:
+    - Ubiquitous: `The [system] SHALL [requirement]`
+    - Event-Driven: `WHEN [event], THEN [system] SHALL [response]`
+    - State-Driven: `WHILE [state], [system] SHALL [response]`
+    - Unwanted Behavior: `IF [error], THEN [system] SHALL [response]`
+    - Optional Feature: `WHERE [feature], [system] SHALL [response]`
+  - Auto-generate unique requirement IDs (REQ-XXX-001, REQ-XXX-002, etc.)
+  - Interactive prompts for requirement creation
+  - Multiple output formats: table (default), JSON, Markdown
+  - Acceptance criteria templates
+  - Traceability matrix initialization
+
+### Technical Details
+- **RequirementsGenerator**: Core generator engine (`src/generators/requirements.js`)
+- **Article IV Compliance**: All generated requirements validated against EARS format
+- **Template Processing**: Uses `src/templates/shared/documents/requirements.md`
+- **Pattern Detection**: Automatic EARS pattern recognition in existing requirements
+- **Validation Rules**:
+  - SHALL keyword mandatory
+  - Pattern-specific syntax validation (WHEN/THEN, WHILE, IF/THEN, WHERE)
+  - Acceptance criteria presence check
+- **Traceability**: Initialize Requirements → Design → Code → Tests mapping
+- **25 new tests**: All EARS patterns, ID generation, validation, formatting
+
+### Changed
+- **package.json**: Version bumped to 0.8.0
+- **bin/**: Added `musubi-requirements.js` CLI command
+- **Phase 1 status**: EARS Requirements Generator operational (Priority 2/P0 complete)
+
 ## [0.7.0] - 2025-11-23
 
 ### Added

@@ -13,7 +13,7 @@ MUSUBIは、6つの主要フレームワークのベスト機能を統合した�
   - GitHub Copilot & Cursor: AGENTS.md（公式サポート）
   - その他4エージェント: AGENTS.md（互換形式）
 - 📋 **憲法ガバナンス** - 9つの不変条項 + フェーズ-1ゲートによる品質保証
-- 📝 **EARS要件形式** - 完全なトレーサビリティを持つ明確な要件
+- 📝 **EARS要件ジェネレーター** - 5つのEARSパターンで明確な要件を作成（v0.8.0）
 - 🔄 **差分仕様** - ブラウンフィールドおよびグリーンフィールドプロジェクト対応
 - 🧭 **自動更新プロジェクトメモリ** - ステアリングシステムがアーキテクチャ、技術スタック、製品コンテキストを維持
 - 🚀 **自動オンボーディング** - `musubi-onboard` が既存プロジェクトを分析し、ステアリングドキュメントを生成（2-5分）
@@ -104,6 +104,13 @@ musubi-validate article 3           # テストファースト原則を検証
 musubi-validate gates               # フェーズ-1ゲートを検証
 musubi-validate complexity          # 複雑度制限をチェック
 musubi-validate all -v              # 詳細付き完全検証
+
+# EARS要件の作成（v0.8.0）
+musubi-requirements init "ユーザー認証"  # 要件ドキュメント初期化
+musubi-requirements add                 # インタラクティブに要件追加
+musubi-requirements list                # 全要件リスト表示
+musubi-requirements validate            # EARS形式検証
+musubi-requirements trace               # トレーサビリティマトリクス表示
 ```
 
 ### プロジェクトタイプ
