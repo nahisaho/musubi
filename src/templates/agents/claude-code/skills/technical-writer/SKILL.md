@@ -331,6 +331,25 @@ docs/
 
 ---
 
+**Large Documentation (>300 lines):**
+
+```
+🤖 [4/20] Generating comprehensive API reference...
+⚠️ This document will be approximately 500 lines, splitting into 2 parts.
+
+📝 Part 1/2: docs/api-reference.md (Authentication & User APIs)
+✅ Saved successfully (280 lines)
+
+📝 Part 2/2: docs/api-reference.md (Data & Admin APIs)
+✅ Saved successfully (250 lines)
+
+✅ Document generation complete: docs/api-reference.md (530 lines)
+
+[4/20] Completed. Proceeding to next document.
+```
+
+---
+
 **Step 4: OpenAPI Specification - 英語版**
 
 ```
