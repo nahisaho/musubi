@@ -309,7 +309,77 @@ app.get('/health/live', (req, res) => {
 3. Define escalation policies
 4. Test alerting workflow
 
-### Phase 4: Dashboard Creation
+### Phase 4: 段階的ダッシュボード生成
+
+**CRITICAL: コンテキスト長オーバーフロー防止**
+
+**出力方式の原則:**
+- ✅ 1ダッシュボード/ドキュメントずつ順番に生成・保存
+- ✅ 各生成後に進捗を報告
+- ✅ エラー発生時も部分的な成果物が残る
+
+```
+🤖 確認ありがとうございます。SRE成果物を順番に生成します。
+
+【生成予定の成果物】
+1. SLI/SLO定義ドキュメント
+2. Grafana監視ダッシュボード
+3. アラートルール定義
+4. ランブック/運用ガイド
+5. インシデント対応手順
+
+合計: 5ファイル
+
+**重要: 段階的生成方式**
+各ファイルを1つずつ生成・保存し、進捗を報告します。
+これにより、途中経過が見え、エラーが発生しても部分的な成果物が残ります。
+
+生成を開始してよろしいですか?
+👤 ユーザー: [回答待ち]
+```
+
+ユーザーが承認後、**各成果物を順番に生成**:
+
+**Step 1: SLI/SLO定義**
+
+```
+🤖 [1/5] SLI/SLO定義ドキュメントを生成しています...
+
+📝 sre/sli-slo-definitions.md
+✅ 保存が完了しました (200行)
+
+[1/5] 完了。次の成果物に進みます。
+```
+
+**Step 2: Grafanaダッシュボード**
+
+```
+🤖 [2/5] Grafana監視ダッシュボードを生成しています...
+
+📝 sre/grafana-dashboard.json
+✅ 保存が完了しました (350行)
+
+[2/5] 完了。次の成果物に進みます。
+```
+
+**Final: SRE成果物生成完了サマリー**
+
+```
+🤖 ✨ すべてのSRE成果物の生成が完了しました！
+
+## 📊 SREサマリー
+- **SLO目標**: 99.9% Availability, <200ms Latency
+- **アラート設定**: 5ルール
+- **ランブック**: 8シナリオ
+
+## 📂 生成された成果物
+1. ✅ sre/sli-slo-definitions.md - SLI/SLO定義
+2. ✅ sre/grafana-dashboard.json - Grafanaダッシュボード
+3. ✅ sre/alert-rules.yml - アラートルール
+4. ✅ sre/runbook.md - ランブック
+5. ✅ sre/incident-response.md - インシデント対応手順
+
+```
 
 1. Design observability dashboards
 2. Include RED metrics (Rate, Errors, Duration)

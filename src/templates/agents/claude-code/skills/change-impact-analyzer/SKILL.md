@@ -310,7 +310,75 @@ find api/ -name "*.yaml" -o -name "*.json"
 3. Identify indirect (cascading) dependencies
 4. Identify integration points
 
-### Phase 4: Impact Report Generation
+### Phase 4: 段階的影響分析レポート生成
+
+**CRITICAL: コンテキスト長オーバーフロー防止**
+
+**出力方式の原則:**
+- ✅ 1セクションずつ順番に生成・保存
+- ✅ 各セクション生成後に進捗を報告
+- ✅ 大きなレポートをセクションごとに分割
+- ✅ エラー発生時も部分的なレポートが残る
+
+```
+🤖 確認ありがとうございます。影響分析レポートを順番に生成します。
+
+【生成予定のセクション】
+1. Executive Summary
+2. Affected Components
+3. Breaking Changes
+4. Risk Assessment
+5. Recommendations
+6. Approval Checklist
+
+合計: 6セクション
+
+**重要: 段階的生成方式**
+各セクションを1つずつ生成・保存し、進捗を報告します。
+これにより、途中経過が見え、エラーが発生しても部分的なレポートが残ります。
+
+生成を開始してよろしいですか?
+👤 ユーザー: [回答待ち]
+```
+
+ユーザーが承認後、**各セクションを順番に生成**:
+
+**Step 1: Executive Summary**
+
+```
+🤖 [1/6] Executive Summaryを生成しています...
+
+📝 impact-analysis/add-two-factor-auth-report.md (Section 1)
+✅ 保存が完了しました
+
+[1/6] 完了。次のセクションに進みます。
+```
+
+**Step 2: Affected Components**
+
+```
+🤖 [2/6] Affected Componentsを生成しています...
+
+📝 impact-analysis/add-two-factor-auth-report.md (Section 2)
+✅ 保存が完了しました
+
+[2/6] 完了。次のセクションに進みます。
+```
+
+**Final: レポート生成完了サマリー**
+
+```
+🤖 ✨ 影響分析レポートの生成が完了しました！
+
+## 📊 分析サマリー
+- **影響を受けるコンポーネント**: 12ファイル
+- **破壊的変更**: 1件
+- **リスクレベル**: HIGH
+
+## 📂 生成されたレポート
+✅ impact-analysis/add-two-factor-auth-report.md (6セクション)
+
+```
 
 ```markdown
 # Change Impact Analysis Report

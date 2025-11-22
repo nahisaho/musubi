@@ -423,9 +423,76 @@ spec:
 \`\`\`
 ```
 
-### Phase 4: モニタリング設定
+### Phase 4: 段階的モニタリング設定
+
+**CRITICAL: コンテキスト長オーバーフロー防止**
+
+**出力方式の原則:**
+- ✅ 1設定ファイルずつ順番に生成・保存
+- ✅ 各設定後に進捗を報告
+- ✅ エラー発生時も部分的な設定が残る
 
 ```
+🤖 確認ありがとうございます。以下のモニタリング設定を順番に生成します。
+
+【生成予定の設定ファイル】
+1. Prometheus設定 (prometheus.yml)
+2. Grafanaダッシュボード (dashboard.json)
+3. アラートルール (alert_rules.yml)
+4. Loki設定 (loki-config.yml)
+5. モニタリングドキュメント (MONITORING.md)
+
+合計: 5ファイル
+
+**重要: 段階的生成方式**
+各設定ファイルを1つずつ生成・保存し、進捗を報告します。
+これにより、途中経過が見え、エラーが発生しても部分的な設定が残ります。
+
+生成を開始してよろしいですか?
+👤 ユーザー: [回答待ち]
+```
+
+ユーザーが承認後、**各設定ファイルを順番に生成**:
+
+**Step 1: Prometheus設定**
+
+```
+🤖 [1/5] Prometheus設定を生成しています...
+
+📝 monitoring/prometheus.yml
+✅ 保存が完了しました
+
+[1/5] 完了。次の設定ファイルに進みます。
+```
+
+**Step 2: Grafanaダッシュボード**
+
+```
+🤖 [2/5] Grafanaダッシュボードを生成しています...
+
+📝 monitoring/grafana/dashboard.json
+✅ 保存が完了しました
+
+[2/5] 完了。次の設定ファイルに進みます。
+```
+
+**Final: モニタリング設定完了サマリー**
+
+```
+🤖 ✨ すべてのモニタリング設定が完了しました！
+
+## 📊 設定サマリー
+- **生成ファイル数**: 5個
+
+## 📂 生成されたファイル
+1. ✅ monitoring/prometheus.yml - Prometheus設定
+2. ✅ monitoring/grafana/dashboard.json - Grafanaダッシュボード
+3. ✅ monitoring/alert_rules.yml - アラートルール
+4. ✅ monitoring/loki-config.yml - Loki設定
+5. ✅ docs/MONITORING.md - モニタリングドキュメント
+
+```
+
 ## Prometheus & Grafana
 
 ### アプリケーションメトリクス

@@ -376,7 +376,73 @@ Run all Phase -1 Gates:
 8. CLI Interface Gate
 9. Test-First Gate
 
-### Phase 4: Report Generation
+### Phase 4: 段階的レポート生成
+
+**CRITICAL: コンテキスト長オーバーフロー防止**
+
+**出力方式の原則:**
+- ✅ 1セクションずつ順番に生成・保存
+- ✅ 各セクション生成後に進捗を報告
+- ✅ エラー発生時も部分的なレポートが残る
+
+```
+🤖 確認ありがとうございます。憲法違反レポートを順番に生成します。
+
+【生成予定のセクション】
+1. Executive Summary
+2. Failed Gates
+3. Passed Gates
+4. Recommendations
+5. Approval Status
+
+合計: 5セクション
+
+**重要: 段階的生成方式**
+各セクションを1つずつ生成・保存し、進捗を報告します。
+これにより、途中経過が見え、エラーが発生しても部分的なレポートが残ります。
+
+生成を開始してよろしいですか?
+👤 ユーザー: [回答待ち]
+```
+
+ユーザーが承認後、**各セクションを順番に生成**:
+
+**Step 1: Executive Summary**
+
+```
+🤖 [1/5] Executive Summaryを生成しています...
+
+📝 compliance/constitutional-compliance-report.md (Section 1)
+✅ 保存が完了しました
+
+[1/5] 完了。次のセクションに進みます。
+```
+
+**Step 2: Failed Gates**
+
+```
+🤖 [2/5] Failed Gatesを生成しています...
+
+📝 compliance/constitutional-compliance-report.md (Section 2)
+✅ 保存が完了しました
+
+[2/5] 完了。次のセクションに進みます。
+```
+
+**Final: レポート生成完了サマリー**
+
+```
+🤖 ✨ 憲法違反レポートの生成が完了しました！
+
+## 📊 コンプライアンスサマリー
+- **合格ゲート**: 7/9 (77.8%)
+- **不合格ゲート**: 2/9 (22.2%)
+- **ステータス**: ❌ BLOCKED
+
+## 📂 生成されたレポート
+✅ compliance/constitutional-compliance-report.md (5セクション)
+
+```
 
 ```markdown
 # Constitutional Compliance Report
