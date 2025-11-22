@@ -6,7 +6,8 @@
   "bin": {
     "musubi-sdd": "bin/musubi.js",
     "musubi": "bin/musubi.js",
-    "musubi-init": "bin/musubi-init.js"
+    "musubi-init": "bin/musubi-init.js",
+    "musubi-onboard": "bin/musubi-onboard.js"
   },
   "scripts": {
     "test": "jest",
@@ -41,6 +42,7 @@
     "chalk": "^4.1.2",
     "commander": "^11.0.0",
     "fs-extra": "^11.0.0",
+    "glob": "^10.0.0",
     "inquirer": "^9.0.0"
   },
   "devDependencies": {
