@@ -208,7 +208,8 @@ async function analyzeCodebase() {
     nodir: true,
   });
 
-  const extensions = new Set(files.map(f => path.extname(f)).filter(Boolean));
+  const fileArray = Array.isArray(files) ? files : [];
+  const extensions = new Set(fileArray.map(f => path.extname(f)).filter(Boolean));
   const langMap = {
     '.js': 'javascript',
     '.ts': 'typescript',
@@ -229,7 +230,8 @@ async function analyzeCodebase() {
   const dirs = await glob('*/', {
     ignore: ['node_modules/**', '.git/**', 'dist/**', 'build/**', '.vscode/**'],
   });
-  state.directories = dirs.map(d => d.replace(/\/$/, '')).slice(0, 10);
+  const dirArray = Array.isArray(dirs) ? dirs : [];
+  state.directories = dirArray.map(d => d.replace(/\/$/, '')).slice(0, 10);
 
   return state;
 }

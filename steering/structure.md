@@ -1,6 +1,6 @@
 # Project Structure
 
-**Project**: N
+**Project**: musubi
 **Last Updated**: 2025-11-22
 **Version**: 1.0
 
@@ -20,7 +20,7 @@
 ### Root Structure
 
 ```
-N/
+musubi/
 ├── lib/                  # Reusable libraries (Article I: Library-First)
 ├── app/                  # Application code (Next.js, etc.)
 ├── api/                  # API routes/controllers
@@ -308,7 +308,7 @@ export class UserRepository {
 
 **Projects** (independently deployable):
 
-1. N - Main application
+1. musubi - Main application
 
 > ⚠️ **Simplicity Gate (Article VII)**: Maximum 3 projects initially.
 > If adding more projects, document justification in Phase -1 Gate approval.

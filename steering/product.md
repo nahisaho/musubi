@@ -1,6 +1,6 @@
 # Product Context
 
-**Project**: N
+**Project**: musubi
 **Last Updated**: 2025-11-22
 **Version**: 1.0
 
@@ -20,7 +20,7 @@
 
 ## Product Overview
 
-### What is N?
+### What is musubi?
 
 A software project using MUSUBI SDD
 

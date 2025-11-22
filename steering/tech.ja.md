@@ -6,6 +6,10 @@
 
 ## フレームワーク
 
+- **ESLint** (detected) - 自動検出されたフレームワーク
+- **Prettier** (detected) - 自動検出されたフレームワーク
+
+
 - **Jest** (^29.0.0) - testing
 
 ## ツール

@@ -1,6 +1,6 @@
 # Technology Stack
 
-**Project**: N
+**Project**: musubi
 **Last Updated**: 2025-11-22
 **Version**: 1.0
 
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This document defines the approved technology stack for N. All development MUST use these technologies unless explicitly approved via Phase -1 Gate (Article VIII: Anti-Abstraction).
+This document defines the approved technology stack for musubi. All development MUST use these technologies unless explicitly approved via Phase -1 Gate (Article VIII: Anti-Abstraction).
 
 ---
 
@@ -410,7 +410,7 @@ services:
 ```json
 // package.json structure
 {
-  "name": "N",
+  "name": "musubi",
   "version": "1.0.0",
   "scripts": {
     "dev": "next dev",
