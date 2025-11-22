@@ -406,3 +406,18 @@ This structure enforces:
 
 **Last Updated**: 2025-11-22
 **Maintained By**: {{MAINTAINER}}
+
+
+## New Directories (Detected 2025-11-22)
+
+```
+tests/
+templates/
+storage/
+steering/
+orchestrator/
+docs/
+coverage/
+bin/
+References/
+```

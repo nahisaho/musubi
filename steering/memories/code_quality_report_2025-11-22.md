@@ -1,7 +1,20 @@
 # Code Quality Analysis Report
 
-**Generated**: 2025-11-22T21:11:05.132Z
+**Generated**: 2025-11-22T21:44:40.090Z
 **Version**: MUSUBI v0.5.0
+
+## Quality Metrics
+
+- Total Files: 175
+- Average Complexity: 27
+- Average Maintainability: 60
+- High Complexity Files: 35
+- Low Maintainability Files: 26
+
+### Recommendations
+
+- ⚠️ 35 files have high complexity. Consider refactoring.
+- ⚠️ 26 files have low maintainability. Add comments and simplify logic.
 
 ## Dependencies
 

@@ -2,8 +2,15 @@ project_name: musubi-sdd
 description: >-
   Ultimate Specification Driven Development Tool with 25 Agents for 7 AI Coding Platforms (Claude
   Code, GitHub Copilot, Cursor, Gemini CLI, Windsurf, Codex, Qwen Code)
-version: 0.5.1
-languages: []
+version: 0.6.1
+languages:
+  - javascript
+  - typescript
+  - python
+  - rust
+  - go
+  - java
+  - ruby
 frameworks:
   - name: Jest
     version: detected

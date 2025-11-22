@@ -22,3 +22,18 @@
 ---
 
 *MUSUBIオンボーディングにより自動生成。必要に応じてカスタマイズしてください。*
+
+
+## 新規ディレクトリ (検出日: 2025-11-22)
+
+```
+tests/
+templates/
+storage/
+steering/
+orchestrator/
+docs/
+coverage/
+bin/
+References/
+```
