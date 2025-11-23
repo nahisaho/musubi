@@ -36,7 +36,7 @@ const program = new Command();
 program
   .name('musubi-tasks')
   .description('MUSUBI Task Breakdown System - Break down design into actionable tasks')
-  .version('0.9.1');
+  .version('0.9.2');
 
 // Initialize task breakdown
 program
@@ -47,26 +47,59 @@ program
   .option('--project <name>', 'Project name')
   .option('-d, --design <path>', 'Design document path')
   .option('-r, --requirements <path>', 'Requirements document path')
+  .option('--dry-run', 'Show what would be created without writing files')
+  .option('--verbose', 'Show detailed output')
+  .option('--json', 'Output result as JSON')
   .action(async (feature, options) => {
     try {
-      console.log(chalk.bold(`\n📋 Initializing task breakdown for: ${feature}\n`));
+      if (!options.json && !options.dryRun) {
+        console.log(chalk.bold(`\n📋 Initializing task breakdown for: ${feature}\n`));
+      }
+      
+      if (options.verbose && !options.json) {
+        console.log(chalk.dim('Options:'));
+        console.log(chalk.dim(`  Output: ${options.output}`));
+        console.log(chalk.dim(`  Author: ${options.author || 'Not specified'}`));
+        console.log(chalk.dim(`  Project: ${options.project || 'Not specified'}`));
+        console.log(chalk.dim(`  Design: ${options.design || 'Not specified'}`));
+        console.log(chalk.dim(`  Requirements: ${options.requirements || 'Not specified'}`));
+        console.log(chalk.dim(`  Dry run: ${options.dryRun || false}`));
+        console.log();
+      }
       
       const generator = new TasksGenerator(process.cwd());
       const result = await generator.init(feature, options);
       
-      console.log(chalk.green('\n✓ Task breakdown document created'));
-      console.log(chalk.dim(`  ${result.path}`));
-      console.log();
-      console.log(chalk.bold('Next steps:'));
-      console.log(chalk.dim(`  1. Edit ${result.path}`));
-      console.log(chalk.dim('  2. Add tasks: musubi-tasks add <title>'));
-      console.log(chalk.dim('  3. Validate: musubi-tasks validate'));
-      console.log(chalk.dim('  4. Generate graph: musubi-tasks graph'));
-      console.log();
+      if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+      } else if (options.dryRun) {
+        console.log(chalk.yellow('🔍 Dry run - No files created'));
+        console.log(chalk.dim(`\n  Would create: ${result.path}`));
+        console.log(chalk.dim('  Template: Task breakdown document'));
+        console.log(chalk.dim(`  Feature: ${feature}`));
+        console.log();
+      } else {
+        console.log(chalk.green('\n✓ Task breakdown document created'));
+        console.log(chalk.dim(`  ${result.path}`));
+        console.log();
+        console.log(chalk.bold('Next steps:'));
+        console.log(chalk.dim(`  1. Edit ${result.path}`));
+        console.log(chalk.dim('  2. Add tasks: musubi-tasks add <title>'));
+        console.log(chalk.dim('  3. Validate: musubi-tasks validate'));
+        console.log(chalk.dim('  4. Generate graph: musubi-tasks graph'));
+        console.log();
+      }
       
       process.exit(0);
     } catch (error) {
-      console.error(chalk.red('✗ Error:'), error.message);
+      if (options.json) {
+        console.error(JSON.stringify({ error: error.message, stack: error.stack }, null, 2));
+      } else {
+        console.error(chalk.red('✗ Error:'), error.message);
+        if (options.verbose) {
+          console.error(chalk.dim(error.stack));
+        }
+      }
       process.exit(1);
     }
   });

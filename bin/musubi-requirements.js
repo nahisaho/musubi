@@ -24,7 +24,7 @@ const program = new Command();
 program
   .name('musubi-requirements')
   .description('EARS Requirements Generator - Create unambiguous specifications')
-  .version('0.9.1');
+  .version('0.9.2');
 
 // Initialize requirements document
 program
@@ -33,25 +33,56 @@ program
   .option('-o, --output <path>', 'Output directory', 'docs/requirements')
   .option('-a, --author <name>', 'Author name')
   .option('--project <name>', 'Project name')
+  .option('--dry-run', 'Show what would be created without writing files')
+  .option('--verbose', 'Show detailed output')
+  .option('--json', 'Output result as JSON')
   .action(async (feature, options) => {
     try {
-      console.log(chalk.bold(`\n📋 Initializing requirements for: ${feature}\n`));
+      if (!options.json && !options.dryRun) {
+        console.log(chalk.bold(`\n📋 Initializing requirements for: ${feature}\n`));
+      }
+      
+      if (options.verbose && !options.json) {
+        console.log(chalk.dim('Options:'));
+        console.log(chalk.dim(`  Output: ${options.output}`));
+        console.log(chalk.dim(`  Author: ${options.author || 'Not specified'}`));
+        console.log(chalk.dim(`  Project: ${options.project || 'Not specified'}`));
+        console.log(chalk.dim(`  Dry run: ${options.dryRun || false}`));
+        console.log();
+      }
       
       const generator = new RequirementsGenerator(process.cwd());
       const result = await generator.init(feature, options);
       
-      console.log(chalk.green('✓ Requirements document created'));
-      console.log(chalk.dim(`  ${result.path}`));
-      console.log();
-      console.log(chalk.bold('Next steps:'));
-      console.log(chalk.dim(`  1. Edit ${result.path}`));
-      console.log(chalk.dim('  2. Add requirements: musubi-requirements add <pattern> <title>'));
-      console.log(chalk.dim('  3. Validate: musubi-requirements validate'));
-      console.log();
+      if (options.json) {
+        console.log(JSON.stringify(result, null, 2));
+      } else if (options.dryRun) {
+        console.log(chalk.yellow('🔍 Dry run - No files created'));
+        console.log(chalk.dim(`\n  Would create: ${result.path}`));
+        console.log(chalk.dim('  Template: EARS requirements document'));
+        console.log(chalk.dim(`  Feature: ${feature}`));
+        console.log();
+      } else {
+        console.log(chalk.green('✓ Requirements document created'));
+        console.log(chalk.dim(`  ${result.path}`));
+        console.log();
+        console.log(chalk.bold('Next steps:'));
+        console.log(chalk.dim(`  1. Edit ${result.path}`));
+        console.log(chalk.dim('  2. Add requirements: musubi-requirements add <pattern> <title>'));
+        console.log(chalk.dim('  3. Validate: musubi-requirements validate'));
+        console.log();
+      }
       
       process.exit(0);
     } catch (error) {
-      console.error(chalk.red('✗ Error:'), error.message);
+      if (options.json) {
+        console.error(JSON.stringify({ error: error.message, stack: error.stack }, null, 2));
+      } else {
+        console.error(chalk.red('✗ Error:'), error.message);
+        if (options.verbose) {
+          console.error(chalk.dim(error.stack));
+        }
+      }
       process.exit(1);
     }
   });

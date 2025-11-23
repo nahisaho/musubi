@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.2] - 2025-11-23
+
+### Added - Enhanced CLI Options
+
+- **Dry Run Support**: Added `--dry-run` option to all init commands
+  - `musubi-requirements init <feature> --dry-run`: Preview without creating files
+  - `musubi-design init <feature> --dry-run`: Preview design document creation
+  - `musubi-tasks init <feature> --dry-run`: Preview task breakdown creation
+- **Verbose Mode**: Added `--verbose` option for detailed output
+  - Shows all options and configuration values
+  - Displays detailed error stack traces
+  - Helpful for debugging and CI/CD integration
+- **JSON Output**: Added `--json` option for machine-readable output
+  - Structured JSON output for automation
+  - Error messages in JSON format
+  - Easy integration with external tools
+
+### Improved
+- Enhanced error handling with verbose stack traces
+- Better user feedback with conditional output based on flags
+- Improved automation support with structured JSON output
+
+---
+
 ## [0.9.1] - 2025-11-23
 
 ### Changed - CLI Command Enhancement
