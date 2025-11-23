@@ -2,7 +2,7 @@
 
 **Project**: musubi
 **Last Updated**: 2025-11-23
-**Version**: 1.1
+**Version**: 1.0
 
 ---
 
@@ -139,71 +139,44 @@ A software project using MUSUBI SDD
 
 ### Must-Have Features (MVP)
 
-1. **25 Specialized AI Agents**
-   - **Description**: Orchestrated multi-agent system for SDD workflow
-   - **User Value**: Automated requirements → design → implementation → testing
+1. **{{FEATURE_1}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
    - **Priority**: P0 (Critical)
 
-2. **Constitutional Governance (9 Articles)**
-   - **Description**: Immutable development principles enforced across all agents
-   - **User Value**: Ensures consistency, quality, and architectural integrity
+2. **{{FEATURE_2}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
    - **Priority**: P0 (Critical)
 
-3. **Project Memory (Steering System)**
-   - **Description**: Auto-updating context files (structure, tech, product)
-   - **User Value**: All agents work with consistent, up-to-date project context
+3. **{{FEATURE_3}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
    - **Priority**: P0 (Critical)
 
 ### High-Priority Features (Post-MVP)
 
-4. **Parallel Agent Execution**
-   - **Description**: Concurrent execution of independent agents (30-70% time reduction)
-   - **User Value**: Faster workflow completion, improved efficiency
-   - **Priority**: P1 (High) - **Implemented v1.1**
+4. **{{FEATURE_4}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
+   - **Priority**: P1 (High)
 
-5. **Gradual Output Pattern**
-   - **Description**: Step-by-step output with progress counters to prevent context overflow
-   - **User Value**: Handles large projects, provides progress visibility
-   - **Priority**: P1 (High) - **Implemented v1.1**
-
-6. **Advanced Error Handling**
-   - **Description**: 4-level error classification with retry strategies and alternative agent suggestions
-   - **User Value**: Robust error recovery, reduced workflow interruptions
-   - **Priority**: P1 (High) - **Implemented v1.1**
-
-### Recent Features (v1.1 - 2025-11-23)
-
-7. **Dependency Visualization (Mermaid Diagrams)**
-   - **Description**: Auto-generated dependency graphs showing critical paths and parallel execution opportunities
-   - **User Value**: Visual understanding of workflow, optimized execution planning
-   - **Priority**: P1 (High) - **Implemented v1.1**
-
-8. **Agent Selection Matrix (60+ Use Cases)**
-   - **Description**: Keyword-based agent selection with Japanese/English support
-   - **User Value**: Accurate agent selection, multilingual support
-   - **Priority**: P1 (High) - **Implemented v1.1**
-
-9. **Dialogue Flow Optimization (6 Agent Types)**
-   - **Description**: Type-specific dialogue flows (2-5 phases) with emergency mode
-   - **User Value**: Faster task completion, reduced unnecessary questions
-   - **Priority**: P1 (High) - **Implemented v1.1**
-
-10. **Project Memory Auto-Update**
-    - **Description**: Automatic detection of project changes with git-diff style updates
-    - **User Value**: Always up-to-date project context, no manual sync needed
-    - **Priority**: P2 (Medium) - **Implemented v1.1**
+5. **{{FEATURE_5}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
+   - **Priority**: P1 (High)
 
 ### Future Features (Roadmap)
 
-11. **CLI Auto-Generation (All Libraries)**
-    - **Description**: Automatic CLI interface generation for all libraries
-    - **User Value**: Consistent CLI experience, reduced boilerplate
-    - **Priority**: P2 (Medium)
+6. **{{FEATURE_6}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
+   - **Priority**: P2 (Medium)
 
-12. **Visual Workflow Designer**
-    - **Description**: Drag-and-drop interface for creating custom agent workflows
-    - **User Value**: Non-technical users can create workflows
-    - **Priority**: P3 (Low)
+7. **{{FEATURE_7}}**
+   - **Description**: [What it does]
+   - **User Value**: [Why users need it]
+   - **Priority**: P3 (Low)
 
 ---
 
@@ -589,39 +562,9 @@ Key concepts and terminology used in this domain:
 
 ## Changelog
 
-### Version 1.1 (2025-11-23)
+### Version 1.1 (Planned)
 
-**Workflow Optimization Release**
-
-**New Features:**
-- ✅ Parallel agent execution (30-70% time reduction)
-- ✅ Gradual output pattern (context overflow prevention)
-- ✅ Advanced error handling (4-level classification + retry)
-- ✅ Dependency visualization (Mermaid diagrams)
-- ✅ Agent selection matrix optimization (60+ use cases, JP/EN)
-- ✅ Dialogue flow optimization (6 agent types, 2-5 phases)
-- ✅ Project memory auto-update (git-diff style)
-- ✅ Traceability auditor gradual output (6-section reports)
-
-**Impact:**
-- Orchestrator SKILL.md: +1,199 lines (200% increase)
-- Traceability Auditor SKILL.md: +265 lines (69% increase)
-- Total: +1,464 lines of new functionality
-
-**Performance Improvements:**
-- 30-70% workflow time reduction (parallel execution)
-- 100% context overflow prevention (gradual output)
-- 95% error recovery rate (advanced error handling)
-
-### Version 1.0 (2025-11-23)
-
-**Initial Release**
-- 25 specialized AI agents
-- Constitutional governance (9 articles)
-- Project memory system (steering files)
-- EARS requirements format
-- C4 model architecture diagrams
-- Traceability validation
+- [Future product updates]
 
 ---
 
