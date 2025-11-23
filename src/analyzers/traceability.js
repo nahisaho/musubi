@@ -190,6 +190,220 @@ class TraceabilityAnalyzer {
   }
 
   /**
+   * Perform bidirectional traceability analysis
+   * Traces both forward (req->design->tasks->code->tests) and backward (tests->code->tasks->design->req)
+   */
+  async analyzeBidirectional(options = {}) {
+    const requirements = await this.findRequirements(options.requirements || 'docs/requirements');
+    const design = await this.findDesign(options.design || 'docs/design');
+    const tasks = await this.findTasks(options.tasks || 'docs/tasks');
+    const code = await this.findCode(options.code || 'src');
+    const tests = await this.findTests(options.tests || 'tests');
+
+    const forward = [];
+    const backward = [];
+    const orphaned = {
+      requirements: [],
+      design: [],
+      tasks: [],
+      code: [],
+      tests: []
+    };
+
+    // Forward traceability: Requirements -> Tests
+    for (const req of requirements) {
+      const linkedDesign = design.filter(d => this.linksToRequirement(d, req.id));
+      const linkedTasks = tasks.filter(t => this.linksToRequirement(t, req.id));
+      const linkedCode = code.filter(c => this.linksToRequirement(c, req.id));
+      const linkedTests = tests.filter(t => this.linksToRequirement(t, req.id));
+
+      forward.push({
+        requirement: req,
+        design: linkedDesign,
+        tasks: linkedTasks,
+        code: linkedCode,
+        tests: linkedTests,
+        complete: linkedDesign.length > 0 && linkedTasks.length > 0 && linkedCode.length > 0 && linkedTests.length > 0
+      });
+
+      if (linkedDesign.length === 0 && linkedTasks.length === 0 && linkedCode.length === 0 && linkedTests.length === 0) {
+        orphaned.requirements.push(req);
+      }
+    }
+
+    // Backward traceability: Tests -> Requirements
+    for (const test of tests) {
+      const linkedCode = code.filter(c => this.testCoversCode(test, c));
+      const linkedTasks = tasks.filter(t => test.content.includes(t.id));
+      const linkedDesign = design.filter(d => test.content.includes(d.id));
+      const linkedRequirements = requirements.filter(r => test.content.includes(r.id));
+
+      backward.push({
+        test,
+        code: linkedCode,
+        tasks: linkedTasks,
+        design: linkedDesign,
+        requirements: linkedRequirements,
+        complete: linkedRequirements.length > 0
+      });
+
+      if (linkedRequirements.length === 0 && linkedDesign.length === 0 && linkedTasks.length === 0) {
+        orphaned.tests.push(test);
+      }
+    }
+
+    // Find orphaned design, tasks, and code
+    orphaned.design = design.filter(d => !requirements.some(r => this.linksToRequirement(d, r.id)));
+    orphaned.tasks = tasks.filter(t => !requirements.some(r => this.linksToRequirement(t, r.id)));
+    orphaned.code = code.filter(c => !tests.some(t => this.testCoversCode(t, c)));
+
+    const completeness = {
+      forwardComplete: forward.filter(f => f.complete).length,
+      forwardTotal: forward.length,
+      forwardPercentage: forward.length > 0 ? Math.round((forward.filter(f => f.complete).length / forward.length) * 100) : 0,
+      backwardComplete: backward.filter(b => b.complete).length,
+      backwardTotal: backward.length,
+      backwardPercentage: backward.length > 0 ? Math.round((backward.filter(b => b.complete).length / backward.length) * 100) : 0
+    };
+
+    return {
+      forward,
+      backward,
+      orphaned,
+      completeness
+    };
+  }
+
+  /**
+   * Analyze impact of requirement changes
+   */
+  async analyzeImpact(requirementId, options = {}) {
+    const design = await this.findDesign(options.design || 'docs/design');
+    const tasks = await this.findTasks(options.tasks || 'docs/tasks');
+    const code = await this.findCode(options.code || 'src');
+    const tests = await this.findTests(options.tests || 'tests');
+
+    const impactedDesign = design.filter(d => this.linksToRequirement(d, requirementId));
+    const impactedTasks = tasks.filter(t => this.linksToRequirement(t, requirementId));
+    const impactedCode = code.filter(c => this.linksToRequirement(c, requirementId));
+    const impactedTests = tests.filter(t => this.linksToRequirement(t, requirementId));
+
+    // Calculate effort estimate (simple heuristic)
+    const impactScore = {
+      design: impactedDesign.length * 2,  // 2 hours per design doc
+      tasks: impactedTasks.length * 1,    // 1 hour per task
+      code: impactedCode.length * 4,      // 4 hours per code file
+      tests: impactedTests.length * 2     // 2 hours per test file
+    };
+
+    const totalEffort = Object.values(impactScore).reduce((sum, val) => sum + val, 0);
+
+    return {
+      requirementId,
+      impacted: {
+        design: impactedDesign,
+        tasks: impactedTasks,
+        code: impactedCode,
+        tests: impactedTests
+      },
+      counts: {
+        design: impactedDesign.length,
+        tasks: impactedTasks.length,
+        code: impactedCode.length,
+        tests: impactedTests.length,
+        total: impactedDesign.length + impactedTasks.length + impactedCode.length + impactedTests.length
+      },
+      effort: {
+        ...impactScore,
+        total: totalEffort,
+        estimate: `${totalEffort} hours`
+      }
+    };
+  }
+
+  /**
+   * Generate detailed statistics
+   */
+  async generateStatistics(options = {}) {
+    const requirements = await this.findRequirements(options.requirements || 'docs/requirements');
+    const design = await this.findDesign(options.design || 'docs/design');
+    const tasks = await this.findTasks(options.tasks || 'docs/tasks');
+    const code = await this.findCode(options.code || 'src');
+    const tests = await this.findTests(options.tests || 'tests');
+
+    // Calculate various metrics
+    const reqWithDesign = requirements.filter(r => design.some(d => this.linksToRequirement(d, r.id)));
+    const reqWithTasks = requirements.filter(r => tasks.some(t => this.linksToRequirement(t, r.id)));
+    const reqWithCode = requirements.filter(r => code.some(c => this.linksToRequirement(c, r.id)));
+    const reqWithTests = requirements.filter(r => tests.some(t => this.linksToRequirement(t, r.id)));
+
+    const codeWithTests = code.filter(c => tests.some(t => this.testCoversCode(t, c)));
+    const tasksCompleted = tasks.filter(t => t.status === 'Complete' || t.status === 'Done');
+
+    return {
+      counts: {
+        requirements: requirements.length,
+        design: design.length,
+        tasks: tasks.length,
+        code: code.length,
+        tests: tests.length
+      },
+      coverage: {
+        requirementsWithDesign: reqWithDesign.length,
+        requirementsWithTasks: reqWithTasks.length,
+        requirementsWithCode: reqWithCode.length,
+        requirementsWithTests: reqWithTests.length,
+        codeWithTests: codeWithTests.length,
+        tasksCompleted: tasksCompleted.length
+      },
+      percentages: {
+        designCoverage: requirements.length > 0 ? Math.round((reqWithDesign.length / requirements.length) * 100) : 0,
+        tasksCoverage: requirements.length > 0 ? Math.round((reqWithTasks.length / requirements.length) * 100) : 0,
+        codeCoverage: requirements.length > 0 ? Math.round((reqWithCode.length / requirements.length) * 100) : 0,
+        testCoverage: requirements.length > 0 ? Math.round((reqWithTests.length / requirements.length) * 100) : 0,
+        codeTestCoverage: code.length > 0 ? Math.round((codeWithTests.length / code.length) * 100) : 0,
+        taskCompletion: tasks.length > 0 ? Math.round((tasksCompleted.length / tasks.length) * 100) : 0
+      },
+      health: {
+        grade: this.calculateHealthGrade(requirements, design, tasks, code, tests),
+        status: this.calculateHealthStatus(requirements, design, tasks, code, tests)
+      }
+    };
+  }
+
+  /**
+   * Calculate overall project health grade
+   */
+  calculateHealthGrade(requirements, design, tasks, code, tests) {
+    if (requirements.length === 0) return 'N/A';
+
+    const designCoverage = design.filter(d => requirements.some(r => this.linksToRequirement(d, r.id))).length / requirements.length;
+    const tasksCoverage = tasks.filter(t => requirements.some(r => this.linksToRequirement(t, r.id))).length / requirements.length;
+    const testsCoverage = tests.filter(t => requirements.some(r => this.linksToRequirement(t, r.id))).length / requirements.length;
+
+    const avgCoverage = (designCoverage + tasksCoverage + testsCoverage) / 3;
+
+    if (avgCoverage >= 0.9) return 'A';
+    if (avgCoverage >= 0.8) return 'B';
+    if (avgCoverage >= 0.7) return 'C';
+    if (avgCoverage >= 0.6) return 'D';
+    return 'F';
+  }
+
+  /**
+   * Calculate overall project health status
+   */
+  calculateHealthStatus(requirements, design, tasks, code, tests) {
+    const grade = this.calculateHealthGrade(requirements, design, tasks, code, tests);
+
+    if (grade === 'A') return 'Excellent';
+    if (grade === 'B') return 'Good';
+    if (grade === 'C') return 'Fair';
+    if (grade === 'D') return 'Poor';
+    return 'Critical';
+  }
+
+  /**
    * Format matrix for output
    */
   formatMatrix(matrixData, format = 'table') {

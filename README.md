@@ -172,6 +172,9 @@ musubi-trace coverage --min-coverage 100        # Require 100% coverage
 musubi-trace gaps                               # Detect orphaned requirements/code
 musubi-trace requirement REQ-AUTH-001           # Trace specific requirement
 musubi-trace validate                           # Validate 100% traceability (Article V)
+musubi-trace bidirectional                      # Bidirectional traceability analysis (v0.9.4)
+musubi-trace impact REQ-AUTH-001                # Impact analysis for requirement changes (v0.9.4)
+musubi-trace statistics                         # Comprehensive project statistics (v0.9.4)
 
 # Change management for brownfield projects (v0.8.6)
 musubi-change init CHANGE-001 --title "Add authentication"  # Create change proposal

@@ -168,6 +168,9 @@ musubi-trace coverage --min-coverage 100        # 100%カバレッジ要求
 musubi-trace gaps                               # 孤立した要件/コード検出
 musubi-trace requirement REQ-AUTH-001           # 特定要件をトレース
 musubi-trace validate                           # 100%トレーサビリティ検証（第5条）
+musubi-trace bidirectional                      # 双方向トレーサビリティ分析（v0.9.4）
+musubi-trace impact REQ-AUTH-001                # 要件変更の影響分析（v0.9.4）
+musubi-trace statistics                         # 包括的プロジェクト統計（v0.9.4）
 
 # ブラウンフィールドプロジェクト向け変更管理（v0.8.6）
 musubi-change init CHANGE-001 --title "認証機能追加"  # 変更提案を作成

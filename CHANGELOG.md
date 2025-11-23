@@ -5,6 +5,53 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.4] - 2025-11-23
+
+### Added - Enhanced Traceability Analysis
+
+- **Bidirectional Traceability**: New `musubi-trace bidirectional` command
+  - Forward traceability: Requirements → Design → Tasks → Code → Tests
+  - Backward traceability: Tests → Code → Tasks → Design → Requirements
+  - Orphaned item detection across all document types
+  - Completeness percentage calculation for both directions
+  - JSON export support
+
+- **Impact Analysis**: New `musubi-trace impact <requirementId>` command
+  - Identifies all impacted design, tasks, code, and test files
+  - Calculates estimated effort (hours) for requirement changes
+  - Impact severity classification (Low/Medium/High)
+  - JSON export for project management tools
+
+- **Comprehensive Statistics**: New `musubi-trace statistics` command
+  - Document counts across all artifact types
+  - Coverage statistics with percentages
+  - Task completion tracking
+  - Project health grade (A-F) and status (Excellent/Good/Fair/Poor/Critical)
+  - JSON export for dashboards
+
+### Improved
+- Enhanced TraceabilityAnalyzer with advanced analysis methods
+- Better gap detection with severity classification
+- More accurate effort estimation for impact analysis
+- Health scoring based on overall traceability coverage
+
+### Example Usage
+```bash
+# Bidirectional analysis
+musubi-trace bidirectional
+
+# Analyze impact of requirement change
+musubi-trace impact REQ-FUNC-001
+
+# Generate project statistics
+musubi-trace statistics
+
+# Export statistics as JSON
+musubi-trace statistics --format json -o stats.json
+```
+
+---
+
 ## [0.9.3] - 2025-11-23
 
 ### Added - Enhanced EARS Validation

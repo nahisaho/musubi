@@ -23,7 +23,7 @@ const program = new Command();
 program
   .name('musubi-trace')
   .description('MUSUBI Traceability System - End-to-end requirement traceability')
-  .version('0.8.5');
+  .version('0.9.4');
 
 // Generate traceability matrix
 program
@@ -354,6 +354,188 @@ program
         console.log();
         process.exit(1);
       }
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Bidirectional traceability analysis
+program
+  .command('bidirectional')
+  .description('Analyze bidirectional traceability (forward and backward)')
+  .option('--requirements <path>', 'Requirements directory', 'docs/requirements')
+  .option('--design <path>', 'Design directory', 'docs/design')
+  .option('--tasks <path>', 'Tasks directory', 'docs/tasks')
+  .option('--code <path>', 'Source code directory', 'src')
+  .option('--tests <path>', 'Tests directory', 'tests')
+  .option('-f, --format <type>', 'Output format (table|json)', 'table')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🔄 Bidirectional Traceability Analysis\n'));
+      
+      const analyzer = new TraceabilityAnalyzer(process.cwd());
+      const result = await analyzer.generateBidirectionalTrace(options);
+      
+      console.log(chalk.bold('Forward Traceability (Requirements → Tests):'));
+      console.log(chalk.dim(`  Complete: ${result.summary.completeRequirements}/${result.summary.totalRequirements} (${Math.round((result.summary.completeRequirements/result.summary.totalRequirements)*100)}%)`));
+      console.log();
+      
+      console.log(chalk.bold('Traceability Score:'));
+      console.log(chalk.dim(`  Overall: ${result.summary.traceabilityScore}%`));
+      console.log();
+      
+      console.log(chalk.bold('Orphaned Items:'));
+      console.log(chalk.dim(`  Incomplete Requirements: ${result.summary.incompleteRequirements}`));
+      console.log(chalk.dim(`  Orphaned Code: ${result.summary.orphanedCode}`));
+      console.log(chalk.dim(`  Orphaned Tests: ${result.summary.orphanedTests}`));
+      console.log();
+      
+      if (options.format === 'json') {
+        const output = JSON.stringify(result, null, 2);
+        if (options.output) {
+          const fs = require('fs-extra');
+          await fs.writeFile(options.output, output, 'utf-8');
+          console.log(chalk.green(`✓ Report saved to ${options.output}\n`));
+        } else {
+          console.log(output);
+        }
+      }
+      
+      const allComplete = result.summary.traceabilityScore === 100;
+      
+      if (allComplete) {
+        console.log(chalk.green('✓ 100% bidirectional traceability achieved!\n'));
+        process.exit(0);
+      } else {
+        console.log(chalk.yellow('⚠ Incomplete bidirectional traceability\n'));
+        process.exit(1);
+      }
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Impact analysis
+program
+  .command('impact <requirementId>')
+  .description('Analyze impact of requirement changes')
+  .option('--design <path>', 'Design directory', 'docs/design')
+  .option('--tasks <path>', 'Tasks directory', 'docs/tasks')
+  .option('--code <path>', 'Source code directory', 'src')
+  .option('--tests <path>', 'Tests directory', 'tests')
+  .option('-f, --format <type>', 'Output format (table|json)', 'table')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (requirementId, options) => {
+    try {
+      console.log(chalk.bold(`\n💥 Impact Analysis: ${requirementId}\n`));
+      
+      const analyzer = new TraceabilityAnalyzer(process.cwd());
+      const impact = await analyzer.analyzeImpact(requirementId, options);
+      
+      console.log(chalk.bold('Impacted Items:'));
+      console.log(chalk.dim(`  Design Documents: ${impact.counts.design}`));
+      console.log(chalk.dim(`  Tasks: ${impact.counts.tasks}`));
+      console.log(chalk.dim(`  Code Files: ${impact.counts.code}`));
+      console.log(chalk.dim(`  Test Files: ${impact.counts.tests}`));
+      console.log(chalk.dim(`  Total: ${impact.counts.total}`));
+      console.log();
+      
+      console.log(chalk.bold('Estimated Effort:'));
+      console.log(chalk.dim(`  Design: ${impact.effort.design} hours`));
+      console.log(chalk.dim(`  Tasks: ${impact.effort.tasks} hours`));
+      console.log(chalk.dim(`  Code: ${impact.effort.code} hours`));
+      console.log(chalk.dim(`  Tests: ${impact.effort.tests} hours`));
+      console.log(chalk.yellow(`  Total: ${impact.effort.total} hours (${impact.effort.estimate})`));
+      console.log();
+      
+      if (options.format === 'json') {
+        const output = JSON.stringify(impact, null, 2);
+        if (options.output) {
+          const fs = require('fs-extra');
+          await fs.writeFile(options.output, output, 'utf-8');
+          console.log(chalk.green(`✓ Impact analysis saved to ${options.output}\n`));
+        } else {
+          console.log(output);
+        }
+      }
+      
+      if (impact.counts.total === 0) {
+        console.log(chalk.green('✓ No impact - requirement is not implemented\n'));
+      } else if (impact.counts.total <= 5) {
+        console.log(chalk.green('✓ Low impact - minimal changes required\n'));
+      } else if (impact.counts.total <= 15) {
+        console.log(chalk.yellow('⚠ Medium impact - moderate changes required\n'));
+      } else {
+        console.log(chalk.red('⚠ High impact - significant changes required\n'));
+      }
+      
+      process.exit(0);
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Statistics
+program
+  .command('statistics')
+  .description('Generate comprehensive traceability statistics')
+  .option('--requirements <path>', 'Requirements directory', 'docs/requirements')
+  .option('--design <path>', 'Design directory', 'docs/design')
+  .option('--tasks <path>', 'Tasks directory', 'docs/tasks')
+  .option('--code <path>', 'Source code directory', 'src')
+  .option('--tests <path>', 'Tests directory', 'tests')
+  .option('-f, --format <type>', 'Output format (table|json)', 'table')
+  .option('-o, --output <path>', 'Output file path')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n📊 Traceability Statistics\n'));
+      
+      const analyzer = new TraceabilityAnalyzer(process.cwd());
+      const stats = await analyzer.generateStatistics(options);
+      
+      console.log(chalk.bold('Document Counts:'));
+      console.log(chalk.dim(`  Requirements: ${stats.counts.requirements}`));
+      console.log(chalk.dim(`  Design Documents: ${stats.counts.design}`));
+      console.log(chalk.dim(`  Tasks: ${stats.counts.tasks}`));
+      console.log(chalk.dim(`  Code Files: ${stats.counts.code}`));
+      console.log(chalk.dim(`  Test Files: ${stats.counts.tests}`));
+      console.log();
+      
+      console.log(chalk.bold('Coverage Statistics:'));
+      console.log(chalk.dim(`  Requirements with Design: ${stats.coverage.requirementsWithDesign}/${stats.counts.requirements} (${stats.percentages.designCoverage}%)`));
+      console.log(chalk.dim(`  Requirements with Tasks: ${stats.coverage.requirementsWithTasks}/${stats.counts.requirements} (${stats.percentages.tasksCoverage}%)`));
+      console.log(chalk.dim(`  Requirements with Code: ${stats.coverage.requirementsWithCode}/${stats.counts.requirements} (${stats.percentages.codeCoverage}%)`));
+      console.log(chalk.dim(`  Requirements with Tests: ${stats.coverage.requirementsWithTests}/${stats.counts.requirements} (${stats.percentages.testCoverage}%)`));
+      console.log(chalk.dim(`  Code with Tests: ${stats.coverage.codeWithTests}/${stats.counts.code} (${stats.percentages.codeTestCoverage}%)`));
+      console.log(chalk.dim(`  Tasks Completed: ${stats.coverage.tasksCompleted}/${stats.counts.tasks} (${stats.percentages.taskCompletion}%)`));
+      console.log();
+      
+      const gradeColor = stats.health.grade === 'A' ? chalk.green :
+        stats.health.grade === 'B' ? chalk.green :
+          stats.health.grade === 'C' ? chalk.yellow :
+            chalk.red;
+      
+      console.log(chalk.bold('Project Health:'));
+      console.log(gradeColor(`  Grade: ${stats.health.grade}`));
+      console.log(gradeColor(`  Status: ${stats.health.status}`));
+      console.log();
+      
+      if (options.format === 'json') {
+        const output = JSON.stringify(stats, null, 2);
+        if (options.output) {
+          const fs = require('fs-extra');
+          await fs.writeFile(options.output, output, 'utf-8');
+          console.log(chalk.green(`✓ Statistics saved to ${options.output}\n`));
+        } else {
+          console.log(output);
+        }
+      }
+      
+      process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
       process.exit(1);
