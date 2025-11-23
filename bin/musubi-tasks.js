@@ -36,7 +36,7 @@ const program = new Command();
 program
   .name('musubi-tasks')
   .description('MUSUBI Task Breakdown System - Break down design into actionable tasks')
-  .version('0.9.7');
+  .version('1.0.0');
 
 // Initialize task breakdown
 program
