@@ -33,6 +33,12 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 
 ## Recent Updates
 
+### v1.1.1 (2025-11-23) - Bug Fix Release
+
+**Fixed:**
+- 🐛 `musubi sync` command now properly integrated into main CLI
+- 🔧 Added sync command to help documentation
+
 ### v1.1 (2025-11-23) - Workflow Optimization
 
 **New Capabilities:**
@@ -51,4 +57,4 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 
 **Agent**: GitHub Copilot
 **Initialized**: 2025-11-23
-**MUSUBI Version**: 1.1.0
+**MUSUBI Version**: 1.1.1

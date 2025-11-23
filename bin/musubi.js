@@ -274,6 +274,34 @@ program
   });
 
 // ============================================================================
+// Command: sync
+// ============================================================================
+program
+  .command('sync')
+  .description('Sync steering documents with codebase changes')
+  .option('--auto-approve', 'Auto-approve all changes')
+  .option('--dry-run', 'Show changes without applying them')
+  .action(async (options) => {
+    // Delegate to musubi-sync.js
+    const syncMain = require('./musubi-sync.js');
+    
+    // Pass options as command line arguments
+    const args = [];
+    if (options.autoApprove) args.push('--auto-approve');
+    if (options.dryRun) args.push('--dry-run');
+    
+    // Temporarily set process.argv for musubi-sync.js
+    const originalArgv = process.argv;
+    process.argv = ['node', 'musubi-sync', ...args];
+    
+    try {
+      await syncMain();
+    } finally {
+      process.argv = originalArgv;
+    }
+  });
+
+// ============================================================================
 // Command: info
 // ============================================================================
 program
@@ -344,6 +372,8 @@ program.on('--help', () => {
   console.log('  $ musubi init --qwen             # Initialize for Qwen Code');
   console.log('  $ musubi init --windsurf         # Initialize for Windsurf IDE');
   console.log('  $ musubi status                  # Show project status');
+  console.log('  $ musubi sync                    # Sync steering with codebase changes');
+  console.log('  $ musubi sync --dry-run          # Preview changes without applying');
   console.log('  $ musubi validate                # Quick validation check');
   console.log('  $ musubi info                    # Show version and supported agents');
   console.log('');
