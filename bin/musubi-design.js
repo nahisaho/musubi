@@ -35,7 +35,7 @@ const program = new Command();
 program
   .name('musubi-design')
   .description('Design Document Generator - Create C4 models and ADRs')
-  .version('0.9.2');
+  .version('0.9.3');
 
 // Initialize design document
 program

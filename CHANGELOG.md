@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.9.3] - 2025-11-23
+
+### Added - Enhanced EARS Validation
+
+- **Stricter EARS Validation**: Enhanced requirements validation with comprehensive quality checks
+  - Detects ambiguous words (should, could, might, may, will, can, must)
+  - Identifies vague terms (etc, as needed, appropriate, suitable, adequate, reasonable)
+  - Validates statement length (flags too short <5 words or too long >50 words)
+  - Pattern-specific validation for event, state, unwanted, optional, and ubiquitous requirements
+  - Detailed warnings for incomplete descriptions in each EARS pattern
+
+- **Quality Metrics Command**: New `musubi-requirements metrics` command
+  - Calculate overall quality score (0-100%) with letter grades (A-F)
+  - Pattern distribution analysis (ubiquitous, event, state, unwanted, optional)
+  - Average words per requirement
+  - Count of ambiguous words and vague terms
+  - Identify too short or too long requirements
+  - Actionable recommendations for improvement
+  - JSON output support for automation
+
+### Improved
+- Enhanced `validateEARSFormat()` with context-aware validation
+- Better error messages with specific improvement suggestions
+- Pattern-specific validation now checks description quality
+- ESLint compliance with proper case block scoping
+
+### Example Usage
+```bash
+# Validate with detailed warnings
+musubi-requirements validate --verbose
+
+# Calculate quality metrics
+musubi-requirements metrics
+
+# Get metrics as JSON
+musubi-requirements metrics --json
+```
+
+---
+
 ## [0.9.2] - 2025-11-23
 
 ### Added - Enhanced CLI Options

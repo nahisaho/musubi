@@ -249,17 +249,19 @@ class RequirementsGenerator {
    */
   parseRequirements(content) {
     const requirements = [];
-    const reqRegex = /### (REQ-[A-Z]+-\d+): (.+?)\n\n(.+?)(?=\n###|\n##|$)/gs;
+    const reqRegex = /### (REQ-[A-Z]+-\d+): (.+?)\n(.+?)(?=\n###|\n##|$)/gs;
 
     let match;
     while ((match = reqRegex.exec(content)) !== null) {
       const [, id, title, body] = match;
-      const pattern = this.detectEARSPattern(body);
+      // Extract first line of body as statement
+      const statement = body.split('\n')[0].trim();
+      const pattern = this.detectEARSPattern(statement);
 
       requirements.push({
         id,
         title,
-        statement: body.trim(),
+        statement,
         pattern
       });
     }
@@ -327,6 +329,7 @@ class RequirementsGenerator {
    */
   validateEARSFormat(requirement) {
     const errors = [];
+    const warnings = [];
     const { statement, pattern } = requirement;
 
     // Check if pattern is recognized
@@ -335,42 +338,102 @@ class RequirementsGenerator {
       return errors;
     }
 
-    // Check for SHALL keyword
+    // Check for SHALL keyword (mandatory)
     if (!statement.includes('SHALL')) {
       errors.push('Missing SHALL keyword');
     }
 
+    // Check for ambiguous words
+    const ambiguousWords = ['should', 'could', 'might', 'may', 'will', 'can', 'must'];
+    const lowerStatement = statement.toLowerCase();
+    ambiguousWords.forEach(word => {
+      if (lowerStatement.includes(word) && word !== 'shall') {
+        warnings.push(`Ambiguous word detected: "${word}" - Use "SHALL" instead`);
+      }
+    });
+
+    // Check for vague terms
+    const vagueTerms = ['etc', 'and so on', 'as needed', 'appropriate', 'suitable', 'adequate', 'reasonable'];
+    vagueTerms.forEach(term => {
+      if (lowerStatement.includes(term)) {
+        warnings.push(`Vague term detected: "${term}" - Be more specific`);
+      }
+    });
+
+    // Check statement length (too short or too long)
+    const words = statement.split(/\s+/).length;
+    if (words < 5) {
+      warnings.push('Statement too short - May lack necessary detail');
+    } else if (words > 50) {
+      warnings.push('Statement too long - Consider splitting into multiple requirements');
+    }
+
     // Pattern-specific validation
     switch (pattern) {
-    case 'event':
+    case 'event': {
       if (!statement.startsWith('WHEN') || !statement.includes('THEN')) {
         errors.push('Event-driven pattern must use WHEN...THEN');
       }
+      // Check for proper event description
+      const whenPart = statement.match(/WHEN (.+?), THEN/)?.[1];
+      if (whenPart && whenPart.split(/\s+/).length < 3) {
+        warnings.push('Event description may be too brief');
+      }
       break;
+    }
 
-    case 'state':
+    case 'state': {
       if (!statement.startsWith('WHILE')) {
         errors.push('State-driven pattern must start with WHILE');
       }
+      // Check for state description
+      const whilePart = statement.match(/WHILE (.+?), the/)?.[1];
+      if (whilePart && whilePart.split(/\s+/).length < 2) {
+        warnings.push('State description may be too brief');
+      }
       break;
+    }
 
-    case 'unwanted':
+    case 'unwanted': {
       if (!statement.startsWith('IF') || !statement.includes('THEN')) {
         errors.push('Unwanted behavior pattern must use IF...THEN');
       }
+      // Check for error condition description
+      const ifPart = statement.match(/IF (.+?), THEN/)?.[1];
+      if (ifPart && ifPart.split(/\s+/).length < 3) {
+        warnings.push('Error condition description may be too brief');
+      }
       break;
+    }
 
-    case 'optional':
+    case 'optional': {
       if (!statement.startsWith('WHERE')) {
         errors.push('Optional feature pattern must start with WHERE');
       }
+      // Check for feature description
+      const wherePart = statement.match(/WHERE (.+?), the/)?.[1];
+      if (wherePart && wherePart.split(/\s+/).length < 2) {
+        warnings.push('Feature description may be too brief');
+      }
       break;
+    }
 
-    case 'ubiquitous':
+    case 'ubiquitous': {
       if (!statement.match(/^The .+ SHALL/)) {
         errors.push('Ubiquitous pattern must use "The [system] SHALL"');
       }
+      // Check for system name
+      const systemPart = statement.match(/^The (.+?) SHALL/)?.[1];
+      if (systemPart && systemPart.split(/\s+/).length > 5) {
+        warnings.push('System name may be too complex - Consider simplifying');
+      }
       break;
+    }
+    }
+
+    // Store warnings for later retrieval
+    if (warnings.length > 0) {
+      errors.push(`WARNINGS: ${warnings.join('; ')}`);
     }
 
     return errors;
@@ -398,6 +461,90 @@ class RequirementsGenerator {
     }
 
     return matrix;
+  }
+
+  /**
+   * Calculate quality metrics for requirements
+   * @param {string} [filePath] - Specific file path
+   * @returns {Promise<object>} Quality metrics
+   */
+  async calculateQualityMetrics(filePath = null) {
+    const requirements = await this.listRequirements(filePath);
+    const validationResults = await this.validate(filePath);
+    
+    // Pattern distribution
+    const patternCount = {
+      ubiquitous: 0,
+      event: 0,
+      state: 0,
+      unwanted: 0,
+      optional: 0,
+      unknown: 0
+    };
+
+    // Quality indicators
+    let totalWords = 0;
+    let ambiguousCount = 0;
+    let vagueCount = 0;
+    let tooShort = 0;
+    let tooLong = 0;
+
+    requirements.forEach(req => {
+      // Count patterns
+      patternCount[req.pattern] = (patternCount[req.pattern] || 0) + 1;
+
+      // Word count
+      const words = req.statement.split(/\s+/).length;
+      totalWords += words;
+
+      if (words < 5) tooShort++;
+      if (words > 50) tooLong++;
+
+      // Check for ambiguous words
+      const lowerStatement = req.statement.toLowerCase();
+      const ambiguousWords = ['should', 'could', 'might', 'may', 'will', 'can', 'must'];
+      if (ambiguousWords.some(word => lowerStatement.includes(word) && word !== 'shall')) {
+        ambiguousCount++;
+      }
+
+      // Check for vague terms
+      const vagueTerms = ['etc', 'and so on', 'as needed', 'appropriate', 'suitable', 'adequate', 'reasonable'];
+      if (vagueTerms.some(term => lowerStatement.includes(term))) {
+        vagueCount++;
+      }
+    });
+
+    const avgWords = requirements.length > 0 ? Math.round(totalWords / requirements.length) : 0;
+    const qualityScore = requirements.length > 0
+      ? Math.round(((requirements.length - ambiguousCount - vagueCount - tooShort - tooLong) / requirements.length) * 100)
+      : 100;
+
+    return {
+      total: requirements.length,
+      valid: validationResults.valid,
+      invalid: validationResults.invalid,
+      patterns: patternCount,
+      avgWords,
+      ambiguousCount,
+      vagueCount,
+      tooShort,
+      tooLong,
+      qualityScore,
+      grade: this.getQualityGrade(qualityScore)
+    };
+  }
+
+  /**
+   * Get quality grade based on score
+   * @param {number} score - Quality score (0-100)
+   * @returns {string} Grade (A-F)
+   */
+  getQualityGrade(score) {
+    if (score >= 90) return 'A';
+    if (score >= 80) return 'B';
+    if (score >= 70) return 'C';
+    if (score >= 60) return 'D';
+    return 'F';
   }
 
   /**

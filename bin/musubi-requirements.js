@@ -24,7 +24,7 @@ const program = new Command();
 program
   .name('musubi-requirements')
   .description('EARS Requirements Generator - Create unambiguous specifications')
-  .version('0.9.2');
+  .version('0.9.3');
 
 // Initialize requirements document
 program
@@ -301,6 +301,77 @@ program
       }
       
       process.exit(results.passed ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Show quality metrics
+program
+  .command('metrics')
+  .description('Calculate and display quality metrics for requirements')
+  .option('-f, --file <path>', 'Specific requirements file')
+  .option('--json', 'Output as JSON')
+  .action(async (options) => {
+    try {
+      const generator = new RequirementsGenerator(process.cwd());
+      const metrics = await generator.calculateQualityMetrics(options.file);
+      
+      if (options.json) {
+        console.log(JSON.stringify(metrics, null, 2));
+      } else {
+        console.log(chalk.bold('\n📊 Requirements Quality Metrics\n'));
+        
+        console.log(chalk.bold('Overview:'));
+        console.log(chalk.dim(`  Total Requirements: ${metrics.total}`));
+        console.log(chalk.green(`  Valid: ${metrics.valid}`));
+        console.log(chalk.red(`  Invalid: ${metrics.invalid}`));
+        console.log();
+        
+        console.log(chalk.bold('Pattern Distribution:'));
+        console.log(chalk.dim(`  Ubiquitous: ${metrics.patterns.ubiquitous}`));
+        console.log(chalk.dim(`  Event-driven: ${metrics.patterns.event}`));
+        console.log(chalk.dim(`  State-driven: ${metrics.patterns.state}`));
+        console.log(chalk.dim(`  Unwanted behavior: ${metrics.patterns.unwanted}`));
+        console.log(chalk.dim(`  Optional: ${metrics.patterns.optional}`));
+        if (metrics.patterns.unknown > 0) {
+          console.log(chalk.red(`  Unknown: ${metrics.patterns.unknown}`));
+        }
+        console.log();
+        
+        console.log(chalk.bold('Quality Indicators:'));
+        console.log(chalk.dim(`  Average words per requirement: ${metrics.avgWords}`));
+        console.log(chalk.dim(`  Requirements with ambiguous words: ${metrics.ambiguousCount}`));
+        console.log(chalk.dim(`  Requirements with vague terms: ${metrics.vagueCount}`));
+        console.log(chalk.dim(`  Too short (<5 words): ${metrics.tooShort}`));
+        console.log(chalk.dim(`  Too long (>50 words): ${metrics.tooLong}`));
+        console.log();
+        
+        const gradeColor = metrics.qualityScore >= 80 ? 'green' : metrics.qualityScore >= 60 ? 'yellow' : 'red';
+        console.log(chalk.bold('Quality Score:'));
+        console.log(chalk[gradeColor](`  ${metrics.qualityScore}% (Grade ${metrics.grade})`));
+        console.log();
+        
+        if (metrics.qualityScore < 80) {
+          console.log(chalk.bold.yellow('Recommendations:'));
+          if (metrics.ambiguousCount > 0) {
+            console.log(chalk.yellow('  • Replace ambiguous words (should, could, might, may) with SHALL'));
+          }
+          if (metrics.vagueCount > 0) {
+            console.log(chalk.yellow('  • Remove vague terms (etc, as needed, appropriate) and be specific'));
+          }
+          if (metrics.tooShort > 0) {
+            console.log(chalk.yellow('  • Add more detail to short requirements'));
+          }
+          if (metrics.tooLong > 0) {
+            console.log(chalk.yellow('  • Split long requirements into smaller ones'));
+          }
+          console.log();
+        }
+      }
+      
+      process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
       process.exit(1);

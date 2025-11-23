@@ -168,7 +168,7 @@ describe('RequirementsGenerator', () => {
     test('should validate event-driven pattern structure', () => {
       const req = {
         id: 'REQ-TEST-001',
-        statement: 'WHEN user clicks, THEN system SHALL respond.',
+        statement: 'WHEN user clicks the submit button, THEN system SHALL respond with confirmation.',
         pattern: 'event'
       };
       const errors = generator.validateEARSFormat(req);
