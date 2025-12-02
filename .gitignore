@@ -1,5 +1,8 @@
 # MUSUBI .gitignore
 
+# Dependencies
+node_modules/
+
 # Reference frameworks (local analysis only)
 References/
 Refecences/
