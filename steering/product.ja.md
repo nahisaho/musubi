@@ -1,17 +1,104 @@
 # プロダクトコンテキスト
 
-## 説明
-
-Ultimate Specification Driven Development Tool with 25 Agents for 7 AI Coding Platforms (Claude Code, GitHub Copilot, Cursor, Gemini CLI, Windsurf, Codex, Qwen Code)
-
-## 目的
-
-[![CI](https://github.com/nahisaho/musubi/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/musubi/actions/workflows/ci.yml) [![npm version](https://badge.fury.io/js/musubi-sdd.svg)](ht
-
-## 対象ユーザー
-
-定義が必要
+**プロジェクト**: MUSUBI (musubi-sdd)
+**最終更新**: 2025-12-03
+**バージョン**: 2.0.0
 
 ---
 
-*MUSUBIオンボーディングにより自動生成。プロダクトビジョンでカスタマイズしてください。*
+## プロダクトビジョン
+
+**ビジョン**: AI開発エージェント時代の「仕様駆動開発」を標準化し、7つの主要AIコーディングプラットフォームで統一されたSDDワークフローを提供する
+
+MUSUBIは、仕様駆動開発（SDD）のベストプラクティスを6つの主要フレームワークから統合し、Claude Code、GitHub Copilot、Cursor、Gemini CLI、Codex CLI、Qwen Code、Windsurfの7つのAIコーディングエージェントで使用できるプロダクションレディなツールです。
+
+**ミッション**: 25の専門エージェントと9条の憲法条項により、要件から実装までの完全な追跡可能性を実現する
+
+---
+
+## 主要機能
+
+### v2.0.0 新機能
+
+1. **CodeGraphMCPServer統合**
+   - 14のMCPツールによる高度なコード分析
+   - GraphRAG駆動のセマンティック検索
+   - Louvainコミュニティ検出
+
+2. **11エージェント強化**
+   - MCPツールを活用した深いコード分析
+   - 依存関係分析、呼び出し追跡
+
+### コア機能
+
+1. **25専門エージェント**
+   - オーケストレーション（3）
+   - 要件・計画（3）
+   - 設計（4）
+   - 開発（1）
+   - 品質（5）
+   - セキュリティ（2）
+   - インフラ（5）
+   - ドキュメント（2）
+
+2. **9条憲法ガバナンス**
+   - Library-First原則
+   - CLIインターフェース義務
+   - Test-First命令
+   - EARS要件形式
+   - トレーサビリティ義務
+
+3. **SDDワークフロー（8ステージ）**
+   - 調査→要件→設計→タスク→実装→テスト→デプロイ→監視
+
+---
+
+## 対象ユーザー
+
+### プライマリユーザー
+
+1. **AI-Firstデベロッパー**
+   - AIコーディングエージェントを日常的に使用
+   - 品質と一貫性の維持に課題
+
+2. **エンタープライズチーム**
+   - 複数プラットフォームでの開発
+   - 監査・コンプライアンス要件
+
+3. **SDDプラクティショナー**
+   - 仕様駆動開発の実践者
+   - 完全なトレーサビリティを求める
+
+---
+
+## 競合優位性
+
+| 特徴 | MUSUBI | 他ツール |
+|-----|--------|---------|
+| プラットフォーム対応 | 7つ | 通常1-2 |
+| 専門エージェント | 25 | 限定的 |
+| 憲法ガバナンス | 9条 | なし |
+| MCP統合 | v2.0.0+ | 限定的 |
+| バイリンガル | EN/JA | EN only |
+
+---
+
+## ロードマップ
+
+### 完了（v2.0.0）
+
+- ✅ 7プラットフォーム対応
+- ✅ 25エージェント
+- ✅ CodeGraphMCPServer統合
+- ✅ 14 CLIコマンド
+
+### 計画中
+
+- 🔄 追加MCPサーバー統合
+- 🔄 チームコラボレーション機能
+- 🔄 エンタープライズ機能
+
+---
+
+**最終更新**: 2025-12-03
+**管理者**: nahisaho（MUSUBI Contributors）

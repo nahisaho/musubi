@@ -5,6 +5,83 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.0] - 2025-12-03
+
+### Added - MCP Server Integration 🚀
+
+**MUSUBI v2.0.0 introduces CodeGraphMCPServer integration**, enabling advanced code analysis capabilities through the Model Context Protocol (MCP).
+
+- **CodeGraphMCPServer Integration** - 14 MCP tools for enhanced code analysis
+  - **Code Graph Tools**: `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies`
+  - **Search Tools**: `local_search`, `global_search`, `query_codebase`
+  - **Analysis Tools**: `analyze_module_structure`, `suggest_refactoring`
+  - **Navigation Tools**: `jump_to_definition`, `find_implementations`
+  - **Resources**: `file://`, `graph://`, `analysis://`, `search://`
+
+- **GraphRAG-Powered Search** - Semantic code understanding
+  - Louvain community detection for code structure analysis
+  - 12 language support (Python, TypeScript, JavaScript, Java, Go, Rust, C++, etc.)
+  - Intelligent code snippet retrieval with context
+
+- **11 Key Agents Enhanced with MCP Tools**:
+  - `@change-impact-analyzer` - `find_dependencies`, `find_callers`, `query_codebase`
+  - `@code-reviewer` - `suggest_refactoring`, `get_code_snippet`, `analyze_module_structure`
+  - `@constitution-enforcer` - `find_dependencies`, `analyze_module_structure`
+  - `@orchestrator` - `query_codebase`, `global_search`
+  - `@system-architect` - `global_search`, `analyze_module_structure`, `find_dependencies`
+  - `@test-engineer` - `find_callers`, `find_dependencies`, `get_code_snippet`
+  - `@traceability-auditor` - `query_codebase`, `find_callers`, `find_dependencies`
+  - `@bug-hunter` - `find_callers`, `local_search`, `get_code_snippet`
+  - `@software-developer` - `get_code_snippet`, `local_search`, `find_dependencies`
+  - `@steering` - `query_codebase`, `analyze_module_structure`
+  - `@security-auditor` - `find_callers`, `query_codebase`, `find_dependencies`
+
+- **Orchestrator CodeGraph MCP Setup Guide**:
+  - 4 installation options (Python venv, Claude Code, VS Code, Claude Desktop)
+  - Project indexing commands (`codegraph-mcp index --full`)
+  - 12 MCP tools documentation with agent mapping
+  - Impact analysis and refactoring workflow examples
+
+- **Steering Documentation Updates**:
+  - `steering/tech.md` - Added MCP Server Integration section with tool mapping
+  - `steering/structure.md` - Added MCP configuration and agent mapping
+  - `src/templates/agents/shared/AGENTS.md` - Added MCP tools references to agents
+
+### Changed
+
+- **Major Version Bump**: 1.1.2 → 2.0.0
+  - Breaking: Agents now reference MCP tools (optional enhancement, backward compatible)
+  - New capability: MCP server integration for advanced code analysis
+
+### Setup
+
+```bash
+# Claude Code
+claude mcp add codegraph -- codegraph-mcp serve --repo .
+
+# VS Code (settings.json)
+{
+  "mcp.servers": {
+    "codegraph": {
+      "command": "codegraph-mcp",
+      "args": ["serve", "--repo", "${workspaceFolder}"]
+    }
+  }
+}
+```
+
+### MCP Tool × Agent Mapping
+
+| Agent | Primary MCP Tools | Use Case |
+|-------|-------------------|----------|
+| @change-impact-analyzer | `find_dependencies`, `find_callers` | Impact analysis |
+| @traceability-auditor | `query_codebase`, `find_callers` | Traceability validation |
+| @system-architect | `analyze_module_structure`, `global_search` | Architecture analysis |
+| @code-reviewer | `suggest_refactoring`, `get_code_snippet` | Code quality review |
+| @security-auditor | `find_callers`, `query_codebase` | Security vulnerability detection |
+
+---
+
 ## [1.0.0] - 2025-11-23
 
 ### Added - Production Release 🎉
@@ -38,7 +115,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - ✅ Zero orphaned items in traceability graph
   - ✅ All 213 tests passing
 
-### Changed
+### Changed (v1.0.0)
 
 - **Version Numbering**: Major version bump (0.9.7 → 1.0.0)
   - Signals production readiness and API stability
@@ -50,9 +127,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Installation instructions finalized
   - Multi-platform support confirmed (7 AI platforms)
 
-### Status
+### Status (v1.0.0)
 
 **Project Maturity**:
+
 - ✅ Core Framework: Complete
 - ✅ CLI Infrastructure: 12 commands operational
 - ✅ Traceability System: 100% functional
@@ -61,6 +139,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - ✅ Documentation: Comprehensive guides available
 
 **Production Readiness Checklist**:
+
 - [x] All core CLI commands functional
 - [x] Traceability system validated
 - [x] Flexible requirement ID detection
@@ -71,6 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [x] Zero critical bugs
 
 **Next Steps** (Post-1.0.0):
+
 - Community adoption and feedback collection
 - Additional example projects
 - Video tutorials and guides
@@ -90,7 +170,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.9.6] - 2025-11-23
 
-### Fixed
+### Fixed (v0.9.6)
 
 - **Bidirectional Traceability**: Fixed `musubi-trace bidirectional` command
   - Changed method call from `generateBidirectionalTrace()` to `analyzeBidirectional()`
@@ -130,7 +210,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Enhanced workflow examples with CLI integration
   - Better agent selection logic with command references
 
-### Example Usage
+### Example Usage (v0.9.5)
+
 ```bash
 # Orchestrator can now guide users through all MUSUBI commands
 # Example: Full project initialization
@@ -168,13 +249,15 @@ musubi-validate all
   - Project health grade (A-F) and status (Excellent/Good/Fair/Poor/Critical)
   - JSON export for dashboards
 
-### Improved
+### Improved (v0.9.4)
+
 - Enhanced TraceabilityAnalyzer with advanced analysis methods
 - Better gap detection with severity classification
 - More accurate effort estimation for impact analysis
 - Health scoring based on overall traceability coverage
 
-### Example Usage
+### Example Usage (v0.9.4)
+
 ```bash
 # Bidirectional analysis
 musubi-trace bidirectional
@@ -211,13 +294,15 @@ musubi-trace statistics --format json -o stats.json
   - Actionable recommendations for improvement
   - JSON output support for automation
 
-### Improved
+### Improved (v0.9.3)
+
 - Enhanced `validateEARSFormat()` with context-aware validation
 - Better error messages with specific improvement suggestions
 - Pattern-specific validation now checks description quality
 - ESLint compliance with proper case block scoping
 
-### Example Usage
+### Example Usage (v0.9.3)
+
 ```bash
 # Validate with detailed warnings
 musubi-requirements validate --verbose
@@ -248,7 +333,8 @@ musubi-requirements metrics --json
   - Error messages in JSON format
   - Easy integration with external tools
 
-### Improved
+### Improved (v0.9.2)
+
 - Enhanced error handling with verbose stack traces
 - Better user feedback with conditional output based on flags
 - Improved automation support with structured JSON output
@@ -268,7 +354,8 @@ musubi-requirements metrics --json
   - Design CLI enforces Article V: C4 Model Imperative
   - Tasks CLI enforces Article VI: Task Breakdown Imperative
 
-### Fixed
+### Fixed (v0.9.1)
+
 - Resolved version drift across CLI commands
 - Improved consistency in command structure
 
@@ -289,9 +376,9 @@ musubi-requirements metrics --json
   - Validates all 9 Constitutional Articles
   - Phase -1 Gates validation
   - Complexity limits enforcement
-  - Multiple output formats (console, JSON, Markdown)
+    - Multiple output formats (console, JSON, Markdown)
 
-### Status
+### Status (v0.9.0)
 
 - **Phase 1 Core Framework**: Constitutional Governance System complete
 - **Phase 2 Change Management**: 100% complete (v0.8.5-v0.8.8)
@@ -301,7 +388,8 @@ musubi-requirements metrics --json
 
 ## [0.8.8] - 2025-11-23
 
-### Added
+### Added (v0.8.8)
+
 - **Phase 2 Documentation** - Comprehensive guides for change management
   - Brownfield project tutorial (step-by-step workflow)
   - Delta specification format guide
@@ -312,14 +400,16 @@ musubi-requirements metrics --json
   - Best practices for brownfield projects
   - Troubleshooting guides
 
-### Documentation
+### Documentation (v0.8.8)
+
 - `docs/guides/brownfield-tutorial.md` - Complete brownfield workflow
 - `docs/guides/delta-spec-guide.md` - Delta specification reference
 - `docs/guides/change-management-workflow.md` - Change workflow guide
 - `docs/guides/traceability-matrix-guide.md` - Traceability guide
 - `docs/guides/video-tutorial-plan.md` - Video content planning
 
-### Phase 2 Completion
+### Phase 2 Completion (v0.8.8)
+
 - All 5 Phase 2 deliverables complete (100%)
 - Delta Specification System (v0.8.6) ✅
 - Change Workflow Commands (v0.8.6) ✅
@@ -330,7 +420,8 @@ musubi-requirements metrics --json
 
 ## [0.8.7] - 2025-11-23
 
-### Added
+### Added (v0.8.7)
+
 - **Gap Detection System** - Identify orphaned requirements and untested code
   - `musubi-gaps detect` - Detect all gaps (requirements, code, tests)
     - Orphaned requirements (no design/task references)
@@ -358,7 +449,8 @@ musubi-requirements metrics --json
     - Average coverage calculation
     - Configurable minimum threshold (--min-coverage)
 
-### Technical Details
+### Technical Details (v0.8.7)
+
 - **GapDetector**: Core gap detection engine (src/analyzers/gap-detector.js)
   - `detectAllGaps()` - Detect all gap types
   - `detectOrphanedRequirements()` - Find requirements without design/tasks
@@ -384,7 +476,8 @@ musubi-requirements metrics --json
 
 ## [0.8.6] - 2025-11-23
 
-### Added
+### Added (v0.8.6)
+
 - **Delta Specification System** - Change management for brownfield projects
   - `musubi-change init <change-id>` - Create change proposal with delta specification
     - ADDED/MODIFIED/REMOVED/RENAMED requirement tracking
@@ -415,7 +508,8 @@ musubi-requirements metrics --json
     - REMOVED: Deleted requirements with rationale
     - RENAMED: Renamed requirements with mapping
 
-### Technical Details
+### Technical Details (v0.8.6)
+
 - **ChangeManager**: Core change management engine (src/managers/change.js)
   - `initChange(changeId, options)` - Create change proposal from template
   - `applyChange(changeId, options)` - Apply delta to codebase
@@ -437,7 +531,8 @@ musubi-requirements metrics --json
 
 ## [0.8.5] - 2025-11-23
 
-### Added
+### Added (v0.8.5)
+
 - **Traceability System** - End-to-end requirement traceability from requirements to tests
   - `musubi-trace matrix` - Generate full traceability matrix
     - Multiple output formats: table (console), markdown (docs), JSON (machine), HTML (web)
@@ -475,7 +570,8 @@ musubi-requirements metrics --json
     - Coverage calculation per stage
     - Multi-format matrix output
 
-### Technical Details
+### Technical Details (v0.8.5)
+
 - **TraceabilityAnalyzer**: Core analysis engine (src/analyzers/traceability.js)
   - `generateMatrix(options)` - Generate full traceability matrix
   - `calculateCoverage(options)` - Calculate coverage statistics
@@ -503,7 +599,8 @@ musubi-requirements metrics --json
 
 ## [0.8.4] - 2025-11-22
 
-### Added
+### Added (v0.8.4)
+
 - **Task Breakdown System** - Break design into actionable implementation tasks
   - `musubi-tasks init <feature>` - Initialize task breakdown document
   - `musubi-tasks add <title>` - Add task with interactive prompts
@@ -541,7 +638,8 @@ musubi-requirements metrics --json
     - Estimated hours by priority
     - Parallel execution groups
 
-### Technical Details
+### Technical Details (v0.8.4)
+
 - **TasksGenerator**: Core engine (src/generators/tasks.js)
   - `init(feature, options)` - Initialize task document
   - `addTask(filePath, task)` - Add task with auto-numbering
@@ -557,7 +655,8 @@ musubi-requirements metrics --json
 
 ## [0.8.2] - 2025-11-23
 
-### Added
+### Added (v0.8.2)
+
 - **Design Document Generator** - Create C4 models and Architecture Decision Records
   - `musubi-design init <feature>` - Initialize design document from template
   - `musubi-design add-c4 <level>` - Add C4 diagram (context|container|component|code)
@@ -581,7 +680,8 @@ musubi-requirements metrics --json
     - Required content: At least one C4 diagram
   - Traceability matrix: Maps REQ-XXX-NNN requirements to design documents
 
-### Technical Details
+### Technical Details (v0.8.2)
+
 - **DesignGenerator**: Core generator engine (`src/generators/design.js`)
 - **C4 Templates**: 4 levels × 2 formats = 8 diagram templates
 - **Article V Compliance**: Requirement-to-design traceability
@@ -590,7 +690,8 @@ musubi-requirements metrics --json
 
 ## [0.8.0] - 2025-11-23
 
-### Added
+### Added (v0.8.0)
+
 - **EARS Requirements Generator** - Create unambiguous specifications following Article IV
   - `musubi-requirements init <feature>` - Initialize requirements document from template
   - `musubi-requirements add` - Add requirement with interactive EARS pattern selection
@@ -609,7 +710,8 @@ musubi-requirements metrics --json
   - Acceptance criteria templates
   - Traceability matrix initialization
 
-### Technical Details
+### Technical Details (v0.8.0)
+
 - **RequirementsGenerator**: Core generator engine (`src/generators/requirements.js`)
 - **Article IV Compliance**: All generated requirements validated against EARS format
 - **Template Processing**: Uses `src/templates/shared/documents/requirements.md`
@@ -621,14 +723,16 @@ musubi-requirements metrics --json
 - **Traceability**: Initialize Requirements → Design → Code → Tests mapping
 - **25 new tests**: All EARS patterns, ID generation, validation, formatting
 
-### Changed
+### Changed (v0.8.0)
+
 - **package.json**: Version bumped to 0.8.0
 - **bin/**: Added `musubi-requirements.js` CLI command
 - **Phase 1 status**: EARS Requirements Generator operational (Priority 2/P0 complete)
 
 ## [0.7.0] - 2025-11-23
 
-### Added
+### Added (v0.7.0)
+
 - **Constitutional Governance System** - Enforce 9 immutable articles governing all development
   - `musubi-validate constitution` - Validate all 9 Constitutional Articles
   - `musubi-validate article <1-9>` - Validate specific article
@@ -638,7 +742,8 @@ musubi-requirements metrics --json
   - Output formats: console (default), JSON, Markdown
   - Verbose mode with detailed violation reports
 
-### Technical Details
+### Technical Details (v0.7.0)
+
 - **9 Constitutional Articles**:
   - Article I: Library-First Principle
   - Article II: CLI Interface Mandate
@@ -654,14 +759,16 @@ musubi-requirements metrics --json
 - **Automated detection**: Project structure, test coverage, EARS patterns, complexity metrics
 - **Exit codes**: 0 (pass), 1 (fail) - CI/CD integration ready
 
-### Changed
+### Changed (v0.7.0)
+
 - **package.json**: Version bumped to 0.7.0
 - **bin/**: Added `musubi-validate.js` CLI command
 - **Phase 1 status**: Constitutional Governance System operational (Priority 1/P0 complete)
 
 ## [0.1.4] - 2025-11-17
 
-### Fixed
+### Fixed (v0.1.4)
+
 - **Skills API initialization fix** - Fixed TypeError when initializing GitHub Copilot and other non-Claude Code platforms
   - Added skillsDir existence check in copySkill() function
   - Restricted skill selection prompt to Claude Code only (Skills API exclusive)
@@ -669,7 +776,8 @@ musubi-requirements metrics --json
   - Only Claude Code supports Skills API (.claude/skills/), other platforms use AGENTS.md
 - **Test verification** - All platforms (Claude Code, GitHub Copilot, Cursor, Gemini CLI, Windsurf, Codex, Qwen Code) now initialize correctly
 
-### Technical Details
+### Technical Details (v0.1.4)
+
 - Skills API is exclusive to Claude Code platform
 - Other 6 platforms use AGENTS.md for 25 agent definitions (OpenAI specification)
 - copySkill() now returns early if agent.layout.skillsDir is undefined
@@ -677,7 +785,8 @@ musubi-requirements metrics --json
 
 ## [0.1.3] - 2025-01-17
 
-### Added
+### Added (v0.1.3)
+
 - **Multi-platform 25-agent support via AGENTS.md** - Industry first: All 7 AI coding platforms now have equal access to 25 specialized agents
 - GitHub Copilot official AGENTS.md support (`.github/AGENTS.md`)
 - Cursor official AGENTS.md support (`.cursor/AGENTS.md`)
@@ -688,7 +797,8 @@ musubi-requirements metrics --json
 - Platform-specific agent file properties in registry (agentsFile)
 - Automated AGENTS.md file copying in musubi-init.js for all 7 platforms
 
-### Changed
+### Changed (v0.1.3)
+
 - **Documentation updates** - All documentation now reflects multi-platform equality
   - Updated Qiita article (Ultimate-SDD-Tool-MUSUBI.md) with 7-platform support details
   - Updated README.md with comprehensive multi-platform support table
@@ -698,24 +808,28 @@ musubi-requirements metrics --json
 - **Registry updates** - All 7 platforms now have `hasSkills: true` and platform-specific `agentsFile` properties
 - **Test expectations** - Updated test suite to validate all platforms support agents (53/53 tests passing)
 
-### Fixed
+### Fixed (v0.1.3)
+
 - Registry tests now correctly validate that all platforms have agent support (previously expected Claude Code only)
 - Test expectations updated from "only Claude Code should have skills" to "all platforms should have skills (AGENTS.md)"
 
-### Technical Details
+### Technical Details (v0.1.3)
+
 - **Implementation Strategy**: Skills API for Claude Code, AGENTS.md (OpenAI specification) for other 6 platforms
 - **Test Coverage**: Maintained 100% coverage (53/53 tests passing)
 - **AGENTS.md Format**: OpenAI specification standard with 25 agent definitions
 - **Feature Parity**: All 7 platforms now offer complete SDD workflow coverage
 
-### Migration Notes
+### Migration Notes (v0.1.3)
+
 - Existing Claude Code projects: No changes required, Skills API continues to work
 - New projects: Use `npx musubi-sdd init --[platform]` to initialize with your preferred AI coding agent
 - Multi-platform projects: AGENTS.md files are automatically copied to appropriate locations
 
 ## [0.1.2] - 2025-01-15
 
-### Added
+### Added (v0.1.2)
+
 - Initial release of MUSUBI with 25 Claude Code Skills
 - Constitutional governance with 9 articles
 - EARS (Easy Approach to Requirements Syntax) format support
@@ -723,7 +837,8 @@ musubi-requirements metrics --json
 - 8-stage SDD workflow support
 - Traceability matrix support
 
-### Features
+### Features (v0.1.2)
+
 - 25 specialized skills covering orchestration, requirements, architecture, development, quality, security, infrastructure, and documentation
 - Multi-language support (English and Japanese)
 - CLI tools for project initialization and status checking
@@ -731,13 +846,15 @@ musubi-requirements metrics --json
 
 ## [0.1.1] - 2025-01-10
 
-### Fixed
+### Fixed (v0.1.1)
+
 - CLI initialization bug fixes
 - Documentation improvements
 
 ## [0.1.0] - 2025-01-08
 
-### Added
+### Added (v0.1.0)
+
 - Initial proof of concept
 - Basic skill structure
 - Project scaffolding

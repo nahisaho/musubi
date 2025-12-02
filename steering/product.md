@@ -1,42 +1,53 @@
 # Product Context
 
-**Project**: musubi
-**Last Updated**: 2025-11-23
-**Version**: 1.0
+**Project**: MUSUBI (musubi-sdd)
+**Last Updated**: 2025-12-03
+**Version**: 2.0.0
 
 ---
 
 ## Product Vision
 
-**Vision Statement**: {{VISION_STATEMENT}}
+**Vision Statement**: AI開発エージェント時代の「仕様駆動開発」を標準化し、7つの主要AIコーディングプラットフォームで統一されたSDDワークフローを提供する
 
-> [1-2 paragraph description of what this product aims to achieve and why it exists]
+> MUSUBIは、仕様駆動開発（SDD）のベストプラクティスを6つの主要フレームワークから統合し、Claude Code、GitHub Copilot、Cursor、Gemini CLI、Codex CLI、Qwen Code、Windsurfの7つのAIコーディングエージェントで使用できるプロダクションレディなツールです。
 
-**Mission**: {{MISSION_STATEMENT}}
+**Mission**: 25の専門エージェントと9条の憲法条項により、要件から実装までの完全な追跡可能性を実現する
 
-> [How the product achieves its vision]
+> 要件定義→設計→実装→テスト→デプロイの全ステージで、AIエージェントと人間の協調開発を支援し、品質と一貫性を保証します。
 
 ---
 
 ## Product Overview
 
-### What is musubi?
+### What is MUSUBI?
 
-A software project using MUSUBI SDD
+> Ultimate Specification Driven Development Tool for 7 AI Coding Agents
 
-> [2-3 paragraphs explaining the product, its purpose, and core value proposition]
+> MUSUBIは、6つの主要SDDフレームワーク（musuhi、OpenSpec、ag2、ai-dev-tasks、cc-sdd、spec-kit）の最良の機能を統合した包括的なSDD（仕様駆動開発）ツールです。
+>
+> 25の専門エージェントが8ステージのワークフロー（Research→Requirements→Design→Tasks→Implementation→Testing→Deployment→Monitoring）を自動化し、EARS形式の要件からテスト駆動の実装まで、完全な追跡可能性を維持します。
+>
+> 9条の憲法条項（Constitutional Governance）により、Library-First原則、Test-First開発、100%トレーサビリティなどの品質基準を強制し、Phase -1 Gatesで実装前の検証を行います。
 
 ### Problem Statement
 
-**Problem**: {{PROBLEM_STATEMENT}}
+**Problem**: AIコーディングエージェントを使った開発で、一貫性・追跡可能性・品質保証が失われる
 
-> [What problem does this product solve? What pain points does it address?]
+> - AIエージェントがプロジェクトコンテキストを把握せず、不整合なコードを生成
+> - 要件→設計→コード→テストの追跡可能性が欠如
+> - プラットフォームごとに異なるワークフローで、チームの学習コストが増大
+> - ブラウンフィールドプロジェクトでの変更管理が困難
 
 ### Solution
 
-**Solution**: {{SOLUTION_STATEMENT}}
+**Solution**: 統一されたSDDワークフローと25エージェントによる自動化
 
-> [How does this product solve the problem? What makes it unique?]
+> - **プロジェクトメモリ（Steering）**: AIエージェントが常に最新のコンテキストを参照
+> - **EARS形式要件**: 曖昧さのないテスト可能な要件定義
+> - **憲法条項**: 9条の不変ルールによる品質保証
+> - **7プラットフォーム対応**: 同じワークフローを異なるAIエージェントで使用可能
+> - **Delta Specifications**: ブラウンフィールドプロジェクトの変更追跡
 
 ---
 
@@ -44,63 +55,64 @@ A software project using MUSUBI SDD
 
 ### Primary Users
 
-#### User Persona 1: {{PERSONA_1_NAME}}
+#### User Persona 1: AI-First Developer
 
 **Demographics**:
 
-- **Role**: {{ROLE}}
-- **Organization Size**: {{ORG_SIZE}}
-- **Technical Level**: {{TECH_LEVEL}}
+- **Role**: ソフトウェアエンジニア / テックリード
+- **Organization Size**: スタートアップ〜大企業
+- **Technical Level**: 中級〜上級
 
 **Goals**:
 
-- [Goal 1]
-- [Goal 2]
-- [Goal 3]
+- AIコーディングエージェントを効果的に活用したい
+- 一貫性のある高品質なコードを生成したい
+- 要件から実装までの追跡可能性を確保したい
 
 **Pain Points**:
 
-- [Pain point 1]
-- [Pain point 2]
-- [Pain point 3]
+- AIが生成するコードの品質にばらつきがある
+- プロジェクトコンテキストをAIに伝えるのが難しい
+- 複数のAIプラットフォームで異なるワークフローを学ぶ必要がある
 
 **Use Cases**:
 
-- [Use case 1]
-- [Use case 2]
-- [Use case 3]
+- 新規プロジェクトのセットアップ（Greenfield）
+- 既存プロジェクトへの機能追加（Brownfield）
+- チーム全体でのSDD導入
 
 ---
 
-#### User Persona 2: {{PERSONA_2_NAME}}
+#### User Persona 2: Tech Lead / Architect
 
 **Demographics**:
 
-- **Role**: {{ROLE}}
-- **Organization Size**: {{ORG_SIZE}}
-- **Technical Level**: {{TECH_LEVEL}}
+- **Role**: テックリード / ソフトウェアアーキテクト
+- **Organization Size**: 中規模〜大企業
+- **Technical Level**: 上級
 
 **Goals**:
 
-- [Goal 1]
-- [Goal 2]
+- チーム全体の開発品質を標準化したい
+- アーキテクチャの一貫性を維持したい
 
 **Pain Points**:
 
-- [Pain point 1]
-- [Pain point 2]
+- AIエージェントが既存アーキテクチャを無視する
+- 憲法条項の遵守を自動化したい
 
 **Use Cases**:
 
-- [Use case 1]
-- [Use case 2]
+- 憲法条項の検証（musubi-validate）
+- アーキテクチャ設計（C4モデル + ADR）
+- トレーサビリティ監査（musubi-trace）
 
 ---
 
 ### Secondary Users
 
-- **{{SECONDARY_USER_1}}**: [Description and role]
-- **{{SECONDARY_USER_2}}**: [Description and role]
+- **プロジェクトマネージャー**: タスク分解・進捗管理にmusubi-tasksを使用
+- **QAエンジニア**: テスト要件の追跡・ギャップ検出にmusubi-gapsを使用
 
 ---
 
@@ -108,30 +120,30 @@ A software project using MUSUBI SDD
 
 ### Market Opportunity
 
-**Market Size**: {{MARKET_SIZE}}
+**Market Size**: 世界のAI開発ツール市場（急成長中）
 
-**Target Market**: {{TARGET_MARKET}}
+**Target Market**: AIコーディングエージェントを使用する開発チーム
 
-> [Description of the market opportunity, competitive landscape, and positioning]
+> 2024年以降、Claude Code、GitHub Copilot、Cursor等のAIコーディングエージェントが急速に普及。しかし、エンタープライズレベルの品質保証・追跡可能性ツールは不足しています。
 
 ### Business Model
 
-**Revenue Model**: {{REVENUE_MODEL}}
+**Revenue Model**: Open Source (MIT License)
 
-> Examples: SaaS subscription, One-time purchase, Freemium, Usage-based
+> MUSUBIはオープンソースプロジェクトとして、コミュニティ貢献で成長します。
 
-**Pricing Tiers** (if applicable):
+**Pricing Tiers**:
 
-- **Free Tier**: [Features, limitations]
-- **Pro Tier**: ${{PRICE}}/month - [Features]
-- **Enterprise Tier**: Custom pricing - [Features]
+- **Free**: 全機能無料（MIT License）
+- **Enterprise Support**: カスタムサポート・トレーニング（将来検討）
 
 ### Competitive Landscape
 
-| Competitor       | Strengths   | Weaknesses   | Our Differentiation   |
-| ---------------- | ----------- | ------------ | --------------------- |
-| {{COMPETITOR_1}} | [Strengths] | [Weaknesses] | [How we're different] |
-| {{COMPETITOR_2}} | [Strengths] | [Weaknesses] | [How we're different] |
+| Competitor | Strengths | Weaknesses | Our Differentiation |
+| --- | --- | --- | --- |
+| musuhi | 20エージェント、ステアリング | 単一プラットフォーム | 7プラットフォーム対応 |
+| OpenSpec | Delta仕様、ブラウンフィールド対応 | エージェント少 | 25エージェント + 憲法条項 |
+| spec-kit | 憲法ガバナンス | 手動ワークフロー | 自動化 + CLI |
 
 ---
 
@@ -139,43 +151,49 @@ A software project using MUSUBI SDD
 
 ### Must-Have Features (MVP)
 
-1. **{{FEATURE_1}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+1. **Multi-Agent Support**
+   - **Description**: 7つのAIコーディングプラットフォーム対応
+   - **User Value**: プラットフォーム変更時も同じワークフローを継続
    - **Priority**: P0 (Critical)
 
-2. **{{FEATURE_2}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+2. **25 Specialized Agents**
+   - **Description**: 要件分析〜デプロイまで25の専門エージェント
+   - **User Value**: 各ステージに最適化されたAI支援
    - **Priority**: P0 (Critical)
 
-3. **{{FEATURE_3}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+3. **Constitutional Governance**
+   - **Description**: 9条の憲法条項 + Phase -1 Gates
+   - **User Value**: 品質基準の自動強制
    - **Priority**: P0 (Critical)
 
 ### High-Priority Features (Post-MVP)
 
-4. **{{FEATURE_4}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+1. **EARS Requirements Generator**
+   - **Description**: 5つのEARSパターンで曖昧さのない要件生成
+   - **User Value**: テスト可能な要件定義
    - **Priority**: P1 (High)
 
-5. **{{FEATURE_5}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+2. **Complete Traceability**
+   - **Description**: 要件↔設計↔コード↔テストの100%追跡
+   - **User Value**: 変更影響分析・監査対応
    - **Priority**: P1 (High)
+
+3. **CodeGraph MCP Server Integration** ✅ (v2.0.0)
+   - **Description**: コードベース構造分析のためのMCPサーバー統合
+   - **User Value**: 依存関係追跡、呼び出し元分析、コミュニティ検出
+   - **Priority**: P1 (High)
+   - **Status**: 実装完了
 
 ### Future Features (Roadmap)
 
-6. **{{FEATURE_6}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+1. **Extended MCP Server Integration**
+   - **Description**: Context7、Azure MCP等との連携強化
+   - **User Value**: 外部ドキュメント・リソースとの統合
    - **Priority**: P2 (Medium)
 
-7. **{{FEATURE_7}}**
-   - **Description**: [What it does]
-   - **User Value**: [Why users need it]
+2. **Team Collaboration Hub**
+   - **Description**: チーム間のメモリ共有・同期機能強化
+   - **User Value**: 大規模チームでのSDD導入
    - **Priority**: P3 (Low)
 
 ---
@@ -184,34 +202,28 @@ A software project using MUSUBI SDD
 
 ### Design Principles
 
-1. **{{PRINCIPLE_1}}**
-   - [Description of what this means for product decisions]
+1. **Specification First**
+   - コードを書く前に仕様を書く。すべての開発は要件定義から始まる
 
-2. **{{PRINCIPLE_2}}**
-   - [Description]
+2. **Constitutional Governance**
+   - 9条の憲法条項は不変。品質基準の妥協は許可しない
 
-3. **{{PRINCIPLE_3}}**
-   - [Description]
+3. **Traceability Always**
+   - 要件→設計→コード→テストの100%追跡可能性を維持
 
-**Examples**:
-
-- **Simplicity First**: Favor simple solutions over complex ones
-- **User Empowerment**: Give users control and flexibility
-- **Speed & Performance**: Fast response times (< 200ms)
+4. **Platform Agnostic**
+   - 特定のAIプラットフォームに依存しない統一ワークフロー
 
 ### User Experience Principles
 
-1. **{{UX_PRINCIPLE_1}}**
-   - [How this guides UX decisions]
+1. **CLI First**
+   - すべての機能はCLIから使用可能。GUIは後から追加
 
-2. **{{UX_PRINCIPLE_2}}**
-   - [How this guides UX decisions]
+2. **Progressive Complexity**
+   - 初期は最大3プロジェクト（Article VII）。複雑さは段階的に追加
 
-**Examples**:
-
-- **Progressive Disclosure**: Show advanced features only when needed
-- **Accessibility First**: WCAG 2.1 AA compliance
-- **Mobile-First**: Design for mobile, enhance for desktop
+3. **Bilingual by Default**
+   - すべてのドキュメントは英語と日本語の両方で生成
 
 ---
 
@@ -219,124 +231,133 @@ A software project using MUSUBI SDD
 
 ### Key Performance Indicators (KPIs)
 
-#### Business Metrics
+#### Community Metrics
 
-| Metric                              | Target            | Measurement    |
-| ----------------------------------- | ----------------- | -------------- |
-| **Monthly Active Users (MAU)**      | {{MAU_TARGET}}    | [How measured] |
-| **Monthly Recurring Revenue (MRR)** | ${{MRR_TARGET}}   | [How measured] |
-| **Customer Acquisition Cost (CAC)** | ${{CAC_TARGET}}   | [How measured] |
-| **Customer Lifetime Value (LTV)**   | ${{LTV_TARGET}}   | [How measured] |
-| **Churn Rate**                      | < {{CHURN_RATE}}% | [How measured] |
+| Metric | Target | Measurement |
+| --- | --- | --- |
+| **npm Weekly Downloads** | 1,000+ | npm統計 |
+| **GitHub Stars** | 500+ | GitHubリポジトリ |
+| **Supported Platforms** | 7 | 対応プラットフォーム数 |
+| **Active Contributors** | 10+ | GitHub Insights |
 
-#### Product Metrics
+#### Quality Metrics
 
-| Metric                       | Target                | Measurement    |
-| ---------------------------- | --------------------- | -------------- |
-| **Daily Active Users (DAU)** | {{DAU_TARGET}}        | [How measured] |
-| **Feature Adoption Rate**    | > {{ADOPTION_RATE}}%  | [How measured] |
-| **User Retention (Day 7)**   | > {{RETENTION_RATE}}% | [How measured] |
-| **Net Promoter Score (NPS)** | > {{NPS_TARGET}}      | [How measured] |
+| Metric | Target | Measurement |
+| --- | --- | --- |
+| **Test Coverage** | ≥ 80% | Jest coverage |
+| **Constitutional Compliance** | 100% | musubi-validate |
+| **Traceability Coverage** | 100% | musubi-trace |
+| **Lint Errors** | 0 | ESLint |
 
 #### Technical Metrics
 
-| Metric                      | Target  | Measurement             |
-| --------------------------- | ------- | ----------------------- |
-| **API Response Time (p95)** | < 200ms | Monitoring dashboard    |
-| **Uptime**                  | 99.9%   | Status page             |
-| **Error Rate**              | < 0.1%  | Error tracking (Sentry) |
-| **Page Load Time**          | < 2s    | Web vitals              |
+| Metric | Target | Measurement |
+| --- | --- | --- |
+| **CLI Response Time** | < 2s | 手動計測 |
+| **CI Build Time** | < 5min | GitHub Actions |
+| **Onboarding Time** | < 5min | musubi-onboard |
+| **Init Time** | < 30s | musubi init |
 
 ---
 
 ## Product Roadmap
 
-### Phase 1: MVP (Months 1-3)
+### Phase 1: Foundation (v0.1-v0.7) ✅ Completed
 
-**Goal**: Launch minimum viable product
+**Goal**: コア機能の実装
 
 **Features**:
 
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
+- ✅ 7プラットフォーム対応 init
+- ✅ 25エージェント（Skills API + AGENTS.md）
+- ✅ 憲法条項ガバナンス
+- ✅ musubi-onboard / sync / analyze / share / validate
 
 **Success Criteria**:
 
-- [Criterion 1]
-- [Criterion 2]
+- ✅ npm公開完了
+- ✅ CI/CD自動化
 
 ---
 
-### Phase 2: Growth (Months 4-6)
+### Phase 2: SDD Workflow (v0.8-v0.9) ✅ Completed
 
-**Goal**: Achieve product-market fit
+**Goal**: 完全なSDDワークフローの実装
 
 **Features**:
 
-- [Feature 4]
-- [Feature 5]
-- [Feature 6]
+- ✅ musubi-requirements（EARS形式）
+- ✅ musubi-design（C4 + ADR）
+- ✅ musubi-tasks（タスク分解）
+- ✅ musubi-trace（トレーサビリティ）
+- ✅ musubi-change（ブラウンフィールド）
+- ✅ musubi-gaps（ギャップ検出）
 
 **Success Criteria**:
 
-- [Criterion 1]
-- [Criterion 2]
+- ✅ 8ステージワークフロー完成
+- ✅ 100%トレーサビリティ対応
 
 ---
 
-### Phase 3: Scale (Months 7-12)
+### Phase 3: Optimization (v1.0-v1.2) 🚧 Current
 
-**Goal**: Scale to {{USER_TARGET}} users
+**Goal**: パフォーマンス最適化・安定化
 
 **Features**:
 
-- [Feature 7]
-- [Feature 8]
-- [Feature 9]
+- ✅ 並列実行（30-70%高速化）
+- ✅ 依存関係可視化（Mermaid）
+- ✅ 高度なエラーハンドリング（4レベル + リトライ）
+- 🚧 MCP Server統合強化
 
 **Success Criteria**:
 
-- [Criterion 1]
-- [Criterion 2]
+- ✅ v1.1.2リリース
+- 🚧 ドキュメント完備
 
 ---
 
 ## User Workflows
 
-### Primary Workflow 1: {{WORKFLOW_1_NAME}}
+### Primary Workflow 1: Greenfield Project (0→1)
 
-**User Goal**: {{USER_GOAL}}
+**User Goal**: 新規プロジェクトをSDDで開始
 
 **Steps**:
 
-1. User [action 1]
-2. System [response 1]
-3. User [action 2]
-4. System [response 2]
-5. User achieves [goal]
+1. User: `npx musubi-sdd init --copilot`
+2. System: steering/ディレクトリと25エージェントを生成
+3. User: `#sdd-steering` で project memory を生成
+4. User: `#sdd-requirements authentication` で要件定義
+5. User: `#sdd-design authentication` で設計
+6. User: `#sdd-tasks authentication` でタスク分解
+7. User: `#sdd-implement authentication` で実装
 
 **Success Criteria**:
 
-- User completes workflow in < {{TIME}} minutes
-- Success rate > {{SUCCESS_RATE}}%
+- プロジェクト初期化 < 30秒
+- 全ステージでトレーサビリティ維持
 
 ---
 
-### Primary Workflow 2: {{WORKFLOW_2_NAME}}
+### Primary Workflow 2: Brownfield Project (1→n)
 
-**User Goal**: {{USER_GOAL}}
+**User Goal**: 既存プロジェクトに機能追加
 
 **Steps**:
 
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
+1. User: `npx musubi-sdd init --copilot` (既存プロジェクトで)
+2. User: `musubi-onboard` で既存コードを分析
+3. User: `#sdd-change-init add-2fa` で変更提案作成
+4. System: change-impact-analyzer で影響分析
+5. User: `#sdd-change-apply add-2fa` で変更適用
+6. User: `#sdd-change-archive add-2fa` でアーカイブ
 
 **Success Criteria**:
 
-- [Criterion 1]
-- [Criterion 2]
+- オンボーディング < 5分
+- 変更の完全な追跡
 
 ---
 
@@ -346,30 +367,25 @@ A software project using MUSUBI SDD
 
 Key concepts and terminology used in this domain:
 
-1. **{{CONCEPT_1}}**: [Definition and importance]
-2. **{{CONCEPT_2}}**: [Definition and importance]
-3. **{{CONCEPT_3}}**: [Definition and importance]
-
-**Example for SaaS Authentication**:
-
-- **Identity Provider (IdP)**: Service that authenticates users
-- **Single Sign-On (SSO)**: One login for multiple applications
-- **Multi-Factor Authentication (MFA)**: Additional verification step
+1. **SDD (Specification Driven Development)**: 仕様を先に書き、それに基づいてコードを生成する開発手法
+2. **EARS (Easy Approach to Requirements Syntax)**: 曖昧さのない要件記述のための5パターン
+3. **Constitutional Governance**: 9条の不変ルールによる品質保証
+4. **Traceability**: 要件→設計→コード→テストの追跡可能性
+5. **Steering**: プロジェクトメモリ（コンテキスト）管理システム
 
 ### Business Rules
 
-1. **{{RULE_1}}**
-   - [Description of business rule]
-   - **Example**: [Concrete example]
+1. **Article III: Test-First Imperative**
+   - テストはコードより先に書く（Red-Green-Blueサイクル）
+   - **Example**: 80%以上のカバレッジ必須
 
-2. **{{RULE_2}}**
-   - [Description]
-   - **Example**: [Example]
+2. **Article V: Traceability Mandate**
+   - すべての要件は設計・コード・テストにマッピング
+   - **Example**: REQ-AUTH-001 → AuthService → auth.test.ts
 
-**Example for E-commerce**:
-
-- **Inventory Reservation**: Reserved items held for 10 minutes during checkout
-- **Refund Window**: Refunds allowed within 30 days of purchase
+3. **Article VII: Simplicity Gate**
+   - 初期は最大3サブプロジェクト
+   - **Example**: Phase -1 Gate承認なしで4プロジェクト以上は禁止
 
 ---
 
@@ -377,24 +393,24 @@ Key concepts and terminology used in this domain:
 
 ### Business Constraints
 
-- **Budget**: ${{BUDGET}}
-- **Timeline**: {{TIMELINE}}
-- **Team Size**: {{TEAM_SIZE}} engineers
-- **Launch Date**: {{LAUNCH_DATE}}
+- **Budget**: Open Source (ボランティア)
+- **Timeline**: 継続的開発
+- **Team Size**: コミュニティベース
+- **Launch Date**: v1.1.2 リリース済み (2025-11-23)
 
 ### Compliance Requirements
 
-- **{{COMPLIANCE_1}}**: [Description, e.g., GDPR, SOC 2, HIPAA]
-- **{{COMPLIANCE_2}}**: [Description]
-- **Data Residency**: [Requirements, e.g., EU data stays in EU]
+- **MIT License**: オープンソースライセンス準拠
+- **Constitutional Governance**: 9条の憲法条項遵守
+- **Bilingual**: 英語 + 日本語ドキュメント
 
 ### Non-Functional Requirements
 
-- **Performance**: API response < 200ms (95th percentile)
-- **Availability**: 99.9% uptime SLA
-- **Scalability**: Support {{CONCURRENT_USERS}} concurrent users
-- **Security**: OWASP Top 10 compliance
-- **Accessibility**: WCAG 2.1 AA compliance
+- **Performance**: CLI応答 < 2秒
+- **Compatibility**: Node.js 18.0.0+
+- **Platform Support**: 7つのAIコーディングプラットフォーム
+- **Test Coverage**: ≥ 80%
+- **Traceability**: 100%
 
 ---
 
@@ -402,21 +418,17 @@ Key concepts and terminology used in this domain:
 
 ### Internal Stakeholders
 
-| Role                    | Name                 | Responsibilities                  |
-| ----------------------- | -------------------- | --------------------------------- |
-| **Product Owner**       | {{PO_NAME}}          | Vision, roadmap, priorities       |
-| **Tech Lead**           | {{TECH_LEAD_NAME}}   | Architecture, technical decisions |
-| **Engineering Manager** | {{EM_NAME}}          | Team management, delivery         |
-| **QA Lead**             | {{QA_LEAD_NAME}}     | Quality assurance, testing        |
-| **Design Lead**         | {{DESIGN_LEAD_NAME}} | UX/UI design                      |
+| Role | Name | Responsibilities |
+| --- | --- | --- |
+| **Maintainer** | nahisaho | Vision, roadmap, code review |
+| **Contributors** | Community | Feature development, bug fixes |
 
 ### External Stakeholders
 
-| Role                        | Name        | Responsibilities            |
-| --------------------------- | ----------- | --------------------------- |
-| **Customer Advisory Board** | [Members]   | Product feedback            |
-| **Investors**               | [Names]     | Funding, strategic guidance |
-| **Partners**                | [Companies] | Integration, co-marketing   |
+| Role | Name | Responsibilities |
+| --- | --- | --- |
+| **Users** | AI Developers | フィードバック、Issue報告 |
+| **Platform Vendors** | Anthropic, GitHub, Cursor等 | API互換性 |
 
 ---
 
@@ -568,5 +580,5 @@ Key concepts and terminology used in this domain:
 
 ---
 
-**Last Updated**: 2025-11-23
-**Maintained By**: {{MAINTAINER}}
+**Last Updated**: 2025-12-03
+**Maintained By**: nahisaho (MUSUBI Contributors)

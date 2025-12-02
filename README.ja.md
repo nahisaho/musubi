@@ -1,12 +1,21 @@
 # MUSUBI
 
-**7つのAIコーディングエージェント向け究極の仕様駆動開発ツール**
+> 7つのAIコーディングエージェント向け究極の仕様駆動開発ツール + MCP統合
 
 MUSUBIは、6つの主要フレームワークのベスト機能を統合した包括的なSDD（仕様駆動開発）フレームワークであり、複数のAIコーディングエージェントに対応した本番環境対応ツールです。
+
+## 🚀 v2.0.0 の新機能
+
+- 🔌 **CodeGraphMCPServer統合** - 14のMCPツールによる高度なコード分析
+- 🧠 **GraphRAG駆動検索** - Louvainコミュニティ検出によるセマンティックコード理解
+- 🔍 **11エージェント強化** - 主要エージェントがMCPツールを活用して深いコード分析を実現
+- 📊 **依存関係分析** - `find_dependencies`, `find_callers`, `analyze_module_structure`
+- 🎯 **スマートコードナビゲーション** - `local_search`, `global_search`, `query_codebase`
 
 ## 特徴
 
 - 🤖 **マルチエージェント対応** - 7つのAIコーディングエージェントに対応（Claude Code、GitHub Copilot、Cursor、Gemini CLI、Codex CLI、Qwen Code、Windsurf）
+- 🔌 **MCPサーバー統合** - 高度なコード分析のためのCodeGraphMCPServer（v2.0.0で追加）
 - 📄 **柔軟なコマンド形式** - Markdown、TOML、AGENTS.md形式に対応
 - 🎯 **25の専門エージェント（全プラットフォーム対応）** - オーケストレーター、ステアリング、要件、アーキテクチャ、開発、品質、セキュリティ、インフラ
   - Claude Code: Skills API（25スキル）
@@ -41,6 +50,7 @@ MUSUBIは7つのAIコーディングエージェントに対応し、それぞ�
 | **Windsurf IDE** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.windsurf/workflows/`, `.windsurf/AGENTS.md` |
 
 **注意事項**：
+
 - スキルAPIはClaude Code専用です
 - **全7プラットフォームが25エージェントに対応**（Skills APIまたはAGENTS.md経由）
 - AGENTS.md: OpenAI仕様、GitHub Copilot & Cursorが公式サポート
@@ -62,6 +72,7 @@ musubi-validate complexity
 ```
 
 **9つの条項**:
+
 1. **Library-Firstの原則** - すべての機能は独立したライブラリとして開始
 2. **CLIインターフェース義務** - すべてのライブラリがCLI機能を公開
 3. **Test-Firstの要請** - コードの前にテストを記述（80%カバレッジ必須）
@@ -73,6 +84,7 @@ musubi-validate complexity
 9. **統合ファーストテスト** - 統合テストは実サービスを使用（モック禁止）
 
 **フェーズ-1ゲート**: 条項VII & VIIIの実装前検証チェックポイント。詳細:
+
 - [steering/rules/constitution.md](steering/rules/constitution.md) - 完全な憲法テキスト
 - [steering/rules/phase-gates.md](steering/rules/phase-gates.md) - 承認プロセスとアクティブゲート
 
@@ -196,8 +208,9 @@ musubi-gaps detect --format markdown > gaps.md  # ギャップレポートをエ
 初期化時、MUSUBIは**プロジェクトタイプ**の選択を求めます。これにより、利用可能なワークフローと機能が決定されます。
 
 #### Greenfield（0→1）
+
 - **概要**: ゼロから新しいプロジェクトを開始
-- **使用例**: 
+- **使用例**:
   - 新規アプリケーション開発
   - 概念実証プロジェクト
   - グリーンフィールドマイクロサービス
@@ -215,6 +228,7 @@ musubi-gaps detect --format markdown > gaps.md  # ギャップレポートをエ
   - 要件からコードまで完全なトレーサビリティ
 
 #### Brownfield（1→n）
+
 - **概要**: 既存のコードベースでの作業
 - **使用例**:
   - 既存アプリケーションへの機能追加
@@ -233,6 +247,7 @@ musubi-gaps detect --format markdown > gaps.md  # ギャップレポートをエ
   - 変更内容と理由の完全な監査証跡
 
 #### Both（両方）
+
 - **概要**: 複雑なシナリオ向けハイブリッドアプローチ
 - **使用例**:
   - モノリス → マイクロサービス移行（ブラウンフィールド + グリーンフィールドサービス）
@@ -240,6 +255,21 @@ musubi-gaps detect --format markdown > gaps.md  # ギャップレポートをエ
   - 成熟度が異なるマルチコンポーネントシステム
 - **有効化される機能**:
   - すべてのGreenfield + Brownfield機能
+  - コンポーネントごとにワークフローを選択する柔軟性
+  - 同一プロジェクト内で差分仕様とグリーンフィールド仕様を混在
+- **メリット**:
+  - 複雑な変革プロジェクトのための最大限の柔軟性
+  - すべてのコンポーネント全体で統一されたステアリング/ガバナンス
+  - モダナイゼーション全体を単一ツールで実施
+
+**選択例**:
+
+```text
+? Project type:
+❯ Greenfield (0→1)    ← 新規プロジェクト
+  Brownfield (1→n)    ← 既存コードベース
+  Both                ← 複雑/ハイブリッドシナリオ
+```
 
 ## ドキュメント
 
@@ -250,26 +280,12 @@ musubi-gaps detect --format markdown > gaps.md  # ギャップレポートをエ
 - **[変更管理ワークフロー](docs/guides/change-management-workflow.md)** - エンドツーエンドワークフロードキュメント
 - **[トレーサビリティマトリクスガイド](docs/guides/traceability-matrix-guide.md)** - トレーサビリティシステム使用方法
 - **[ビデオチュートリアル計画](docs/guides/video-tutorial-plan.md)** - ビデオコンテンツスクリプト
-  - コンポーネントごとにワークフローを選択する柔軟性
-  - 同一プロジェクト内で差分仕様とグリーンフィールド仕様を混在
-- **メリット**:
-  - 複雑な変革プロジェクトのための最大限の柔軟性
-  - すべてのコンポーネント全体で統一されたステアリング/ガバナンス
-  - モダナイゼーション全体を単一ツールで実施
-
-**選択例**:
-```
-? Project type:
-❯ Greenfield (0→1)    ← 新規プロジェクト
-  Brownfield (1→n)    ← 既存コードベース
-  Both                ← 複雑/ハイブリッドシナリオ
-```
 
 ### インストールされる内容
 
 #### Claude Code（Skills API）
 
-```
+```text
 your-project/
 ├── .claude/
 │   ├── skills/              # 25 Skills API（Claude Code専用機能）
@@ -293,7 +309,7 @@ your-project/
 
 #### その他のエージェント（GitHub Copilot、Cursor、Geminiなど）
 
-```
+```text
 your-project/
 ├── .github/prompts/         # GitHub Copilot用（#sdd-*、Markdown）
 │   ├── AGENTS.md             # 25エージェント定義（公式サポート）
@@ -322,6 +338,7 @@ your-project/
 ```
 
 **主な違い**：
+
 - **Claude Code**: 25 Skills API（専用） + コマンド（Markdown）
 - **GitHub Copilot & Cursor**: AGENTS.md（公式サポート） + コマンド（Markdown）
 - **Gemini CLI**: GEMINI.md統合（25エージェント） + TOMLコマンド（ユニーク）
@@ -361,7 +378,7 @@ musubi init
 
 MUSUBIプロジェクトの現在の状態を表示します。
 
-```
+```text
 📊 MUSUBI Project Status
 
 ✅ MUSUBI is initialized
@@ -424,6 +441,7 @@ MUSUBIプロジェクトの現在の状態を表示します。
 ```
 
 **スキル（自動起動）**: Claude Codeは適切なスキルを自動的に選択します。
+
 - 「コードをレビューして」 → `code-reviewer`スキル
 - 「ユーザーログインの要件を作成」 → `requirements-analyst`スキル
 - 「決済用のAPIを設計」 → `api-designer`スキル
@@ -481,30 +499,36 @@ MUSUBIプロジェクトの現在の状態を表示します。
 ## 25エージェント概要（全プラットフォーム対応）
 
 **全7プラットフォームで利用可能**：
+
 - **Claude Code**: Skills API（自動起動）
 - **GitHub Copilot & Cursor**: AGENTS.md（公式サポート、`@エージェント名`で参照）
 - **Gemini、Windsurf、Codex、Qwen**: AGENTS.md（互換形式、自然言語で参照）
 
 ### オーケストレーションと管理（3）
+
 - **orchestrator** - マルチスキルワークフローのマスターコーディネーター
 - **steering** - プロジェクトメモリマネージャー（自動更新コンテキスト）
 - **constitution-enforcer** - ガバナンス検証（9条項 + フェーズ-1ゲート）
 
 ### 要件と計画（3）
+
 - **requirements-analyst** - EARS形式要件生成
 - **project-manager** - プロジェクト計画、スケジューリング、リスク管理
 - **change-impact-analyzer** - ブラウンフィールド変更分析
 
 ### アーキテクチャと設計（4）
+
 - **system-architect** - C4モデル + ADRアーキテクチャ設計
 - **api-designer** - REST/GraphQL/gRPC API設計
 - **database-schema-designer** - データベース設計、ER図、DDL
 - **ui-ux-designer** - UI/UX設計、ワイヤーフレーム、プロトタイプ
 
 ### 開発（1）
+
 - **software-developer** - 多言語コード実装
 
 ### 品質とレビュー（5）
+
 - **test-engineer** - EARSマッピングを使用したユニット、統合、E2Eテスト
 - **code-reviewer** - コードレビュー、SOLID原則
 - **bug-hunter** - バグ調査、根本原因分析
@@ -512,10 +536,12 @@ MUSUBIプロジェクトの現在の状態を表示します。
 - **traceability-auditor** - 要件 ↔ コード ↔ テストカバレッジ検証
 
 ### セキュリティとパフォーマンス（2）
+
 - **security-auditor** - OWASP Top 10、脆弱性検出
 - **performance-optimizer** - パフォーマンス分析、最適化
 
 ### インフラと運用（5）
+
 - **devops-engineer** - CI/CDパイプライン、Docker/Kubernetes
 - **cloud-architect** - AWS/Azure/GCP、IaC（Terraform/Bicep）
 - **database-administrator** - データベース運用、チューニング
@@ -523,10 +549,11 @@ MUSUBIプロジェクトの現在の状態を表示します。
 - **release-coordinator** - マルチコンポーネントリリース管理
 
 ### ドキュメントと専門（2）
+
 - **technical-writer** - 技術ドキュメント、APIドキュメント
 - **ai-ml-engineer** - MLモデル開発、MLOps
 
-## 憲法ガバナンス
+## 9条憲法ガバナンス
 
 MUSUBIは9つの不変の憲法条項を施行します。
 
@@ -542,12 +569,13 @@ MUSUBIは9つの不変の憲法条項を施行します。
 
 ## SDDワークフロー（8段階）
 
-```
+```text
 1. 調査 → 2. 要件 → 3. 設計 → 4. タスク →
 5. 実装 → 6. テスト → 7. デプロイ → 8. モニタリング
 ```
 
 各段階には以下が含まれます。
+
 - 専用スキル
 - 品質ゲート
 - トレーサビリティ要件
@@ -582,11 +610,13 @@ AND システムSHALLセッションを作成する。
 ### バイリンガルで生成されるファイル
 
 **ステアリングコンテキスト**：
+
 - `steering/structure.md` + `steering/structure.ja.md`
 - `steering/tech.md` + `steering/tech.ja.md`
 - `steering/product.md` + `steering/product.ja.md`
 
 **仕様**：
+
 - `storage/specs/auth-requirements.md` + `storage/specs/auth-requirements.ja.md`
 - `storage/specs/auth-design.md` + `storage/specs/auth-design.ja.md`
 - `storage/specs/auth-tasks.md` + `storage/specs/auth-tasks.ja.md`
@@ -665,7 +695,92 @@ npx musubi-sdd init
 
 ### MCPサーバー統合
 
-MUSUBIは機能強化のためにMCPサーバーと統合します。
+MUSUBI v2.0.0は高度なコード分析のために**CodeGraphMCPServer**と統合します。
+
+#### オプション1: Claude Code（ターミナル）
+
+```bash
+# CodeGraph MCPをグローバルインストール
+pip install codegraph-mcp
+
+# Claude Codeに追加
+claude mcp add codegraph -- codegraph-mcp serve --repo .
+
+# インストールを確認
+claude mcp list
+```
+
+#### オプション2: VS Code + Claude拡張機能
+
+1. **前提条件をインストール**:
+
+   ```bash
+   pip install codegraph-mcp
+   ```
+
+2. **VS Codeを設定** (`settings.json`):
+
+   ```json
+   {
+     "mcp.servers": {
+       "codegraph": {
+         "command": "codegraph-mcp",
+         "args": ["serve", "--repo", "${workspaceFolder}"]
+       }
+     }
+   }
+   ```
+
+3. **または Claude Desktop設定を使用** (`~/.claude/claude_desktop_config.json` macOS/Linux、`%APPDATA%\Claude\claude_desktop_config.json` Windows):
+
+   ```json
+   {
+     "mcpServers": {
+       "codegraph": {
+         "command": "codegraph-mcp",
+         "args": ["serve", "--repo", "/path/to/your/project"]
+       }
+     }
+   }
+   ```
+
+#### オプション3: npx（インストール不要）
+
+```bash
+# npx経由で追加（グローバルインストール不要）
+claude mcp add codegraph -- npx -y @anthropic/codegraph-mcp --codebase .
+```
+
+#### MCPサーバーの動作確認
+
+セットアップ後、Claudeでテスト：
+
+```text
+init_graphツールを使ってこのコードベースを分析してください
+```
+
+成功すると、コードグラフ初期化の出力が表示されます。
+
+**利用可能なMCPツール（14ツール）**:
+
+| カテゴリ | ツール | 説明 |
+|----------|-------|-------------|
+| コードグラフ | `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies` | コードグラフの構築とクエリ |
+| 検索 | `local_search`, `global_search`, `query_codebase` | GraphRAG駆動セマンティック検索 |
+| 分析 | `analyze_module_structure`, `suggest_refactoring` | コード構造分析 |
+| ナビゲーション | `jump_to_definition`, `find_implementations` | コードナビゲーション |
+
+**エージェント × MCPツールマッピング**:
+
+| エージェント | 主要MCPツール | 用途 |
+|-------|-------------------|----------|
+| @change-impact-analyzer | `find_dependencies`, `find_callers` | 影響分析 |
+| @traceability-auditor | `query_codebase`, `find_callers` | トレーサビリティ検証 |
+| @system-architect | `analyze_module_structure`, `global_search` | アーキテクチャ分析 |
+| @code-reviewer | `suggest_refactoring`, `get_code_snippet` | コード品質レビュー |
+| @security-auditor | `find_callers`, `query_codebase` | セキュリティ脆弱性検出 |
+
+その他のMCPサーバーとも統合：
 
 - **Context7 MCP** - 最新のライブラリドキュメント（Next.js、Reactなど）
 - **Azure MCP** - Azureリソース管理
@@ -720,6 +835,7 @@ MITライセンス - 詳細は[LICENSE](LICENSE)を参照してください。
 ## クレジット
 
 MUSUBIは以下のフレームワークから機能を統合しています。
+
 - **musuhi** - 20エージェントシステム、ステアリング、EARS形式
 - **OpenSpec** - 差分仕様、ブラウンフィールド対応
 - **ag2**（AutoGen） - マルチエージェントオーケストレーション

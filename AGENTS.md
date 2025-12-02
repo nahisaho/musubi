@@ -33,9 +33,27 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 
 ## Recent Updates
 
+### v2.0.0 (2025-12-03) - MCP Server Integration 🚀
+
+**Major New Feature:**
+
+- 🔌 **CodeGraphMCPServer Integration** - 14 MCP tools for enhanced code analysis
+- 🧠 **GraphRAG-Powered Search** - Semantic code understanding with Louvain community detection
+- 🔍 **11 Agents Enhanced** - MCP tool references for key agents
+- 📊 **Dependency Analysis** - `find_dependencies`, `find_callers`, `analyze_module_structure`
+- 🎯 **Smart Code Navigation** - `local_search`, `global_search`, `query_codebase`
+
+**MCP Tools Available:**
+
+- Code Graph: `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies`
+- Search: `local_search`, `global_search`, `query_codebase`
+- Analysis: `analyze_module_structure`, `suggest_refactoring`
+- Resources: `file://`, `graph://`, `analysis://`, `search://`
+
 ### v1.1.2 (2025-11-23) - Documentation Enhancement
 
 **Enhanced:**
+
 - 📚 Added standalone CLI commands documentation to help output
 - ℹ️ Listed all 9 advanced CLI tools (requirements, design, tasks, etc.)
 - 🔍 Improved discoverability of specialized command-line tools
@@ -43,12 +61,14 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 ### v1.1.1 (2025-11-23) - Bug Fix Release
 
 **Fixed:**
+
 - 🐛 `musubi sync` command now properly integrated into main CLI
 - 🔧 Added sync command to help documentation
 
 ### v1.1 (2025-11-23) - Workflow Optimization
 
 **New Capabilities:**
+
 - 🚀 Parallel execution (30-70% faster)
 - 📊 Dependency visualization (Mermaid diagrams)
 - 🛡️ Advanced error handling (4-level + retry)
@@ -57,11 +77,12 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 - 📝 Auto-updating project memory
 
 **Performance:**
+
 - Orchestrator: +1,199 lines (200% enhancement)
 - Traceability: +265 lines (69% enhancement)
 
 ---
 
 **Agent**: GitHub Copilot
-**Initialized**: 2025-11-23
-**MUSUBI Version**: 1.1.2
+**Initialized**: 2025-12-03
+**MUSUBI Version**: 2.0.0

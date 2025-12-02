@@ -1,14 +1,40 @@
 # Technology Stack
 
-**Project**: musubi
-**Last Updated**: 2025-11-23
-**Version**: 1.0
+**Project**: MUSUBI (musubi-sdd)
+**Last Updated**: 2025-12-03
+**Version**: 2.0.0
+
+---
+
+## CodeGraph Analysis Integration
+
+> 📊 **CodeGraphMCPServer v0.7.1** によるコード分析が利用可能（2025-12-03）
+
+### Analysis Capabilities
+
+| 機能 | MCP Tool | 活用シーン |
+| --- | --- | --- |
+| **依存関係追跡** | `find_dependencies` | 変更影響分析 |
+| **呼び出し元追跡** | `find_callers` | リファクタリング影響確認 |
+| **コミュニティ検出** | `community` | モジュール境界の識別 |
+| **セマンティック検索** | `local_search`, `global_search` | コードパターン検索 |
+| **モジュール構造分析** | `analyze_module_structure` | アーキテクチャ検証 |
+
+### Codebase Graph Statistics
+
+| Metric | Value |
+| --- | --- |
+| Total Entities | 1,006 |
+| Relations | 4,624 |
+| Communities | 36 |
+| Indexed Files | 70 |
 
 ---
 
 ## Overview
 
-This document defines the approved technology stack for musubi. All development MUST use these technologies unless explicitly approved via Phase -1 Gate (Article VIII: Anti-Abstraction).
+MUSUBIはNode.jsベースのCLIツールです。このドキュメントは承認された技術スタックを定義します。
+Phase -1 Gate（Article VIII: Anti-Abstraction）で明示的に承認されない限り、これらの技術を使用する必要があります。
 
 ---
 
@@ -16,141 +42,199 @@ This document defines the approved technology stack for musubi. All development 
 
 ### Programming Languages
 
-| Language             | Version        | Usage                        | Notes               |
-| -------------------- | -------------- | ---------------------------- | ------------------- |
-| {{PRIMARY_LANGUAGE}} | {{VERSION}}    | Primary application language | [Notes]             |
-| SQL                  | PostgreSQL 15+ | Database queries             | Via Prisma ORM      |
-| TypeScript           | 5.0+           | Type definitions             | Strict mode enabled |
+| Language | Version | Usage | Notes |
+| --- | --- | --- | --- |
+| JavaScript | ES2022+ | メインアプリケーション言語 | Node.jsランタイム |
+| YAML | 1.2 | 設定ファイル | project.yml |
+| Markdown | CommonMark | ドキュメント | ステアリング、スペック |
+| TOML | 1.0 | Gemini CLIコマンド | .tomlファイル |
 
 ### Runtime Environment
 
-- **Node.js**: {{NODE_VERSION}}+ (LTS)
-- **Package Manager**: npm {{NPM_VERSION}}+ / pnpm {{PNPM_VERSION}}+
+- **Node.js**: 18.0.0+ (LTS)
+- **Package Manager**: npm (bundled with Node.js)
 
 ---
 
-## Frontend Stack
+## Core Dependencies
 
-### Framework
+### Production Dependencies
 
-**Primary Framework**: {{FRONTEND_FRAMEWORK}}
+| Library | Version | Purpose |
+| --- | --- | --- |
+| chalk | ^4.1.2 | ターミナルの色付き出力 |
+| commander | ^11.0.0 | CLIコマンドパーサー |
+| fs-extra | ^11.0.0 | ファイルシステム操作拡張 |
+| glob | ^10.5.0 | ファイルパターンマッチング |
+| inquirer | ^9.0.0 | インタラクティブプロンプト |
+| js-yaml | ^4.1.0 | YAMLパーサー |
 
-| Technology             | Version     | Purpose                             |
-| ---------------------- | ----------- | ----------------------------------- |
-| {{FRONTEND_FRAMEWORK}} | {{VERSION}} | [Purpose]                           |
-| React                  | 18+         | UI library (if using Next.js/Remix) |
-| TypeScript             | 5.0+        | Type safety                         |
+### Development Dependencies
 
-### UI Components
-
-| Library        | Version     | Purpose              |
-| -------------- | ----------- | -------------------- |
-| {{UI_LIBRARY}} | {{VERSION}} | Component library    |
-| Tailwind CSS   | 3.0+        | Utility-first CSS    |
-| shadcn/ui      | Latest      | Component primitives |
-
-### State Management
-
-| Library           | Version     | Purpose                       |
-| ----------------- | ----------- | ----------------------------- |
-| {{STATE_LIBRARY}} | {{VERSION}} | [Global state / Server state] |
-| React Context     | Built-in    | Local state                   |
-| React Query       | 5.0+        | Server state (if applicable)  |
-
-### Form Handling
-
-| Library         | Version | Purpose           |
-| --------------- | ------- | ----------------- |
-| React Hook Form | 7.0+    | Form management   |
-| Zod             | 3.0+    | Schema validation |
+| Library | Version | Purpose |
+| --- | --- | --- |
+| eslint | ^8.50.0 | JavaScriptリント |
+| jest | ^29.0.0 | テストフレームワーク |
+| prettier | ^3.0.0 | コードフォーマッター |
 
 ---
 
-## Backend Stack
+## CLI Commands
 
-### Framework
+### Core Commands
 
-**Primary Framework**: {{BACKEND_FRAMEWORK}}
+| Command | Purpose |
+| --- | --- |
+| `musubi init` | プロジェクト初期化 |
+| `musubi status` | プロジェクト状況確認 |
+| `musubi validate` | 憲法検証 |
+| `musubi info` | プロジェクト情報表示 |
 
-| Technology            | Version     | Purpose                           |
-| --------------------- | ----------- | --------------------------------- |
-| {{BACKEND_FRAMEWORK}} | {{VERSION}} | API server                        |
-| Express               | 4.0+        | Web framework (if using Node.js)  |
-| Next.js API Routes    | 14+         | Serverless API (if using Next.js) |
+### Standalone Commands
 
-### API Technologies
-
-| Technology | Version    | Purpose               |
-| ---------- | ---------- | --------------------- |
-| REST       | -          | Primary API style     |
-| GraphQL    | (Optional) | Complex data fetching |
-| OpenAPI    | 3.0+       | API specification     |
+| Command | Purpose |
+| --- | --- |
+| `musubi-onboard` | 既存プロジェクトのオンボーディング |
+| `musubi-sync` | ステアリング同期 |
+| `musubi-analyze` | コード品質分析 |
+| `musubi-share` | チームコラボレーション |
+| `musubi-validate` | 憲法条項検証 |
+| `musubi-requirements` | EARS要件生成 |
+| `musubi-design` | C4 + ADR設計 |
+| `musubi-tasks` | タスク分解 |
+| `musubi-trace` | トレーサビリティ |
+| `musubi-change` | 変更管理（Brownfield） |
+| `musubi-gaps` | ギャップ検出 |
 
 ---
 
-## Database Stack
+## 25 Agents
 
-### Primary Database
+### Orchestration & Management (3)
 
-**Database**: {{DATABASE}}
+- **orchestrator** - マルチスキルワークフローのコーディネーター
+- **steering** - プロジェクトメモリマネージャー
+- **constitution-enforcer** - 憲法検証（9条 + Phase -1 Gates）
 
-| Technology   | Version     | Purpose            |
-| ------------ | ----------- | ------------------ |
-| {{DATABASE}} | {{VERSION}} | Primary data store |
-| Prisma       | 5.0+        | ORM and migrations |
+### Requirements & Planning (3)
 
-### Database Schema
+- **requirements-analyst** - EARS形式要件生成
+- **project-manager** - プロジェクト計画・リスク管理
+- **change-impact-analyzer** - Brownfield変更分析
 
-```prisma
-// Example schema structure
-generator client {
-  provider = "prisma-client-js"
-}
+### Architecture & Design (4)
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
+- **system-architect** - C4モデル + ADR設計
+- **api-designer** - REST/GraphQL/gRPC API設計
+- **database-schema-designer** - データベース設計
+- **ui-ux-designer** - UI/UX設計
 
-model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+### Development (1)
+
+- **software-developer** - マルチ言語実装
+
+### Quality & Review (5)
+
+- **test-engineer** - ユニット/統合/E2Eテスト
+- **code-reviewer** - コードレビュー
+- **bug-hunter** - バグ調査
+- **quality-assurance** - QA戦略
+- **traceability-auditor** - 要件↔コード↔テスト追跡
+
+### Security & Performance (2)
+
+- **security-auditor** - OWASP Top 10、脆弱性検出
+- **performance-optimizer** - パフォーマンス最適化
+
+### Infrastructure & Operations (5)
+
+- **devops-engineer** - CI/CDパイプライン
+- **cloud-architect** - AWS/Azure/GCP
+- **database-administrator** - DB運用
+- **site-reliability-engineer** - SLO/SLI、インシデント対応
+- **release-coordinator** - リリース管理
+
+### Documentation & Specialized (2)
+
+- **technical-writer** - 技術ドキュメント
+- **ai-ml-engineer** - MLモデル開発
+
+---
+
+## MCP Server Integration
+
+### CodeGraphMCPServer (Recommended)
+
+**Purpose**: コードベース構造分析、GraphRAG検索
+
+**Installation**:
+
+```bash
+pip install codegraph-mcp-server
+codegraph-mcp index /path/to/repository --full
+```
+
+**MCP設定 (VS Code)**:
+
+```json
+{
+  "mcp.servers": {
+    "codegraph": {
+      "command": "codegraph-mcp",
+      "args": ["serve", "--repo", "${workspaceFolder}"]
+    }
+  }
 }
 ```
 
-### Caching Layer
+**MCP設定 (Claude Code)**:
 
-| Technology      | Version | Purpose                  |
-| --------------- | ------- | ------------------------ |
-| Redis           | 7.0+    | Session storage, caching |
-| In-memory cache | -       | Development only         |
+```bash
+claude mcp add codegraph -- codegraph-mcp serve --repo /path/to/project
+```
+
+### CodeGraph MCP Tools (14)
+
+| Tool | Purpose | MUSUBI Agent |
+| --- | --- | --- |
+| `query_codebase` | 自然言語でコード検索 | @orchestrator, @steering |
+| `find_dependencies` | 依存関係分析 | @change-impact-analyzer, @constitution-enforcer |
+| `find_callers` | 関数の呼び出し元検索 | @change-impact-analyzer, @test-engineer |
+| `find_callees` | 関数が呼ぶ関数を検索 | @software-developer |
+| `find_implementations` | インターフェース実装検索 | @api-designer |
+| `analyze_module_structure` | モジュール構造分析 | @system-architect |
+| `get_code_snippet` | ソースコード取得 | @software-developer, @code-reviewer |
+| `global_search` | GraphRAGグローバル検索 | @orchestrator, @technical-writer |
+| `local_search` | GraphRAGローカル検索 | @software-developer, @bug-hunter |
+| `suggest_refactoring` | リファクタリング提案 | @code-reviewer, @performance-optimizer |
+| `reindex_repository` | リポジトリ再インデックス | @devops-engineer |
+
+### CodeGraph MCP Prompts (6)
+
+| Prompt | Purpose | MUSUBI Agent |
+| --- | --- | --- |
+| `code_review` | コードレビュー | @code-reviewer |
+| `explain_codebase` | コードベース説明 | @steering, @technical-writer |
+| `implement_feature` | 機能実装ガイド | @software-developer |
+| `debug_issue` | デバッグ支援 | @bug-hunter |
+| `refactor_guidance` | リファクタリングガイド | @code-reviewer |
+| `test_generation` | テスト生成 | @test-engineer |
 
 ---
 
-## Authentication & Authorization
+## Supported Platforms
 
-### Authentication
+### 7 AI Coding Platforms
 
-| Technology      | Version     | Purpose                           |
-| --------------- | ----------- | --------------------------------- |
-| {{AUTH_METHOD}} | {{VERSION}} | User authentication               |
-| bcrypt          | 5.0+        | Password hashing (cost factor 12) |
-| JWT             | -           | Session tokens                    |
-
-**Password Requirements**:
-
-- Hashing: bcrypt with cost factor 12 (Article III: Security)
-- Minimum length: 12 characters
-- Complexity: Uppercase, lowercase, number, special char
-
-### Authorization
-
-| Technology | Version | Purpose                          |
-| ---------- | ------- | -------------------------------- |
-| RBAC       | -       | Role-Based Access Control        |
-| CASL       | 6.0+    | Authorization library (optional) |
+| Platform | Skills API | Agents | Command Format |
+| --- | --- | --- | --- |
+| Claude Code | ✅ (25 skills) | ✅ | `/sdd-*` |
+| GitHub Copilot | ❌ | ✅ (AGENTS.md) | `#sdd-*` |
+| Cursor IDE | ❌ | ✅ (AGENTS.md) | `/sdd-*` |
+| Gemini CLI | ❌ | ✅ (GEMINI.md) | `/sdd-*` |
+| Codex CLI | ❌ | ✅ (AGENTS.md) | `/prompts:sdd-*` |
+| Qwen Code | ❌ | ✅ (AGENTS.md) | `/sdd-*` |
+| Windsurf IDE | ❌ | ✅ (AGENTS.md) | `/sdd-*` |
 
 ---
 
@@ -158,383 +242,163 @@ model User {
 
 ### Test Frameworks
 
-| Technology         | Version     | Purpose                                      |
-| ------------------ | ----------- | -------------------------------------------- |
-| {{TEST_FRAMEWORK}} | {{VERSION}} | Unit testing                                 |
-| Jest               | 29+         | Test runner (if using JavaScript/TypeScript) |
-| Vitest             | 1.0+        | Fast test runner (alternative to Jest)       |
+| Technology | Version | Purpose |
+| --- | --- | --- |
+| Jest | ^29.0.0 | テストランナー + アサーション |
+| ESLint | ^8.50.0 | 静的解析 |
+| Prettier | ^3.0.0 | コードフォーマット |
 
-### Testing Libraries
+### Test Configuration
 
-| Library               | Version | Purpose               |
-| --------------------- | ------- | --------------------- |
-| React Testing Library | 14+     | Component testing     |
-| Supertest             | 6.0+    | API testing           |
-| Playwright            | 1.40+   | E2E testing           |
-| Testing Library       | Latest  | DOM testing utilities |
-
-### Test Databases
-
-- **Integration Tests**: Real PostgreSQL (Docker container)
-- **Unit Tests**: Mocked repository layer
-- **E2E Tests**: Dedicated test database
-
-**Docker Compose** for test services:
-
-```yaml
-services:
-  test-db:
-    image: postgres:15-alpine
-    environment:
-      POSTGRES_PASSWORD: test
-      POSTGRES_DB: test
-    ports:
-      - '5432:5432'
-
-  test-redis:
-    image: redis:7-alpine
-    ports:
-      - '6379:6379'
+```javascript
+// jest.config.js
+module.exports = {
+  testEnvironment: 'node',
+  coverageThreshold: {
+    global: {
+      branches: 80,
+      functions: 80,
+      lines: 80,
+      statements: 80
+    }
+  },
+  collectCoverageFrom: [
+    'src/**/*.js',
+    'bin/**/*.js'
+  ]
+};
 ```
 
-**Constitutional Compliance (Article IX)**:
+### Test Guidelines (Article III & IX)
 
-- Integration tests MUST use real database
-- Integration tests MUST use real cache
-- Mocks only for external APIs without test environments
+- **Test-First**: テストはコードより先に書く
+- **Coverage**: 最低80%カバレッジ
+- **Real Services**: 統合テストは実サービスを使用
+- **Platform Tests**: 7プラットフォームの初期化テスト
 
 ---
 
 ## Build & Development Tools
 
-### Build Tools
+### npm Scripts
 
-| Tool           | Version     | Purpose               |
-| -------------- | ----------- | --------------------- |
-| {{BUILD_TOOL}} | {{VERSION}} | Build system          |
-| esbuild        | Latest      | Fast bundler          |
-| Turbo          | Latest      | Monorepo build system |
-
-### Code Quality
-
-| Tool        | Version | Purpose                       |
-| ----------- | ------- | ----------------------------- |
-| ESLint      | 8.0+    | JavaScript/TypeScript linting |
-| Prettier    | 3.0+    | Code formatting               |
-| TypeScript  | 5.0+    | Type checking                 |
-| Husky       | 8.0+    | Git hooks                     |
-| lint-staged | 14.0+   | Pre-commit linting            |
-
-**ESLint Configuration**:
-
-```json
-{
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
-  "rules": {
-    "@typescript-eslint/no-unused-vars": "error",
-    "@typescript-eslint/no-explicit-any": "warn"
-  }
-}
-```
+| Script | Command | Purpose |
+| --- | --- | --- |
+| test | `jest` | テスト実行 |
+| test:watch | `jest --watch` | ウォッチモード |
+| test:coverage | `jest --coverage` | カバレッジレポート |
+| lint | `eslint bin/ src/ tests/` | リント |
+| lint:fix | `eslint --fix` | リント自動修正 |
+| format | `prettier --write` | フォーマット |
+| format:check | `prettier --check` | フォーマットチェック |
 
 ---
 
 ## CI/CD Stack
 
-### CI/CD Platform
+### GitHub Actions
 
-| Technology         | Version | Purpose                           |
-| ------------------ | ------- | --------------------------------- |
-| {{CI_CD_PLATFORM}} | -       | Continuous Integration/Deployment |
-| GitHub Actions     | -       | CI/CD workflows                   |
-| GitLab CI          | -       | Alternative CI/CD                 |
+| Workflow | Trigger | Purpose |
+| --- | --- | --- |
+| CI | PR, push to main | Lint, Test, Build |
+| Release | tag v*.*.* | npm publish |
+| Dependabot | Weekly (Mon 9:00 JST) | 依存関係更新 |
 
-### Deployment
+### CI Pipeline Steps
 
-| Technology     | Version | Purpose                        |
-| -------------- | ------- | ------------------------------ |
-| Docker         | 24.0+   | Containerization               |
-| Docker Compose | 2.0+    | Multi-container apps (dev)     |
-| Kubernetes     | 1.28+   | Container orchestration (prod) |
-
----
-
-## Cloud Infrastructure
-
-### Cloud Provider
-
-**Primary Provider**: {{CLOUD_PROVIDER}}
-
-| Service              | Purpose             |
-| -------------------- | ------------------- |
-| {{COMPUTE_SERVICE}}  | Application hosting |
-| {{DATABASE_SERVICE}} | Managed database    |
-| {{STORAGE_SERVICE}}  | Object storage      |
-| {{CACHE_SERVICE}}    | Managed Redis       |
-
-### Infrastructure as Code
-
-| Technology   | Version     | Purpose                     |
-| ------------ | ----------- | --------------------------- |
-| {{IAC_TOOL}} | {{VERSION}} | Infrastructure provisioning |
-| Terraform    | 1.6+        | Cloud infrastructure        |
-| Bicep        | Latest      | Azure infrastructure        |
+1. ESLint & Prettier
+2. Jest Tests (80% coverage required)
+3. Build Verification
+4. Security Audit (npm audit)
+5. Platform Initialization Tests (7 platforms)
 
 ---
 
-## Monitoring & Observability
+## Development Environment
 
-### Logging
+### Recommended IDE
 
-| Technology       | Version     | Purpose                       |
-| ---------------- | ----------- | ----------------------------- |
-| {{LOGGING_TOOL}} | {{VERSION}} | Log aggregation               |
-| Winston          | 3.0+        | Application logging (Node.js) |
-| Pino             | 8.0+        | Fast logging (alternative)    |
-
-**Log Format**: JSON
-
-```typescript
-// Example log entry
-{
-  "timestamp": "2025-11-16T10:00:00Z",
-  "level": "info",
-  "message": "User logged in",
-  "context": {
-    "userId": "uuid",
-    "ip": "192.168.1.1"
-  },
-  "traceId": "trace-id"
-}
-```
-
-### Monitoring
-
-| Technology          | Version     | Purpose                |
-| ------------------- | ----------- | ---------------------- |
-| {{MONITORING_TOOL}} | {{VERSION}} | Application monitoring |
-| Prometheus          | 2.0+        | Metrics collection     |
-| Grafana             | 10.0+       | Metrics visualization  |
-
-### Tracing
-
-| Technology       | Version     | Purpose             |
-| ---------------- | ----------- | ------------------- |
-| {{TRACING_TOOL}} | {{VERSION}} | Distributed tracing |
-| OpenTelemetry    | Latest      | Tracing standard    |
-| Jaeger           | 1.50+       | Tracing backend     |
-
-### Error Tracking
-
-| Technology | Version | Purpose                      |
-| ---------- | ------- | ---------------------------- |
-| Sentry     | Latest  | Error tracking and reporting |
-
----
-
-## Documentation Tools
-
-### API Documentation
-
-| Tool               | Version | Purpose                |
-| ------------------ | ------- | ---------------------- |
-| OpenAPI/Swagger    | 3.0+    | REST API documentation |
-| GraphQL Playground | -       | GraphQL API explorer   |
-| Postman            | Latest  | API testing and docs   |
-
-### Code Documentation
-
-| Tool      | Version | Purpose                  |
-| --------- | ------- | ------------------------ |
-| TSDoc     | -       | TypeScript documentation |
-| JSDoc     | -       | JavaScript documentation |
-| Storybook | 7.0+    | Component documentation  |
-
----
-
-## Development Tools
-
-### Code Editors
-
-- **Recommended**: Visual Studio Code
-- **Extensions**:
+- **VS Code** with extensions:
   - ESLint
   - Prettier
-  - TypeScript
-  - Prisma
-  - Tailwind CSS IntelliSense
+  - GitLens
+  - Jest Runner
 
-### Database Tools
+### npm Audit
 
-| Tool          | Version  | Purpose               |
-| ------------- | -------- | --------------------- |
-| Prisma Studio | Built-in | Database GUI          |
-| pgAdmin       | 4.0+     | PostgreSQL admin      |
-| TablePlus     | Latest   | Multi-database client |
+```bash
+# セキュリティ監査
+npm audit
 
-### API Testing
-
-| Tool     | Version | Purpose                  |
-| -------- | ------- | ------------------------ |
-| Postman  | Latest  | API testing              |
-| Insomnia | Latest  | REST/GraphQL client      |
-| curl     | -       | Command-line API testing |
-
----
-
-## Security Tools
-
-### Security Scanning
-
-| Tool      | Version  | Purpose                           |
-| --------- | -------- | --------------------------------- |
-| npm audit | Built-in | Dependency vulnerability scanning |
-| Snyk      | Latest   | Continuous security monitoring    |
-| OWASP ZAP | Latest   | Security testing                  |
-
-### Secrets Management
-
-| Tool                | Version     | Purpose                    |
-| ------------------- | ----------- | -------------------------- |
-| {{SECRETS_TOOL}}    | {{VERSION}} | Secrets management         |
-| .env files          | -           | Local development secrets  |
-| AWS Secrets Manager | -           | Production secrets (AWS)   |
-| Azure Key Vault     | -           | Production secrets (Azure) |
-
----
-
-## Package Management
-
-### Dependency Management
-
-```json
-// package.json structure
-{
-  "name": "musubi",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "test": "jest",
-    "lint": "eslint .",
-    "format": "prettier --write ."
-  },
-  "dependencies": {
-    // Production dependencies
-  },
-  "devDependencies": {
-    // Development dependencies
-  }
-}
-```
-
-### Version Pinning
-
-- **Exact Versions**: Critical dependencies (database drivers, auth libraries)
-- **Caret Ranges**: UI libraries, utilities (`^1.2.3`)
-- **Lock Files**: Commit `package-lock.json` / `pnpm-lock.yaml`
-
----
-
-## Framework-Specific Configurations
-
-### {{PRIMARY_FRAMEWORK}} Configuration
-
-[Include framework-specific configuration details]
-
-**Example for Next.js**:
-
-```typescript
-// next.config.js
-const nextConfig = {
-  reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: false,
-  },
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
-  experimental: {
-    serverActions: true,
-  },
-};
-
-export default nextConfig;
+# 自動修正
+npm audit fix
 ```
 
 ---
 
 ## Anti-Abstraction Policy (Article VIII)
 
-**CRITICAL**: Use framework APIs directly. Do NOT create custom abstraction layers.
+**CRITICAL**: フレームワークAPIを直接使用。カスタム抽象化レイヤーを作成しない。
 
-### ✅ Allowed
+### ✅ 許可
 
-```typescript
-// Use Prisma directly
-const user = await prisma.user.findUnique({ where: { id } });
+```javascript
+// commander を直接使用
+const program = new Command();
+program.option('-v, --verbose', 'Enable verbose output');
 
-// Use bcrypt directly
-const hash = await bcrypt.hash(password, 12);
+// fs-extra を直接使用
+await fs.ensureDir('./storage/specs');
+await fs.writeJson('./data.json', data);
 
-// Use Next.js API routes directly
-export async function POST(request: Request) { ... }
+// inquirer を直接使用
+const answers = await inquirer.prompt([...]);
 ```
 
-### ❌ Prohibited (Without Phase -1 Gate Approval)
+### ❌ 禁止（Phase -1 Gate承認なし）
 
-```typescript
-// ❌ Custom database wrapper
-class MyDatabase {
-  async find(id: string) { ... }  // Wrapping Prisma
+```javascript
+// ❌ カスタムファイルシステムラッパー
+class MyFileSystem {
+  async write(path, data) { ... }  // fs-extraをラップ
 }
 
-// ❌ Custom HTTP client
-class MyHttpClient {
-  async get(url: string) { ... }  // Wrapping fetch
+// ❌ カスタムCLIラッパー
+class MyCLI {
+  async parse(args) { ... }  // commanderをラップ
 }
 ```
 
-**Exception**: Multi-framework support or justified architectural need requires Phase -1 Gate approval with:
-
-1. Multi-framework justification
-2. Team expertise analysis
-3. Migration path documentation
-4. Approval from @system-architect + @software-developer
+**例外**: マルチフレームワークサポートが必要な場合はPhase -1 Gate承認が必要
 
 ---
 
-## Technology Selection Criteria
+## Constitutional Alignment
 
-When evaluating new technologies:
+本技術スタックは以下の憲法条項を遵守します：
 
-1. **Community Support**: Active maintenance, large community
-2. **Documentation**: Comprehensive, up-to-date
-3. **Type Safety**: TypeScript support preferred
-4. **Performance**: Benchmarked performance metrics
-5. **Security**: Regular security updates
-6. **License**: Compatible with project (MIT, Apache 2.0 preferred)
-7. **Team Expertise**: Team familiarity with technology
-8. **Constitutional Alignment**: Supports Library-First, Test-First principles
-
----
-
-## Deprecated Technologies
-
-| Technology | Deprecated Date | Replacement | Migration Deadline |
-| ---------- | --------------- | ----------- | ------------------ |
-| [Old Tech] | [Date]          | [New Tech]  | [Date]             |
+- **Article I (Library-First)**: src/内のモジュール構成
+- **Article II (CLI Interface)**: bin/内の14 CLIコマンド
+- **Article III (Test-First)**: Jest + 80%カバレッジ
+- **Article VIII (Anti-Abstraction)**: フレームワークAPIを直接使用
+- **Article IX (Integration Testing)**: 7プラットフォーム初期化テスト
 
 ---
 
 ## Changelog
 
-### Version 1.1 (Planned)
+### Version 1.1.2 (2025-11-23)
 
-- [Planned technology updates]
+- Documentation enhancement
+- CLI help improvements
+
+### Version 1.1.0 (2025-11-23)
+
+- Parallel execution (30-70% faster)
+- Dependency visualization (Mermaid)
+- Advanced error handling
 
 ---
 
-**Last Updated**: 2025-11-23
-**Maintained By**: {{MAINTAINER}}
+**Last Updated**: 2025-12-03
+**Maintained By**: nahisaho (MUSUBI Contributors)

@@ -4,13 +4,22 @@
 [![npm version](https://badge.fury.io/js/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Ultimate Specification Driven Development Tool for 7 AI Coding Agents**
+> Ultimate Specification Driven Development Tool for 7 AI Coding Agents + MCP Integration
 
 MUSUBI is a comprehensive SDD (Specification Driven Development) framework that synthesizes the best features from 6 leading frameworks into a production-ready tool for multiple AI coding agents.
+
+## 🚀 What's New in v2.0.0
+
+- 🔌 **CodeGraphMCPServer Integration** - 14 MCP tools for enhanced code analysis
+- 🧠 **GraphRAG-Powered Search** - Semantic code understanding with Louvain community detection
+- 🔍 **11 Agents Enhanced** - Key agents now leverage MCP tools for deeper code analysis
+- 📊 **Dependency Analysis** - `find_dependencies`, `find_callers`, `analyze_module_structure`
+- 🎯 **Smart Code Navigation** - `local_search`, `global_search`, `query_codebase`
 
 ## Features
 
 - 🤖 **Multi-Agent Support** - Works with 7 AI coding agents (Claude Code, GitHub Copilot, Cursor, Gemini CLI, Codex CLI, Qwen Code, Windsurf)
+- 🔌 **MCP Server Integration** - CodeGraphMCPServer for advanced code analysis (NEW in v2.0.0)
 - 📄 **Flexible Command Formats** - Supports Markdown, TOML, and AGENTS.md formats
 - 🎯 **25 Specialized Agents (All Platforms)** - Orchestrator, Steering, Requirements, Architecture, Development, Quality, Security, Infrastructure
   - Claude Code: Skills API (25 skills)
@@ -45,6 +54,7 @@ MUSUBI supports 7 AI coding agents, each with tailored configurations:
 | **Windsurf IDE** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.windsurf/workflows/`, `.windsurf/AGENTS.md` |
 
 **Notes**:
+
 - Skills API is exclusive to Claude Code
 - **All 7 platforms now support 25 agents** via Skills API (Claude Code) or AGENTS.md (others)
 - AGENTS.md: OpenAI specification, officially supported by GitHub Copilot & Cursor
@@ -65,6 +75,7 @@ musubi-validate complexity
 ```
 
 **9 Articles**:
+
 1. **Library-First Principle** - All features begin as independent libraries
 2. **CLI Interface Mandate** - All libraries expose CLI functionality
 3. **Test-First Imperative** - Tests written before code (80% coverage required)
@@ -76,6 +87,7 @@ musubi-validate complexity
 9. **Integration-First Testing** - Integration tests use real services (no mocks)
 
 **Phase -1 Gates**: Pre-implementation validation checkpoints for Articles VII & VIII. See:
+
 - [steering/rules/constitution.md](steering/rules/constitution.md) - Full constitutional text
 - [steering/rules/phase-gates.md](steering/rules/phase-gates.md) - Approval process and active gates
 - All other agents use Markdown format + AGENTS.md
@@ -210,8 +222,9 @@ Comprehensive guides are available in `docs/guides/`:
 During initialization, MUSUBI asks you to select a **Project Type**. This determines the workflow and features available:
 
 #### Greenfield (0→1)
+
 - **What it is**: Starting a new project from scratch
-- **Use cases**: 
+- **Use cases**:
   - New application development
   - Proof-of-concept projects
   - Greenfield microservices
@@ -229,6 +242,7 @@ During initialization, MUSUBI asks you to select a **Project Type**. This determ
   - Complete traceability from requirements to code
 
 #### Brownfield (1→n)
+
 - **What it is**: Working with existing codebases
 - **Use cases**:
   - Adding features to existing applications
@@ -247,6 +261,7 @@ During initialization, MUSUBI asks you to select a **Project Type**. This determ
   - Full audit trail of what changed and why
 
 #### Both
+
 - **What it is**: Hybrid approach for complex scenarios
 - **Use cases**:
   - Monolith → Microservices migration (brownfield + greenfield services)
@@ -262,7 +277,8 @@ During initialization, MUSUBI asks you to select a **Project Type**. This determ
   - Single tool for entire modernization journey
 
 **Example Selection**:
-```
+
+```text
 ? Project type:
 ❯ Greenfield (0→1)    ← New projects
   Brownfield (1→n)    ← Existing codebases
@@ -273,7 +289,7 @@ During initialization, MUSUBI asks you to select a **Project Type**. This determ
 
 #### Claude Code (Skills API)
 
-```
+```text
 your-project/
 ├── .claude/
 │   ├── skills/              # 25 Skills API (Claude Code exclusive feature)
@@ -305,7 +321,7 @@ your-project/
 
 #### Other Agents (GitHub Copilot, Cursor, Gemini, etc.)
 
-```
+```text
 your-project/
 ├── .github/prompts/         # For GitHub Copilot (#sdd-*, Markdown)
 │   ├── AGENTS.md             # 25 agents definition (official support)
@@ -343,6 +359,7 @@ your-project/
 ```
 
 **Key Differences**:
+
 - **Claude Code**: 25 Skills API (exclusive) + commands (Markdown)
 - **GitHub Copilot & Cursor**: AGENTS.md (official support) + commands (Markdown)
 - **Gemini CLI**: GEMINI.md integration (25 agents) + TOML commands (unique)
@@ -409,7 +426,7 @@ musubi-share status            # Show sharing status
 
 Automatically analyzes existing projects and generates steering documentation:
 
-```
+```text
 🚀 MUSUBI Onboarding Wizard
 
 Analyzing your project...
@@ -434,6 +451,7 @@ Analyzing your project...
 ```
 
 **Features**:
+
 - Automatic codebase analysis (package.json, directory structure)
 - Technology stack detection (languages, frameworks)
 - Bilingual steering docs generation (English + Japanese)
@@ -445,7 +463,7 @@ Analyzing your project...
 
 Detects codebase changes and keeps steering documents synchronized:
 
-```
+```text
 🔄 MUSUBI Steering Sync
 
 Detected changes:
@@ -464,6 +482,7 @@ Detected changes:
 ```
 
 **Features**:
+
 - Change detection (version, languages, frameworks, directories)
 - Interactive mode (default): Show changes, ask confirmation
 - Auto-approve mode (--auto-approve): CI/CD integration
@@ -472,6 +491,7 @@ Detected changes:
 - Memory recording (audit trail)
 
 **Usage**:
+
 ```bash
 # Interactive (default)
 musubi-sync
@@ -487,7 +507,7 @@ musubi-sync --auto-approve
 
 Share and merge project memories across team members and AI platforms (v0.6.0+):
 
-```
+```text
 📤 MUSUBI Memory Export
 
 Export Summary:
@@ -499,6 +519,7 @@ Export Summary:
 ```
 
 **Features**:
+
 - **Export**: Share memories as JSON/YAML
 - **Import**: Merge memories from teammates
 - **Sync**: Synchronize across AI platforms
@@ -506,6 +527,7 @@ Export Summary:
 - **Status**: Show installed platforms and memory counts
 
 **Usage**:
+
 ```bash
 # Export memories
 musubi-share export
@@ -525,11 +547,11 @@ musubi-share sync --platform=cursor
 musubi-share status
 ```
 
-####  musubi status
+#### musubi status
 
 Shows the current state of your MUSUBI project:
 
-```
+```text
 📊 MUSUBI Project Status
 
 ✅ MUSUBI is initialized
@@ -592,6 +614,7 @@ For comprehensive validation, use your agent's `/sdd-validate` (or equivalent) c
 ```
 
 **Skills (Auto-Invoked)**: Claude Code automatically selects the appropriate skill:
+
 - "Review my code" → `code-reviewer` skill
 - "Create requirements for user login" → `requirements-analyst` skill
 - "Design API for payment" → `api-designer` skill
@@ -649,30 +672,36 @@ For comprehensive validation, use your agent's `/sdd-validate` (or equivalent) c
 ## 25 Agents Overview (All Platforms)
 
 **Available on all 7 platforms** via:
+
 - **Claude Code**: Skills API (automatic invocation)
 - **GitHub Copilot & Cursor**: AGENTS.md (official support, reference via `@agent-name`)
 - **Gemini, Windsurf, Codex, Qwen**: AGENTS.md (compatible format, natural language reference)
 
 ### Orchestration & Management (3)
+
 - **orchestrator** - Master coordinator for multi-skill workflows
 - **steering** - Project memory manager (auto-updating context)
 - **constitution-enforcer** - Governance validation (9 Articles + Phase -1 Gates)
 
 ### Requirements & Planning (3)
+
 - **requirements-analyst** - EARS format requirements generation
 - **project-manager** - Project planning, scheduling, risk management
 - **change-impact-analyzer** - Brownfield change analysis
 
 ### Architecture & Design (4)
+
 - **system-architect** - C4 model + ADR architecture design
 - **api-designer** - REST/GraphQL/gRPC API design
 - **database-schema-designer** - Database design, ER diagrams, DDL
 - **ui-ux-designer** - UI/UX design, wireframes, prototypes
 
 ### Development (1)
+
 - **software-developer** - Multi-language code implementation
 
 ### Quality & Review (5)
+
 - **test-engineer** - Unit, integration, E2E testing with EARS mapping
 - **code-reviewer** - Code review, SOLID principles
 - **bug-hunter** - Bug investigation, root cause analysis
@@ -680,10 +709,12 @@ For comprehensive validation, use your agent's `/sdd-validate` (or equivalent) c
 - **traceability-auditor** - Requirements ↔ Code ↔ Test coverage validation
 
 ### Security & Performance (2)
+
 - **security-auditor** - OWASP Top 10, vulnerability detection
 - **performance-optimizer** - Performance analysis, optimization
 
 ### Infrastructure & Operations (5)
+
 - **devops-engineer** - CI/CD pipelines, Docker/Kubernetes
 - **cloud-architect** - AWS/Azure/GCP, IaC (Terraform/Bicep)
 - **database-administrator** - Database operations, tuning
@@ -691,10 +722,11 @@ For comprehensive validation, use your agent's `/sdd-validate` (or equivalent) c
 - **release-coordinator** - Multi-component release management
 
 ### Documentation & Specialized (2)
+
 - **technical-writer** - Technical documentation, API docs
 - **ai-ml-engineer** - ML model development, MLOps
 
-## Constitutional Governance
+## Governance Articles
 
 MUSUBI enforces 9 immutable constitutional articles:
 
@@ -710,12 +742,13 @@ MUSUBI enforces 9 immutable constitutional articles:
 
 ## SDD Workflow (8 Stages)
 
-```
+```text
 1. Research → 2. Requirements → 3. Design → 4. Tasks →
 5. Implementation → 6. Testing → 7. Deployment → 8. Monitoring
 ```
 
 Each stage has:
+
 - Dedicated skills
 - Quality gates
 - Traceability requirements
@@ -750,11 +783,13 @@ AND the system SHALL create a session.
 ### Files Generated Bilingually
 
 **Steering Context**:
+
 - `steering/structure.md` + `steering/structure.ja.md`
 - `steering/tech.md` + `steering/tech.ja.md`
 - `steering/product.md` + `steering/product.ja.md`
 
 **Specifications**:
+
 - `storage/specs/auth-requirements.md` + `storage/specs/auth-requirements.ja.md`
 - `storage/specs/auth-design.md` + `storage/specs/auth-design.ja.md`
 - `storage/specs/auth-tasks.md` + `storage/specs/auth-tasks.ja.md`
@@ -833,7 +868,92 @@ npx musubi-sdd init
 
 ### MCP Server Integration
 
-MUSUBI integrates with MCP servers for enhanced capabilities:
+MUSUBI v2.0.0 integrates with **CodeGraphMCPServer** for advanced code analysis.
+
+#### Option 1: Claude Code (Terminal)
+
+```bash
+# Install CodeGraph MCP globally
+pip install codegraph-mcp
+
+# Add to Claude Code
+claude mcp add codegraph -- codegraph-mcp serve --repo .
+
+# Verify installation
+claude mcp list
+```
+
+#### Option 2: VS Code with Claude Extension
+
+1. **Install Prerequisites**:
+
+   ```bash
+   pip install codegraph-mcp
+   ```
+
+2. **Configure VS Code** (`settings.json`):
+
+   ```json
+   {
+     "mcp.servers": {
+       "codegraph": {
+         "command": "codegraph-mcp",
+         "args": ["serve", "--repo", "${workspaceFolder}"]
+       }
+     }
+   }
+   ```
+
+3. **Or use Claude Desktop config** (`~/.claude/claude_desktop_config.json` on macOS/Linux, `%APPDATA%\Claude\claude_desktop_config.json` on Windows):
+
+   ```json
+   {
+     "mcpServers": {
+       "codegraph": {
+         "command": "codegraph-mcp",
+         "args": ["serve", "--repo", "/path/to/your/project"]
+       }
+     }
+   }
+   ```
+
+#### Option 3: npx (No Installation)
+
+```bash
+# Add via npx (no global install needed)
+claude mcp add codegraph -- npx -y @anthropic/codegraph-mcp --codebase .
+```
+
+#### Verify MCP Server is Working
+
+After setup, test in Claude:
+
+```text
+Use the init_graph tool to analyze this codebase
+```
+
+If successful, you'll see the code graph initialization output.
+
+**Available MCP Tools (14 tools)**:
+
+| Category | Tools | Description |
+|----------|-------|-------------|
+| Code Graph | `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies` | Build and query code graph |
+| Search | `local_search`, `global_search`, `query_codebase` | GraphRAG-powered semantic search |
+| Analysis | `analyze_module_structure`, `suggest_refactoring` | Code structure analysis |
+| Navigation | `jump_to_definition`, `find_implementations` | Code navigation |
+
+**Agent × MCP Tool Mapping**:
+
+| Agent | Primary MCP Tools | Use Case |
+|-------|-------------------|----------|
+| @change-impact-analyzer | `find_dependencies`, `find_callers` | Impact analysis |
+| @traceability-auditor | `query_codebase`, `find_callers` | Traceability validation |
+| @system-architect | `analyze_module_structure`, `global_search` | Architecture analysis |
+| @code-reviewer | `suggest_refactoring`, `get_code_snippet` | Code quality review |
+| @security-auditor | `find_callers`, `query_codebase` | Security vulnerability detection |
+
+Also integrates with other MCP servers:
 
 - **Context7 MCP** - Up-to-date library documentation (Next.js, React, etc.)
 - **Azure MCP** - Azure resource management
@@ -921,6 +1041,7 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Credits
 
 MUSUBI synthesizes features from:
+
 - **musuhi** - 20-agent system, steering, EARS format
 - **OpenSpec** - Delta specs, brownfield support
 - **ag2** (AutoGen) - Multi-agent orchestration

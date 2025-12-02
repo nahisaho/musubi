@@ -181,15 +181,135 @@ d) 実行を中断
 
 **使用例**:
 
-```
+```text
 ToDoを管理するWebアプリケーションを開発したい。要件定義から開始してください。
 ```
 
-```
+```text
 既存のAPIにパフォーマンス改善とセキュリティ監査を実施してください。
 ```
 
 Orchestratorが自動的に適切なエージェントを選択し、調整します。
+
+---
+
+## CodeGraph MCP Server Integration
+
+Orchestratorは **CodeGraphMCPServer** を活用して、コードベースの高度な構造分析を行えます。
+
+### CodeGraph MCP インストール・設定
+
+ユーザーが「CodeGraph MCP を設定したい」「コード分析ツールを追加したい」と依頼した場合、以下の手順を案内してください：
+
+#### Option 1: Python venv（推奨）
+
+```bash
+# 1. 仮想環境作成
+python3 -m venv ~/codegraph-venv
+
+# 2. アクティベートしてインストール
+cd ~/codegraph-venv && source bin/activate
+pip install codegraph-mcp
+
+# 3. 動作確認
+codegraph-mcp --version
+```
+
+#### Option 2: Claude Code（ターミナル）
+
+```bash
+claude mcp add codegraph -- ~/codegraph-venv/bin/codegraph-mcp serve --repo ${workspaceFolder}
+```
+
+#### Option 3: VS Code settings.json
+
+`.vscode/settings.json` に追加：
+
+```json
+{
+  "mcp.servers": {
+    "codegraph": {
+      "command": "npx",
+      "args": ["-y", "@anthropic/codegraph-mcp", "--codebase", "."]
+    }
+  }
+}
+```
+
+#### Option 4: ~/.claude/claude_desktop_config.json
+
+Claude Desktop設定ファイル：
+
+```json
+{
+  "mcpServers": {
+    "CodeGraph": {
+      "command": "/path/to/codegraph-venv/bin/codegraph-mcp",
+      "args": ["serve", "--repo", "/path/to/your/project"]
+    }
+  }
+}
+```
+
+### プロジェクトのインデックス作成
+
+設定完了後、プロジェクトをインデックスします：
+
+```bash
+codegraph-mcp index "/path/to/project" --full
+```
+
+出力例：
+
+```text
+Full indexing...
+Indexed 105 files
+- Entities: 1006
+- Relations: 5359
+- Communities: 36
+```
+
+### 利用可能な MCP Tools
+
+| Tool | 説明 | 活用エージェント |
+| --- | --- | --- |
+| `init_graph` | コードグラフ初期化 | Orchestrator, Steering |
+| `get_code_snippet` | ソースコード取得 | Software Developer, Bug Hunter |
+| `find_callers` | 呼び出し元追跡 | Test Engineer, Security Auditor |
+| `find_callees` | 呼び出し先追跡 | Change Impact Analyzer |
+| `find_dependencies` | 依存関係分析 | System Architect, Change Impact Analyzer |
+| `local_search` | ローカルコンテキスト検索 | Software Developer, Bug Hunter |
+| `global_search` | グローバル検索 | Orchestrator, System Architect |
+| `query_codebase` | 自然言語クエリ | 全エージェント |
+| `analyze_module_structure` | モジュール構造分析 | System Architect, Constitution Enforcer |
+| `suggest_refactoring` | リファクタリング提案 | Code Reviewer |
+| `stats` | コードベース統計 | Orchestrator |
+| `community` | コミュニティ検出 | System Architect |
+
+### CodeGraph活用ワークフロー
+
+**影響分析（Change Impact Analysis）**:
+
+```bash
+# 1. 統計確認
+codegraph-mcp stats "/path/to/project"
+
+# 2. 依存関係分析
+# MCP経由: find_dependencies(entity_name)
+
+# 3. コミュニティ検出
+codegraph-mcp community "/path/to/project"
+```
+
+**リファクタリング準備**:
+
+```bash
+# 1. 呼び出し元を特定
+# MCP経由: find_callers(function_name)
+
+# 2. 影響範囲を評価
+# MCP経由: find_dependencies(module_name)
+```
 
 ---
 
