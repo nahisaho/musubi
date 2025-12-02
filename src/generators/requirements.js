@@ -166,23 +166,23 @@ class RequirementsGenerator {
     const { pattern, system, statement, response } = data;
 
     switch (pattern) {
-    case 'ubiquitous':
-      return `The ${system} SHALL ${response}.`;
+      case 'ubiquitous':
+        return `The ${system} SHALL ${response}.`;
 
-    case 'event':
-      return `WHEN ${statement}, THEN the ${system} SHALL ${response}.`;
+      case 'event':
+        return `WHEN ${statement}, THEN the ${system} SHALL ${response}.`;
 
-    case 'state':
-      return `WHILE ${statement}, the ${system} SHALL ${response}.`;
+      case 'state':
+        return `WHILE ${statement}, the ${system} SHALL ${response}.`;
 
-    case 'unwanted':
-      return `IF ${statement}, THEN the ${system} SHALL ${response}.`;
+      case 'unwanted':
+        return `IF ${statement}, THEN the ${system} SHALL ${response}.`;
 
-    case 'optional':
-      return `WHERE ${statement}, the ${system} SHALL ${response}.`;
+      case 'optional':
+        return `WHERE ${statement}, the ${system} SHALL ${response}.`;
 
-    default:
-      throw new Error(`Unknown EARS pattern: ${pattern}`);
+      default:
+        throw new Error(`Unknown EARS pattern: ${pattern}`);
     }
   }
 
@@ -387,65 +387,65 @@ class RequirementsGenerator {
 
     // Pattern-specific validation
     switch (pattern) {
-    case 'event': {
-      if (!statement.startsWith('WHEN') || !statement.includes('THEN')) {
-        errors.push('Event-driven pattern must use WHEN...THEN');
+      case 'event': {
+        if (!statement.startsWith('WHEN') || !statement.includes('THEN')) {
+          errors.push('Event-driven pattern must use WHEN...THEN');
+        }
+        // Check for proper event description
+        const whenPart = statement.match(/WHEN (.+?), THEN/)?.[1];
+        if (whenPart && whenPart.split(/\s+/).length < 3) {
+          warnings.push('Event description may be too brief');
+        }
+        break;
       }
-      // Check for proper event description
-      const whenPart = statement.match(/WHEN (.+?), THEN/)?.[1];
-      if (whenPart && whenPart.split(/\s+/).length < 3) {
-        warnings.push('Event description may be too brief');
-      }
-      break;
-    }
 
-    case 'state': {
-      if (!statement.startsWith('WHILE')) {
-        errors.push('State-driven pattern must start with WHILE');
+      case 'state': {
+        if (!statement.startsWith('WHILE')) {
+          errors.push('State-driven pattern must start with WHILE');
+        }
+        // Check for state description
+        const whilePart = statement.match(/WHILE (.+?), the/)?.[1];
+        if (whilePart && whilePart.split(/\s+/).length < 2) {
+          warnings.push('State description may be too brief');
+        }
+        break;
       }
-      // Check for state description
-      const whilePart = statement.match(/WHILE (.+?), the/)?.[1];
-      if (whilePart && whilePart.split(/\s+/).length < 2) {
-        warnings.push('State description may be too brief');
-      }
-      break;
-    }
 
-    case 'unwanted': {
-      if (!statement.startsWith('IF') || !statement.includes('THEN')) {
-        errors.push('Unwanted behavior pattern must use IF...THEN');
+      case 'unwanted': {
+        if (!statement.startsWith('IF') || !statement.includes('THEN')) {
+          errors.push('Unwanted behavior pattern must use IF...THEN');
+        }
+        // Check for error condition description
+        const ifPart = statement.match(/IF (.+?), THEN/)?.[1];
+        if (ifPart && ifPart.split(/\s+/).length < 3) {
+          warnings.push('Error condition description may be too brief');
+        }
+        break;
       }
-      // Check for error condition description
-      const ifPart = statement.match(/IF (.+?), THEN/)?.[1];
-      if (ifPart && ifPart.split(/\s+/).length < 3) {
-        warnings.push('Error condition description may be too brief');
-      }
-      break;
-    }
 
-    case 'optional': {
-      if (!statement.startsWith('WHERE')) {
-        errors.push('Optional feature pattern must start with WHERE');
+      case 'optional': {
+        if (!statement.startsWith('WHERE')) {
+          errors.push('Optional feature pattern must start with WHERE');
+        }
+        // Check for feature description
+        const wherePart = statement.match(/WHERE (.+?), the/)?.[1];
+        if (wherePart && wherePart.split(/\s+/).length < 2) {
+          warnings.push('Feature description may be too brief');
+        }
+        break;
       }
-      // Check for feature description
-      const wherePart = statement.match(/WHERE (.+?), the/)?.[1];
-      if (wherePart && wherePart.split(/\s+/).length < 2) {
-        warnings.push('Feature description may be too brief');
-      }
-      break;
-    }
 
-    case 'ubiquitous': {
-      if (!statement.match(/^The .+ SHALL/)) {
-        errors.push('Ubiquitous pattern must use "The [system] SHALL"');
+      case 'ubiquitous': {
+        if (!statement.match(/^The .+ SHALL/)) {
+          errors.push('Ubiquitous pattern must use "The [system] SHALL"');
+        }
+        // Check for system name
+        const systemPart = statement.match(/^The (.+?) SHALL/)?.[1];
+        if (systemPart && systemPart.split(/\s+/).length > 5) {
+          warnings.push('System name may be too complex - Consider simplifying');
+        }
+        break;
       }
-      // Check for system name
-      const systemPart = statement.match(/^The (.+?) SHALL/)?.[1];
-      if (systemPart && systemPart.split(/\s+/).length > 5) {
-        warnings.push('System name may be too complex - Consider simplifying');
-      }
-      break;
-    }
     }
 
     // Store warnings for later retrieval
@@ -543,10 +543,10 @@ class RequirementsGenerator {
     const qualityScore =
       requirements.length > 0
         ? Math.round(
-          ((requirements.length - ambiguousCount - vagueCount - tooShort - tooLong) /
+            ((requirements.length - ambiguousCount - vagueCount - tooShort - tooLong) /
               requirements.length) *
               100
-        )
+          )
         : 100;
 
     return {
