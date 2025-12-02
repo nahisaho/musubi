@@ -2,10 +2,10 @@
 
 /**
  * MUSUBI Traceability System CLI
- * 
+ *
  * Provides end-to-end traceability from requirements to code to tests
  * Ensures 100% coverage and detects gaps
- * 
+ *
  * Usage:
  *   musubi-trace matrix                      # Generate full traceability matrix
  *   musubi-trace coverage                    # Calculate requirement coverage
@@ -36,13 +36,13 @@ program
   .option('--tasks <path>', 'Tasks directory', 'docs/tasks')
   .option('--code <path>', 'Source code directory', 'src')
   .option('--tests <path>', 'Tests directory', 'tests')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n📊 Generating Traceability Matrix\n'));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const matrix = await analyzer.generateMatrix(options);
-      
+
       if (options.output) {
         const fs = require('fs-extra');
         await fs.writeFile(options.output, analyzer.formatMatrix(matrix, options.format), 'utf-8');
@@ -50,16 +50,24 @@ program
       } else {
         console.log(analyzer.formatMatrix(matrix, options.format));
       }
-      
+
       console.log();
       console.log(chalk.bold('Summary:'));
       console.log(chalk.dim(`  Requirements: ${matrix.summary.totalRequirements}`));
-      console.log(chalk.dim(`  With Design: ${matrix.summary.withDesign} (${matrix.summary.designCoverage}%)`));
-      console.log(chalk.dim(`  With Tasks: ${matrix.summary.withTasks} (${matrix.summary.tasksCoverage}%)`));
-      console.log(chalk.dim(`  With Code: ${matrix.summary.withCode} (${matrix.summary.codeCoverage}%)`));
-      console.log(chalk.dim(`  With Tests: ${matrix.summary.withTests} (${matrix.summary.testsCoverage}%)`));
+      console.log(
+        chalk.dim(`  With Design: ${matrix.summary.withDesign} (${matrix.summary.designCoverage}%)`)
+      );
+      console.log(
+        chalk.dim(`  With Tasks: ${matrix.summary.withTasks} (${matrix.summary.tasksCoverage}%)`)
+      );
+      console.log(
+        chalk.dim(`  With Code: ${matrix.summary.withCode} (${matrix.summary.codeCoverage}%)`)
+      );
+      console.log(
+        chalk.dim(`  With Tests: ${matrix.summary.withTests} (${matrix.summary.testsCoverage}%)`)
+      );
       console.log();
-      
+
       process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
@@ -77,36 +85,52 @@ program
   .option('--code <path>', 'Source code directory', 'src')
   .option('--tests <path>', 'Tests directory', 'tests')
   .option('--min-coverage <percent>', 'Minimum required coverage', '100')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n📈 Calculating Coverage\n'));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const coverage = await analyzer.calculateCoverage(options);
-      
+
       const minCoverage = parseInt(options.minCoverage);
-      
+
       console.log(chalk.bold('Coverage Report:'));
       console.log();
-      
+
       const stages = [
-        { name: 'Requirements → Design', value: coverage.designCoverage, color: coverage.designCoverage >= minCoverage ? chalk.green : chalk.red },
-        { name: 'Requirements → Tasks', value: coverage.tasksCoverage, color: coverage.tasksCoverage >= minCoverage ? chalk.green : chalk.red },
-        { name: 'Requirements → Code', value: coverage.codeCoverage, color: coverage.codeCoverage >= minCoverage ? chalk.green : chalk.red },
-        { name: 'Requirements → Tests', value: coverage.testsCoverage, color: coverage.testsCoverage >= minCoverage ? chalk.green : chalk.red }
+        {
+          name: 'Requirements → Design',
+          value: coverage.designCoverage,
+          color: coverage.designCoverage >= minCoverage ? chalk.green : chalk.red,
+        },
+        {
+          name: 'Requirements → Tasks',
+          value: coverage.tasksCoverage,
+          color: coverage.tasksCoverage >= minCoverage ? chalk.green : chalk.red,
+        },
+        {
+          name: 'Requirements → Code',
+          value: coverage.codeCoverage,
+          color: coverage.codeCoverage >= minCoverage ? chalk.green : chalk.red,
+        },
+        {
+          name: 'Requirements → Tests',
+          value: coverage.testsCoverage,
+          color: coverage.testsCoverage >= minCoverage ? chalk.green : chalk.red,
+        },
       ];
-      
+
       stages.forEach(stage => {
         const bar = '█'.repeat(Math.floor(stage.value / 2));
         console.log(stage.color(`  ${stage.name.padEnd(25)} ${bar} ${stage.value}%`));
       });
-      
+
       console.log();
       console.log(chalk.bold('Overall Coverage:'));
       const overallColor = coverage.overall >= minCoverage ? chalk.green : chalk.red;
       console.log(overallColor(`  ${coverage.overall}% (min: ${minCoverage}%)`));
       console.log();
-      
+
       if (coverage.overall >= minCoverage) {
         console.log(chalk.green('✓ Coverage meets requirements\n'));
         process.exit(0);
@@ -130,15 +154,15 @@ program
   .option('--code <path>', 'Source code directory', 'src')
   .option('--tests <path>', 'Tests directory', 'tests')
   .option('-v, --verbose', 'Show detailed gap information')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n🔍 Detecting Gaps\n'));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const gaps = await analyzer.detectGaps(options);
-      
+
       let hasGaps = false;
-      
+
       if (gaps.orphanedRequirements.length > 0) {
         hasGaps = true;
         console.log(chalk.red.bold('Orphaned Requirements (no design/tasks):'));
@@ -150,7 +174,7 @@ program
         });
         console.log();
       }
-      
+
       if (gaps.orphanedDesign.length > 0) {
         hasGaps = true;
         console.log(chalk.yellow.bold('Orphaned Design (no requirements):'));
@@ -162,7 +186,7 @@ program
         });
         console.log();
       }
-      
+
       if (gaps.orphanedTasks.length > 0) {
         hasGaps = true;
         console.log(chalk.yellow.bold('Orphaned Tasks (no requirements):'));
@@ -174,7 +198,7 @@ program
         });
         console.log();
       }
-      
+
       if (gaps.untestedCode.length > 0) {
         hasGaps = true;
         console.log(chalk.red.bold('Untested Code (no test coverage):'));
@@ -186,7 +210,7 @@ program
         });
         console.log();
       }
-      
+
       if (gaps.missingTests.length > 0) {
         hasGaps = true;
         console.log(chalk.red.bold('Missing Tests (requirements not tested):'));
@@ -195,7 +219,7 @@ program
         });
         console.log();
       }
-      
+
       if (!hasGaps) {
         console.log(chalk.green('✓ No gaps detected - 100% traceability!\n'));
         process.exit(0);
@@ -227,20 +251,20 @@ program
   .action(async (id, options) => {
     try {
       console.log(chalk.bold(`\n🔗 Tracing Requirement: ${id}\n`));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const trace = await analyzer.traceRequirement(id, options);
-      
+
       if (!trace.requirement) {
         console.log(chalk.red(`✗ Requirement ${id} not found\n`));
         process.exit(1);
       }
-      
+
       console.log(chalk.bold('Requirement:'));
       console.log(chalk.cyan(`  ${trace.requirement.id}: ${trace.requirement.title}`));
       console.log(chalk.dim(`  ${trace.requirement.file}`));
       console.log();
-      
+
       if (trace.design.length > 0) {
         console.log(chalk.bold('Design:'));
         trace.design.forEach(d => {
@@ -251,7 +275,7 @@ program
       } else {
         console.log(chalk.yellow('⚠ No design found\n'));
       }
-      
+
       if (trace.tasks.length > 0) {
         console.log(chalk.bold('Tasks:'));
         trace.tasks.forEach(t => {
@@ -262,7 +286,7 @@ program
       } else {
         console.log(chalk.yellow('⚠ No tasks found\n'));
       }
-      
+
       if (trace.code.length > 0) {
         console.log(chalk.bold('Code:'));
         trace.code.forEach(c => {
@@ -273,7 +297,7 @@ program
       } else {
         console.log(chalk.yellow('⚠ No code implementation found\n'));
       }
-      
+
       if (trace.tests.length > 0) {
         console.log(chalk.bold('Tests:'));
         trace.tests.forEach(t => {
@@ -284,21 +308,26 @@ program
       } else {
         console.log(chalk.red('✗ No tests found\n'));
       }
-      
+
       const coverage = {
         design: trace.design.length > 0,
         tasks: trace.tasks.length > 0,
         code: trace.code.length > 0,
-        tests: trace.tests.length > 0
+        tests: trace.tests.length > 0,
       };
-      
+
       const coveragePercent = Object.values(coverage).filter(Boolean).length * 25;
-      const coverageColor = coveragePercent === 100 ? chalk.green : coveragePercent >= 75 ? chalk.yellow : chalk.red;
-      
+      const coverageColor =
+        coveragePercent === 100 ? chalk.green : coveragePercent >= 75 ? chalk.yellow : chalk.red;
+
       console.log(chalk.bold('Coverage:'));
-      console.log(coverageColor(`  ${coveragePercent}% (${Object.values(coverage).filter(Boolean).length}/4 stages)`));
+      console.log(
+        coverageColor(
+          `  ${coveragePercent}% (${Object.values(coverage).filter(Boolean).length}/4 stages)`
+        )
+      );
       console.log();
-      
+
       process.exit(coveragePercent === 100 ? 0 : 1);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
@@ -316,16 +345,16 @@ program
   .option('--code <path>', 'Source code directory', 'src')
   .option('--tests <path>', 'Tests directory', 'tests')
   .option('--strict', 'Fail on any gaps (default: true)', true)
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n🔍 Validating Traceability (Article V)\n'));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const validation = await analyzer.validate(options);
-      
+
       console.log(chalk.bold('Article V: Complete Traceability'));
       console.log();
-      
+
       if (validation.passed) {
         console.log(chalk.green('✓ 100% traceability achieved'));
         console.log(chalk.dim(`  Requirements: ${validation.coverage.totalRequirements}`));
@@ -338,9 +367,11 @@ program
       } else {
         console.log(chalk.red('✗ Traceability gaps detected'));
         console.log();
-        
+
         if (validation.gaps.orphanedRequirements.length > 0) {
-          console.log(chalk.red(`  Orphaned Requirements: ${validation.gaps.orphanedRequirements.length}`));
+          console.log(
+            chalk.red(`  Orphaned Requirements: ${validation.gaps.orphanedRequirements.length}`)
+          );
         }
         if (validation.gaps.untestedCode.length > 0) {
           console.log(chalk.red(`  Untested Code: ${validation.gaps.untestedCode.length}`));
@@ -348,7 +379,7 @@ program
         if (validation.gaps.missingTests.length > 0) {
           console.log(chalk.red(`  Missing Tests: ${validation.gaps.missingTests.length}`));
         }
-        
+
         console.log();
         console.log(chalk.dim('Run `musubi-trace gaps` for detailed gap analysis'));
         console.log();
@@ -371,21 +402,29 @@ program
   .option('--tests <path>', 'Tests directory', 'tests')
   .option('-f, --format <type>', 'Output format (table|json)', 'table')
   .option('-o, --output <path>', 'Output file path')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n🔄 Bidirectional Traceability Analysis\n'));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const result = await analyzer.analyzeBidirectional(options);
-      
+
       console.log(chalk.bold('Forward Traceability (Requirements → Tests):'));
-      console.log(chalk.dim(`  Complete: ${result.completeness.forwardComplete}/${result.completeness.forwardTotal} (${result.completeness.forwardPercentage}%)`));
+      console.log(
+        chalk.dim(
+          `  Complete: ${result.completeness.forwardComplete}/${result.completeness.forwardTotal} (${result.completeness.forwardPercentage}%)`
+        )
+      );
       console.log();
-      
+
       console.log(chalk.bold('Backward Traceability (Tests → Requirements):'));
-      console.log(chalk.dim(`  Complete: ${result.completeness.backwardComplete}/${result.completeness.backwardTotal} (${result.completeness.backwardPercentage}%)`));
+      console.log(
+        chalk.dim(
+          `  Complete: ${result.completeness.backwardComplete}/${result.completeness.backwardTotal} (${result.completeness.backwardPercentage}%)`
+        )
+      );
       console.log();
-      
+
       console.log(chalk.bold('Orphaned Items:'));
       console.log(chalk.dim(`  Requirements: ${result.orphaned.requirements.length}`));
       console.log(chalk.dim(`  Design: ${result.orphaned.design.length}`));
@@ -393,7 +432,7 @@ program
       console.log(chalk.dim(`  Code: ${result.orphaned.code.length}`));
       console.log(chalk.dim(`  Tests: ${result.orphaned.tests.length}`));
       console.log();
-      
+
       if (options.format === 'json') {
         const output = JSON.stringify(result, null, 2);
         if (options.output) {
@@ -404,9 +443,11 @@ program
           console.log(output);
         }
       }
-      
-      const allComplete = result.completeness.forwardPercentage === 100 && result.completeness.backwardPercentage === 100;
-      
+
+      const allComplete =
+        result.completeness.forwardPercentage === 100 &&
+        result.completeness.backwardPercentage === 100;
+
       if (allComplete) {
         console.log(chalk.green('✓ 100% bidirectional traceability achieved!\n'));
         process.exit(0);
@@ -433,10 +474,10 @@ program
   .action(async (requirementId, options) => {
     try {
       console.log(chalk.bold(`\n💥 Impact Analysis: ${requirementId}\n`));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const impact = await analyzer.analyzeImpact(requirementId, options);
-      
+
       console.log(chalk.bold('Impacted Items:'));
       console.log(chalk.dim(`  Design Documents: ${impact.counts.design}`));
       console.log(chalk.dim(`  Tasks: ${impact.counts.tasks}`));
@@ -444,15 +485,17 @@ program
       console.log(chalk.dim(`  Test Files: ${impact.counts.tests}`));
       console.log(chalk.dim(`  Total: ${impact.counts.total}`));
       console.log();
-      
+
       console.log(chalk.bold('Estimated Effort:'));
       console.log(chalk.dim(`  Design: ${impact.effort.design} hours`));
       console.log(chalk.dim(`  Tasks: ${impact.effort.tasks} hours`));
       console.log(chalk.dim(`  Code: ${impact.effort.code} hours`));
       console.log(chalk.dim(`  Tests: ${impact.effort.tests} hours`));
-      console.log(chalk.yellow(`  Total: ${impact.effort.total} hours (${impact.effort.estimate})`));
+      console.log(
+        chalk.yellow(`  Total: ${impact.effort.total} hours (${impact.effort.estimate})`)
+      );
       console.log();
-      
+
       if (options.format === 'json') {
         const output = JSON.stringify(impact, null, 2);
         if (options.output) {
@@ -463,7 +506,7 @@ program
           console.log(output);
         }
       }
-      
+
       if (impact.counts.total === 0) {
         console.log(chalk.green('✓ No impact - requirement is not implemented\n'));
       } else if (impact.counts.total <= 5) {
@@ -473,7 +516,7 @@ program
       } else {
         console.log(chalk.red('⚠ High impact - significant changes required\n'));
       }
-      
+
       process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
@@ -492,13 +535,13 @@ program
   .option('--tests <path>', 'Tests directory', 'tests')
   .option('-f, --format <type>', 'Output format (table|json)', 'table')
   .option('-o, --output <path>', 'Output file path')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n📊 Traceability Statistics\n'));
-      
+
       const analyzer = new TraceabilityAnalyzer(process.cwd());
       const stats = await analyzer.generateStatistics(options);
-      
+
       console.log(chalk.bold('Document Counts:'));
       console.log(chalk.dim(`  Requirements: ${stats.counts.requirements}`));
       console.log(chalk.dim(`  Design Documents: ${stats.counts.design}`));
@@ -506,26 +549,54 @@ program
       console.log(chalk.dim(`  Code Files: ${stats.counts.code}`));
       console.log(chalk.dim(`  Test Files: ${stats.counts.tests}`));
       console.log();
-      
+
       console.log(chalk.bold('Coverage Statistics:'));
-      console.log(chalk.dim(`  Requirements with Design: ${stats.coverage.requirementsWithDesign}/${stats.counts.requirements} (${stats.percentages.designCoverage}%)`));
-      console.log(chalk.dim(`  Requirements with Tasks: ${stats.coverage.requirementsWithTasks}/${stats.counts.requirements} (${stats.percentages.tasksCoverage}%)`));
-      console.log(chalk.dim(`  Requirements with Code: ${stats.coverage.requirementsWithCode}/${stats.counts.requirements} (${stats.percentages.codeCoverage}%)`));
-      console.log(chalk.dim(`  Requirements with Tests: ${stats.coverage.requirementsWithTests}/${stats.counts.requirements} (${stats.percentages.testCoverage}%)`));
-      console.log(chalk.dim(`  Code with Tests: ${stats.coverage.codeWithTests}/${stats.counts.code} (${stats.percentages.codeTestCoverage}%)`));
-      console.log(chalk.dim(`  Tasks Completed: ${stats.coverage.tasksCompleted}/${stats.counts.tasks} (${stats.percentages.taskCompletion}%)`));
+      console.log(
+        chalk.dim(
+          `  Requirements with Design: ${stats.coverage.requirementsWithDesign}/${stats.counts.requirements} (${stats.percentages.designCoverage}%)`
+        )
+      );
+      console.log(
+        chalk.dim(
+          `  Requirements with Tasks: ${stats.coverage.requirementsWithTasks}/${stats.counts.requirements} (${stats.percentages.tasksCoverage}%)`
+        )
+      );
+      console.log(
+        chalk.dim(
+          `  Requirements with Code: ${stats.coverage.requirementsWithCode}/${stats.counts.requirements} (${stats.percentages.codeCoverage}%)`
+        )
+      );
+      console.log(
+        chalk.dim(
+          `  Requirements with Tests: ${stats.coverage.requirementsWithTests}/${stats.counts.requirements} (${stats.percentages.testCoverage}%)`
+        )
+      );
+      console.log(
+        chalk.dim(
+          `  Code with Tests: ${stats.coverage.codeWithTests}/${stats.counts.code} (${stats.percentages.codeTestCoverage}%)`
+        )
+      );
+      console.log(
+        chalk.dim(
+          `  Tasks Completed: ${stats.coverage.tasksCompleted}/${stats.counts.tasks} (${stats.percentages.taskCompletion}%)`
+        )
+      );
       console.log();
-      
-      const gradeColor = stats.health.grade === 'A' ? chalk.green :
-        stats.health.grade === 'B' ? chalk.green :
-          stats.health.grade === 'C' ? chalk.yellow :
-            chalk.red;
-      
+
+      const gradeColor =
+        stats.health.grade === 'A'
+          ? chalk.green
+          : stats.health.grade === 'B'
+            ? chalk.green
+            : stats.health.grade === 'C'
+              ? chalk.yellow
+              : chalk.red;
+
       console.log(chalk.bold('Project Health:'));
       console.log(gradeColor(`  Grade: ${stats.health.grade}`));
       console.log(gradeColor(`  Status: ${stats.health.status}`));
       console.log();
-      
+
       if (options.format === 'json') {
         const output = JSON.stringify(stats, null, 2);
         if (options.output) {
@@ -536,7 +607,7 @@ program
           console.log(output);
         }
       }
-      
+
       process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);

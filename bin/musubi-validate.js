@@ -2,10 +2,10 @@
 
 /**
  * MUSUBI Constitutional Validator CLI
- * 
+ *
  * Validates project compliance with 9 Constitutional Articles
  * Enforces Phase -1 Gates and SDD governance rules
- * 
+ *
  * Usage:
  *   musubi-validate constitution    # Validate all 9 articles
  *   musubi-validate article <1-9>   # Validate specific article
@@ -31,11 +31,11 @@ program
   .description('Validate all 9 Constitutional Articles')
   .option('-v, --verbose', 'Show detailed validation results')
   .option('-f, --format <type>', 'Output format (console|json|markdown)', 'console')
-  .action(async (options) => {
+  .action(async options => {
     try {
       const validator = new ConstitutionValidator(process.cwd());
       const results = await validator.validateAll();
-      
+
       displayResults('Constitutional Validation', results, options);
       process.exit(results.passed ? 0 : 1);
     } catch (error) {
@@ -60,7 +60,7 @@ program
 
       const validator = new ConstitutionValidator(process.cwd());
       const result = await validator.validateArticle(articleNum);
-      
+
       displayResults(`Article ${articleNum} Validation`, result, options);
       process.exit(result.passed ? 0 : 1);
     } catch (error) {
@@ -75,11 +75,11 @@ program
   .description('Validate Phase -1 Gates (Simplicity, Anti-Abstraction)')
   .option('-v, --verbose', 'Show detailed validation results')
   .option('-f, --format <type>', 'Output format (console|json|markdown)', 'console')
-  .action(async (options) => {
+  .action(async options => {
     try {
       const validator = new ConstitutionValidator(process.cwd());
       const results = await validator.validateGates();
-      
+
       displayResults('Phase -1 Gates Validation', results, options);
       process.exit(results.passed ? 0 : 1);
     } catch (error) {
@@ -94,11 +94,11 @@ program
   .description('Validate complexity limits (modules ≤1500 lines, functions ≤50 lines)')
   .option('-v, --verbose', 'Show detailed validation results')
   .option('-f, --format <type>', 'Output format (console|json|markdown)', 'console')
-  .action(async (options) => {
+  .action(async options => {
     try {
       const validator = new ConstitutionValidator(process.cwd());
       const results = await validator.validateComplexity();
-      
+
       displayResults('Complexity Validation', results, options);
       process.exit(results.passed ? 0 : 1);
     } catch (error) {
@@ -113,25 +113,25 @@ program
   .description('Run all validations (constitution + gates + complexity)')
   .option('-v, --verbose', 'Show detailed validation results')
   .option('-f, --format <type>', 'Output format (console|json|markdown)', 'console')
-  .action(async (options) => {
+  .action(async options => {
     try {
       const validator = new ConstitutionValidator(process.cwd());
-      
+
       console.log(chalk.bold('\n🔍 Running comprehensive constitutional validation...\n'));
-      
+
       const [constitutionResults, gatesResults, complexityResults] = await Promise.all([
         validator.validateAll(),
         validator.validateGates(),
-        validator.validateComplexity()
+        validator.validateComplexity(),
       ]);
-      
+
       const allResults = {
         constitution: constitutionResults,
         gates: gatesResults,
         complexity: complexityResults,
-        passed: constitutionResults.passed && gatesResults.passed && complexityResults.passed
+        passed: constitutionResults.passed && gatesResults.passed && complexityResults.passed,
       };
-      
+
       displayAllResults(allResults, options);
       process.exit(allResults.passed ? 0 : 1);
     } catch (error) {
@@ -156,7 +156,7 @@ function displayResults(title, results, options) {
 
   // Console format (default)
   console.log(chalk.bold(`\n📋 ${title}\n`));
-  
+
   if (results.passed) {
     console.log(chalk.green('✓ All checks passed\n'));
   } else {
@@ -206,21 +206,27 @@ function displayAllResults(allResults, options) {
 
   console.log(chalk.bold('\n📊 Comprehensive Validation Results\n'));
   console.log(chalk.bold('━'.repeat(60)));
-  
+
   // Constitution
   const constitutionIcon = allResults.constitution.passed ? chalk.green('✓') : chalk.red('✗');
-  console.log(`\n${constitutionIcon} ${chalk.bold('Constitutional Articles')}: ${allResults.constitution.passed ? chalk.green('PASSED') : chalk.red('FAILED')}`);
-  
+  console.log(
+    `\n${constitutionIcon} ${chalk.bold('Constitutional Articles')}: ${allResults.constitution.passed ? chalk.green('PASSED') : chalk.red('FAILED')}`
+  );
+
   // Gates
   const gatesIcon = allResults.gates.passed ? chalk.green('✓') : chalk.red('✗');
-  console.log(`${gatesIcon} ${chalk.bold('Phase -1 Gates')}: ${allResults.gates.passed ? chalk.green('PASSED') : chalk.red('FAILED')}`);
-  
+  console.log(
+    `${gatesIcon} ${chalk.bold('Phase -1 Gates')}: ${allResults.gates.passed ? chalk.green('PASSED') : chalk.red('FAILED')}`
+  );
+
   // Complexity
   const complexityIcon = allResults.complexity.passed ? chalk.green('✓') : chalk.red('✗');
-  console.log(`${complexityIcon} ${chalk.bold('Complexity Limits')}: ${allResults.complexity.passed ? chalk.green('PASSED') : chalk.red('FAILED')}`);
-  
+  console.log(
+    `${complexityIcon} ${chalk.bold('Complexity Limits')}: ${allResults.complexity.passed ? chalk.green('PASSED') : chalk.red('FAILED')}`
+  );
+
   console.log('\n' + chalk.bold('━'.repeat(60)));
-  
+
   if (allResults.passed) {
     console.log(chalk.bold.green('\n✓ ALL VALIDATIONS PASSED\n'));
     console.log(chalk.dim('Your project complies with all 9 Constitutional Articles.'));
@@ -228,7 +234,7 @@ function displayAllResults(allResults, options) {
     console.log(chalk.bold.red('\n✗ VALIDATION FAILURES DETECTED\n'));
     console.log(chalk.dim('Please address the violations above before proceeding.'));
   }
-  
+
   console.log();
 }
 
@@ -238,7 +244,7 @@ function displayAllResults(allResults, options) {
 function displayMarkdown(title, results) {
   console.log(`# ${title}\n`);
   console.log(`**Status**: ${results.passed ? '✓ PASSED' : '✗ FAILED'}\n`);
-  
+
   if (results.violations && results.violations.length > 0) {
     console.log('## Violations\n');
     results.violations.forEach(violation => {
@@ -246,7 +252,7 @@ function displayMarkdown(title, results) {
     });
     console.log();
   }
-  
+
   if (results.warnings && results.warnings.length > 0) {
     console.log('## Warnings\n');
     results.warnings.forEach(warning => {
@@ -254,7 +260,7 @@ function displayMarkdown(title, results) {
     });
     console.log();
   }
-  
+
   if (results.summary) {
     console.log('## Summary\n');
     console.log(results.summary);

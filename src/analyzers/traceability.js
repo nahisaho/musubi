@@ -1,6 +1,6 @@
 /**
  * MUSUBI Traceability Analyzer
- * 
+ *
  * Provides end-to-end traceability from requirements to code to tests
  * Implements Constitutional Article V: Complete Traceability
  */
@@ -42,8 +42,8 @@ class TraceabilityAnalyzer {
           design: relatedDesign.length > 0,
           tasks: relatedTasks.length > 0,
           code: relatedCode.length > 0,
-          tests: relatedTests.length > 0
-        }
+          tests: relatedTests.length > 0,
+        },
       });
     }
 
@@ -59,7 +59,11 @@ class TraceabilityAnalyzer {
     const { summary } = await this.generateMatrix(options);
 
     const overall = Math.round(
-      (summary.designCoverage + summary.tasksCoverage + summary.codeCoverage + summary.testsCoverage) / 4
+      (summary.designCoverage +
+        summary.tasksCoverage +
+        summary.codeCoverage +
+        summary.testsCoverage) /
+        4
     );
 
     return {
@@ -72,7 +76,7 @@ class TraceabilityAnalyzer {
       tasksCoverage: summary.tasksCoverage,
       codeCoverage: summary.codeCoverage,
       testsCoverage: summary.testsCoverage,
-      overall
+      overall,
     };
   }
 
@@ -96,11 +100,11 @@ class TraceabilityAnalyzer {
     for (const req of requirements) {
       const hasDesign = design.some(d => this.linksToRequirement(d, req.id));
       const hasTasks = tasks.some(t => this.linksToRequirement(t, req.id));
-      
+
       if (!hasDesign && !hasTasks) {
         orphanedRequirements.push(req);
       }
-      
+
       // Check for missing tests
       const hasTests = tests.some(t => this.linksToRequirement(t, req.id));
       if (!hasTests) {
@@ -137,7 +141,7 @@ class TraceabilityAnalyzer {
       orphanedDesign,
       orphanedTasks,
       untestedCode,
-      missingTests
+      missingTests,
     };
   }
 
@@ -166,7 +170,7 @@ class TraceabilityAnalyzer {
       design: relatedDesign,
       tasks: relatedTasks,
       code: relatedCode,
-      tests: relatedTests
+      tests: relatedTests,
     };
   }
 
@@ -177,15 +181,16 @@ class TraceabilityAnalyzer {
     const coverage = await this.calculateCoverage(options);
     const gaps = await this.detectGaps(options);
 
-    const passed = coverage.overall === 100 && 
-                   gaps.orphanedRequirements.length === 0 &&
-                   gaps.untestedCode.length === 0 &&
-                   gaps.missingTests.length === 0;
+    const passed =
+      coverage.overall === 100 &&
+      gaps.orphanedRequirements.length === 0 &&
+      gaps.untestedCode.length === 0 &&
+      gaps.missingTests.length === 0;
 
     return {
       passed,
       coverage,
-      gaps
+      gaps,
     };
   }
 
@@ -207,7 +212,7 @@ class TraceabilityAnalyzer {
       design: [],
       tasks: [],
       code: [],
-      tests: []
+      tests: [],
     };
 
     // Forward traceability: Requirements -> Tests
@@ -223,10 +228,19 @@ class TraceabilityAnalyzer {
         tasks: linkedTasks,
         code: linkedCode,
         tests: linkedTests,
-        complete: linkedDesign.length > 0 && linkedTasks.length > 0 && linkedCode.length > 0 && linkedTests.length > 0
+        complete:
+          linkedDesign.length > 0 &&
+          linkedTasks.length > 0 &&
+          linkedCode.length > 0 &&
+          linkedTests.length > 0,
       });
 
-      if (linkedDesign.length === 0 && linkedTasks.length === 0 && linkedCode.length === 0 && linkedTests.length === 0) {
+      if (
+        linkedDesign.length === 0 &&
+        linkedTasks.length === 0 &&
+        linkedCode.length === 0 &&
+        linkedTests.length === 0
+      ) {
         orphaned.requirements.push(req);
       }
     }
@@ -244,10 +258,14 @@ class TraceabilityAnalyzer {
         tasks: linkedTasks,
         design: linkedDesign,
         requirements: linkedRequirements,
-        complete: linkedRequirements.length > 0
+        complete: linkedRequirements.length > 0,
       });
 
-      if (linkedRequirements.length === 0 && linkedDesign.length === 0 && linkedTasks.length === 0) {
+      if (
+        linkedRequirements.length === 0 &&
+        linkedDesign.length === 0 &&
+        linkedTasks.length === 0
+      ) {
         orphaned.tests.push(test);
       }
     }
@@ -260,17 +278,23 @@ class TraceabilityAnalyzer {
     const completeness = {
       forwardComplete: forward.filter(f => f.complete).length,
       forwardTotal: forward.length,
-      forwardPercentage: forward.length > 0 ? Math.round((forward.filter(f => f.complete).length / forward.length) * 100) : 0,
+      forwardPercentage:
+        forward.length > 0
+          ? Math.round((forward.filter(f => f.complete).length / forward.length) * 100)
+          : 0,
       backwardComplete: backward.filter(b => b.complete).length,
       backwardTotal: backward.length,
-      backwardPercentage: backward.length > 0 ? Math.round((backward.filter(b => b.complete).length / backward.length) * 100) : 0
+      backwardPercentage:
+        backward.length > 0
+          ? Math.round((backward.filter(b => b.complete).length / backward.length) * 100)
+          : 0,
     };
 
     return {
       forward,
       backward,
       orphaned,
-      completeness
+      completeness,
     };
   }
 
@@ -290,10 +314,10 @@ class TraceabilityAnalyzer {
 
     // Calculate effort estimate (simple heuristic)
     const impactScore = {
-      design: impactedDesign.length * 2,  // 2 hours per design doc
-      tasks: impactedTasks.length * 1,    // 1 hour per task
-      code: impactedCode.length * 4,      // 4 hours per code file
-      tests: impactedTests.length * 2     // 2 hours per test file
+      design: impactedDesign.length * 2, // 2 hours per design doc
+      tasks: impactedTasks.length * 1, // 1 hour per task
+      code: impactedCode.length * 4, // 4 hours per code file
+      tests: impactedTests.length * 2, // 2 hours per test file
     };
 
     const totalEffort = Object.values(impactScore).reduce((sum, val) => sum + val, 0);
@@ -304,20 +328,21 @@ class TraceabilityAnalyzer {
         design: impactedDesign,
         tasks: impactedTasks,
         code: impactedCode,
-        tests: impactedTests
+        tests: impactedTests,
       },
       counts: {
         design: impactedDesign.length,
         tasks: impactedTasks.length,
         code: impactedCode.length,
         tests: impactedTests.length,
-        total: impactedDesign.length + impactedTasks.length + impactedCode.length + impactedTests.length
+        total:
+          impactedDesign.length + impactedTasks.length + impactedCode.length + impactedTests.length,
       },
       effort: {
         ...impactScore,
         total: totalEffort,
-        estimate: `${totalEffort} hours`
-      }
+        estimate: `${totalEffort} hours`,
+      },
     };
   }
 
@@ -332,10 +357,16 @@ class TraceabilityAnalyzer {
     const tests = await this.findTests(options.tests || 'tests');
 
     // Calculate various metrics
-    const reqWithDesign = requirements.filter(r => design.some(d => this.linksToRequirement(d, r.id)));
-    const reqWithTasks = requirements.filter(r => tasks.some(t => this.linksToRequirement(t, r.id)));
+    const reqWithDesign = requirements.filter(r =>
+      design.some(d => this.linksToRequirement(d, r.id))
+    );
+    const reqWithTasks = requirements.filter(r =>
+      tasks.some(t => this.linksToRequirement(t, r.id))
+    );
     const reqWithCode = requirements.filter(r => code.some(c => this.linksToRequirement(c, r.id)));
-    const reqWithTests = requirements.filter(r => tests.some(t => this.linksToRequirement(t, r.id)));
+    const reqWithTests = requirements.filter(r =>
+      tests.some(t => this.linksToRequirement(t, r.id))
+    );
 
     const codeWithTests = code.filter(c => tests.some(t => this.testCoversCode(t, c)));
     const tasksCompleted = tasks.filter(t => t.status === 'Complete' || t.status === 'Done');
@@ -346,7 +377,7 @@ class TraceabilityAnalyzer {
         design: design.length,
         tasks: tasks.length,
         code: code.length,
-        tests: tests.length
+        tests: tests.length,
       },
       coverage: {
         requirementsWithDesign: reqWithDesign.length,
@@ -354,20 +385,34 @@ class TraceabilityAnalyzer {
         requirementsWithCode: reqWithCode.length,
         requirementsWithTests: reqWithTests.length,
         codeWithTests: codeWithTests.length,
-        tasksCompleted: tasksCompleted.length
+        tasksCompleted: tasksCompleted.length,
       },
       percentages: {
-        designCoverage: requirements.length > 0 ? Math.round((reqWithDesign.length / requirements.length) * 100) : 0,
-        tasksCoverage: requirements.length > 0 ? Math.round((reqWithTasks.length / requirements.length) * 100) : 0,
-        codeCoverage: requirements.length > 0 ? Math.round((reqWithCode.length / requirements.length) * 100) : 0,
-        testCoverage: requirements.length > 0 ? Math.round((reqWithTests.length / requirements.length) * 100) : 0,
-        codeTestCoverage: code.length > 0 ? Math.round((codeWithTests.length / code.length) * 100) : 0,
-        taskCompletion: tasks.length > 0 ? Math.round((tasksCompleted.length / tasks.length) * 100) : 0
+        designCoverage:
+          requirements.length > 0
+            ? Math.round((reqWithDesign.length / requirements.length) * 100)
+            : 0,
+        tasksCoverage:
+          requirements.length > 0
+            ? Math.round((reqWithTasks.length / requirements.length) * 100)
+            : 0,
+        codeCoverage:
+          requirements.length > 0
+            ? Math.round((reqWithCode.length / requirements.length) * 100)
+            : 0,
+        testCoverage:
+          requirements.length > 0
+            ? Math.round((reqWithTests.length / requirements.length) * 100)
+            : 0,
+        codeTestCoverage:
+          code.length > 0 ? Math.round((codeWithTests.length / code.length) * 100) : 0,
+        taskCompletion:
+          tasks.length > 0 ? Math.round((tasksCompleted.length / tasks.length) * 100) : 0,
       },
       health: {
         grade: this.calculateHealthGrade(requirements, design, tasks, code, tests),
-        status: this.calculateHealthStatus(requirements, design, tasks, code, tests)
-      }
+        status: this.calculateHealthStatus(requirements, design, tasks, code, tests),
+      },
     };
   }
 
@@ -377,9 +422,15 @@ class TraceabilityAnalyzer {
   calculateHealthGrade(requirements, design, tasks, code, tests) {
     if (requirements.length === 0) return 'N/A';
 
-    const designCoverage = design.filter(d => requirements.some(r => this.linksToRequirement(d, r.id))).length / requirements.length;
-    const tasksCoverage = tasks.filter(t => requirements.some(r => this.linksToRequirement(t, r.id))).length / requirements.length;
-    const testsCoverage = tests.filter(t => requirements.some(r => this.linksToRequirement(t, r.id))).length / requirements.length;
+    const designCoverage =
+      design.filter(d => requirements.some(r => this.linksToRequirement(d, r.id))).length /
+      requirements.length;
+    const tasksCoverage =
+      tasks.filter(t => requirements.some(r => this.linksToRequirement(t, r.id))).length /
+      requirements.length;
+    const testsCoverage =
+      tests.filter(t => requirements.some(r => this.linksToRequirement(t, r.id))).length /
+      requirements.length;
 
     const avgCoverage = (designCoverage + tasksCoverage + testsCoverage) / 3;
 
@@ -433,7 +484,14 @@ class TraceabilityAnalyzer {
     let output = '';
 
     output += chalk.bold('Requirement Traceability Matrix\n\n');
-    output += chalk.dim('REQ ID'.padEnd(20) + 'Design'.padEnd(10) + 'Tasks'.padEnd(10) + 'Code'.padEnd(10) + 'Tests'.padEnd(10)) + '\n';
+    output +=
+      chalk.dim(
+        'REQ ID'.padEnd(20) +
+          'Design'.padEnd(10) +
+          'Tasks'.padEnd(10) +
+          'Code'.padEnd(10) +
+          'Tests'.padEnd(10)
+      ) + '\n';
     output += chalk.dim('-'.repeat(60)) + '\n';
 
     matrix.forEach(row => {
@@ -499,7 +557,8 @@ class TraceabilityAnalyzer {
     html += `<li>Code Coverage: ${summary.codeCoverage}%</li>\n`;
     html += `<li>Test Coverage: ${summary.testsCoverage}%</li>\n`;
     html += '</ul>\n<h2>Matrix</h2>\n';
-    html += '<table>\n<tr><th>Requirement ID</th><th>Title</th><th>Design</th><th>Tasks</th><th>Code</th><th>Tests</th></tr>\n';
+    html +=
+      '<table>\n<tr><th>Requirement ID</th><th>Title</th><th>Design</th><th>Tasks</th><th>Code</th><th>Tests</th></tr>\n';
 
     matrix.forEach(row => {
       const designClass = row.coverage.design ? 'pass' : 'fail';
@@ -534,10 +593,11 @@ class TraceabilityAnalyzer {
       withTasks,
       withCode,
       withTests,
-      designCoverage: totalRequirements > 0 ? Math.round((withDesign / totalRequirements) * 100) : 0,
+      designCoverage:
+        totalRequirements > 0 ? Math.round((withDesign / totalRequirements) * 100) : 0,
       tasksCoverage: totalRequirements > 0 ? Math.round((withTasks / totalRequirements) * 100) : 0,
       codeCoverage: totalRequirements > 0 ? Math.round((withCode / totalRequirements) * 100) : 0,
-      testsCoverage: totalRequirements > 0 ? Math.round((withTests / totalRequirements) * 100) : 0
+      testsCoverage: totalRequirements > 0 ? Math.round((withTests / totalRequirements) * 100) : 0,
     };
   }
 
@@ -546,7 +606,7 @@ class TraceabilityAnalyzer {
    */
   async findRequirements(reqDir) {
     const reqPath = path.join(this.workspaceRoot, reqDir);
-    if (!await fs.pathExists(reqPath)) {
+    if (!(await fs.pathExists(reqPath))) {
       return [];
     }
 
@@ -559,14 +619,16 @@ class TraceabilityAnalyzer {
       // - REQ-ABC-001 (original)
       // - REQ-ABC-F-001 (with category: F, NF, etc.)
       // - REQ-ABCF-001 (category without hyphen)
-      const reqMatches = content.matchAll(/### (REQ-[A-Z0-9]+-(?:[A-Z]+-)?(?:[A-Z0-9]+-)?\d{3}): (.+)/g);
+      const reqMatches = content.matchAll(
+        /### (REQ-[A-Z0-9]+-(?:[A-Z]+-)?(?:[A-Z0-9]+-)?\d{3}): (.+)/g
+      );
 
       for (const match of reqMatches) {
         requirements.push({
           id: match[1],
           title: match[2],
           file: path.relative(this.workspaceRoot, file),
-          content
+          content,
         });
       }
     }
@@ -579,7 +641,7 @@ class TraceabilityAnalyzer {
    */
   async findDesign(designDir) {
     const designPath = path.join(this.workspaceRoot, designDir);
-    if (!await fs.pathExists(designPath)) {
+    if (!(await fs.pathExists(designPath))) {
       return [];
     }
 
@@ -588,7 +650,7 @@ class TraceabilityAnalyzer {
 
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
-      
+
       // Extract C4 diagrams and ADRs
       const c4Matches = content.matchAll(/### (Level \d: .+)/g);
       const adrMatches = content.matchAll(/### (ADR-\d{3}): (.+)/g);
@@ -599,7 +661,7 @@ class TraceabilityAnalyzer {
           title: match[1],
           type: 'C4',
           file: path.relative(this.workspaceRoot, file),
-          content
+          content,
         });
       }
 
@@ -609,7 +671,7 @@ class TraceabilityAnalyzer {
           title: match[2],
           type: 'ADR',
           file: path.relative(this.workspaceRoot, file),
-          content
+          content,
         });
       }
     }
@@ -622,7 +684,7 @@ class TraceabilityAnalyzer {
    */
   async findTasks(tasksDir) {
     const tasksPath = path.join(this.workspaceRoot, tasksDir);
-    if (!await fs.pathExists(tasksPath)) {
+    if (!(await fs.pathExists(tasksPath))) {
       return [];
     }
 
@@ -637,13 +699,13 @@ class TraceabilityAnalyzer {
         // Extract status - look for **Status**: pattern after task heading
         const taskSection = content.substring(match.index);
         const statusMatch = taskSection.match(/\*\*Status\*\*:\s*(\w+)/);
-        
+
         tasks.push({
           id: match[1],
           title: match[2],
           status: statusMatch ? statusMatch[1] : 'Unknown',
           file: path.relative(this.workspaceRoot, file),
-          content
+          content,
         });
       }
     }
@@ -656,26 +718,29 @@ class TraceabilityAnalyzer {
    */
   async findCode(codeDir) {
     const codePath = path.join(this.workspaceRoot, codeDir);
-    if (!await fs.pathExists(codePath)) {
+    if (!(await fs.pathExists(codePath))) {
       return [];
     }
 
-    const files = glob.sync('**/*.{js,ts,jsx,tsx,py,java,go,rs}', { cwd: codePath, absolute: true });
+    const files = glob.sync('**/*.{js,ts,jsx,tsx,py,java,go,rs}', {
+      cwd: codePath,
+      absolute: true,
+    });
     const code = [];
 
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
-      
+
       // Extract functions and classes with REQ references
       const functionMatches = content.matchAll(/(?:function|const|let|var)\s+(\w+)|class\s+(\w+)/g);
-      
+
       for (const match of functionMatches) {
         code.push({
           file: path.relative(this.workspaceRoot, file),
           function: match[1],
           class: match[2],
           lines: this.getLineNumber(content, match.index),
-          content
+          content,
         });
       }
     }
@@ -688,24 +753,27 @@ class TraceabilityAnalyzer {
    */
   async findTests(testsDir) {
     const testsPath = path.join(this.workspaceRoot, testsDir);
-    if (!await fs.pathExists(testsPath)) {
+    if (!(await fs.pathExists(testsPath))) {
       return [];
     }
 
-    const files = glob.sync('**/*.{test,spec}.{js,ts,jsx,tsx,py,java,go,rs}', { cwd: testsPath, absolute: true });
+    const files = glob.sync('**/*.{test,spec}.{js,ts,jsx,tsx,py,java,go,rs}', {
+      cwd: testsPath,
+      absolute: true,
+    });
     const tests = [];
 
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
-      
+
       // Extract test cases
       const testMatches = content.matchAll(/(?:test|it|describe)\(['"](.+?)['"]/g);
-      
+
       for (const match of testMatches) {
         tests.push({
           file: path.relative(this.workspaceRoot, file),
           test: match[1],
-          content
+          content,
         });
       }
     }
@@ -725,10 +793,16 @@ class TraceabilityAnalyzer {
    */
   testCoversCode(test, code) {
     // Simple heuristic: test file path matches code file path
-    const testBase = path.basename(test.file, path.extname(test.file)).replace(/\.(test|spec)$/, '');
+    const testBase = path
+      .basename(test.file, path.extname(test.file))
+      .replace(/\.(test|spec)$/, '');
     const codeBase = path.basename(code.file, path.extname(code.file));
-    
-    return testBase === codeBase || test.content.includes(code.function) || test.content.includes(code.class);
+
+    return (
+      testBase === codeBase ||
+      test.content.includes(code.function) ||
+      test.content.includes(code.class)
+    );
   }
 
   /**

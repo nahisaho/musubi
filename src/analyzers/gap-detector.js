@@ -30,13 +30,16 @@ class GapDetector {
       untestedCode,
       missingTests,
       summary: {
-        total: orphanedRequirements.length + unimplementedRequirements.length + 
-               untestedCode.length + missingTests.length,
+        total:
+          orphanedRequirements.length +
+          unimplementedRequirements.length +
+          untestedCode.length +
+          missingTests.length,
         orphanedRequirements: orphanedRequirements.length,
         unimplementedRequirements: unimplementedRequirements.length,
         untestedCode: untestedCode.length,
-        missingTests: missingTests.length
-      }
+        missingTests: missingTests.length,
+      },
     };
   }
 
@@ -52,13 +55,13 @@ class GapDetector {
     for (const req of requirements) {
       const hasDesign = designRefs.some(ref => ref === req.id);
       const hasTask = taskRefs.some(ref => ref === req.id);
-      
+
       if (!hasDesign && !hasTask) {
         orphaned.push({
           id: req.id,
           title: req.title,
           file: req.file,
-          reason: 'No design or task references found'
+          reason: 'No design or task references found',
         });
       }
     }
@@ -76,13 +79,13 @@ class GapDetector {
     const unimplemented = [];
     for (const req of requirements) {
       const hasCode = codeRefs.some(ref => ref === req.id);
-      
+
       if (!hasCode) {
         unimplemented.push({
           id: req.id,
           title: req.title,
           file: req.file,
-          reason: 'No code implementation found'
+          reason: 'No code implementation found',
         });
       }
     }
@@ -108,7 +111,7 @@ class GapDetector {
       if (!hasTest) {
         untested.push({
           file: srcFile,
-          reason: 'No corresponding test file found'
+          reason: 'No corresponding test file found',
         });
       }
     }
@@ -126,13 +129,13 @@ class GapDetector {
     const missing = [];
     for (const req of requirements) {
       const hasTest = testRefs.some(ref => ref === req.id);
-      
+
       if (!hasTest) {
         missing.push({
           id: req.id,
           title: req.title,
           file: req.file,
-          reason: 'No test coverage found'
+          reason: 'No test coverage found',
         });
       }
     }
@@ -153,18 +156,10 @@ class GapDetector {
     const testFiles = await this.getTestFiles();
 
     const totalReqs = requirements.length;
-    const withDesign = requirements.filter(req => 
-      designRefs.some(ref => ref === req.id)
-    ).length;
-    const withTasks = requirements.filter(req => 
-      taskRefs.some(ref => ref === req.id)
-    ).length;
-    const withCode = requirements.filter(req => 
-      codeRefs.some(ref => ref === req.id)
-    ).length;
-    const withTests = requirements.filter(req => 
-      testRefs.some(ref => ref === req.id)
-    ).length;
+    const withDesign = requirements.filter(req => designRefs.some(ref => ref === req.id)).length;
+    const withTasks = requirements.filter(req => taskRefs.some(ref => ref === req.id)).length;
+    const withCode = requirements.filter(req => codeRefs.some(ref => ref === req.id)).length;
+    const withTests = requirements.filter(req => testRefs.some(ref => ref === req.id)).length;
 
     const totalSrc = srcFiles.length;
     const testedSrc = srcFiles.filter(srcFile => {
@@ -185,14 +180,14 @@ class GapDetector {
         designCoverage: totalReqs > 0 ? (withDesign / totalReqs) * 100 : 100,
         taskCoverage: totalReqs > 0 ? (withTasks / totalReqs) * 100 : 100,
         implementationCoverage: totalReqs > 0 ? (withCode / totalReqs) * 100 : 100,
-        testCoverage: totalReqs > 0 ? (withTests / totalReqs) * 100 : 100
+        testCoverage: totalReqs > 0 ? (withTests / totalReqs) * 100 : 100,
       },
       code: {
         total: totalSrc,
         tested: testedSrc,
         untested: totalSrc - testedSrc,
-        testCoverage: totalSrc > 0 ? (testedSrc / totalSrc) * 100 : 100
-      }
+        testCoverage: totalSrc > 0 ? (testedSrc / totalSrc) * 100 : 100,
+      },
     };
   }
 
@@ -200,7 +195,7 @@ class GapDetector {
    * Extract requirements from requirements directory
    */
   async extractRequirements() {
-    if (!await fs.pathExists(this.requirementsDir)) {
+    if (!(await fs.pathExists(this.requirementsDir))) {
       return [];
     }
 
@@ -210,12 +205,12 @@ class GapDetector {
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const matches = content.matchAll(/^##\s+(REQ-[A-Z]+-\d+):\s+(.+)$/gm);
-      
+
       for (const match of matches) {
         requirements.push({
           id: match[1],
           title: match[2],
-          file: path.relative(process.cwd(), file)
+          file: path.relative(process.cwd(), file),
         });
       }
     }
@@ -227,7 +222,7 @@ class GapDetector {
    * Extract design references from design directory
    */
   async extractDesignReferences() {
-    if (!await fs.pathExists(this.designDir)) {
+    if (!(await fs.pathExists(this.designDir))) {
       return [];
     }
 
@@ -237,7 +232,7 @@ class GapDetector {
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const matches = content.matchAll(/REQ-[A-Z]+-\d+/g);
-      
+
       for (const match of matches) {
         references.add(match[0]);
       }
@@ -250,7 +245,7 @@ class GapDetector {
    * Extract task references from tasks directory
    */
   async extractTaskReferences() {
-    if (!await fs.pathExists(this.tasksDir)) {
+    if (!(await fs.pathExists(this.tasksDir))) {
       return [];
     }
 
@@ -260,7 +255,7 @@ class GapDetector {
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const matches = content.matchAll(/REQ-[A-Z]+-\d+/g);
-      
+
       for (const match of matches) {
         references.add(match[0]);
       }
@@ -273,7 +268,7 @@ class GapDetector {
    * Extract code references from source directory
    */
   async extractCodeReferences() {
-    if (!await fs.pathExists(this.srcDir)) {
+    if (!(await fs.pathExists(this.srcDir))) {
       return [];
     }
 
@@ -283,7 +278,7 @@ class GapDetector {
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const matches = content.matchAll(/REQ-[A-Z]+-\d+/g);
-      
+
       for (const match of matches) {
         references.add(match[0]);
       }
@@ -296,7 +291,7 @@ class GapDetector {
    * Extract test references from tests directory
    */
   async extractTestReferences() {
-    if (!await fs.pathExists(this.testsDir)) {
+    if (!(await fs.pathExists(this.testsDir))) {
       return [];
     }
 
@@ -306,7 +301,7 @@ class GapDetector {
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const matches = content.matchAll(/REQ-[A-Z]+-\d+/g);
-      
+
       for (const match of matches) {
         references.add(match[0]);
       }
@@ -319,12 +314,12 @@ class GapDetector {
    * Get source files
    */
   async getSourceFiles() {
-    if (!await fs.pathExists(this.srcDir)) {
+    if (!(await fs.pathExists(this.srcDir))) {
       return [];
     }
 
     return glob.sync(`${this.srcDir}/**/*.{js,ts,jsx,tsx}`, {
-      ignore: ['**/*.test.*', '**/*.spec.*', '**/node_modules/**']
+      ignore: ['**/*.test.*', '**/*.spec.*', '**/node_modules/**'],
     });
   }
 
@@ -332,7 +327,7 @@ class GapDetector {
    * Get test files
    */
   async getTestFiles() {
-    if (!await fs.pathExists(this.testsDir)) {
+    if (!(await fs.pathExists(this.testsDir))) {
       return [];
     }
 
@@ -346,7 +341,9 @@ class GapDetector {
     console.log(chalk.bold('\n📊 Gap Detection Summary\n'));
     console.log(`Total Gaps: ${chalk.yellow(gaps.summary.total)}`);
     console.log(`  Orphaned Requirements: ${chalk.yellow(gaps.summary.orphanedRequirements)}`);
-    console.log(`  Unimplemented Requirements: ${chalk.yellow(gaps.summary.unimplementedRequirements)}`);
+    console.log(
+      `  Unimplemented Requirements: ${chalk.yellow(gaps.summary.unimplementedRequirements)}`
+    );
     console.log(`  Untested Code: ${chalk.yellow(gaps.summary.untestedCode)}`);
     console.log(`  Missing Tests: ${chalk.yellow(gaps.summary.missingTests)}`);
 
@@ -406,14 +403,22 @@ class GapDetector {
    */
   displayCoverageTable(coverage) {
     console.log(chalk.bold('\n📊 Coverage Statistics\n'));
-    
+
     console.log(chalk.bold('Requirements Coverage:'));
     console.log(`  Total Requirements: ${coverage.requirements.total}`);
-    console.log(`  With Design: ${coverage.requirements.withDesign} (${coverage.requirements.designCoverage.toFixed(1)}%)`);
-    console.log(`  With Tasks: ${coverage.requirements.withTasks} (${coverage.requirements.taskCoverage.toFixed(1)}%)`);
-    console.log(`  With Code: ${coverage.requirements.withCode} (${coverage.requirements.implementationCoverage.toFixed(1)}%)`);
-    console.log(`  With Tests: ${coverage.requirements.withTests} (${coverage.requirements.testCoverage.toFixed(1)}%)`);
-    
+    console.log(
+      `  With Design: ${coverage.requirements.withDesign} (${coverage.requirements.designCoverage.toFixed(1)}%)`
+    );
+    console.log(
+      `  With Tasks: ${coverage.requirements.withTasks} (${coverage.requirements.taskCoverage.toFixed(1)}%)`
+    );
+    console.log(
+      `  With Code: ${coverage.requirements.withCode} (${coverage.requirements.implementationCoverage.toFixed(1)}%)`
+    );
+    console.log(
+      `  With Tests: ${coverage.requirements.withTests} (${coverage.requirements.testCoverage.toFixed(1)}%)`
+    );
+
     console.log(chalk.bold('\nCode Coverage:'));
     console.log(`  Total Source Files: ${coverage.code.total}`);
     console.log(`  Tested: ${coverage.code.tested} (${coverage.code.testCoverage.toFixed(1)}%)`);
@@ -488,19 +493,19 @@ class GapDetector {
    */
   formatCoverageMarkdown(coverage) {
     let md = '# Coverage Report\n\n';
-    
+
     md += '## Requirements Coverage\n\n';
     md += `- **Total Requirements**: ${coverage.requirements.total}\n`;
     md += `- **With Design**: ${coverage.requirements.withDesign} (${coverage.requirements.designCoverage.toFixed(1)}%)\n`;
     md += `- **With Tasks**: ${coverage.requirements.withTasks} (${coverage.requirements.taskCoverage.toFixed(1)}%)\n`;
     md += `- **With Code**: ${coverage.requirements.withCode} (${coverage.requirements.implementationCoverage.toFixed(1)}%)\n`;
     md += `- **With Tests**: ${coverage.requirements.withTests} (${coverage.requirements.testCoverage.toFixed(1)}%)\n\n`;
-    
+
     md += '## Code Coverage\n\n';
     md += `- **Total Source Files**: ${coverage.code.total}\n`;
     md += `- **Tested**: ${coverage.code.tested} (${coverage.code.testCoverage.toFixed(1)}%)\n`;
     md += `- **Untested**: ${coverage.code.untested}\n`;
-    
+
     return md;
   }
 }

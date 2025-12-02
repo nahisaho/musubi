@@ -1,6 +1,6 @@
 /**
  * MUSUBI Tasks Generator
- * 
+ *
  * Generates task breakdown documents with P0-P3 priority labels
  * Supports dependency graphs and parallel execution planning
  */
@@ -45,10 +45,7 @@ class TasksGenerator {
    * Find all task breakdown files
    */
   async findTaskFiles() {
-    const patterns = [
-      'docs/tasks/**/*.md',
-      'tasks/**/*.md'
-    ];
+    const patterns = ['docs/tasks/**/*.md', 'tasks/**/*.md'];
 
     const files = [];
     for (const pattern of patterns) {
@@ -73,7 +70,8 @@ class TasksGenerator {
 
     // Find insertion point based on priority
     const insertionPoint = this.findTaskInsertionPoint(content, task.priority);
-    const updatedContent = content.slice(0, insertionPoint) + '\n' + taskSection + '\n' + content.slice(insertionPoint);
+    const updatedContent =
+      content.slice(0, insertionPoint) + '\n' + taskSection + '\n' + content.slice(insertionPoint);
 
     await fs.writeFile(filePath, updatedContent, 'utf-8');
 
@@ -157,10 +155,10 @@ class TasksGenerator {
    */
   findTaskInsertionPoint(content, priority) {
     const priorityHeaders = {
-      'P0': '## P0 Tasks',
-      'P1': '## P1 Tasks',
-      'P2': '## P2 Tasks',
-      'P3': '## P2 Tasks'
+      P0: '## P0 Tasks',
+      P1: '## P1 Tasks',
+      P2: '## P2 Tasks',
+      P3: '## P2 Tasks',
     };
 
     const headerPattern = priorityHeaders[priority];
@@ -216,7 +214,7 @@ class TasksGenerator {
       p2: filtered.filter(t => t.priority === 'P2').length,
       p3: filtered.filter(t => t.priority === 'P3').length,
       totalPoints: filtered.reduce((sum, t) => sum + (t.storyPoints || 0), 0),
-      totalHours: filtered.reduce((sum, t) => sum + (t.estimatedHours || 0), 0)
+      totalHours: filtered.reduce((sum, t) => sum + (t.estimatedHours || 0), 0),
     };
 
     return { tasks: filtered, summary };
@@ -227,7 +225,8 @@ class TasksGenerator {
    */
   parseTasks(content) {
     const tasks = [];
-    const taskRegex = /### TASK-(\d{3}): (.+?)\n\n\*\*Priority\*\*: (P[0-3])\n\*\*Story Points\*\*: (\d+)\n\*\*Estimated Hours\*\*: ([\d.]+)\n\*\*Assignee\*\*: (.+?)\n\*\*Status\*\*: (.+?)\n/g;
+    const taskRegex =
+      /### TASK-(\d{3}): (.+?)\n\n\*\*Priority\*\*: (P[0-3])\n\*\*Story Points\*\*: (\d+)\n\*\*Estimated Hours\*\*: ([\d.]+)\n\*\*Assignee\*\*: (.+?)\n\*\*Status\*\*: (.+?)\n/g;
     let match;
 
     while ((match = taskRegex.exec(content)) !== null) {
@@ -238,7 +237,7 @@ class TasksGenerator {
         storyPoints: parseInt(match[4]),
         estimatedHours: parseFloat(match[5]),
         assignee: match[6],
-        status: match[7]
+        status: match[7],
       });
     }
 
@@ -250,21 +249,24 @@ class TasksGenerator {
    */
   async updateStatus(taskId, newStatus, filePath = null) {
     const files = filePath ? [filePath] : await this.findTaskFiles();
-    
+
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
-      const taskPattern = new RegExp(`(### TASK-${taskId}: .+?\\n\\n\\*\\*Priority\\*\\*: .+?\\n\\*\\*Story Points\\*\\*: .+?\\n\\*\\*Estimated Hours\\*\\*: .+?\\n\\*\\*Assignee\\*\\*: .+?\\n\\*\\*Status\\*\\*: )(.+?)(\\n)`, 'g');
-      
+      const taskPattern = new RegExp(
+        `(### TASK-${taskId}: .+?\\n\\n\\*\\*Priority\\*\\*: .+?\\n\\*\\*Story Points\\*\\*: .+?\\n\\*\\*Estimated Hours\\*\\*: .+?\\n\\*\\*Assignee\\*\\*: .+?\\n\\*\\*Status\\*\\*: )(.+?)(\\n)`,
+        'g'
+      );
+
       const match = taskPattern.exec(content);
       if (match) {
         const oldStatus = match[2];
         const updatedContent = content.replace(taskPattern, `$1${newStatus}$3`);
         await fs.writeFile(file, updatedContent, 'utf-8');
-        
+
         // Extract task title
         const titleMatch = content.match(new RegExp(`### TASK-${taskId}: (.+?)\\n`));
         const title = titleMatch ? titleMatch[1] : 'Unknown';
-        
+
         return { id: taskId, title, oldStatus, newStatus };
       }
     }
@@ -318,7 +320,7 @@ class TasksGenerator {
       total,
       valid,
       invalid: total - valid,
-      violations
+      violations,
     };
   }
 

@@ -7,7 +7,7 @@ This directory contains persistent knowledge for the MUSUBI project.
 The memory system stores accumulated knowledge across conversations:
 
 - **architecture_decisions.md** - ADR-style decision records
-- **development_workflow.md** - Common workflows and processes  
+- **development_workflow.md** - Common workflows and processes
 - **domain_knowledge.md** - Business domain understanding
 - **suggested_commands.md** - Frequently used commands
 - **lessons_learned.md** - Insights and improvements
@@ -22,4 +22,4 @@ Review and update these files regularly to keep knowledge current.
 
 ---
 
-*Initialized: {{DATE}}*
+_Initialized: {{DATE}}_

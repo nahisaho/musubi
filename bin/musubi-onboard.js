@@ -214,11 +214,11 @@ async function analyzeDirectoryStructure() {
   // Detect architecture patterns
   if (dirs.includes('src/')) {
     analysis.patterns.push('src-based');
-    
+
     // Check sub-patterns within src
     const srcDirsResult = await glob('src/*/', { ignore: ['node_modules/**'] });
     const srcDirs = Array.isArray(srcDirsResult) ? srcDirsResult : [];
-    
+
     if (srcDirs.includes('src/features/')) analysis.architecture = 'feature-first';
     else if (srcDirs.includes('src/components/')) analysis.architecture = 'component-based';
     else if (srcDirs.includes('src/domain/')) analysis.architecture = 'domain-driven-design';
@@ -281,18 +281,26 @@ async function detectTechnologyStack(projectConfig) {
     if ('nuxt' in allDeps) stack.frameworks.push({ name: 'Nuxt', version: allDeps.nuxt });
 
     // Testing
-    if ('jest' in allDeps) stack.frameworks.push({ name: 'Jest', version: allDeps.jest, purpose: 'testing' });
-    if ('vitest' in allDeps) stack.frameworks.push({ name: 'Vitest', version: allDeps.vitest, purpose: 'testing' });
-    if ('mocha' in allDeps) stack.frameworks.push({ name: 'Mocha', version: allDeps.mocha, purpose: 'testing' });
+    if ('jest' in allDeps)
+      stack.frameworks.push({ name: 'Jest', version: allDeps.jest, purpose: 'testing' });
+    if ('vitest' in allDeps)
+      stack.frameworks.push({ name: 'Vitest', version: allDeps.vitest, purpose: 'testing' });
+    if ('mocha' in allDeps)
+      stack.frameworks.push({ name: 'Mocha', version: allDeps.mocha, purpose: 'testing' });
 
     // Linting/Formatting
-    if ('eslint' in allDeps) stack.tools.push({ name: 'ESLint', version: allDeps.eslint, purpose: 'linting' });
-    if ('prettier' in allDeps) stack.tools.push({ name: 'Prettier', version: allDeps.prettier, purpose: 'formatting' });
+    if ('eslint' in allDeps)
+      stack.tools.push({ name: 'ESLint', version: allDeps.eslint, purpose: 'linting' });
+    if ('prettier' in allDeps)
+      stack.tools.push({ name: 'Prettier', version: allDeps.prettier, purpose: 'formatting' });
 
     // Build tools
-    if ('webpack' in allDeps) stack.tools.push({ name: 'Webpack', version: allDeps.webpack, purpose: 'bundler' });
-    if ('vite' in allDeps) stack.tools.push({ name: 'Vite', version: allDeps.vite, purpose: 'bundler' });
-    if ('rollup' in allDeps) stack.tools.push({ name: 'Rollup', version: allDeps.rollup, purpose: 'bundler' });
+    if ('webpack' in allDeps)
+      stack.tools.push({ name: 'Webpack', version: allDeps.webpack, purpose: 'bundler' });
+    if ('vite' in allDeps)
+      stack.tools.push({ name: 'Vite', version: allDeps.vite, purpose: 'bundler' });
+    if ('rollup' in allDeps)
+      stack.tools.push({ name: 'Rollup', version: allDeps.rollup, purpose: 'bundler' });
   }
 
   return stack;
@@ -313,11 +321,11 @@ async function extractBusinessContext(projectConfig) {
   for (const file of readmeFiles) {
     if (await fs.pathExists(file)) {
       const content = await fs.readFile(file, 'utf8');
-      
+
       // Extract first paragraph as purpose
       const lines = content.split('\n').filter(l => l.trim());
       context.purpose = lines.slice(1, 4).join(' ').substring(0, 200);
-      
+
       break;
     }
   }
@@ -402,7 +410,12 @@ ${techStack.frameworks.map(f => `  - name: "${f.name}"\n    version: "${f.versio
 conventions:
   architecture_pattern: "${directoryAnalysis.architecture}"
   directory_structure:
-${directoryAnalysis.directories.slice(0, 5).map(d => `    ${d.replace(/\//g, '')}: "${d}"`).join('\n') || '    src: "src/"'}
+${
+  directoryAnalysis.directories
+    .slice(0, 5)
+    .map(d => `    ${d.replace(/\//g, '')}: "${d}"`)
+    .join('\n') || '    src: "src/"'
+}
 
 # Steering configuration
 steering:
@@ -619,7 +632,7 @@ async function initializeMemories(projectConfig, techStack, directoryAnalysis) {
   await fs.ensureDir('steering/memories');
 
   const TEMPLATE_DIR = path.join(__dirname, '..', 'src', 'templates', 'memories');
-  
+
   const today = new Date().toISOString().split('T')[0];
   const replacements = {
     '{{PROJECT_NAME}}': projectConfig.projectName,
@@ -630,18 +643,18 @@ async function initializeMemories(projectConfig, techStack, directoryAnalysis) {
   // Copy memory templates with variable replacement
   if (await fs.pathExists(TEMPLATE_DIR)) {
     const files = await fs.readdir(TEMPLATE_DIR);
-    
+
     for (const file of files) {
       const templatePath = path.join(TEMPLATE_DIR, file);
       const destPath = path.join('steering/memories', file);
-      
+
       let content = await fs.readFile(templatePath, 'utf8');
-      
+
       // Replace all placeholders
       for (const [placeholder, value] of Object.entries(replacements)) {
         content = content.replaceAll(placeholder, value);
       }
-      
+
       await fs.writeFile(destPath, content);
     }
   } else {

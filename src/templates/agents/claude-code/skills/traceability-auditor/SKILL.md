@@ -168,6 +168,7 @@ coverage_test = (requirements_with_tests / requirements_total) * 100
 **CRITICAL: コンテキスト長オーバーフロー防止**
 
 **出力方式の原則:**
+
 - ✅ 1セクションずつ順番に生成・保存
 - ✅ 各セクション生成後に進捗を報告
 - ✅ エラー発生時も部分的なレポートが残る

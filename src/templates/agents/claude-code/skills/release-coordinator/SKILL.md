@@ -595,6 +595,7 @@ If you encounter any issues, please contact support@example.com or visit our [He
 **CRITICAL: コンテキスト長オーバーフロー防止**
 
 **出力方式の原则:**
+
 - ✅ 1タスクずつ順番に実行・報告
 - ✅ 各タスク後に進捗を報告
 - ✅ エラー発生時も部分的な成果物が残る

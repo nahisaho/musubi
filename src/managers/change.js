@@ -1,6 +1,6 @@
 /**
  * MUSUBI Change Manager
- * 
+ *
  * Manages delta specifications for brownfield projects
  * Implements ADDED/MODIFIED/REMOVED/RENAMED change tracking
  */
@@ -37,14 +37,14 @@ class ChangeManager {
       changeId,
       title: options.title || 'New Change',
       description: options.description || 'Description of the change',
-      date: new Date().toISOString().split('T')[0]
+      date: new Date().toISOString().split('T')[0],
     });
 
     await fs.writeFile(changeFile, content, 'utf-8');
 
     return {
       file: changeFile,
-      changeId
+      changeId,
     };
   }
 
@@ -56,7 +56,7 @@ class ChangeManager {
     const changeFile = path.join(changesDir, `${changeId}.md`);
 
     // Check if change exists
-    if (!await fs.pathExists(changeFile)) {
+    if (!(await fs.pathExists(changeFile))) {
       throw new Error(`Change ${changeId} not found`);
     }
 
@@ -75,7 +75,7 @@ class ChangeManager {
       added: 0,
       modified: 0,
       removed: 0,
-      renamed: 0
+      renamed: 0,
     };
 
     if (!options.dryRun) {
@@ -123,7 +123,7 @@ class ChangeManager {
     const archiveFile = path.join(specsDir, 'changes', `${changeId}.md`);
 
     // Check if change exists
-    if (!await fs.pathExists(sourceFile)) {
+    if (!(await fs.pathExists(sourceFile))) {
       throw new Error(`Change ${changeId} not found`);
     }
 
@@ -139,7 +139,7 @@ class ChangeManager {
 
     return {
       source: sourceFile,
-      archive: archiveFile
+      archive: archiveFile,
     };
   }
 
@@ -148,8 +148,8 @@ class ChangeManager {
    */
   async listChanges(options = {}) {
     const changesDir = path.join(this.workspaceRoot, options.changesDir || 'storage/changes');
-    
-    if (!await fs.pathExists(changesDir)) {
+
+    if (!(await fs.pathExists(changesDir))) {
       return [];
     }
 
@@ -159,11 +159,11 @@ class ChangeManager {
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const changeId = path.basename(file, '.md');
-      
+
       // Extract title and date
       const titleMatch = content.match(/# (.+)/);
       const dateMatch = content.match(/\*\*Date\*\*: (.+)/);
-      
+
       // Determine status (simplified - could be more sophisticated)
       const status = 'pending'; // In real implementation, track applied/archived status
 
@@ -172,7 +172,7 @@ class ChangeManager {
         title: titleMatch ? titleMatch[1] : changeId,
         date: dateMatch ? dateMatch[1] : 'Unknown',
         status,
-        file: path.relative(this.workspaceRoot, file)
+        file: path.relative(this.workspaceRoot, file),
       });
     }
 
@@ -193,7 +193,7 @@ class ChangeManager {
     const changeFile = path.join(changesDir, `${changeId}.md`);
 
     // Check if change exists
-    if (!await fs.pathExists(changeFile)) {
+    if (!(await fs.pathExists(changeFile))) {
       throw new Error(`Change ${changeId} not found`);
     }
 
@@ -210,8 +210,8 @@ class ChangeManager {
         added: delta.added.length,
         modified: delta.modified.length,
         removed: delta.removed.length,
-        renamed: delta.renamed.length
-      }
+        renamed: delta.renamed.length,
+      },
     };
   }
 
@@ -219,7 +219,7 @@ class ChangeManager {
    * Load template
    */
   async loadTemplate(customTemplate) {
-    if (customTemplate && await fs.pathExists(customTemplate)) {
+    if (customTemplate && (await fs.pathExists(customTemplate))) {
       return fs.readFile(customTemplate, 'utf-8');
     }
 
@@ -350,12 +350,12 @@ class ChangeManager {
       added: [],
       modified: [],
       removed: [],
-      renamed: []
+      renamed: [],
     };
 
     // Simple parser - extract items under each section
     const sections = ['ADDED', 'MODIFIED', 'REMOVED', 'RENAMED'];
-    
+
     for (const section of sections) {
       const sectionRegex = new RegExp(`### ${section}\\s+([\\s\\S]*?)(?=###|$)`, 'g');
       const matches = content.matchAll(sectionRegex);
@@ -383,7 +383,7 @@ class ChangeManager {
       if (!trimmed || trimmed.startsWith('<!--') || trimmed.startsWith('##')) {
         continue;
       }
-      
+
       if (trimmed.startsWith('- REQ-')) {
         // Extract requirement ID and title
         const match = trimmed.match(/- (REQ-[A-Z0-9]+-\d{3}):?\s*(.+)?/);
@@ -391,7 +391,7 @@ class ChangeManager {
           items.push({
             id: match[1],
             title: match[2] || '',
-            line: trimmed
+            line: trimmed,
           });
         }
       }
@@ -407,25 +407,20 @@ class ChangeManager {
     const errors = [];
 
     // Check for valid REQ IDs
-    const allItems = [
-      ...delta.added,
-      ...delta.modified,
-      ...delta.removed,
-      ...delta.renamed
-    ];
+    const allItems = [...delta.added, ...delta.modified, ...delta.removed, ...delta.renamed];
 
     for (const item of allItems) {
       if (!item.id || !item.id.match(/^REQ-[A-Z0-9]+-\d{3}$/)) {
         errors.push({
           message: `Invalid requirement ID: ${item.id}`,
-          line: item.line
+          line: item.line,
         });
       }
     }
 
     return {
       valid: errors.length === 0,
-      errors
+      errors,
     };
   }
 

@@ -24,7 +24,7 @@ describe('TasksGenerator', () => {
     test('should create task breakdown document', async () => {
       const result = await generator.init('User Authentication', {
         author: 'Test Author',
-        project: 'Test Project'
+        project: 'Test Project',
       });
 
       expect(result.feature).toBe('User Authentication');
@@ -41,7 +41,7 @@ describe('TasksGenerator', () => {
 
     test('should slugify feature name', async () => {
       const result = await generator.init('Payment & Checkout System', {
-        author: 'Test'
+        author: 'Test',
       });
 
       expect(result.path).toContain('payment-checkout-system.md');
@@ -88,7 +88,7 @@ describe('TasksGenerator', () => {
         description: 'Design database schema',
         requirements: ['REQ-001'],
         acceptance: ['Schema created', 'Tests passing'],
-        dependencies: ['TASK-000']
+        dependencies: ['TASK-000'],
       };
 
       const section = generator.formatTaskSection('001', task);
@@ -114,7 +114,7 @@ describe('TasksGenerator', () => {
         estimatedHours: 4,
         assignee: 'Dev',
         status: 'Not Started',
-        description: 'A simple task'
+        description: 'A simple task',
       };
 
       const section = generator.formatTaskSection('002', task);
@@ -171,12 +171,12 @@ describe('TasksGenerator', () => {
         estimatedHours: 8,
         assignee: 'Developer',
         status: 'Not Started',
-        description: 'A valid task'
+        description: 'A valid task',
       });
 
       const content = await fs.readFile(filePath, 'utf-8');
       const tasks = generator.parseTasks(content);
-      
+
       // Template has existing tasks, we added 1 more
       expect(tasks.length).toBeGreaterThan(0);
     });
@@ -187,12 +187,12 @@ describe('TasksGenerator', () => {
       const tasks = [
         { id: '001', title: 'Setup', dependencies: [] },
         { id: '002', title: 'Database', dependencies: ['001'] },
-        { id: '003', title: 'API', dependencies: ['002'] }
+        { id: '003', title: 'API', dependencies: ['002'] },
       ];
       const dependencies = new Map([
         ['001', []],
         ['002', ['001']],
-        ['003', ['002']]
+        ['003', ['002']],
       ]);
 
       const graph = generator.generateMermaidGraph(tasks, dependencies);
@@ -209,11 +209,11 @@ describe('TasksGenerator', () => {
     test('should generate DOT dependency graph', () => {
       const tasks = [
         { id: '001', title: 'Setup', dependencies: [] },
-        { id: '002', title: 'Database', dependencies: ['001'] }
+        { id: '002', title: 'Database', dependencies: ['001'] },
       ];
       const dependencies = new Map([
         ['001', []],
-        ['002', ['001']]
+        ['002', ['001']],
       ]);
 
       const graph = generator.generateDotGraph(tasks, dependencies);
@@ -231,13 +231,13 @@ describe('TasksGenerator', () => {
         { id: '001', title: 'Setup', dependencies: [] },
         { id: '002', title: 'Database', dependencies: ['001'] },
         { id: '003', title: 'Cache', dependencies: ['001'] },
-        { id: '004', title: 'API', dependencies: ['002', '003'] }
+        { id: '004', title: 'API', dependencies: ['002', '003'] },
       ];
       const dependencies = new Map([
         ['001', []],
         ['002', ['001']],
         ['003', ['001']],
-        ['004', ['002', '003']]
+        ['004', ['002', '003']],
       ]);
 
       const groups = generator.calculateParallelGroups(tasks, dependencies);
@@ -252,18 +252,16 @@ describe('TasksGenerator', () => {
     test('should detect circular dependencies', () => {
       const tasks = [
         { id: '001', title: 'A', dependencies: ['002'] },
-        { id: '002', title: 'B', dependencies: ['001'] }
+        { id: '002', title: 'B', dependencies: ['001'] },
       ];
       const dependencies = new Map([
         ['001', ['002']],
-        ['002', ['001']]
+        ['002', ['001']],
       ]);
 
       const groups = generator.calculateParallelGroups(tasks, dependencies);
 
-      expect(groups.some(group => 
-        group.some(task => task.includes('circular'))
-      )).toBe(true);
+      expect(groups.some(group => group.some(task => task.includes('circular')))).toBe(true);
     });
   });
 
@@ -327,7 +325,7 @@ describe('TasksGenerator', () => {
         estimatedHours: 8,
         assignee: 'Dev A',
         status: 'Not Started',
-        description: 'Design database schema'
+        description: 'Design database schema',
       });
 
       const task2Id = await generator.addTask(filePath, {
@@ -338,7 +336,7 @@ describe('TasksGenerator', () => {
         assignee: 'Dev B',
         status: 'Not Started',
         description: 'Implement REST API',
-        dependencies: [`TASK-${task1Id.id}`]
+        dependencies: [`TASK-${task1Id.id}`],
       });
 
       const content = await fs.readFile(filePath, 'utf-8');

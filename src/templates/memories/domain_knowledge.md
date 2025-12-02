@@ -16,8 +16,8 @@ Business domain understanding for {{PROJECT_NAME}}.
 
 ## Terminology
 
-| Term | Definition |
-|------|------------|
+| Term  | Definition  |
+| ----- | ----------- |
 | Term1 | Definition1 |
 | Term2 | Definition2 |
 
@@ -27,4 +27,4 @@ Document recurring business logic patterns here.
 
 ---
 
-*Fill in with your domain knowledge*
+_Fill in with your domain knowledge_

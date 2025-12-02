@@ -25,7 +25,8 @@ Architecture Decision Records (ADRs) for {{PROJECT_NAME}}.
 
 **Rationale**: Why this approach was chosen
 
-**Impact**: 
+**Impact**:
+
 - Positive: Benefits gained
 - Negative: Trade-offs accepted
 

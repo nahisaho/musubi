@@ -2,10 +2,10 @@
 
 /**
  * MUSUBI Design Document Generator CLI
- * 
+ *
  * Generates technical design documents with C4 model and ADR
  * Complies with Article V (Traceability) and steering context
- * 
+ *
  * Usage:
  *   musubi-design init <feature>           # Initialize design document
  *   musubi-design add-c4 <level>           # Add C4 diagram (context|container|component|code)
@@ -53,7 +53,7 @@ program
       if (!options.json && !options.dryRun) {
         console.log(chalk.bold(`\n🏗️  Initializing design for: ${feature}\n`));
       }
-      
+
       if (options.verbose && !options.json) {
         console.log(chalk.dim('Options:'));
         console.log(chalk.dim(`  Output: ${options.output}`));
@@ -63,10 +63,10 @@ program
         console.log(chalk.dim(`  Dry run: ${options.dryRun || false}`));
         console.log();
       }
-      
+
       const generator = new DesignGenerator(process.cwd());
       const result = await generator.init(feature, options);
-      
+
       if (options.json) {
         console.log(JSON.stringify(result, null, 2));
       } else if (options.dryRun) {
@@ -86,7 +86,7 @@ program
         console.log(chalk.dim('  4. Validate: musubi-design validate'));
         console.log();
       }
-      
+
       process.exit(0);
     } catch (error) {
       if (options.json) {
@@ -110,9 +110,9 @@ program
   .action(async (level, options) => {
     try {
       console.log(chalk.bold(`\n📊 Adding C4 ${level} diagram\n`));
-      
+
       const generator = new DesignGenerator(process.cwd());
-      
+
       // Find design file
       let designFile = options.file;
       if (!designFile) {
@@ -122,21 +122,23 @@ program
           console.log(chalk.dim('  Run: musubi-design init <feature>'));
           process.exit(1);
         }
-        
+
         if (files.length === 1) {
           designFile = files[0];
         } else {
           const inquirerInst = await getInquirer();
-          const answer = await inquirerInst.prompt([{
-            type: 'list',
-            name: 'file',
-            message: 'Select design file:',
-            choices: files
-          }]);
+          const answer = await inquirerInst.prompt([
+            {
+              type: 'list',
+              name: 'file',
+              message: 'Select design file:',
+              choices: files,
+            },
+          ]);
           designFile = answer.file;
         }
       }
-      
+
       // Interactive prompts for C4 diagram
       const inquirerInst2 = await getInquirer();
       const answers = await inquirerInst2.prompt([
@@ -145,31 +147,31 @@ program
           name: 'title',
           message: 'Diagram title:',
           default: `${level.charAt(0).toUpperCase() + level.slice(1)} Diagram`,
-          validate: (input) => input.length > 0 || 'Title is required'
+          validate: input => input.length > 0 || 'Title is required',
         },
         {
           type: 'input',
           name: 'description',
           message: 'Diagram description:',
-          default: `Shows ${level}-level architecture`
-        }
+          default: `Shows ${level}-level architecture`,
+        },
       ]);
-      
+
       const diagram = {
         level,
         title: answers.title,
         description: answers.description,
-        format: options.format
+        format: options.format,
       };
-      
+
       const result = await generator.addC4Diagram(designFile, diagram);
-      
+
       console.log(chalk.green('\n✓ C4 diagram added:'));
       console.log(chalk.dim(`  ${result.level}: ${result.title}`));
       console.log(chalk.bold('\n📝 Diagram Template:'));
       console.log(chalk.cyan(result.template));
       console.log();
-      
+
       process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
@@ -186,9 +188,9 @@ program
   .action(async (decision, options) => {
     try {
       console.log(chalk.bold(`\n📜 Adding ADR: ${decision}\n`));
-      
+
       const generator = new DesignGenerator(process.cwd());
-      
+
       // Find design file
       let designFile = options.file;
       if (!designFile) {
@@ -198,21 +200,23 @@ program
           console.log(chalk.dim('  Run: musubi-design init <feature>'));
           process.exit(1);
         }
-        
+
         if (files.length === 1) {
           designFile = files[0];
         } else {
           const inquirerInst = await getInquirer();
-          const answer = await inquirerInst.prompt([{
-            type: 'list',
-            name: 'file',
-            message: 'Select design file:',
-            choices: files
-          }]);
+          const answer = await inquirerInst.prompt([
+            {
+              type: 'list',
+              name: 'file',
+              message: 'Select design file:',
+              choices: files,
+            },
+          ]);
           designFile = answer.file;
         }
       }
-      
+
       // Interactive prompts for ADR
       const inquirerInst2 = await getInquirer();
       const answers = await inquirerInst2.prompt([
@@ -220,44 +224,48 @@ program
           type: 'input',
           name: 'context',
           message: 'What is the context/problem?',
-          validate: (input) => input.length > 0 || 'Context is required'
+          validate: input => input.length > 0 || 'Context is required',
         },
         {
           type: 'input',
           name: 'decision',
           message: 'What is the decision?',
-          validate: (input) => input.length > 0 || 'Decision is required'
+          validate: input => input.length > 0 || 'Decision is required',
         },
         {
           type: 'input',
           name: 'consequences',
           message: 'What are the consequences?',
-          validate: (input) => input.length > 0 || 'Consequences are required'
+          validate: input => input.length > 0 || 'Consequences are required',
         },
         {
           type: 'input',
           name: 'alternatives',
           message: 'Alternatives considered (comma-separated):',
-          filter: (input) => input.split(',').map(s => s.trim()).filter(s => s.length > 0)
-        }
+          filter: input =>
+            input
+              .split(',')
+              .map(s => s.trim())
+              .filter(s => s.length > 0),
+        },
       ]);
-      
+
       const adr = {
         title: decision,
         status: options.status,
         context: answers.context,
         decision: answers.decision,
         consequences: answers.consequences,
-        alternatives: answers.alternatives
+        alternatives: answers.alternatives,
       };
-      
+
       const result = await generator.addADR(designFile, adr);
-      
+
       console.log(chalk.green('\n✓ ADR added:'));
       console.log(chalk.dim(`  ADR-${result.number}: ${result.title}`));
       console.log(chalk.dim(`  Status: ${result.status}`));
       console.log();
-      
+
       process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
@@ -271,25 +279,25 @@ program
   .description('Validate design document completeness')
   .option('-f, --file <path>', 'Specific design file')
   .option('-v, --verbose', 'Show detailed validation results')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n🔍 Validating Design Documents\n'));
-      
+
       const generator = new DesignGenerator(process.cwd());
       const results = await generator.validate(options.file);
-      
+
       if (results.passed) {
         console.log(chalk.green('✓ All designs valid\n'));
       } else {
         console.log(chalk.red('✗ Validation failed\n'));
       }
-      
+
       console.log(chalk.bold('Summary:'));
       console.log(chalk.dim(`  Total: ${results.total}`));
       console.log(chalk.green(`  Valid: ${results.valid}`));
       console.log(chalk.red(`  Invalid: ${results.invalid}`));
       console.log();
-      
+
       if (results.violations.length > 0) {
         console.log(chalk.bold.red('Violations:'));
         results.violations.forEach(v => {
@@ -297,7 +305,7 @@ program
         });
         console.log();
       }
-      
+
       if (options.verbose && results.details) {
         console.log(chalk.bold('Details:'));
         results.details.forEach(d => {
@@ -306,7 +314,7 @@ program
         });
         console.log();
       }
-      
+
       process.exit(results.passed ? 0 : 1);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);
@@ -320,37 +328,37 @@ program
   .description('Show requirement-to-design traceability')
   .option('-f, --file <path>', 'Specific design file')
   .option('--format <type>', 'Output format (table|json|markdown)', 'table')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.bold('\n🔗 Design Traceability Matrix\n'));
-      
+
       const generator = new DesignGenerator(process.cwd());
       const matrix = await generator.generateTraceabilityMatrix(options.file);
-      
+
       if (options.format === 'json') {
         console.log(JSON.stringify(matrix, null, 2));
       } else {
         console.log(chalk.bold('| Requirement | Design | Components | Status |'));
         console.log('|-------------|--------|------------|--------|');
-        
+
         matrix.forEach(row => {
           const design = row.design ? '✓' : '-';
           const components = row.components || 0;
           const status = row.traced ? chalk.green('Traced') : chalk.yellow('Missing');
-          
+
           console.log(`| ${row.requirement} | ${design} | ${components} | ${status} |`);
         });
         console.log();
-        
+
         const traced = matrix.filter(r => r.traced).length;
         const total = matrix.length;
         const percentage = total > 0 ? Math.round((traced / total) * 100) : 0;
-        
+
         console.log(chalk.bold('Coverage:'));
         console.log(chalk.dim(`  ${traced}/${total} requirements traced (${percentage}%)`));
         console.log();
       }
-      
+
       process.exit(0);
     } catch (error) {
       console.error(chalk.red('✗ Error:'), error.message);

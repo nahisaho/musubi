@@ -55,11 +55,7 @@ describe('DesignGenerator', () => {
     });
 
     test('should generate code diagram', () => {
-      const template = generator.generateMermaidTemplate(
-        'code',
-        'Code View',
-        'Shows classes'
-      );
+      const template = generator.generateMermaidTemplate('code', 'Code View', 'Shows classes');
       expect(template).toContain('classDiagram');
       expect(template).toContain('class Controller');
     });
@@ -121,7 +117,7 @@ describe('DesignGenerator', () => {
         status: 'accepted',
         context: 'Need relational database',
         decision: 'Use PostgreSQL',
-        consequences: 'Good performance'
+        consequences: 'Good performance',
       };
       const section = generator.formatADRSection('ADR-001', adr);
       expect(section).toContain('### ADR-001: Use PostgreSQL');
@@ -138,7 +134,7 @@ describe('DesignGenerator', () => {
         context: 'Need database',
         decision: 'Use PostgreSQL',
         consequences: 'Good',
-        alternatives: ['MySQL', 'MongoDB']
+        alternatives: ['MySQL', 'MongoDB'],
       };
       const section = generator.formatADRSection('ADR-001', adr);
       expect(section).toContain('**Alternatives Considered**:');

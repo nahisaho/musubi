@@ -137,7 +137,7 @@ async function exportMemories(options = {}) {
 async function importMemories(importFile, options = {}) {
   console.log(chalk.blue.bold('\n📥 MUSUBI Memory Import\n'));
 
-  if (!await fs.pathExists(importFile)) {
+  if (!(await fs.pathExists(importFile))) {
     console.error(chalk.red(`❌ Import file not found: ${importFile}`));
     process.exit(1);
   }
@@ -179,7 +179,11 @@ async function importMemories(importFile, options = {}) {
 
   // Check version compatibility
   if (importedMemories.metadata.musubiVersion !== currentVersion) {
-    console.log(chalk.yellow(`  ⚠️  Version mismatch: ${importedMemories.metadata.musubiVersion} → ${currentVersion}`));
+    console.log(
+      chalk.yellow(
+        `  ⚠️  Version mismatch: ${importedMemories.metadata.musubiVersion} → ${currentVersion}`
+      )
+    );
   }
 
   // Detect memory conflicts
@@ -216,7 +220,7 @@ async function importMemories(importFile, options = {}) {
     console.log(chalk.gray('  Skipping conflicted files...\n'));
   } else if (strategy === 'theirs') {
     console.log(chalk.gray('  Strategy: Accept imported changes (theirs)'));
-    
+
     for (const conflict of conflicts) {
       await fs.writeFile(conflict.localPath, conflict.importedContent);
       console.log(chalk.gray(`  ✓ Updated: ${conflict.file}`));
@@ -224,7 +228,7 @@ async function importMemories(importFile, options = {}) {
     }
   } else if (strategy === 'merge') {
     console.log(chalk.gray('  Strategy: Auto-merge with markers'));
-    
+
     for (const conflict of conflicts) {
       const mergedContent = `${conflict.localContent}\n\n<<<<<<< LOCAL\n${conflict.localContent}\n=======\n${conflict.importedContent}\n>>>>>>> IMPORTED\n`;
       await fs.writeFile(conflict.localPath, mergedContent);
@@ -240,7 +244,7 @@ async function importMemories(importFile, options = {}) {
   // Import new memories (no conflicts)
   for (const [file, content] of Object.entries(importedMemories.memories)) {
     const localPath = path.join(CONFIG.memoriesDir, file);
-    if (!await fs.pathExists(localPath)) {
+    if (!(await fs.pathExists(localPath))) {
       await fs.ensureDir(CONFIG.memoriesDir);
       await fs.writeFile(localPath, content);
       console.log(chalk.gray(`  ✓ Added new memory: ${file}`));
@@ -253,7 +257,7 @@ async function importMemories(importFile, options = {}) {
   console.log(chalk.gray(`  Strategy: ${strategy}`));
   console.log(chalk.gray(`  Conflicts: ${conflicts.length}`));
   console.log(chalk.gray(`  Merged: ${mergeCount} files`));
-  
+
   if (conflicts.length > 0 && strategy === 'interactive') {
     console.log(chalk.yellow('\nNext steps:'));
     console.log(chalk.gray('  1. Review conflicted files manually'));
@@ -276,7 +280,7 @@ async function syncPlatforms(options = {}) {
     'windsurf',
     'codex',
     'qwen-code',
-    'gemini-cli'
+    'gemini-cli',
   ];
 
   if (targetPlatform && !availablePlatforms.includes(targetPlatform)) {
@@ -291,8 +295,8 @@ async function syncPlatforms(options = {}) {
   const platformDirs = {
     'claude-code': '.claude',
     'github-copilot': '.github/copilot',
-    'cursor': '.cursor',
-    'windsurf': '.windsurf',
+    cursor: '.cursor',
+    windsurf: '.windsurf',
   };
 
   for (const [platform, dir] of Object.entries(platformDirs)) {
@@ -317,11 +321,11 @@ async function syncPlatforms(options = {}) {
     if (targetPlatform && platform !== targetPlatform) continue;
 
     const platformDir = platformDirs[platform];
-    
+
     // Sync AGENTS.md
     const agentsSource = 'AGENTS.md';
     const agentsTarget = path.join(platformDir, 'AGENTS.md');
-    
+
     if (await fs.pathExists(agentsSource)) {
       await fs.copy(agentsSource, agentsTarget);
       console.log(chalk.gray(`  ✓ ${platform}: Synced AGENTS.md`));
@@ -361,9 +365,9 @@ async function showStatus() {
   const platformDirs = {
     'Claude Code': '.claude',
     'GitHub Copilot': '.github/copilot',
-    'Cursor': '.cursor',
-    'Windsurf': '.windsurf',
-    'Codex': '.codex',
+    Cursor: '.cursor',
+    Windsurf: '.windsurf',
+    Codex: '.codex',
     'Qwen Code': '.qwen',
   };
 
@@ -406,7 +410,11 @@ async function main() {
   program
     .command('import <file>')
     .description('Import and merge memories from file')
-    .option('-s, --strategy <strategy>', 'Merge strategy: ours, theirs, merge, interactive', 'interactive')
+    .option(
+      '-s, --strategy <strategy>',
+      'Merge strategy: ours, theirs, merge, interactive',
+      'interactive'
+    )
     .action(importMemories);
 
   program
@@ -415,10 +423,7 @@ async function main() {
     .option('-p, --platform <platform>', 'Target platform to sync')
     .action(syncPlatforms);
 
-  program
-    .command('status')
-    .description('Show sharing status')
-    .action(showStatus);
+  program.command('status').description('Show sharing status').action(showStatus);
 
   program.parse();
 }

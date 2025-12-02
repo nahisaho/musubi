@@ -73,29 +73,30 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 
 ### Core Workflow Commands
 
-| Command | Purpose | Example |
-|---------|---------|---------|
-| `musubi-requirements` | EARS requirements management | `musubi-requirements init <feature>` |
-| `musubi-design` | C4 + ADR design documents | `musubi-design init <feature>` |
-| `musubi-tasks` | Task breakdown management | `musubi-tasks init <feature>` |
-| `musubi-trace` | Traceability analysis | `musubi-trace matrix` |
-| `musubi-change` | Change management (brownfield) | `musubi-change init <change-id>` |
-| `musubi-gaps` | Gap detection & coverage | `musubi-gaps detect` |
-| `musubi-validate` | Constitutional validation | `musubi-validate all` |
+| Command               | Purpose                        | Example                              |
+| --------------------- | ------------------------------ | ------------------------------------ |
+| `musubi-requirements` | EARS requirements management   | `musubi-requirements init <feature>` |
+| `musubi-design`       | C4 + ADR design documents      | `musubi-design init <feature>`       |
+| `musubi-tasks`        | Task breakdown management      | `musubi-tasks init <feature>`        |
+| `musubi-trace`        | Traceability analysis          | `musubi-trace matrix`                |
+| `musubi-change`       | Change management (brownfield) | `musubi-change init <change-id>`     |
+| `musubi-gaps`         | Gap detection & coverage       | `musubi-gaps detect`                 |
+| `musubi-validate`     | Constitutional validation      | `musubi-validate all`                |
 
 ### Supporting Commands
 
-| Command | Purpose | Example |
-|---------|---------|---------|
-| `musubi-init` | Initialize MUSUBI in project | `musubi-init --platform claude-code` |
-| `musubi-share` | Memory sharing across projects | `musubi-share export` |
-| `musubi-sync` | Sync steering files | `musubi-sync --from <source>` |
-| `musubi-analyze` | Project analysis | `musubi-analyze complexity` |
-| `musubi-onboard` | AI platform onboarding | `musubi-onboard <platform>` |
+| Command          | Purpose                        | Example                              |
+| ---------------- | ------------------------------ | ------------------------------------ |
+| `musubi-init`    | Initialize MUSUBI in project   | `musubi-init --platform claude-code` |
+| `musubi-share`   | Memory sharing across projects | `musubi-share export`                |
+| `musubi-sync`    | Sync steering files            | `musubi-sync --from <source>`        |
+| `musubi-analyze` | Project analysis               | `musubi-analyze complexity`          |
+| `musubi-onboard` | AI platform onboarding         | `musubi-onboard <platform>`          |
 
 ### Detailed Command Options
 
 **musubi-requirements**:
+
 - `init <feature>` - Initialize requirements document
 - `add <pattern> <title>` - Add EARS requirement
 - `list` - List all requirements
@@ -104,6 +105,7 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `trace` - Show traceability matrix
 
 **musubi-design**:
+
 - `init <feature>` - Initialize design document
 - `add-c4 <level>` - Add C4 diagram (context/container/component/code)
 - `add-adr <decision>` - Add Architecture Decision Record
@@ -111,6 +113,7 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `trace` - Show requirement traceability
 
 **musubi-tasks**:
+
 - `init <feature>` - Initialize task breakdown
 - `add <title>` - Add task with interactive prompts
 - `list` - List all tasks
@@ -119,6 +122,7 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `graph` - Generate dependency graph
 
 **musubi-trace** (v0.9.4 enhanced):
+
 - `matrix` - Generate full traceability matrix
 - `coverage` - Calculate requirement coverage
 - `gaps` - Detect orphaned requirements/code
@@ -129,6 +133,7 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `statistics` - Comprehensive project statistics (v0.9.4)
 
 **musubi-change**:
+
 - `init <change-id>` - Create change proposal
 - `validate <change-id>` - Validate delta format
 - `apply <change-id>` - Apply change to codebase
@@ -136,12 +141,14 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `list` - List all changes
 
 **musubi-gaps**:
+
 - `detect` - Detect all gaps
 - `requirements` - Detect orphaned requirements
 - `code` - Detect untested code
 - `coverage` - Calculate coverage statistics
 
 **musubi-validate**:
+
 - `constitution` - Validate all 9 articles
 - `article <1-9>` - Validate specific article
 - `gates` - Validate Phase -1 Gates
@@ -286,20 +293,20 @@ Indexed 105 files
 
 ### 利用可能な MCP Tools
 
-| Tool | 説明 | 活用エージェント |
-| --- | --- | --- |
-| `init_graph` | コードグラフ初期化 | Orchestrator, Steering |
-| `get_code_snippet` | ソースコード取得 | Software Developer, Bug Hunter |
-| `find_callers` | 呼び出し元追跡 | Test Engineer, Security Auditor |
-| `find_callees` | 呼び出し先追跡 | Change Impact Analyzer |
-| `find_dependencies` | 依存関係分析 | System Architect, Change Impact Analyzer |
-| `local_search` | ローカルコンテキスト検索 | Software Developer, Bug Hunter |
-| `global_search` | グローバル検索 | Orchestrator, System Architect |
-| `query_codebase` | 自然言語クエリ | 全エージェント |
-| `analyze_module_structure` | モジュール構造分析 | System Architect, Constitution Enforcer |
-| `suggest_refactoring` | リファクタリング提案 | Code Reviewer |
-| `stats` | コードベース統計 | Orchestrator |
-| `community` | コミュニティ検出 | System Architect |
+| Tool                       | 説明                     | 活用エージェント                         |
+| -------------------------- | ------------------------ | ---------------------------------------- |
+| `init_graph`               | コードグラフ初期化       | Orchestrator, Steering                   |
+| `get_code_snippet`         | ソースコード取得         | Software Developer, Bug Hunter           |
+| `find_callers`             | 呼び出し元追跡           | Test Engineer, Security Auditor          |
+| `find_callees`             | 呼び出し先追跡           | Change Impact Analyzer                   |
+| `find_dependencies`        | 依存関係分析             | System Architect, Change Impact Analyzer |
+| `local_search`             | ローカルコンテキスト検索 | Software Developer, Bug Hunter           |
+| `global_search`            | グローバル検索           | Orchestrator, System Architect           |
+| `query_codebase`           | 自然言語クエリ           | 全エージェント                           |
+| `analyze_module_structure` | モジュール構造分析       | System Architect, Constitution Enforcer  |
+| `suggest_refactoring`      | リファクタリング提案     | Code Reviewer                            |
+| `stats`                    | コードベース統計         | Orchestrator                             |
+| `community`                | コミュニティ検出         | System Architect                         |
 
 ### CodeGraph活用ワークフロー
 
@@ -332,53 +339,53 @@ codegraph-mcp community "/path/to/project"
 
 ### Orchestration & Governance (3 agents)
 
-| Agent | Specialty | Key Deliverables |
-|-------|-----------|------------------|
-| **Orchestrator** | Multi-agent coordination | Execution plans, integrated reports |
-| **Steering** | Project memory management | Steering files (structure/tech/product) |
-| **Constitution Enforcer** | Constitutional validation | Compliance reports, violation alerts |
+| Agent                     | Specialty                 | Key Deliverables                        |
+| ------------------------- | ------------------------- | --------------------------------------- |
+| **Orchestrator**          | Multi-agent coordination  | Execution plans, integrated reports     |
+| **Steering**              | Project memory management | Steering files (structure/tech/product) |
+| **Constitution Enforcer** | Constitutional validation | Compliance reports, violation alerts    |
 
 ### Design & Architecture (5 agents)
 
-| Agent                        | Specialty                          | Key Deliverables                                          | CLI Command |
-| ---------------------------- | ---------------------------------- | --------------------------------------------------------- | ----------- |
+| Agent                        | Specialty                          | Key Deliverables                                          | CLI Command           |
+| ---------------------------- | ---------------------------------- | --------------------------------------------------------- | --------------------- |
 | **Requirements Analyst**     | Requirements definition & analysis | SRS, functional/non-functional requirements, user stories | `musubi-requirements` |
-| **System Architect**         | System design & architecture       | C4 model diagrams, ADR, architecture documents            | `musubi-design` |
-| **API Designer**             | API design                         | OpenAPI specs, GraphQL schemas, API documentation         | - |
-| **Database Schema Designer** | Database design                    | ER diagrams, DDL, normalization analysis, migration plans | - |
-| **Cloud Architect**          | Cloud infrastructure design        | Cloud architecture, IaC code (Terraform, Bicep)           | - |
+| **System Architect**         | System design & architecture       | C4 model diagrams, ADR, architecture documents            | `musubi-design`       |
+| **API Designer**             | API design                         | OpenAPI specs, GraphQL schemas, API documentation         | -                     |
+| **Database Schema Designer** | Database design                    | ER diagrams, DDL, normalization analysis, migration plans | -                     |
+| **Cloud Architect**          | Cloud infrastructure design        | Cloud architecture, IaC code (Terraform, Bicep)           | -                     |
 
 ### Development & Quality (7 agents)
 
-| Agent                  | Specialty                    | Key Deliverables                                              | CLI Command |
-| ---------------------- | ---------------------------- | ------------------------------------------------------------- | ----------- |
-| **Software Developer** | Code implementation          | Production-ready source code, unit tests, integration tests   | - |
-| **Code Reviewer**      | Code review                  | Review reports, improvement suggestions, refactoring plans    | - |
-| **Test Engineer**      | Test design & implementation | Test code, test design documents, test cases                  | `musubi-tasks` |
-| **Security Auditor**   | Security auditing            | Vulnerability reports, remediation plans, security guidelines | - |
-| **Quality Assurance**  | Quality assurance strategy   | Test plans, quality metrics, QA reports                       | `musubi-validate` |
-| **Bug Hunter**         | Bug investigation & fixes    | Bug reports, root cause analysis, fix code                    | - |
-| **Performance Optimizer** | Performance optimization  | Performance reports, optimization code, benchmarks            | - |
+| Agent                     | Specialty                    | Key Deliverables                                              | CLI Command       |
+| ------------------------- | ---------------------------- | ------------------------------------------------------------- | ----------------- |
+| **Software Developer**    | Code implementation          | Production-ready source code, unit tests, integration tests   | -                 |
+| **Code Reviewer**         | Code review                  | Review reports, improvement suggestions, refactoring plans    | -                 |
+| **Test Engineer**         | Test design & implementation | Test code, test design documents, test cases                  | `musubi-tasks`    |
+| **Security Auditor**      | Security auditing            | Vulnerability reports, remediation plans, security guidelines | -                 |
+| **Quality Assurance**     | Quality assurance strategy   | Test plans, quality metrics, QA reports                       | `musubi-validate` |
+| **Bug Hunter**            | Bug investigation & fixes    | Bug reports, root cause analysis, fix code                    | -                 |
+| **Performance Optimizer** | Performance optimization     | Performance reports, optimization code, benchmarks            | -                 |
 
 ### Operations & Infrastructure (5 agents)
 
-| Agent                     | Specialty                         | Key Deliverables                                   | CLI Command |
-| ------------------------- | --------------------------------- | -------------------------------------------------- | ----------- |
-| **Project Manager**       | Project management                | Project plans, WBS, Gantt charts, risk registers   | `musubi-tasks` |
-| **DevOps Engineer**       | CI/CD & infrastructure automation | Pipeline definitions, Dockerfiles, K8s manifests   | - |
-| **Technical Writer**      | Technical documentation           | API docs, README, user guides, runbooks            | - |
-| **Site Reliability Engineer** | SRE & observability           | SLI/SLO/SLA definitions, monitoring configs        | - |
-| **Release Coordinator**   | Release management                | Release notes, deployment plans, rollback procedures | - |
+| Agent                         | Specialty                         | Key Deliverables                                     | CLI Command    |
+| ----------------------------- | --------------------------------- | ---------------------------------------------------- | -------------- |
+| **Project Manager**           | Project management                | Project plans, WBS, Gantt charts, risk registers     | `musubi-tasks` |
+| **DevOps Engineer**           | CI/CD & infrastructure automation | Pipeline definitions, Dockerfiles, K8s manifests     | -              |
+| **Technical Writer**          | Technical documentation           | API docs, README, user guides, runbooks              | -              |
+| **Site Reliability Engineer** | SRE & observability               | SLI/SLO/SLA definitions, monitoring configs          | -              |
+| **Release Coordinator**       | Release management                | Release notes, deployment plans, rollback procedures | -              |
 
 ### Specialized Experts (5 agents)
 
-| Agent                      | Specialty                    | Key Deliverables                                                      | CLI Command |
-| -------------------------- | ---------------------------- | --------------------------------------------------------------------- | ----------- |
-| **UI/UX Designer**         | UI/UX design & prototyping   | Wireframes, mockups, interactive prototypes, design systems           | - |
-| **Database Administrator** | Database operations & tuning | Performance tuning reports, backup/recovery plans, HA configurations  | - |
-| **AI/ML Engineer**         | ML model development & MLOps | Trained models, model cards, deployment pipelines, evaluation reports | - |
+| Agent                      | Specialty                    | Key Deliverables                                                      | CLI Command     |
+| -------------------------- | ---------------------------- | --------------------------------------------------------------------- | --------------- |
+| **UI/UX Designer**         | UI/UX design & prototyping   | Wireframes, mockups, interactive prototypes, design systems           | -               |
+| **Database Administrator** | Database operations & tuning | Performance tuning reports, backup/recovery plans, HA configurations  | -               |
+| **AI/ML Engineer**         | ML model development & MLOps | Trained models, model cards, deployment pipelines, evaluation reports | -               |
 | **Change Impact Analyzer** | Impact analysis              | Impact reports, affected components, effort estimates                 | `musubi-change` |
-| **Traceability Auditor**   | Traceability verification    | Traceability matrices, coverage reports, gap analysis                 | `musubi-trace` |
+| **Traceability Auditor**   | Traceability verification    | Traceability matrices, coverage reports, gap analysis                 | `musubi-trace`  |
 
 **Total: 25 Specialized Agents**
 
@@ -579,25 +586,25 @@ Any Agent → Technical Writer（ドキュメント作成）
 
 ### Agent Selection Matrix
 
-| ユーザーリクエスト例     | 選択エージェント                                                                  | CLI Commands | 実行順序  |
-| ------------------------ | --------------------------------------------------------------------------------- | ------------ | --------- |
-| プロジェクト初期化 | Steering | `musubi-init` | 単一 |
-| 新機能の要件定義         | Requirements Analyst                                                              | `musubi-requirements init` | 単一      |
-| データベース設計         | Requirements Analyst → Database Schema Designer                                   | `musubi-requirements`, `musubi-design` | 順次      |
-| RESTful API設計          | Requirements Analyst → API Designer → Technical Writer                            | `musubi-requirements`, `musubi-design` | 順次      |
-| 仕様書からAPI実装        | Software Developer → Code Reviewer → Test Engineer                                | `musubi-tasks init` | 順次      |
-| ユーザー認証システム構築 | Requirements Analyst → System Architect → Software Developer → Security Auditor   | `musubi-requirements`, `musubi-design`, `musubi-tasks` | 順次      |
-| コードレビュー依頼       | Code Reviewer                                                                     | - | 単一      |
-| バグ調査・修正           | Bug Hunter → Test Engineer                                                        | - | 順次      |
-| セキュリティ監査         | Security Auditor → Bug Hunter（脆弱性があれば）                                   | - | 順次      |
-| パフォーマンス改善       | Performance Optimizer → Test Engineer                                             | - | 順次      |
-| CI/CDパイプライン構築    | DevOps Engineer                                                                   | - | 単一      |
-| クラウドインフラ設計     | Cloud Architect → DevOps Engineer                                                 | - | 順次      |
-| トレーサビリティ検証 | Traceability Auditor | `musubi-trace matrix`, `musubi-trace bidirectional` | 単一 |
-| 影響分析 | Change Impact Analyzer | `musubi-trace impact`, `musubi-change init` | 単一 |
-| Constitutional検証 | Constitution Enforcer | `musubi-validate all` | 単一 |
+| ユーザーリクエスト例     | 選択エージェント                                                                  | CLI Commands                                                           | 実行順序  |
+| ------------------------ | --------------------------------------------------------------------------------- | ---------------------------------------------------------------------- | --------- |
+| プロジェクト初期化       | Steering                                                                          | `musubi-init`                                                          | 単一      |
+| 新機能の要件定義         | Requirements Analyst                                                              | `musubi-requirements init`                                             | 単一      |
+| データベース設計         | Requirements Analyst → Database Schema Designer                                   | `musubi-requirements`, `musubi-design`                                 | 順次      |
+| RESTful API設計          | Requirements Analyst → API Designer → Technical Writer                            | `musubi-requirements`, `musubi-design`                                 | 順次      |
+| 仕様書からAPI実装        | Software Developer → Code Reviewer → Test Engineer                                | `musubi-tasks init`                                                    | 順次      |
+| ユーザー認証システム構築 | Requirements Analyst → System Architect → Software Developer → Security Auditor   | `musubi-requirements`, `musubi-design`, `musubi-tasks`                 | 順次      |
+| コードレビュー依頼       | Code Reviewer                                                                     | -                                                                      | 単一      |
+| バグ調査・修正           | Bug Hunter → Test Engineer                                                        | -                                                                      | 順次      |
+| セキュリティ監査         | Security Auditor → Bug Hunter（脆弱性があれば）                                   | -                                                                      | 順次      |
+| パフォーマンス改善       | Performance Optimizer → Test Engineer                                             | -                                                                      | 順次      |
+| CI/CDパイプライン構築    | DevOps Engineer                                                                   | -                                                                      | 単一      |
+| クラウドインフラ設計     | Cloud Architect → DevOps Engineer                                                 | -                                                                      | 順次      |
+| トレーサビリティ検証     | Traceability Auditor                                                              | `musubi-trace matrix`, `musubi-trace bidirectional`                    | 単一      |
+| 影響分析                 | Change Impact Analyzer                                                            | `musubi-trace impact`, `musubi-change init`                            | 単一      |
+| Constitutional検証       | Constitution Enforcer                                                             | `musubi-validate all`                                                  | 単一      |
 | フルスタック開発         | Requirements → API/DB Design → Software Developer → Code Reviewer → Test → DevOps | `musubi-requirements`, `musubi-design`, `musubi-tasks`, `musubi-trace` | 順次      |
-| 品質改善施策             | Code Reviewer + Security Auditor + Performance Optimizer（並列） → Test Engineer  | `musubi-gaps detect`, `musubi-validate` | 並列→順次 |
+| 品質改善施策             | Code Reviewer + Security Auditor + Performance Optimizer（並列） → Test Engineer  | `musubi-gaps detect`, `musubi-validate`                                | 並列→順次 |
 
 ---
 

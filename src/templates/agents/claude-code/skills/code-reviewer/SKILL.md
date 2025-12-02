@@ -605,6 +605,7 @@ export async function login(email: string, password: string): Promise<LoginRespo
 **CRITICAL: コンテキスト長オーバーフロー防止**
 
 **出力方式の原則:**
+
 - ✅ 1問題ずつ順番に修正・保存
 - ✅ 各修正後に進捗を報告
 - ✅ エラー発生時も部分的な修正が残る

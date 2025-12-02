@@ -26,20 +26,20 @@ program
   .option('--tests <dir>', 'Test directory', 'tests')
   .option('--format <format>', 'Output format (table|json|markdown)', 'table')
   .option('--verbose', 'Show detailed gap information')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.blue('\n🔍 Detecting gaps in traceability...\n'));
-      
+
       const detector = new GapDetector({
         requirementsDir: options.requirements,
         designDir: options.design,
         tasksDir: options.tasks,
         srcDir: options.src,
-        testsDir: options.tests
+        testsDir: options.tests,
       });
 
       const gaps = await detector.detectAllGaps();
-      
+
       if (options.format === 'json') {
         console.log(JSON.stringify(gaps, null, 2));
       } else if (options.format === 'markdown') {
@@ -48,10 +48,11 @@ program
         detector.displayTable(gaps, options.verbose);
       }
 
-      const totalGaps = gaps.orphanedRequirements.length +
-                        gaps.unimplementedRequirements.length +
-                        gaps.untestedCode.length +
-                        gaps.missingTests.length;
+      const totalGaps =
+        gaps.orphanedRequirements.length +
+        gaps.unimplementedRequirements.length +
+        gaps.untestedCode.length +
+        gaps.missingTests.length;
 
       if (totalGaps === 0) {
         console.log(chalk.green('\n✓ No gaps detected! 100% traceability achieved.\n'));
@@ -73,18 +74,18 @@ program
   .option('--design <dir>', 'Design directory', 'docs/design')
   .option('--tasks <dir>', 'Tasks directory', 'docs/tasks')
   .option('--format <format>', 'Output format (table|json|markdown)', 'table')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.blue('\n🔍 Detecting orphaned requirements...\n'));
-      
+
       const detector = new GapDetector({
         requirementsDir: options.requirements,
         designDir: options.design,
-        tasksDir: options.tasks
+        tasksDir: options.tasks,
       });
 
       const orphaned = await detector.detectOrphanedRequirements();
-      
+
       if (options.format === 'json') {
         console.log(JSON.stringify(orphaned, null, 2));
       } else if (options.format === 'markdown') {
@@ -112,17 +113,17 @@ program
   .option('--src <dir>', 'Source code directory', 'src')
   .option('--tests <dir>', 'Test directory', 'tests')
   .option('--format <format>', 'Output format (table|json|markdown)', 'table')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.blue('\n🔍 Detecting untested code...\n'));
-      
+
       const detector = new GapDetector({
         srcDir: options.src,
-        testsDir: options.tests
+        testsDir: options.tests,
       });
 
       const untested = await detector.detectUntestedCode();
-      
+
       if (options.format === 'json') {
         console.log(JSON.stringify(untested, null, 2));
       } else if (options.format === 'markdown') {
@@ -154,21 +155,21 @@ program
   .option('--tests <dir>', 'Test directory', 'tests')
   .option('--min-coverage <percent>', 'Minimum required coverage', '100')
   .option('--format <format>', 'Output format (table|json|markdown)', 'table')
-  .action(async (options) => {
+  .action(async options => {
     try {
       console.log(chalk.blue('\n📊 Calculating coverage statistics...\n'));
-      
+
       const detector = new GapDetector({
         requirementsDir: options.requirements,
         designDir: options.design,
         tasksDir: options.tasks,
         srcDir: options.src,
-        testsDir: options.tests
+        testsDir: options.tests,
       });
 
       const coverage = await detector.calculateCoverage();
       const minCoverage = parseFloat(options.minCoverage);
-      
+
       if (options.format === 'json') {
         console.log(JSON.stringify(coverage, null, 2));
       } else if (options.format === 'markdown') {
@@ -177,17 +178,21 @@ program
         detector.displayCoverageTable(coverage);
       }
 
-      const avgCoverage = (
-        coverage.requirements.implementationCoverage +
-        coverage.requirements.testCoverage +
-        coverage.code.testCoverage
-      ) / 3;
+      const avgCoverage =
+        (coverage.requirements.implementationCoverage +
+          coverage.requirements.testCoverage +
+          coverage.code.testCoverage) /
+        3;
 
       if (avgCoverage >= minCoverage) {
-        console.log(chalk.green(`\n✓ Coverage ${avgCoverage.toFixed(1)}% meets minimum ${minCoverage}%\n`));
+        console.log(
+          chalk.green(`\n✓ Coverage ${avgCoverage.toFixed(1)}% meets minimum ${minCoverage}%\n`)
+        );
         process.exit(0);
       } else {
-        console.log(chalk.red(`\n✗ Coverage ${avgCoverage.toFixed(1)}% below minimum ${minCoverage}%\n`));
+        console.log(
+          chalk.red(`\n✗ Coverage ${avgCoverage.toFixed(1)}% below minimum ${minCoverage}%\n`)
+        );
         process.exit(1);
       }
     } catch (error) {

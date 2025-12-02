@@ -106,14 +106,8 @@ describe('TraceabilityAnalyzer', () => {
         path.join(tmpDir, 'docs/tasks/auth.md'),
         '### TASK-001: Login\n\n**Status**: Complete\n\nREQ-AUTH-001'
       );
-      await fs.writeFile(
-        path.join(tmpDir, 'src/auth.js'),
-        '// REQ-AUTH-001\nfunction login() {}'
-      );
-      await fs.writeFile(
-        path.join(tmpDir, 'tests/auth.test.js'),
-        'test("REQ-AUTH-001", () => {})'
-      );
+      await fs.writeFile(path.join(tmpDir, 'src/auth.js'), '// REQ-AUTH-001\nfunction login() {}');
+      await fs.writeFile(path.join(tmpDir, 'tests/auth.test.js'), 'test("REQ-AUTH-001", () => {})');
 
       const coverage = await analyzer.calculateCoverage();
 
@@ -174,14 +168,8 @@ describe('TraceabilityAnalyzer', () => {
         path.join(tmpDir, 'docs/tasks/auth.md'),
         '### TASK-001: Login\n\n**Status**: Complete\n\nREQ-AUTH-001'
       );
-      await fs.writeFile(
-        path.join(tmpDir, 'src/auth.js'),
-        '// REQ-AUTH-001\nfunction login() {}'
-      );
-      await fs.writeFile(
-        path.join(tmpDir, 'tests/auth.test.js'),
-        'test("REQ-AUTH-001", () => {})'
-      );
+      await fs.writeFile(path.join(tmpDir, 'src/auth.js'), '// REQ-AUTH-001\nfunction login() {}');
+      await fs.writeFile(path.join(tmpDir, 'tests/auth.test.js'), 'test("REQ-AUTH-001", () => {})');
 
       const gaps = await analyzer.detectGaps();
 
@@ -244,10 +232,7 @@ describe('TraceabilityAnalyzer', () => {
 
     test('detects untested code', async () => {
       // Create code without tests
-      await fs.writeFile(
-        path.join(tmpDir, 'src/untested.js'),
-        'function untestedFunction() {}'
-      );
+      await fs.writeFile(path.join(tmpDir, 'src/untested.js'), 'function untestedFunction() {}');
 
       const gaps = await analyzer.detectGaps();
 
@@ -270,14 +255,8 @@ describe('TraceabilityAnalyzer', () => {
         path.join(tmpDir, 'docs/tasks/auth.md'),
         '### TASK-001: Login\n\n**Status**: Complete\n\nREQ-AUTH-001'
       );
-      await fs.writeFile(
-        path.join(tmpDir, 'src/auth.js'),
-        '// REQ-AUTH-001\nfunction login() {}'
-      );
-      await fs.writeFile(
-        path.join(tmpDir, 'tests/auth.test.js'),
-        'test("REQ-AUTH-001", () => {})'
-      );
+      await fs.writeFile(path.join(tmpDir, 'src/auth.js'), '// REQ-AUTH-001\nfunction login() {}');
+      await fs.writeFile(path.join(tmpDir, 'tests/auth.test.js'), 'test("REQ-AUTH-001", () => {})');
 
       const trace = await analyzer.traceRequirement('REQ-AUTH-001');
 
@@ -329,14 +308,8 @@ describe('TraceabilityAnalyzer', () => {
         path.join(tmpDir, 'docs/tasks/auth.md'),
         '### TASK-001: Login\n\n**Status**: Complete\n\nREQ-AUTH-001'
       );
-      await fs.writeFile(
-        path.join(tmpDir, 'src/auth.js'),
-        '// REQ-AUTH-001\nfunction login() {}'
-      );
-      await fs.writeFile(
-        path.join(tmpDir, 'tests/auth.test.js'),
-        'test("REQ-AUTH-001", () => {})'
-      );
+      await fs.writeFile(path.join(tmpDir, 'src/auth.js'), '// REQ-AUTH-001\nfunction login() {}');
+      await fs.writeFile(path.join(tmpDir, 'tests/auth.test.js'), 'test("REQ-AUTH-001", () => {})');
 
       const result = await analyzer.validate();
 
@@ -456,10 +429,7 @@ describe('TraceabilityAnalyzer', () => {
     });
 
     test('parses code files correctly', async () => {
-      await fs.writeFile(
-        path.join(tmpDir, 'src/auth.js'),
-        'function login() {}\nclass Auth {}'
-      );
+      await fs.writeFile(path.join(tmpDir, 'src/auth.js'), 'function login() {}\nclass Auth {}');
 
       const code = await analyzer.findCode('src');
 

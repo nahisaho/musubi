@@ -14,18 +14,18 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 When CodeGraphMCPServer is available, agents can leverage these tools for enhanced code understanding:
 
-| MCP Tool | Primary Agents | Usage |
-|----------|---------------|-------|
-| `query_codebase` | @orchestrator, @steering | コードベース全体の検索 |
-| `find_dependencies` | @change-impact-analyzer, @constitution-enforcer | 依存関係分析・違反検出 |
-| `find_callers` | @change-impact-analyzer, @test-engineer, @security-auditor | 呼び出し元追跡 |
-| `find_callees` | @software-developer | 呼び出し先追跡 |
-| `find_implementations` | @api-designer, @system-architect | 実装クラス検索 |
-| `analyze_module_structure` | @system-architect, @steering | モジュール構造分析 |
-| `get_code_snippet` | @software-developer, @code-reviewer | ソースコード取得 |
-| `global_search` | @orchestrator, @technical-writer | GraphRAGグローバル検索 |
-| `local_search` | @software-developer, @bug-hunter | GraphRAGローカル検索 |
-| `suggest_refactoring` | @code-reviewer, @performance-optimizer | リファクタリング提案 |
+| MCP Tool                   | Primary Agents                                             | Usage                  |
+| -------------------------- | ---------------------------------------------------------- | ---------------------- |
+| `query_codebase`           | @orchestrator, @steering                                   | コードベース全体の検索 |
+| `find_dependencies`        | @change-impact-analyzer, @constitution-enforcer            | 依存関係分析・違反検出 |
+| `find_callers`             | @change-impact-analyzer, @test-engineer, @security-auditor | 呼び出し元追跡         |
+| `find_callees`             | @software-developer                                        | 呼び出し先追跡         |
+| `find_implementations`     | @api-designer, @system-architect                           | 実装クラス検索         |
+| `analyze_module_structure` | @system-architect, @steering                               | モジュール構造分析     |
+| `get_code_snippet`         | @software-developer, @code-reviewer                        | ソースコード取得       |
+| `global_search`            | @orchestrator, @technical-writer                           | GraphRAGグローバル検索 |
+| `local_search`             | @software-developer, @bug-hunter                           | GraphRAGローカル検索   |
+| `suggest_refactoring`      | @code-reviewer, @performance-optimizer                     | リファクタリング提案   |
 
 **Setup**: See `steering/tech.md` for MCP configuration.
 

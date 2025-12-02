@@ -375,6 +375,7 @@ CREATE INDEX idx_products_category_id ON products(category_id);
 **CRITICAL: コンテキスト長オーバーフロー防止**
 
 **出力方式の原則:**
+
 - ✅ 1最適化項目ずつ順番に実装・保存
 - ✅ 各実装後に進捗とパフォーマンス改善を報告
 - ✅ エラー発生時も部分的な最適化が残る

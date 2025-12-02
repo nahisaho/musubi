@@ -2,10 +2,10 @@
 
 /**
  * MUSUBI Change Management CLI
- * 
+ *
  * Manages delta specifications for brownfield projects
  * Implements ADDED/MODIFIED/REMOVED/RENAMED change tracking
- * 
+ *
  * Usage:
  *   musubi-change init <change-id>       # Create change proposal
  *   musubi-change apply <change-id>      # Apply change to codebase
@@ -45,7 +45,7 @@ program
         title: options.title,
         description: options.description,
         changesDir: options.changes,
-        template: options.template
+        template: options.template,
       });
 
       console.log(chalk.green('✓ Change proposal created successfully'));
@@ -83,7 +83,7 @@ program
       const result = await manager.applyChange(changeId, {
         changesDir: options.changes,
         dryRun: options.dryRun,
-        force: options.force
+        force: options.force,
       });
 
       if (options.dryRun) {
@@ -98,7 +98,7 @@ program
         console.log(chalk.blue(`  ${result.stats.modified} files modified`));
         console.log(chalk.red(`  ${result.stats.removed} files removed`));
         console.log(chalk.yellow(`  ${result.stats.renamed} files renamed`));
-        
+
         console.log();
         console.log(chalk.yellow('Next steps:'));
         console.log(chalk.dim('1. Test the changes'));
@@ -126,7 +126,7 @@ program
 
       const result = await manager.archiveChange(changeId, {
         changesDir: options.changes,
-        specsDir: options.specs
+        specsDir: options.specs,
       });
 
       console.log(chalk.green('✓ Change archived successfully'));
@@ -148,14 +148,14 @@ program
   .option('--changes <dir>', 'Changes directory', 'storage/changes')
   .option('--status <status>', 'Filter by status (pending|applied|archived)')
   .option('--format <format>', 'Output format (table|json)', 'table')
-  .action(async (options) => {
+  .action(async options => {
     try {
       const workspaceRoot = process.cwd();
       const manager = new ChangeManager(workspaceRoot);
 
       const changes = await manager.listChanges({
         changesDir: options.changes,
-        status: options.status
+        status: options.status,
       });
 
       if (options.format === 'json') {
@@ -165,7 +165,7 @@ program
 
       // Table format
       console.log(chalk.bold('\nChange Proposals:\n'));
-      
+
       if (changes.length === 0) {
         console.log(chalk.dim('No changes found'));
         return;
@@ -175,17 +175,18 @@ program
       console.log(chalk.dim('-'.repeat(90)));
 
       changes.forEach(change => {
-        const statusColor = {
-          pending: chalk.yellow,
-          applied: chalk.blue,
-          archived: chalk.green
-        }[change.status] || chalk.white;
+        const statusColor =
+          {
+            pending: chalk.yellow,
+            applied: chalk.blue,
+            archived: chalk.green,
+          }[change.status] || chalk.white;
 
         console.log(
           change.id.padEnd(20) +
-          change.title.padEnd(40) +
-          statusColor(change.status.padEnd(15)) +
-          change.date
+            change.title.padEnd(40) +
+            statusColor(change.status.padEnd(15)) +
+            change.date
         );
       });
 
@@ -213,12 +214,12 @@ program
 
       const result = await manager.validateChange(changeId, {
         changesDir: options.changes,
-        verbose: options.verbose
+        verbose: options.verbose,
       });
 
       if (result.valid) {
         console.log(chalk.green('✓ Delta specification is valid'));
-        
+
         if (options.verbose) {
           console.log();
           console.log(chalk.bold('Summary:'));
@@ -230,14 +231,14 @@ program
       } else {
         console.log(chalk.red('✗ Validation failed'));
         console.log();
-        
+
         result.errors.forEach(error => {
           console.log(chalk.red(`  • ${error.message}`));
           if (error.line) {
             console.log(chalk.dim(`    Line ${error.line}`));
           }
         });
-        
+
         process.exit(1);
       }
     } catch (error) {

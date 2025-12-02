@@ -22,7 +22,7 @@ describe('ChangeManager', () => {
     test('creates new change proposal', async () => {
       const result = await manager.initChange('CHANGE-001', {
         title: 'Add user authentication',
-        description: 'Implement JWT-based authentication'
+        description: 'Implement JWT-based authentication',
       });
 
       expect(result.changeId).toBe('CHANGE-001');
@@ -36,14 +36,14 @@ describe('ChangeManager', () => {
     test('throws error if change already exists', async () => {
       await manager.initChange('CHANGE-001');
 
-      await expect(
-        manager.initChange('CHANGE-001')
-      ).rejects.toThrow('Change CHANGE-001 already exists');
+      await expect(manager.initChange('CHANGE-001')).rejects.toThrow(
+        'Change CHANGE-001 already exists'
+      );
     });
 
     test('creates changes directory if not exists', async () => {
       const changesDir = path.join(tmpDir, 'storage/changes');
-      
+
       expect(await fs.pathExists(changesDir)).toBe(false);
 
       await manager.initChange('CHANGE-001');
@@ -57,7 +57,7 @@ describe('ChangeManager', () => {
       // Create change with delta items
       await manager.initChange('CHANGE-002');
       const changeFile = path.join(tmpDir, 'storage/changes/CHANGE-002.md');
-      
+
       // Add some delta items (replace placeholder)
       const content = await fs.readFile(changeFile, 'utf-8');
       const withItems = content.replace(
@@ -72,9 +72,9 @@ describe('ChangeManager', () => {
     });
 
     test('throws error if change not found', async () => {
-      await expect(
-        manager.applyChange('NONEXISTENT')
-      ).rejects.toThrow('Change NONEXISTENT not found');
+      await expect(manager.applyChange('NONEXISTENT')).rejects.toThrow(
+        'Change NONEXISTENT not found'
+      );
     });
   });
 
@@ -89,9 +89,9 @@ describe('ChangeManager', () => {
     });
 
     test('throws error if change not found', async () => {
-      await expect(
-        manager.archiveChange('NONEXISTENT')
-      ).rejects.toThrow('Change NONEXISTENT not found');
+      await expect(manager.archiveChange('NONEXISTENT')).rejects.toThrow(
+        'Change NONEXISTENT not found'
+      );
     });
   });
 
@@ -126,7 +126,7 @@ describe('ChangeManager', () => {
     test('validates change with valid delta', async () => {
       await manager.initChange('CHANGE-007');
       const changeFile = path.join(tmpDir, 'storage/changes/CHANGE-007.md');
-      
+
       // Add valid delta items
       const content = await fs.readFile(changeFile, 'utf-8');
       const withItems = content.replace(
@@ -144,7 +144,7 @@ describe('ChangeManager', () => {
     test('detects invalid requirement IDs', async () => {
       await manager.initChange('CHANGE-008');
       const changeFile = path.join(tmpDir, 'storage/changes/CHANGE-008.md');
-      
+
       // Add invalid delta items (not matching REQ-XXX-NNN pattern)
       const content = await fs.readFile(changeFile, 'utf-8');
       const withItems = content.replace(
@@ -166,14 +166,26 @@ describe('ChangeManager', () => {
     test('parses delta with all sections', async () => {
       await manager.initChange('CHANGE-009');
       const changeFile = path.join(tmpDir, 'storage/changes/CHANGE-009.md');
-      
+
       // Add items to all sections (replace placeholders)
       let content = await fs.readFile(changeFile, 'utf-8');
       content = content
-        .replace('### ADDED\n\n<!-- List new requirements here -->', '### ADDED\n\n- REQ-NEW-001: New requirement')
-        .replace('### MODIFIED\n\n<!-- List modified requirements here -->', '### MODIFIED\n\n- REQ-MOD-001: Modified requirement')
-        .replace('### REMOVED\n\n<!-- List removed requirements here -->', '### REMOVED\n\n- REQ-DEL-001: Removed requirement')
-        .replace('### RENAMED\n\n<!-- List renamed requirements here -->', '### RENAMED\n\n- REQ-OLD-001: Renamed requirement');
+        .replace(
+          '### ADDED\n\n<!-- List new requirements here -->',
+          '### ADDED\n\n- REQ-NEW-001: New requirement'
+        )
+        .replace(
+          '### MODIFIED\n\n<!-- List modified requirements here -->',
+          '### MODIFIED\n\n- REQ-MOD-001: Modified requirement'
+        )
+        .replace(
+          '### REMOVED\n\n<!-- List removed requirements here -->',
+          '### REMOVED\n\n- REQ-DEL-001: Removed requirement'
+        )
+        .replace(
+          '### RENAMED\n\n<!-- List renamed requirements here -->',
+          '### RENAMED\n\n- REQ-OLD-001: Renamed requirement'
+        );
       await fs.writeFile(changeFile, content);
 
       const delta = await manager.parseDelta(changeFile);
@@ -190,7 +202,7 @@ describe('ChangeManager', () => {
       const template = '# {{title}}\n\n**ID**: {{id}}';
       const rendered = manager.renderTemplate(template, {
         title: 'Test Title',
-        id: 'TEST-001'
+        id: 'TEST-001',
       });
 
       expect(rendered).toBe('# Test Title\n\n**ID**: TEST-001');

@@ -36,7 +36,7 @@ async function main() {
   const dryRun = args.includes('--dry-run');
 
   // Check if steering documents exist
-  if (!await fs.pathExists('steering/project.yml')) {
+  if (!(await fs.pathExists('steering/project.yml'))) {
     console.log(chalk.red('❌ steering/project.yml not found.'));
     console.log(chalk.yellow('Run `musubi-onboard` first to initialize steering.'));
     process.exit(1);
@@ -55,7 +55,7 @@ async function main() {
   // Step 3: Detect differences
   console.log(chalk.cyan('\n🔎 Step 3: Detecting changes...\n'));
   const changes = detectChanges(currentConfig, actualState);
-  
+
   if (changes.length === 0) {
     console.log(chalk.green('✅ No changes detected. Steering is up to date!\n'));
     process.exit(0);
@@ -123,12 +123,10 @@ async function loadSteeringConfig() {
     config.projectName = projectYml.project_name || '';
     config.version = projectYml.version || '';
     config.languages = projectYml.languages || [];
-    
+
     // Extract framework names from frameworks array
     if (Array.isArray(projectYml.frameworks)) {
-      config.frameworks = projectYml.frameworks.map(f => 
-        typeof f === 'string' ? f : f.name
-      );
+      config.frameworks = projectYml.frameworks.map(f => (typeof f === 'string' ? f : f.name));
     }
 
     // Extract directories from conventions
@@ -177,22 +175,22 @@ async function analyzeCodebase() {
 
     // Common frameworks
     const frameworkMap = {
-      'react': 'React',
-      'vue': 'Vue',
-      'angular': 'Angular',
-      'next': 'Next.js',
-      'nuxt': 'Nuxt',
-      'express': 'Express',
-      'fastify': 'Fastify',
-      'nest': 'NestJS',
-      'jest': 'Jest',
-      'vitest': 'Vitest',
-      'mocha': 'Mocha',
-      'eslint': 'ESLint',
-      'prettier': 'Prettier',
-      'webpack': 'Webpack',
-      'vite': 'Vite',
-      'rollup': 'Rollup',
+      react: 'React',
+      vue: 'Vue',
+      angular: 'Angular',
+      next: 'Next.js',
+      nuxt: 'Nuxt',
+      express: 'Express',
+      fastify: 'Fastify',
+      nest: 'NestJS',
+      jest: 'Jest',
+      vitest: 'Vitest',
+      mocha: 'Mocha',
+      eslint: 'ESLint',
+      prettier: 'Prettier',
+      webpack: 'Webpack',
+      vite: 'Vite',
+      rollup: 'Rollup',
     };
 
     for (const [key, name] of Object.entries(frameworkMap)) {
@@ -294,7 +292,7 @@ function detectChanges(config, actual) {
       added: newFrameworks,
       description: `New frameworks detected: ${newFrameworks.join(', ')}`,
     });
-    
+
     // Also update tech.md
     changes.push({
       type: 'new_frameworks',
@@ -355,7 +353,7 @@ function displayChanges(changes) {
   changes.forEach((change, idx) => {
     console.log(chalk.white(`${idx + 1}. ${change.description}`));
     console.log(chalk.gray(`   File: ${change.file}`));
-    
+
     if (change.added) {
       console.log(chalk.green(`   Added: ${change.added.join(', ')}`));
     }
@@ -439,9 +437,7 @@ async function updateProjectYml(changes, actualState) {
  * Update tech.md with new frameworks
  */
 async function updateTechMd(changes, _actualState) {
-  const newFrameworks = changes
-    .filter(c => c.type === 'new_frameworks')
-    .flatMap(c => c.added);
+  const newFrameworks = changes.filter(c => c.type === 'new_frameworks').flatMap(c => c.added);
 
   if (newFrameworks.length === 0) return;
 
@@ -449,17 +445,16 @@ async function updateTechMd(changes, _actualState) {
   const techMdPath = 'steering/tech.md';
   if (await fs.pathExists(techMdPath)) {
     let content = await fs.readFile(techMdPath, 'utf8');
-    
+
     // Find frameworks section and append
     const frameworkSection = '## Frameworks';
     if (content.includes(frameworkSection)) {
-      const newEntries = newFrameworks.map(fw => `- **${fw}** (detected) - Auto-detected framework`).join('\n');
-      content = content.replace(
-        frameworkSection,
-        `${frameworkSection}\n\n${newEntries}\n`
-      );
+      const newEntries = newFrameworks
+        .map(fw => `- **${fw}** (detected) - Auto-detected framework`)
+        .join('\n');
+      content = content.replace(frameworkSection, `${frameworkSection}\n\n${newEntries}\n`);
     }
-    
+
     await fs.writeFile(techMdPath, content);
   }
 
@@ -467,16 +462,15 @@ async function updateTechMd(changes, _actualState) {
   const techMdJaPath = 'steering/tech.ja.md';
   if (await fs.pathExists(techMdJaPath)) {
     let content = await fs.readFile(techMdJaPath, 'utf8');
-    
+
     const frameworkSection = '## フレームワーク';
     if (content.includes(frameworkSection)) {
-      const newEntries = newFrameworks.map(fw => `- **${fw}** (detected) - 自動検出されたフレームワーク`).join('\n');
-      content = content.replace(
-        frameworkSection,
-        `${frameworkSection}\n\n${newEntries}\n`
-      );
+      const newEntries = newFrameworks
+        .map(fw => `- **${fw}** (detected) - 自動検出されたフレームワーク`)
+        .join('\n');
+      content = content.replace(frameworkSection, `${frameworkSection}\n\n${newEntries}\n`);
     }
-    
+
     await fs.writeFile(techMdJaPath, content);
   }
 }
@@ -485,9 +479,7 @@ async function updateTechMd(changes, _actualState) {
  * Update structure.md with new directories
  */
 async function updateStructureMd(changes, _actualState) {
-  const newDirs = changes
-    .filter(c => c.type === 'new_directories')
-    .flatMap(c => c.added);
+  const newDirs = changes.filter(c => c.type === 'new_directories').flatMap(c => c.added);
 
   if (newDirs.length === 0) return;
 
@@ -495,11 +487,11 @@ async function updateStructureMd(changes, _actualState) {
   const structureMdPath = 'steering/structure.md';
   if (await fs.pathExists(structureMdPath)) {
     let content = await fs.readFile(structureMdPath, 'utf8');
-    
+
     // Append new directories to the directory structure section
     const dirList = newDirs.map(dir => `${dir}/`).join('\n');
     content += `\n\n## New Directories (Detected ${new Date().toISOString().split('T')[0]})\n\n\`\`\`\n${dirList}\n\`\`\`\n`;
-    
+
     await fs.writeFile(structureMdPath, content);
   }
 
@@ -507,10 +499,10 @@ async function updateStructureMd(changes, _actualState) {
   const structureMdJaPath = 'steering/structure.ja.md';
   if (await fs.pathExists(structureMdJaPath)) {
     let content = await fs.readFile(structureMdJaPath, 'utf8');
-    
+
     const dirList = newDirs.map(dir => `${dir}/`).join('\n');
     content += `\n\n## 新規ディレクトリ (検出日: ${new Date().toISOString().split('T')[0]})\n\n\`\`\`\n${dirList}\n\`\`\`\n`;
-    
+
     await fs.writeFile(structureMdJaPath, content);
   }
 }
@@ -520,19 +512,19 @@ async function updateStructureMd(changes, _actualState) {
  */
 async function recordChangeInMemory(changes) {
   const memoryPath = 'steering/memories/architecture_decisions.md';
-  if (!await fs.pathExists(memoryPath)) return;
+  if (!(await fs.pathExists(memoryPath))) return;
 
   let content = await fs.readFile(memoryPath, 'utf8');
-  
+
   const today = new Date().toISOString().split('T')[0];
   const changeDescriptions = changes.map(c => `- ${c.description}`).join('\n');
-  
+
   const entry = `\n## [${today}] Steering Sync - Automatic Update\n\n**Decision**: Synchronized steering documents with codebase changes\n\n**Changes Detected**:\n${changeDescriptions}\n\n**Action**: Automatically updated steering documents via \`musubi-sync\`\n\n---\n`;
-  
+
   // Insert after the heading
   const insertAfter = '# Architecture Decisions\n';
   content = content.replace(insertAfter, insertAfter + entry);
-  
+
   await fs.writeFile(memoryPath, content);
 }
 

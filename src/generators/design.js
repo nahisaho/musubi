@@ -1,15 +1,15 @@
 /**
  * MUSUBI Design Document Generator
- * 
+ *
  * Generates technical design documents with C4 model and ADR
  * Complies with Article V (Traceability) and steering context
- * 
+ *
  * C4 Model Levels:
  * 1. Context: System in its environment
  * 2. Container: High-level technology choices
  * 3. Component: Components within containers
  * 4. Code: Class/component implementation details
- * 
+ *
  * ADR Format:
  * - Title: Decision name
  * - Status: proposed|accepted|rejected|deprecated
@@ -90,12 +90,7 @@ class DesignGenerator {
    * @returns {Promise<string[]>} List of design file paths
    */
   async findDesignFiles() {
-    const patterns = [
-      'docs/design/**/*.md',
-      'docs/design/*.md',
-      'design/**/*.md',
-      'design/*.md'
-    ];
+    const patterns = ['docs/design/**/*.md', 'docs/design/*.md', 'design/**/*.md', 'design/*.md'];
 
     const files = [];
     for (const pattern of patterns) {
@@ -120,15 +115,16 @@ class DesignGenerator {
 
     // Find insertion point based on level
     const insertionPoint = this.findC4InsertionPoint(content, diagram.level);
-    
-    const newContent = content.slice(0, insertionPoint) + template + '\n' + content.slice(insertionPoint);
+
+    const newContent =
+      content.slice(0, insertionPoint) + template + '\n' + content.slice(insertionPoint);
 
     await fs.writeFile(filePath, newContent, 'utf-8');
 
-    return { 
-      level: diagram.level, 
+    return {
+      level: diagram.level,
       title: diagram.title,
-      template 
+      template,
     };
   }
 
@@ -260,7 +256,7 @@ classDiagram
 - **Controller**: [Purpose and key methods]
 - **Service**: [Purpose and key methods]
 - **Repository**: [Purpose and key methods]
-`
+`,
     };
 
     return templates[level] || templates.context;
@@ -380,7 +376,7 @@ Service --> Repository
 
 @enduml
 \`\`\`
-`
+`,
     };
 
     return templates[level] || templates.context;
@@ -396,7 +392,7 @@ Service --> Repository
       context: 'C4 Model: Context Diagram',
       container: 'C4 Model: Container Diagram',
       component: 'C4 Model: Component Diagram',
-      code: 'C4 Model: Code Diagram'
+      code: 'C4 Model: Code Diagram',
     };
     return names[level] || 'Architecture Design';
   }
@@ -443,14 +439,15 @@ Service --> Repository
 
     // Find insertion point (Architecture Decisions section)
     const insertionPoint = this.findADRInsertionPoint(content);
-    const newContent = content.slice(0, insertionPoint) + section + '\n' + content.slice(insertionPoint);
+    const newContent =
+      content.slice(0, insertionPoint) + section + '\n' + content.slice(insertionPoint);
 
     await fs.writeFile(filePath, newContent, 'utf-8');
 
-    return { 
-      number, 
+    return {
+      number,
       title: adr.title,
-      status: adr.status
+      status: adr.status,
     };
   }
 
@@ -461,7 +458,7 @@ Service --> Repository
    */
   generateADRNumber(content) {
     const regex = /### ADR-(\d+):/g;
-    
+
     let maxNum = 0;
     let match;
     while ((match = regex.exec(content)) !== null) {
@@ -481,14 +478,14 @@ Service --> Repository
    */
   formatADRSection(number, adr) {
     const date = new Date().toISOString().split('T')[0];
-    
+
     let section = `### ${number}: ${adr.title}\n\n`;
     section += `**Status**: ${adr.status}\n`;
     section += `**Date**: ${date}\n\n`;
     section += `**Context**:\n\n${adr.context}\n\n`;
     section += `**Decision**:\n\n${adr.decision}\n\n`;
     section += `**Consequences**:\n\n${adr.consequences}\n\n`;
-    
+
     if (adr.alternatives && adr.alternatives.length > 0) {
       section += '**Alternatives Considered**:\n\n';
       adr.alternatives.forEach(alt => {
@@ -541,19 +538,19 @@ Service --> Repository
     for (const file of files) {
       const content = await fs.readFile(file, 'utf-8');
       const errors = this.validateDesignDocument(content);
-      
+
       if (errors.length > 0) {
         violations.push(`${path.basename(file)}: ${errors.join(', ')}`);
         details.push({
           file: path.basename(file),
           valid: false,
-          message: errors.join(', ')
+          message: errors.join(', '),
         });
       } else {
         details.push({
           file: path.basename(file),
           valid: true,
-          message: 'Design document complete'
+          message: 'Design document complete',
         });
       }
     }
@@ -564,7 +561,7 @@ Service --> Repository
       valid: files.length - violations.length,
       invalid: violations.length,
       violations,
-      details
+      details,
     };
   }
 
@@ -586,11 +583,12 @@ Service --> Repository
     }
 
     // Check for C4 diagrams (at least one level)
-    const hasC4 = content.includes('C4Context') || 
-                  content.includes('C4Container') ||
-                  content.includes('C4Component') ||
-                  content.includes('C4 Model');
-    
+    const hasC4 =
+      content.includes('C4Context') ||
+      content.includes('C4Container') ||
+      content.includes('C4Component') ||
+      content.includes('C4 Model');
+
     if (!hasC4) {
       errors.push('Missing C4 model diagrams');
     }
@@ -607,9 +605,9 @@ Service --> Repository
     const matrix = [];
 
     // Find requirement files
-    const reqFiles = await glob('docs/requirements/**/*.md', { 
-      cwd: this.rootDir, 
-      absolute: true 
+    const reqFiles = await glob('docs/requirements/**/*.md', {
+      cwd: this.rootDir,
+      absolute: true,
     });
 
     for (const reqFile of reqFiles) {
@@ -621,7 +619,7 @@ Service --> Repository
           requirement: req.id,
           design: false,
           components: 0,
-          traced: false
+          traced: false,
         });
       }
     }

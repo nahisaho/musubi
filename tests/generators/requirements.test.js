@@ -52,7 +52,7 @@ describe('RequirementsGenerator', () => {
       const data = {
         pattern: 'ubiquitous',
         system: 'system',
-        response: 'process user input'
+        response: 'process user input',
       };
       const statement = generator.generateEARSStatement(data);
       expect(statement).toBe('The system SHALL process user input.');
@@ -63,10 +63,12 @@ describe('RequirementsGenerator', () => {
         pattern: 'event',
         system: 'system',
         statement: 'user clicks submit button',
-        response: 'validate form data'
+        response: 'validate form data',
       };
       const statement = generator.generateEARSStatement(data);
-      expect(statement).toBe('WHEN user clicks submit button, THEN the system SHALL validate form data.');
+      expect(statement).toBe(
+        'WHEN user clicks submit button, THEN the system SHALL validate form data.'
+      );
     });
 
     test('should generate state-driven pattern', () => {
@@ -74,10 +76,12 @@ describe('RequirementsGenerator', () => {
         pattern: 'state',
         system: 'system',
         statement: 'offline mode is active',
-        response: 'queue changes locally'
+        response: 'queue changes locally',
       };
       const statement = generator.generateEARSStatement(data);
-      expect(statement).toBe('WHILE offline mode is active, the system SHALL queue changes locally.');
+      expect(statement).toBe(
+        'WHILE offline mode is active, the system SHALL queue changes locally.'
+      );
     });
 
     test('should generate unwanted behavior pattern', () => {
@@ -85,10 +89,12 @@ describe('RequirementsGenerator', () => {
         pattern: 'unwanted',
         system: 'system',
         statement: 'network connection fails',
-        response: 'display error message'
+        response: 'display error message',
       };
       const statement = generator.generateEARSStatement(data);
-      expect(statement).toBe('IF network connection fails, THEN the system SHALL display error message.');
+      expect(statement).toBe(
+        'IF network connection fails, THEN the system SHALL display error message.'
+      );
     });
 
     test('should generate optional feature pattern', () => {
@@ -96,7 +102,7 @@ describe('RequirementsGenerator', () => {
         pattern: 'optional',
         system: 'system',
         statement: 'dark mode is enabled',
-        response: 'use dark color scheme'
+        response: 'use dark color scheme',
       };
       const statement = generator.generateEARSStatement(data);
       expect(statement).toBe('WHERE dark mode is enabled, the system SHALL use dark color scheme.');
@@ -106,7 +112,7 @@ describe('RequirementsGenerator', () => {
       const data = {
         pattern: 'invalid',
         system: 'system',
-        response: 'do something'
+        response: 'do something',
       };
       expect(() => generator.generateEARSStatement(data)).toThrow('Unknown EARS pattern: invalid');
     });
@@ -149,7 +155,7 @@ describe('RequirementsGenerator', () => {
       const req = {
         id: 'REQ-TEST-001',
         statement: 'The system SHALL validate user input.',
-        pattern: 'ubiquitous'
+        pattern: 'ubiquitous',
       };
       const errors = generator.validateEARSFormat(req);
       expect(errors).toHaveLength(0);
@@ -159,7 +165,7 @@ describe('RequirementsGenerator', () => {
       const req = {
         id: 'REQ-TEST-001',
         statement: 'The system will validate input.',
-        pattern: 'ubiquitous'
+        pattern: 'ubiquitous',
       };
       const errors = generator.validateEARSFormat(req);
       expect(errors).toContain('Missing SHALL keyword');
@@ -168,8 +174,9 @@ describe('RequirementsGenerator', () => {
     test('should validate event-driven pattern structure', () => {
       const req = {
         id: 'REQ-TEST-001',
-        statement: 'WHEN user clicks the submit button, THEN system SHALL respond with confirmation.',
-        pattern: 'event'
+        statement:
+          'WHEN user clicks the submit button, THEN system SHALL respond with confirmation.',
+        pattern: 'event',
       };
       const errors = generator.validateEARSFormat(req);
       expect(errors).toHaveLength(0);
@@ -179,7 +186,7 @@ describe('RequirementsGenerator', () => {
       const req = {
         id: 'REQ-TEST-001',
         statement: 'User clicks and system SHALL respond.',
-        pattern: 'event'
+        pattern: 'event',
       };
       const errors = generator.validateEARSFormat(req);
       expect(errors.length).toBeGreaterThan(0);
@@ -189,7 +196,7 @@ describe('RequirementsGenerator', () => {
       const req = {
         id: 'REQ-TEST-001',
         statement: 'Invalid statement.',
-        pattern: 'unknown'
+        pattern: 'unknown',
       };
       const errors = generator.validateEARSFormat(req);
       expect(errors).toContain('Unknown EARS pattern');

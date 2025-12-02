@@ -27,9 +27,7 @@ describe('Platform Initialization Tests', () => {
       const templatePath = path.join(TEMPLATE_DIR, platform);
       const possibleFiles = ['AGENTS.md', 'CLAUDE.md', 'GEMINI.md', 'QWEN.md'];
 
-      const hasAgentFile = possibleFiles.some(file =>
-        fs.existsSync(path.join(templatePath, file))
-      );
+      const hasAgentFile = possibleFiles.some(file => fs.existsSync(path.join(templatePath, file)));
 
       expect(hasAgentFile).toBe(true);
     });
@@ -96,4 +94,3 @@ describe('Platform Initialization Tests', () => {
     expect(fs.existsSync(constitutionPath)).toBe(true);
   });
 });
-
