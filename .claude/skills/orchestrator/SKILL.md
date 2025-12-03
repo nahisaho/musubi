@@ -217,7 +217,7 @@ codegraph-mcpがインストールされていない場合、**ユーザーに�
 ```bash
 # 仮想環境作成とインストール
 python3 -m venv ~/codegraph-venv
-cd ~/codegraph-venv && source bin/activate && pip install codegraph-mcp
+cd ~/codegraph-venv && source bin/activate && pip install codegraph-mcp-server
 
 # 動作確認
 ~/codegraph-venv/bin/codegraph-mcp --version

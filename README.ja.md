@@ -701,7 +701,7 @@ MUSUBI v2.0.0は高度なコード分析のために**CodeGraphMCPServer**と統
 
 ```bash
 # CodeGraph MCPをグローバルインストール
-pip install codegraph-mcp
+pip install codegraph-mcp-server
 
 # Claude Codeに追加
 claude mcp add codegraph -- codegraph-mcp serve --repo .
@@ -715,7 +715,7 @@ claude mcp list
 1. **前提条件をインストール**:
 
    ```bash
-   pip install codegraph-mcp
+   pip install codegraph-mcp-server
    ```
 
 2. **VS Codeを設定** (`settings.json`):
