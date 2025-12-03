@@ -8,9 +8,17 @@ AIコーディングアシスタントの最大の課題は「**コードベー�
 
 この記事では、MUSUBI v2.0の新機能と、CodeGraph MCPの設定方法、実践的な活用例を紹介します。
 
+:::note info
+**関連記事**
+- MUSUBIの詳細: [「MUSUBI」- 7つのAIエージェント対応、25スキル搭載の究極仕様駆動開発ツール](https://qiita.com/hisaho/items/a245c2ad5adf2ab5a409)
+- CodeGraph MCP Serverの詳細: [CodeGraph MCP Server - AIコーディングアシスタントにコード理解力を与える](https://qiita.com/hisaho/items/b99ac51d78119ef60b6b)
+:::
+
 ## CodeGraph MCP Serverとは？
 
 **CodeGraph MCP Server**は、ソースコードをグラフ構造として解析し、MCP（Model Context Protocol）経由でAIエージェントに提供するサーバーです。
+
+👉 詳細は [CodeGraph MCP Serverの紹介記事](https://qiita.com/hisaho/items/b99ac51d78119ef60b6b) をご覧ください。
 
 ### 主な特徴
 
@@ -442,7 +450,14 @@ musubi-init --platform claude-code
 
 ## 関連リンク
 
-- [MUSUBI GitHub](https://github.com/nahisaho/musubi)
+### Qiita記事
+
+- 📚 [MUSUBI - 7つのAIエージェント対応、25スキル搭載の究極仕様駆動開発ツール](https://qiita.com/hisaho/items/a245c2ad5adf2ab5a409)
+- 📊 [CodeGraph MCP Server - AIコーディングアシスタントにコード理解力を与える](https://qiita.com/hisaho/items/b99ac51d78119ef60b6b)
+
+### GitHub
+
+- [MUSUBI](https://github.com/nahisaho/musubi)
 - [CodeGraph MCP Server](https://github.com/nahisaho/CodeGraphMCPServer)
 - [MCP (Model Context Protocol)](https://modelcontextprotocol.io/)
 
