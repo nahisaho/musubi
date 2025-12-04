@@ -22,14 +22,65 @@ This guide defines the standard workflow for Specification Driven Development us
 
 ```mermaid
 graph LR
-    A[Research] -->|Optional| B[Requirements]
+    A[Spike] -->|Optional| B[Requirements]
     B --> C[Design]
     C --> D[Tasks]
     D --> E[Implementation]
-    E --> F[Testing]
-    F --> G[Deployment]
-    G --> H[Monitoring]
+    E --> F[Review]
+    F --> G[Testing]
+    G --> H[Deployment]
+    H --> I[Monitoring]
+    I --> J[Retrospective]
+    J -.->|Next Iteration| B
 ```
+
+---
+
+## Stage 0: Spike / PoC (Optional)
+
+**When to use**: 技術的な不確実性が高い場合、新技術の評価が必要な場合
+
+**Agent**: `@software-developer`, `@system-architect`
+
+**Output**: 
+- `spike-{topic}.md` - 調査結果と結論
+- PoC コード（使い捨て可）
+
+**Purpose**:
+- 技術的実現可能性の検証
+- パフォーマンス特性の確認
+- ライブラリ/フレームワークの評価
+- リスクの早期発見
+
+**Timeboxing**: 最大 1-2 日（超える場合は分割）
+
+**Completion Criteria**:
+- [ ] 技術的な質問に回答できた
+- [ ] Go/No-Go の判断ができた
+- [ ] リスクと制約が明確になった
+- [ ] 次のステップが決まった
+
+**Output Format**:
+```markdown
+# Spike: [Topic]
+
+## Question
+何を検証するのか？
+
+## Approach
+どのように検証したか？
+
+## Findings
+何がわかったか？
+
+## Recommendation
+推奨事項と次のステップ
+
+## Time Spent
+実際にかかった時間
+```
+
+**Next Stage**: Requirements Definition
 
 ---
 
@@ -204,6 +255,53 @@ graph LR
 - Follow SOLID principles
 - Use design patterns from `steering/structure.md`
 
+**Next Stage**: Code Review
+
+---
+
+## Stage 5.5: Code Review
+
+**Agent**: `@code-reviewer`, `@security-auditor`
+
+**Input**:
+- Implementation code
+- Unit tests
+- Design document
+- Requirements document
+
+**Output**:
+- レビューコメント
+- 承認/修正要求
+- セキュリティ指摘事項
+
+**Purpose**:
+- コード品質の確保
+- 設計との整合性確認
+- セキュリティ脆弱性の検出
+- 知識共有とメンタリング
+
+**Review Checklist**:
+- [ ] コードが設計に準拠している
+- [ ] SOLID 原則に従っている
+- [ ] エラーハンドリングが適切
+- [ ] セキュリティ考慮事項が実装されている
+- [ ] テストが十分
+- [ ] ドキュメントが更新されている
+- [ ] パフォーマンス問題がない
+
+**MCP Tools** (CodeGraph 利用時):
+- `find_callers` - 変更の影響範囲確認
+- `find_dependencies` - 依存関係の確認
+- `query_codebase` - 類似コードの検索
+
+**Review Types**:
+
+| タイプ | 目的 | 時間目安 |
+|--------|------|---------|
+| **Quick Review** | 小さな変更、バグ修正 | 15-30分 |
+| **Standard Review** | 機能追加 | 1-2時間 |
+| **Deep Review** | アーキテクチャ変更、セキュリティ | 半日 |
+
 **Next Stage**: Testing
 
 ---
@@ -302,6 +400,69 @@ graph LR
 - [ ] NFRs being met (response time, uptime, etc.)
 - [ ] Security vulnerabilities addressed
 - [ ] Performance optimized
+
+**Next Stage**: Retrospective
+
+---
+
+## Stage 9: Retrospective
+
+**Agent**: `@project-manager`, `@orchestrator`
+
+**When to run**: 
+- 各スプリント/イテレーション終了時
+- 機能リリース後
+- 重大インシデント後
+
+**Input**:
+- 完了した要件/タスク
+- インシデントレポート
+- チームフィードバック
+- メトリクス
+
+**Output**:
+- `steering/memories/lessons_learned.md` への追記
+- 改善アクションアイテム
+- ワークフロー改善提案
+
+**Purpose**:
+- プロセスの継続的改善
+- 知識の蓄積と共有
+- チームの成長
+
+**Retrospective Format**:
+
+```markdown
+## [YYYY-MM-DD] Sprint/Release X.X 振り返り
+
+### 📊 Metrics
+- 要件数: X
+- タスク完了率: X%
+- バグ発見（テスト時/本番）: X/X
+- 手戻り回数: X
+- リードタイム: X 日
+
+### 👍 What Went Well
+- [良かった点]
+
+### 🔧 What Could Be Improved
+- [改善点]
+
+### 💡 Insights
+- [気づき、学び]
+
+### 📋 Action Items
+- [ ] [具体的な改善アクション]
+- [ ] [担当者: XXX、期限: YYYY-MM-DD]
+```
+
+**Discussion Questions**:
+1. ワークフローのどこがボトルネックだったか？
+2. どのステージで手戻りが発生したか？
+3. 事前に防げた問題はあったか？
+4. 次回改善できることは何か？
+
+**Next Stage**: 次のイテレーションの Requirements へ
 
 ---
 

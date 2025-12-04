@@ -8,13 +8,20 @@
 
 MUSUBI is a comprehensive SDD (Specification Driven Development) framework that synthesizes the best features from 6 leading frameworks into a production-ready tool for multiple AI coding agents.
 
-## 🚀 What's New in v2.0.0
+## 🚀 What's New in v2.1.0
+
+- 🔄 **Workflow Engine** - New `musubi-workflow` CLI for stage management and metrics
+- 📊 **Metrics Collection** - Track time per stage, iteration counts, feedback loops
+- 🔬 **Spike/PoC Stage** - Stage 0 for research and prototyping before requirements
+- 👀 **Code Review Stage** - Stage 5.5 between implementation and testing
+- 🔄 **Retrospective Stage** - Stage 9 for continuous improvement
+- ✅ **Stage Validation Guide** - Checklists for stage transition validation
+
+### Previous (v2.0.0)
 
 - 🔌 **CodeGraphMCPServer Integration** - 14 MCP tools for enhanced code analysis
 - 🧠 **GraphRAG-Powered Search** - Semantic code understanding with Louvain community detection
 - 🔍 **11 Agents Enhanced** - Key agents now leverage MCP tools for deeper code analysis
-- 📊 **Dependency Analysis** - `find_dependencies`, `find_callers`, `analyze_module_structure`
-- 🎯 **Smart Code Navigation** - `local_search`, `global_search`, `query_codebase`
 
 ## Features
 

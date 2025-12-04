@@ -5,6 +5,63 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-12-05
+
+### Added - Workflow Engine & Enhanced SDD Stages 🔄
+
+**MUSUBI v2.1.0 introduces a comprehensive Workflow Engine** for managing SDD stages, tracking metrics, and enabling continuous improvement.
+
+#### New CLI: `musubi-workflow`
+
+```bash
+# Initialize workflow for a feature
+musubi-workflow init <feature-name>
+
+# Check current status
+musubi-workflow status
+
+# Transition to next stage
+musubi-workflow next design
+
+# Record feedback loop
+musubi-workflow feedback review implementation -r "Refactoring needed"
+
+# Complete workflow with summary
+musubi-workflow complete
+
+# View history and metrics
+musubi-workflow history
+musubi-workflow metrics
+```
+
+#### New SDD Stages
+
+- **Stage 0: Spike/PoC** - Research and prototyping before requirements
+- **Stage 5.5: Code Review** - Structured review between implementation and testing
+- **Stage 9: Retrospective** - Continuous improvement after monitoring
+
+#### Workflow Features
+
+- **State Management** - Track current stage per feature in `storage/workflow-state.yml`
+- **Metrics Collection** - Time per stage, iteration counts, feedback loops
+- **Valid Transitions** - Enforced stage transitions with feedback loop support
+- **Stage Validation Guide** - Checklists for each stage transition
+
+#### New Files
+
+- `src/managers/workflow.js` - Workflow engine core
+- `bin/musubi-workflow.js` - CLI for workflow management
+- `steering/rules/stage-validation.md` - Stage validation checklists
+- `tests/managers/workflow.test.js` - 13 tests for workflow engine
+
+#### Updated Files
+
+- `steering/rules/workflow.md` - Added Spike, Review, Retrospective stages
+- `steering/memories/lessons_learned.md` - Added retrospective template
+- `package.json` - Added `musubi-workflow` binary
+
+---
+
 ## [2.0.6] - 2025-12-04
 
 ### Fixed - CodeGraph MCP Install Always Updates to Latest
