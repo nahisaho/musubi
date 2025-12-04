@@ -216,7 +216,7 @@ program
         return;
       }
 
-      const newState = await engine.transitionTo(stage, options.notes);
+      await engine.transitionTo(stage, options.notes);
       console.log(chalk.green(`\n✅ Transitioned to ${formatStage(stage)}`));
     } catch (error) {
       console.error(chalk.red(`\n❌ Error: ${error.message}`));

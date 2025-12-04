@@ -264,12 +264,13 @@ class WorkflowEngine {
         case 'feedback_loop':
           summary.feedbackLoops++;
           break;
-        case 'stage_transition':
+        case 'stage_transition': {
           summary.stageTransitions++;
           const to = m.data.to;
           summary.stageStats[to] = summary.stageStats[to] || { visits: 0 };
           summary.stageStats[to].visits++;
           break;
+        }
       }
     });
 
