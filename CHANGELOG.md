@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.5] - 2025-12-04
+
+### Changed - CodeGraph MCP Installation Method
+
+- **Switch to pipx installation** (recommended over venv + pip)
+  - Simpler installation: `pipx install codegraph-mcp-server`
+  - No need for virtual environment management
+  - Commands available globally without path prefix
+
+- **VS Code MCP configuration updated**
+  - Changed from `settings.json` to `.vscode/mcp.json` format
+  - Updated JSON structure with `servers` and `type: "stdio"`
+
+- **Simplified command paths**
+  - Removed `~/codegraph-venv/bin/` prefix from all commands
+  - Direct `codegraph-mcp` command usage
+
+- **Updated documentation**:
+  - `src/templates/agents/claude-code/skills/orchestrator/SKILL.md`
+  - `.claude/skills/orchestrator/SKILL.md`
+  - `README.md` and `README.ja.md`
+  - `docs/Qiita/MUSUBI-CodeGraph-MCP-Integration.md`
+
+---
+
 ## [2.0.1] - 2025-12-03
 
 ### Fixed - Orchestrator CodeGraph MCP Auto-Setup
