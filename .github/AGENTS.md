@@ -10,6 +10,17 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 ## MCP Server Integration
 
+### CodeGraph MCP Server セットアップ
+
+以下のフレーズで CodeGraph MCP Server をインストール・設定できます：
+
+- `CodeGraph MCP Server をインストールして`
+- `CodeGraph MCP をインストールして`
+- `CodeGraph MCP を設定して`
+- `CodeGraph をセットアップして`
+
+詳細は `.github/prompts/setup-codegraph.md` を参照。
+
 ### CodeGraphMCPServer
 
 When CodeGraphMCPServer is available, agents can leverage these tools for enhanced code understanding:

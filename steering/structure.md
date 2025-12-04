@@ -1,17 +1,19 @@
 # Project Structure
 
 **Project**: musubi
-**Last Updated**: 2025-12-04
-**Version**: 1.0
+**Last Updated**: 2025-12-05
+**Version**: 2.0.6
 
 ---
 
 ## Architecture Pattern
 
-**Primary Pattern**: {{ARCHITECTURE_PATTERN}}
+**Primary Pattern**: Modular CLI Tool with Agent Registry
 
-> [Description of the architecture pattern used in this project]
-> Examples: Monorepo with Library-First, Microservices, Modular Monolith, Serverless
+> MUSUBI is a Specification Driven Development (SDD) CLI tool featuring a modular architecture with:
+> - 25 specialized agents coordinated via registry pattern
+> - Multi-platform support (7 AI coding agents)
+> - MCP (Model Context Protocol) integration with CodeGraphMCPServer
 
 ---
 
@@ -21,25 +23,93 @@
 
 ```
 musubi/
-├── lib/                  # Reusable libraries (Article I: Library-First)
-├── app/                  # Application code (Next.js, etc.)
-├── api/                  # API routes/controllers
-├── components/           # UI components
-├── services/             # Business logic services
+├── bin/                  # CLI entry points (12 commands)
+│   ├── musubi.js         # Main entry
+│   ├── musubi-init.js    # Project initialization
+│   ├── musubi-onboard.js # Automatic onboarding
+│   ├── musubi-sync.js    # Auto-sync steering
+│   ├── musubi-analyze.js # Code analysis
+│   ├── musubi-share.js   # Team collaboration
+│   ├── musubi-validate.js # Constitutional validation
+│   ├── musubi-requirements.js # EARS requirements
+│   ├── musubi-design.js  # C4/ADR design
+│   ├── musubi-tasks.js   # Task breakdown
+│   ├── musubi-trace.js   # Traceability matrix
+│   ├── musubi-gaps.js    # Gap detection
+│   └── musubi-change.js  # Change management
+├── src/                  # Source code
+│   ├── agents/           # Agent registry
+│   ├── analyzers/        # Gap detector, traceability
+│   ├── generators/       # Requirements, design, tasks
+│   ├── managers/         # Change management
+│   ├── validators/       # Constitutional validation
+│   └── templates/        # Document templates
 ├── tests/                # Test suites
 ├── docs/                 # Documentation
+│   ├── analysis/         # Framework analysis
+│   ├── guides/           # User guides
+│   ├── Qiita/            # Published articles
+│   └── requirements/     # Requirements docs
 ├── storage/              # SDD artifacts
-│   ├── specs/            # Requirements, design, tasks
-│   ├── changes/          # Delta specifications (brownfield)
-│   └── validation/       # Validation reports
+│   └── specs/            # Generated specifications
 ├── steering/             # Project memory (this directory)
 │   ├── structure.md      # This file
 │   ├── tech.md           # Technology stack
 │   ├── product.md        # Product context
-│   └── rules/            # Constitutional governance
-├── templates/            # Document templates
-└── [Other directories]
+│   ├── rules/            # Constitutional governance
+│   ├── memories/         # Agent memories
+│   └── templates/        # Steering templates
+├── orchestrator/         # Orchestration reports
+│   └── reports/          # Reorganization summaries
+└── coverage/             # Test coverage reports
 ```
+
+---
+
+## Source Code Organization
+
+### src/ Directory Structure
+
+```
+src/
+├── agents/               # Agent Management
+│   └── registry.js       # 25 agents registry for 7 platforms
+├── analyzers/            # Analysis Tools
+│   ├── gap-detector.js   # Orphaned requirements detection
+│   └── traceability.js   # Requirement → Code mapping
+├── generators/           # Document Generators
+│   ├── requirements.js   # EARS requirements generator
+│   ├── design.js         # C4/ADR design generator
+│   └── tasks.js          # Task breakdown generator
+├── managers/             # Resource Management
+│   └── change.js         # Delta specification management
+├── validators/           # Validation Tools
+│   └── constitution.js   # 9 Articles compliance checker
+└── templates/            # Document Templates
+    └── [template files]
+```
+
+---
+
+## CLI Commands (bin/)
+
+All 12 CLI commands with their purposes:
+
+| Command | Purpose |
+|---------|---------|
+| `musubi` | Main entry, help display |
+| `musubi-init` | Initialize MUSUBI for project |
+| `musubi-onboard` | Auto-analyze and generate steering |
+| `musubi-sync` | Sync steering with codebase changes |
+| `musubi-analyze` | Quality metrics, complexity analysis |
+| `musubi-share` | Team collaboration, memory sharing |
+| `musubi-validate` | Constitutional compliance check |
+| `musubi-requirements` | Generate EARS requirements |
+| `musubi-design` | Generate C4 models and ADRs |
+| `musubi-tasks` | Break down into implementation tasks |
+| `musubi-trace` | Generate traceability matrix |
+| `musubi-gaps` | Detect specification gaps |
+| `musubi-change` | Brownfield change management |
 
 ---
 

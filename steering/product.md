@@ -1,42 +1,54 @@
 # Product Context
 
 **Project**: musubi
-**Last Updated**: 2025-12-04
-**Version**: 1.0
+**Last Updated**: 2025-12-05
+**Version**: 2.0.6
 
 ---
 
 ## Product Vision
 
-**Vision Statement**: {{VISION_STATEMENT}}
+**Vision Statement**: Empower development teams with AI-assisted Specification Driven Development that ensures quality, traceability, and constitutional governance across all major AI coding platforms.
 
-> [1-2 paragraph description of what this product aims to achieve and why it exists]
+> MUSUBI aims to be the definitive SDD framework that bridges human requirements and AI-generated code, providing complete traceability from requirements through design to implementation while enforcing quality through constitutional governance.
 
-**Mission**: {{MISSION_STATEMENT}}
-
-> [How the product achieves its vision]
+**Mission**: Synthesize the best practices from 6 leading SDD frameworks into a production-ready tool that works with 7 AI coding agents, enabling teams to maintain high-quality software development practices in the AI-assisted era.
 
 ---
 
 ## Product Overview
 
-### What is musubi?
+### What is MUSUBI?
 
-A software project using MUSUBI SDD
+MUSUBI (Ultimate Specification Driven Development) is a comprehensive SDD framework and CLI tool that provides:
 
-> [2-3 paragraphs explaining the product, its purpose, and core value proposition]
+- **25 Specialized Agents**: Orchestrator, Steering, Requirements, Architecture, Development, Quality, Security, and Infrastructure agents
+- **Multi-Platform Support**: Works with Claude Code, GitHub Copilot, Cursor, Gemini CLI, Codex CLI, Qwen Code, and Windsurf
+- **MCP Integration**: CodeGraphMCPServer for GraphRAG-powered code analysis (v2.0.0+)
+- **Constitutional Governance**: 9 immutable articles ensuring quality standards
+
+The name MUSUBI (結び) means "connection" or "bond" in Japanese, representing the tool's role in connecting requirements to implementation.
 
 ### Problem Statement
 
-**Problem**: {{PROBLEM_STATEMENT}}
+**Problem**: AI coding assistants lack context about project requirements, design decisions, and quality standards, leading to inconsistent code that doesn't align with specifications.
 
-> [What problem does this product solve? What pain points does it address?]
+> Teams using AI coding tools struggle with:
+> - Maintaining traceability between requirements and code
+> - Ensuring consistent quality standards across AI-generated code
+> - Managing project memory and context for AI agents
+> - Bridging the gap between human specifications and AI implementation
 
 ### Solution
 
-**Solution**: {{SOLUTION_STATEMENT}}
+**Solution**: MUSUBI provides a structured framework with 25 specialized agents, constitutional governance, and automatic project memory management.
 
-> [How does this product solve the problem? What makes it unique?]
+> MUSUBI solves these problems by:
+> - Generating EARS-format requirements with complete traceability
+> - Maintaining steering documents as project memory for AI agents
+> - Enforcing 9 constitutional articles through automated validation
+> - Providing specialized agents for each development phase
+> - Integrating with CodeGraphMCPServer for deep code understanding
 
 ---
 
@@ -44,56 +56,51 @@ A software project using MUSUBI SDD
 
 ### Primary Users
 
-#### User Persona 1: {{PERSONA_1_NAME}}
+#### User Persona 1: AI-Assisted Developer
 
 **Demographics**:
-
-- **Role**: {{ROLE}}
-- **Organization Size**: {{ORG_SIZE}}
-- **Technical Level**: {{TECH_LEVEL}}
+- **Role**: Software Developer / Engineer
+- **Organization Size**: Startup to Enterprise
+- **Technical Level**: Intermediate to Advanced
 
 **Goals**:
-
-- [Goal 1]
-- [Goal 2]
-- [Goal 3]
+- Leverage AI coding assistants effectively
+- Maintain code quality and consistency
+- Ensure requirements traceability
 
 **Pain Points**:
-
-- [Pain point 1]
-- [Pain point 2]
-- [Pain point 3]
+- AI assistants lack project context
+- Generated code doesn't follow project standards
+- Difficult to trace code back to requirements
 
 **Use Cases**:
-
-- [Use case 1]
-- [Use case 2]
-- [Use case 3]
+- Initialize SDD workflow for new features
+- Generate requirements and design documents
+- Validate code against constitutional articles
 
 ---
 
-#### User Persona 2: {{PERSONA_2_NAME}}
+#### User Persona 2: Technical Lead / Architect
 
 **Demographics**:
-
-- **Role**: {{ROLE}}
-- **Organization Size**: {{ORG_SIZE}}
-- **Technical Level**: {{TECH_LEVEL}}
+- **Role**: Tech Lead, Software Architect
+- **Organization Size**: Mid-size to Enterprise
+- **Technical Level**: Expert
 
 **Goals**:
-
-- [Goal 1]
-- [Goal 2]
+- Establish consistent development standards
+- Enable team collaboration on specifications
+- Ensure architectural integrity
 
 **Pain Points**:
-
-- [Pain point 1]
-- [Pain point 2]
+- Team members use different approaches
+- Lack of visibility into specification gaps
+- Difficulty enforcing quality standards
 
 **Use Cases**:
-
-- [Use case 1]
-- [Use case 2]
+- Set up MUSUBI for entire team
+- Review traceability matrices
+- Validate constitutional compliance
 
 ---
 
