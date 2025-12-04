@@ -8,6 +8,29 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 ---
 
+## MCP Server Integration
+
+### CodeGraphMCPServer
+
+When CodeGraphMCPServer is available, agents can leverage these tools for enhanced code understanding:
+
+| MCP Tool                   | Primary Agents                                             | Usage                  |
+| -------------------------- | ---------------------------------------------------------- | ---------------------- |
+| `query_codebase`           | @orchestrator, @steering                                   | コードベース全体の検索 |
+| `find_dependencies`        | @change-impact-analyzer, @constitution-enforcer            | 依存関係分析・違反検出 |
+| `find_callers`             | @change-impact-analyzer, @test-engineer, @security-auditor | 呼び出し元追跡         |
+| `find_callees`             | @software-developer                                        | 呼び出し先追跡         |
+| `find_implementations`     | @api-designer, @system-architect                           | 実装クラス検索         |
+| `analyze_module_structure` | @system-architect, @steering                               | モジュール構造分析     |
+| `get_code_snippet`         | @software-developer, @code-reviewer                        | ソースコード取得       |
+| `global_search`            | @orchestrator, @technical-writer                           | GraphRAGグローバル検索 |
+| `local_search`             | @software-developer, @bug-hunter                           | GraphRAGローカル検索   |
+| `suggest_refactoring`      | @code-reviewer, @performance-optimizer                     | リファクタリング提案   |
+
+**Setup**: See `steering/tech.md` for MCP configuration.
+
+---
+
 ## Quick Reference
 
 | Category                            | Agents                                                                                                        |
@@ -33,7 +56,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @ai-ml-engineer Implement recommendation system using collaborative filtering
 ```
 
@@ -54,7 +77,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @api-designer Design RESTful API for blog platform with OpenAPI 3.0 spec
 ```
 
@@ -73,9 +96,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Quality
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `find_callers` - バグの影響範囲特定
+- `local_search` - ローカルコンテキストで根本原因分析
+- `get_code_snippet` - 問題のコード取得
+
 **Example Usage**:
 
-```
+```text
 @bug-hunter Investigate why users are getting 500 errors on checkout
 ```
 
@@ -94,9 +123,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Requirements
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `find_dependencies` - 変更対象の依存関係を分析
+- `find_callers` - 変更影響範囲を特定（呼び出し元追跡）
+- `query_codebase` - 関連コードの検索
+
 **Example Usage**:
 
-```
+```text
 @change-impact-analyzer Analyze impact of changing authentication library to OAuth 2.0
 ```
 
@@ -117,7 +152,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @cloud-architect Design AWS infrastructure with Terraform for high-availability web app
 ```
 
@@ -136,9 +171,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Quality
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `suggest_refactoring` - リファクタリング提案
+- `find_dependencies` - 依存関係の複雑度分析
+- `get_code_snippet` - ソースコード取得
+
 **Example Usage**:
 
-```
+```text
 @code-reviewer Review this pull request for security issues and best practices
 ```
 
@@ -157,9 +198,14 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Orchestration
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `find_dependencies` - Article I（Library-First）違反検出
+- `analyze_module_structure` - モジュール構造の憲法遵守確認
+
 **Example Usage**:
 
-```
+```text
 @constitution-enforcer Check project for constitutional compliance violations
 ```
 
@@ -180,7 +226,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @database-administrator Optimize PostgreSQL performance and create backup strategy
 ```
 
@@ -201,7 +247,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @database-schema-designer Design normalized database schema for social media app
 ```
 
@@ -222,7 +268,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @devops-engineer Create CI/CD pipeline with GitHub Actions and Docker deployment
 ```
 
@@ -241,9 +287,14 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Orchestration
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `global_search` - コードベース全体の俯瞰とコミュニティ検出
+- `query_codebase` - タスクに関連するコードの検索
+
 **Example Usage**:
 
-```
+```text
 @orchestrator Implement user authentication feature from requirements to deployment
 ```
 
@@ -264,7 +315,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @performance-optimizer Optimize database queries causing slow page load times
 ```
 
@@ -285,7 +336,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @project-manager Create project plan with WBS and Gantt chart for 3-month development
 ```
 
@@ -306,7 +357,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @quality-assurance Develop QA strategy and test plan for new feature release
 ```
 
@@ -327,7 +378,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @release-coordinator Plan release strategy with rollback procedures and deployment windows
 ```
 
@@ -348,7 +399,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @requirements-analyst Create EARS requirements for user registration with email verification
 ```
 
@@ -367,9 +418,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Security
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `find_callers` - 危険な関数の呼び出し元追跡
+- `query_codebase` - 脆弱性パターンの検索
+- `find_dependencies` - セキュリティ依存関係の分析
+
 **Example Usage**:
 
-```
+```text
 @security-auditor Audit authentication system for OWASP Top 10 vulnerabilities
 ```
 
@@ -390,7 +447,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @site-reliability-engineer Set up monitoring, alerting, and SLO tracking for production
 ```
 
@@ -409,9 +466,16 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Development
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `get_code_snippet` - 既存コードの参照
+- `find_callees` - 呼び出し先の確認
+- `local_search` - 類似実装パターンの発見
+- `query_codebase` - 関連コードの検索
+
 **Example Usage**:
 
-```
+```text
 @software-developer Implement user login API with JWT authentication and unit tests
 ```
 
@@ -430,9 +494,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Orchestration
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `global_search` - コードベース構造の理解
+- `analyze_module_structure` - モジュール構造の分析
+- `query_codebase` - 技術スタックの検出
+
 **Example Usage**:
 
-```
+```text
 @steering Analyze this codebase and generate project steering context
 ```
 
@@ -451,9 +521,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Architecture
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `global_search` - コミュニティ検出でモジュール境界を発見
+- `analyze_module_structure` - モジュール構造分析
+- `find_dependencies` - コンポーネント間依存関係の可視化
+
 **Example Usage**:
 
-```
+```text
 @system-architect Design microservices architecture for e-commerce platform with C4 diagrams
 ```
 
@@ -474,7 +550,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @technical-writer Write API documentation and user guide for REST API
 ```
 
@@ -493,9 +569,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Quality
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `find_callers` - テストカバレッジの自動判定
+- `find_dependencies` - 未テストコードパスの発見
+- `query_codebase` - テスト対象の検索
+
 **Example Usage**:
 
-```
+```text
 @test-engineer Create comprehensive test suite for payment processing module
 ```
 
@@ -514,9 +596,15 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Category**: Quality
 
+**MCP Tools** (when CodeGraphMCPServer available):
+
+- `query_codebase` - 要件IDでコードベースを検索
+- `find_callers` - 要件→コード→テストのマッピング検証
+- `find_dependencies` - トレーサビリティチェーンの確認
+
 **Example Usage**:
 
-```
+```text
 @traceability-auditor Verify requirements traceability from specs to tests
 ```
 
@@ -537,7 +625,7 @@ This file defines 25 specialized AI agents for Specification Driven Development 
 
 **Example Usage**:
 
-```
+```text
 @ui-ux-designer Create wireframes and prototypes for mobile shopping app
 ```
 
@@ -570,7 +658,7 @@ Use `@constitution-enforcer` to validate compliance.
 
 ### Greenfield Projects (New Development)
 
-```
+```text
 1. @steering          → Generate project memory (structure.md, tech.md, product.md)
 2. @requirements-analyst → Create EARS requirements
 3. @system-architect  → Design architecture with C4 diagrams
@@ -586,7 +674,7 @@ Use `@constitution-enforcer` to validate compliance.
 
 ### Brownfield Projects (Existing Codebase)
 
-```
+```text
 1. @change-impact-analyzer → Analyze change impact
 2. @requirements-analyst   → Document change requirements
 3. @system-architect       → Update architecture if needed
@@ -610,7 +698,7 @@ Use `@constitution-enforcer` to validate compliance.
 
 For complex tasks spanning multiple domains, use:
 
-```
+```text
 @orchestrator [Your complex request]
 ```
 
@@ -625,7 +713,7 @@ The orchestrator will:
 
 **Example**:
 
-```
+```text
 @orchestrator Implement a secure payment processing feature with API, database, tests, and deployment pipeline
 ```
 

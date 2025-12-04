@@ -243,11 +243,11 @@ Orchestratorが以下を自動実行：
 #### Step 1: インストール
 
 ```bash
-# PyPIからインストール
-pip install codegraph-mcp-server
+# pipxでインストール（推奨）
+pipx install codegraph-mcp-server
 
 # または GitHub から最新版
-pip install git+https://github.com/nahisaho/CodeGraphMCPServer.git
+pipx install git+https://github.com/nahisaho/CodeGraphMCPServer.git
 ```
 
 #### Step 2: プロジェクトのインデックス作成

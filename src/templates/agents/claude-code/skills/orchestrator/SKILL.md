@@ -170,29 +170,32 @@ Orchestratorは **CodeGraphMCPServer** を活用して、コードベースの�
 まず現在の状態を確認：
 
 ```bash
-which python3 && python3 --version
+which pipx 2>/dev/null || echo "pipx not installed"
 which codegraph-mcp 2>/dev/null || echo "codegraph-mcp not installed"
 ```
+
+> **Note**: pipxがインストールされていない場合は、先に `pip install pipx && pipx ensurepath` を実行してください。
 
 #### Step 2: インストール実行
 
 codegraph-mcpがインストールされていない場合、**ユーザーに確認後、以下を実行**：
 
 ```bash
-# 仮想環境作成とインストール
-python3 -m venv ~/codegraph-venv
-cd ~/codegraph-venv && source bin/activate && pip install codegraph-mcp
+# pipxでインストール（推奨）
+pipx install codegraph-mcp-server
 
 # 動作確認
-~/codegraph-venv/bin/codegraph-mcp --version
+codegraph-mcp --version
 ```
+
+> **Note**: pipxがインストールされていない場合は、先に `pip install pipx && pipx ensurepath` を実行してください。
 
 #### Step 3: プロジェクトインデックス作成
 
 インストール完了後、**現在のプロジェクトをインデックス**：
 
 ```bash
-~/codegraph-venv/bin/codegraph-mcp index "${workspaceFolder}" --full
+codegraph-mcp index "${workspaceFolder}" --full
 ```
 
 #### Step 4: 設定ファイル作成（オプション選択）
@@ -202,16 +205,17 @@ cd ~/codegraph-venv && source bin/activate && pip install codegraph-mcp
 **a) Claude Code の場合**:
 
 ```bash
-claude mcp add codegraph -- ~/codegraph-venv/bin/codegraph-mcp serve --repo ${workspaceFolder}
+claude mcp add codegraph -- codegraph-mcp serve --repo ${workspaceFolder}
 ```
 
-**b) VS Code の場合** - `.vscode/settings.json` を作成/更新：
+**b) VS Code の場合** - `.vscode/mcp.json` を作成/更新：
 
 ```json
 {
-  "mcp.servers": {
+  "servers": {
     "codegraph": {
-      "command": "~/codegraph-venv/bin/codegraph-mcp",
+      "type": "stdio",
+      "command": "codegraph-mcp",
       "args": ["serve", "--repo", "${workspaceFolder}"]
     }
   }
@@ -224,7 +228,7 @@ claude mcp add codegraph -- ~/codegraph-venv/bin/codegraph-mcp serve --repo ${wo
 {
   "mcpServers": {
     "CodeGraph": {
-      "command": "~/codegraph-venv/bin/codegraph-mcp",
+      "command": "codegraph-mcp",
       "args": ["serve", "--repo", "/absolute/path/to/project"]
     }
   }
@@ -235,9 +239,9 @@ claude mcp add codegraph -- ~/codegraph-venv/bin/codegraph-mcp serve --repo ${wo
 
 **重要**: 「CodeGraph MCP を設定して」と依頼された場合、以下を順番に実行：
 
-1. ✅ Python環境確認（`which python3`）
+1. ✅ pipx確認（`which pipx`）
 2. ✅ 既存インストール確認（`which codegraph-mcp`）
-3. ✅ 未インストールなら venv 作成・pip install 実行
+3. ✅ 未インストールなら pipx install 実行
 4. ✅ 現在のプロジェクトをインデックス（`codegraph-mcp index --full`）
 5. ✅ 統計表示（`codegraph-mcp stats`）
 6. ✅ 使用環境を確認し、設定ファイル作成
