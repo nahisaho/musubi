@@ -1,7 +1,7 @@
 # Project Structure
 
 **Project**: musubi
-**Last Updated**: 2025-12-04
+**Last Updated**: 2025-12-07
 **Version**: 1.0
 
 ---
@@ -404,5 +404,20 @@ This structure enforces:
 
 ---
 
-**Last Updated**: 2025-12-04
+**Last Updated**: 2025-12-07
 **Maintained By**: {{MAINTAINER}}
+
+
+## New Directories (Detected 2025-12-07)
+
+```
+tests/
+templates/
+storage/
+steering/
+orchestrator/
+docs/
+coverage/
+bin/
+References/
+```
