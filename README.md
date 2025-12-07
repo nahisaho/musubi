@@ -1,14 +1,75 @@
-# MUSUBI
+<div align="center">
+
+# 🎋 MUSUBI
+
+**Ultimate Specification Driven Development Tool**
 
 [![CI](https://github.com/nahisaho/musubi/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/musubi/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
+[![npm downloads](https://img.shields.io/npm/dm/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
-> Ultimate Specification Driven Development Tool for 7 AI Coding Agents + MCP Integration
+[English](README.md) | [日本語](README.ja.md) | [Documentation](docs/) | [npm](https://www.npmjs.com/package/musubi-sdd)
 
-MUSUBI is a comprehensive SDD (Specification Driven Development) framework that synthesizes the best features from 6 leading frameworks into a production-ready tool for multiple AI coding agents.
+</div>
 
-## 🚀 What's New in v2.1.0
+---
+
+> 🤖 **7 AI Coding Agents** × 📋 **25 Specialized Skills** × ⚖️ **Constitutional Governance**
+
+MUSUBI (結び - "connection/binding") is a comprehensive **Specification Driven Development (SDD)** framework that synthesizes the best features from 6 leading frameworks into a production-ready tool for multiple AI coding agents.
+
+<!-- TODO: Add demo GIF here
+![MUSUBI Demo](docs/assets/demo.gif)
+-->
+
+## ✨ Why MUSUBI?
+
+| Challenge | MUSUBI Solution |
+|-----------|-----------------|
+| 🔀 Fragmented AI tools | **7 agents, 1 unified workflow** |
+| 📝 Ambiguous requirements | **EARS format with 5 patterns** |
+| 🔍 Lost traceability | **100% Req→Design→Code→Test mapping** |
+| ⚠️ Quality inconsistency | **9 Constitutional Articles + Phase -1 Gates** |
+| 🔄 Brownfield challenges | **Delta specs + Change management** |
+
+## 🚀 Quick Start
+
+```bash
+# Install and initialize in 30 seconds
+npx musubi-sdd init
+
+# For existing projects - auto-analyze and generate steering docs
+npx musubi-sdd onboard
+
+# That's it! Now use your AI agent with SDD commands:
+# Claude Code: /sdd-requirements, /sdd-design, /sdd-implement
+# GitHub Copilot: #sdd-requirements, #sdd-design, #sdd-implement
+```
+
+<details>
+<summary>📦 More installation options</summary>
+
+```bash
+# Global installation
+npm install -g musubi-sdd
+
+# Initialize for specific AI agent
+musubi init --copilot   # GitHub Copilot
+musubi init --cursor    # Cursor IDE
+musubi init --gemini    # Gemini CLI
+musubi init --codex     # Codex CLI
+musubi init --qwen      # Qwen Code
+musubi init --windsurf  # Windsurf IDE
+```
+
+</details>
+
+---
+
+## 📊 What's New in v2.1.0
 
 - 🔄 **Workflow Engine** - New `musubi-workflow` CLI for stage management and metrics
 - 📊 **Metrics Collection** - Track time per stage, iteration counts, feedback loops
@@ -1043,6 +1104,15 @@ musubi init
 
 Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
+## ⭐ Support
+
+If you find MUSUBI useful, please consider:
+
+- ⭐ **Star this repository** - It helps others discover MUSUBI
+- 🐛 **Report issues** - Help us improve
+- 💡 **Suggest features** - We value your ideas
+- 📝 **Share your experience** - Write about MUSUBI on your blog
+
 ## License
 
 MIT License - see [LICENSE](LICENSE) for details.
@@ -1058,13 +1128,22 @@ MUSUBI synthesizes features from:
 - **cc-sdd** - P-label parallelization, validation gates
 - **spec-kit** - Constitutional governance, test-first
 
-## Learn More
+## 📚 Learn More
 
-- [Documentation](https://musubi-sdd.dev)
-- [Blueprint](Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md)
-- [Project Plan](PROJECT-PLAN-MUSUBI.md)
-- [Framework Comparison](SDD-Framework-Comparison-Report.md)
+- [📖 Documentation](docs/)
+- [📋 SRS v3.0.0](docs/requirements/srs/srs-musubi-v3.0.0.md)
+- [📅 Project Plan v3.0.0](docs/plans/project-plan-v3.0.0.md)
+- [🏗️ Blueprint](Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md)
+- [📊 Project Plan](PROJECT-PLAN-MUSUBI.md)
 
 ---
 
-**MUSUBI** - むすび - Bringing specifications, design, and code together.
+<div align="center">
+
+**🎋 MUSUBI** - むすび - Bringing specifications, design, and code together.
+
+[![GitHub stars](https://img.shields.io/github/stars/nahisaho/musubi?style=social)](https://github.com/nahisaho/musubi)
+
+Made with ❤️ for the AI Coding Community
+
+</div>

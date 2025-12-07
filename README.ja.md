@@ -1,10 +1,75 @@
-# MUSUBI
+<div align="center">
 
-> 7つのAIコーディングエージェント向け究極の仕様駆動開発ツール + MCP統合
+# 🎋 MUSUBI
 
-MUSUBIは、6つの主要フレームワークのベスト機能を統合した包括的なSDD（仕様駆動開発）フレームワークであり、複数のAIコーディングエージェントに対応した本番環境対応ツールです。
+**究極の仕様駆動開発ツール**
 
-## 🚀 v2.1.0 の新機能
+[![CI](https://github.com/nahisaho/musubi/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/musubi/actions/workflows/ci.yml)
+[![npm version](https://badge.fury.io/js/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
+[![npm downloads](https://img.shields.io/npm/dm/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)](https://nodejs.org)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
+
+[English](README.md) | [日本語](README.ja.md) | [ドキュメント](docs/) | [npm](https://www.npmjs.com/package/musubi-sdd)
+
+</div>
+
+---
+
+> 🤖 **7つのAIエージェント** × 📋 **25の専門スキル** × ⚖️ **憲法ガバナンス**
+
+MUSUBI（結び）は、6つの主要フレームワークのベスト機能を統合した包括的な**仕様駆動開発（SDD）**フレームワークです。複数のAIコーディングエージェントに対応した本番環境対応ツールです。
+
+<!-- TODO: デモGIFをここに追加
+![MUSUBI Demo](docs/assets/demo.gif)
+-->
+
+## ✨ なぜMUSUBI？
+
+| 課題 | MUSUBIのソリューション |
+|------|----------------------|
+| 🔀 AIツールの分断 | **7エージェント、1つの統一ワークフロー** |
+| 📝 曖昧な要件定義 | **5パターンのEARS形式** |
+| 🔍 トレーサビリティの喪失 | **100% 要件→設計→コード→テスト追跡** |
+| ⚠️ 品質の不一致 | **9つの憲法条項 + フェーズ-1ゲート** |
+| 🔄 既存プロジェクトの課題 | **差分仕様 + 変更管理** |
+
+## 🚀 クイックスタート
+
+```bash
+# 30秒でインストール＆初期化
+npx musubi-sdd init
+
+# 既存プロジェクト向け - 自動分析とステアリングドキュメント生成
+npx musubi-sdd onboard
+
+# 完了！AIエージェントでSDDコマンドを使用:
+# Claude Code: /sdd-requirements, /sdd-design, /sdd-implement
+# GitHub Copilot: #sdd-requirements, #sdd-design, #sdd-implement
+```
+
+<details>
+<summary>📦 その他のインストールオプション</summary>
+
+```bash
+# グローバルインストール
+npm install -g musubi-sdd
+
+# 特定のAIエージェント向けに初期化
+musubi init --copilot   # GitHub Copilot
+musubi init --cursor    # Cursor IDE
+musubi init --gemini    # Gemini CLI
+musubi init --codex     # Codex CLI
+musubi init --qwen      # Qwen Code
+musubi init --windsurf  # Windsurf IDE
+```
+
+</details>
+
+---
+
+## 📊 v2.1.0 の新機能
 
 - 🔄 **ワークフローエンジン** - ステージ管理とメトリクス収集の新CLI `musubi-workflow`
 - 📊 **メトリクス収集** - ステージごとの所要時間、イテレーション回数、フィードバックループを追跡
@@ -837,6 +902,15 @@ musubi init
 
 貢献を歓迎します！ガイドラインについては[CONTRIBUTING.md](CONTRIBUTING.md)を参照してください。
 
+## ⭐ サポート
+
+MUSUBIが役立つと感じたら、ぜひ：
+
+- ⭐ **このリポジトリにスターを** - 他の人がMUSUBIを発見する助けになります
+- 🐛 **問題を報告** - 改善にご協力ください
+- 💡 **機能を提案** - あなたのアイデアを大切にします
+- 📝 **体験を共有** - ブログでMUSUBIについて書いてください
+
 ## ライセンス
 
 MITライセンス - 詳細は[LICENSE](LICENSE)を参照してください。
@@ -852,13 +926,22 @@ MUSUBIは以下のフレームワークから機能を統合しています。
 - **cc-sdd** - Pラベル並列化、検証ゲート
 - **spec-kit** - 憲法ガバナンス、テストファースト
 
-## 詳細情報
+## 📚 詳細情報
 
-- [ドキュメント](https://musubi-sdd.dev)
-- [ブループリント](Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md)
-- [プロジェクト計画](PROJECT-PLAN-MUSUBI.md)
-- [フレームワーク比較](SDD-Framework-Comparison-Report.md)
+- [📖 ドキュメント](docs/)
+- [📋 SRS v3.0.0](docs/requirements/srs/srs-musubi-v3.0.0.ja.md)
+- [📅 プロジェクト計画 v3.0.0](docs/plans/project-plan-v3.0.0.ja.md)
+- [🏗️ ブループリント](Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md)
+- [📊 プロジェクト計画](PROJECT-PLAN-MUSUBI.md)
 
 ---
 
-**MUSUBI** - むすび - 仕様、設計、コードを結びつける。
+<div align="center">
+
+**🎋 MUSUBI** - むすび - 仕様、設計、コードを結びつける。
+
+[![GitHub stars](https://img.shields.io/github/stars/nahisaho/musubi?style=social)](https://github.com/nahisaho/musubi)
+
+Made with ❤️ for the AI Coding Community
+
+</div>
