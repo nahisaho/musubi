@@ -21,7 +21,8 @@
     "musubi-workflow": "bin/musubi-workflow.js",
     "musubi-remember": "bin/musubi-remember.js",
     "musubi-resolve": "bin/musubi-resolve.js",
-    "musubi-convert": "bin/musubi-convert.js"
+    "musubi-convert": "bin/musubi-convert.js",
+    "musubi-browser": "bin/musubi-browser.js"
   },
   "scripts": {
     "test": "jest",
@@ -59,7 +60,8 @@
     "fs-extra": "^11.3.2",
     "glob": "^10.5.0",
     "inquirer": "^9.0.0",
-    "js-yaml": "^4.1.0"
+    "js-yaml": "^4.1.0",
+    "playwright": "^1.40.0"
   },
   "devDependencies": {
     "eslint": "^8.50.0",
