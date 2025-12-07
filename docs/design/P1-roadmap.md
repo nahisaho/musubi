@@ -6,16 +6,48 @@
 
 ### P1 要件一覧
 
-| ID | 要件名 | 工数 | 依存関係 | ターゲット |
-|----|--------|------|----------|-----------|
-| REQ-P1-001 | Browser Automation Agent | 4週間 | なし | v2.5.0 |
-| REQ-P1-002 | Web GUI Dashboard | 4週間 | なし | v2.6.0 |
-| REQ-P1-003 | VS Code Extension | 3週間 | なし | v2.7.0 |
-| REQ-P1-004 | Spec Kit Compatibility | 3週間 | なし | v2.8.0 |
+| ID | 要件名 | 工数 | 依存関係 | ターゲット | 状態 |
+|----|--------|------|----------|-----------|------|
+| REQ-P1-001 | Browser Automation Agent | 4週間 | なし | v3.0.0 | ✅ 完了 |
+| REQ-P1-002 | Web GUI Dashboard | 4週間 | なし | v3.0.0 | ✅ 完了 |
+| REQ-P1-003 | VS Code Extension | 3週間 | なし | v2.2.0 | ✅ 完了 |
+| REQ-P1-004 | Spec Kit Compatibility | 3週間 | なし | v2.2.0 | ✅ 完了 |
 
-**合計工数**: 14週間（約3.5ヶ月）
+**全 P1 要件完了** 🎉
 
-## タイムライン
+## 完了サマリー
+
+### REQ-P1-001 Browser Automation Agent ✅
+- **コミット**: af4c26c
+- **成果物**:
+  - `src/agents/browser-agent.js` - Playwright統合
+  - `src/templates/skills/browser-agent.md` - Claude Codeスキル
+  - E2Eテスト生成、スクリーンショット比較機能
+
+### REQ-P1-002 Web GUI Dashboard ✅
+- **コミット**: 9204e3f
+- **成果物**:
+  - `bin/musubi-gui.js` - CLI (start, dev, status, matrix)
+  - `src/gui/server.js` - Express + WebSocket サーバー
+  - `src/gui/services/` - ProjectScanner, FileWatcher, WorkflowService, TraceabilityService
+  - REST API: /api/project, /api/specs, /api/traceability, /api/workflow, /api/steering
+
+### REQ-P1-003 VS Code Extension ✅
+- **公開**: VS Code Marketplace
+- **成果物**:
+  - サイドバー、ステータスバー、コマンドパレット統合
+  - SDDワークフローコマンド
+
+### REQ-P1-004 Spec Kit Compatibility ✅
+- **コミット**: 86b3721
+- **成果物**:
+  - `src/managers/speckit-manager.js` - 変換マネージャー
+  - `musubi-convert` コマンド
+  - MUSUBI ↔ Spec Kit 双方向変換
+
+---
+
+## タイムライン（実績）
 
 ```
 2025 Q1

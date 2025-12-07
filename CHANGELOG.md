@@ -5,6 +5,103 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0] - 2025-12-07
+
+### Added - P1 Feature Completion 🎉
+
+**MUSUBI v3.0.0 completes all P1 roadmap features**, introducing Browser Automation Agent and Web GUI Dashboard.
+
+#### New Features (2 Major)
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **REQ-P1-001** | Browser Automation Agent with Playwright | ✅ Complete |
+| **REQ-P1-002** | Web GUI Dashboard with real-time updates | ✅ Complete |
+| **REQ-P1-003** | VS Code Extension | ✅ Complete (v2.2.0) |
+| **REQ-P1-004** | Spec Kit Compatibility | ✅ Complete (v2.2.0) |
+
+#### Browser Automation Agent (REQ-P1-001)
+
+- **New Agent**: `browser-agent` - Playwright-based E2E testing specialist
+- **New CLI**: `musubi-browser` command for browser automation
+- **Capabilities**:
+  - E2E test scenario design and implementation
+  - Cross-browser testing (Chromium, Firefox, WebKit)
+  - Visual regression testing (screenshot comparison)
+  - Web accessibility auditing
+  - Performance measurement (Core Web Vitals)
+
+```bash
+# Run browser automation
+npx musubi-browser navigate "https://example.com"
+npx musubi-browser screenshot "/dashboard" --output dashboard.png
+npx musubi-browser test login-flow.spec.js
+```
+
+#### Web GUI Dashboard (REQ-P1-002)
+
+- **New CLI**: `musubi-gui` command with 4 subcommands
+- **New Server**: Express + WebSocket real-time server
+- **New Services**:
+  - `ProjectScanner`: Comprehensive project structure analysis (547 lines)
+  - `FileWatcher`: File system monitoring with debounce
+  - `WorkflowService`: 8-stage SDD workflow management
+  - `TraceabilityService`: Traceability matrix builder with gap detection
+
+```bash
+# Launch dashboard
+npx musubi-gui start           # Start server at localhost:3000
+npx musubi-gui dev             # Development mode with hot reload
+npx musubi-gui matrix          # Display traceability matrix
+npx musubi-gui start --port 4000  # Custom port
+```
+
+**REST API Endpoints**:
+| Endpoint | Description |
+|----------|-------------|
+| `GET /api/project` | Project overview (files, stats) |
+| `GET /api/specs` | Specifications list (EARS format) |
+| `GET /api/traceability` | Traceability matrix |
+| `GET /api/workflow` | Workflow state (8 stages) |
+| `GET /api/steering` | Steering documents |
+| `GET /api/health` | Health check |
+
+**WebSocket Events**:
+- `file:changed` - File modification notification
+- `file:added` - New file notification
+- `file:removed` - File deletion notification
+
+#### New Skills (2 total, 27 Agents now)
+
+- **browser-agent**: E2E testing with Playwright
+- **web-gui**: Dashboard visualization skill
+
+### Dependencies
+
+- Added: `express` ^4.18.2 - Web server
+- Added: `ws` ^8.14.2 - WebSocket support
+- Added: `cors` ^2.8.5 - Cross-origin support
+- Added: `gray-matter` ^4.0.3 - Frontmatter parsing
+- Added: `chokidar` ^3.5.3 - File watching
+- Added: `playwright` ^1.40.0 - Browser automation
+
+### Tests
+
+- **673 tests passing** (up from 483 in v2.2.0)
+- 190 new tests for P1 features
+  - `tests/gui/project-scanner.test.js` - 20 tests
+  - `tests/gui/file-watcher.test.js` - 16 tests
+  - `tests/gui/workflow-service.test.js` - 16 tests
+  - `tests/gui/traceability-service.test.js` - 21 tests
+  - `tests/gui/server.test.js` - 17 tests
+  - `tests/agents/browser-agent.test.js` - 100+ tests
+
+### Breaking Changes
+
+- None - fully backward compatible
+
+---
+
 ## [2.2.0] - 2025-12-07
 
 ### Added - OpenHands-Inspired Features 🤖

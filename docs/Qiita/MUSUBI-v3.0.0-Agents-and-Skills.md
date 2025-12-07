@@ -1,8 +1,13 @@
-# MUSUBI v2.2.0 完全ガイド: 25の専門AIエージェントとスキル
+# MUSUBI v3.0.0 完全ガイド: 27の専門AIエージェントとスキル
 
 ## はじめに
 
-MUSUBI (Specification Driven Development) v2.2.0は、Claude Codeを活用した仕様駆動開発フレームワークです。本記事では、MUSUBIに搭載された **25の専門AIエージェント（Skill）** について、それぞれの役割、使用可能なツール、専門領域を詳しく解説します。
+MUSUBI (Specification Driven Development) v3.0.0は、Claude Codeを活用した仕様駆動開発フレームワークです。本記事では、MUSUBIに搭載された **27の専門AIエージェント（Skill）** について、それぞれの役割、使用可能なツール、専門領域を詳しく解説します。
+
+**v3.0.0 新機能:**
+- 🌐 **Browser Agent**: 自然言語でブラウザを自動操作
+- 📊 **Web GUI Dashboard**: リアルタイムプロジェクトダッシュボード
+- 🔄 **Spec Kit互換**: GitHub Copilot Spec Kitとの相互変換
 
 ## インストール・アップグレード
 
@@ -10,20 +15,20 @@ MUSUBI (Specification Driven Development) v2.2.0は、Claude Codeを活用した
 
 ```bash
 # Claude Code用（デフォルト）
-npx musubi-sdd@2.2.0 init
+npx musubi-sdd@latest init
 
 # GitHub Copilot用
-npx musubi-sdd@2.2.0 init --copilot
+npx musubi-sdd@latest init --copilot
 
 # Cursor IDE用
-npx musubi-sdd@2.2.0 init --cursor
+npx musubi-sdd@latest init --cursor
 ```
 
 ### 既存プロジェクトのアップグレード
 
 ```bash
-# v2.2.0にアップグレード
-npx musubi-sdd@2.2.0 init
+# v3.0.0にアップグレード
+npx musubi-sdd@latest init
 
 # Skillsとコマンドが自動的に更新されます
 ```
@@ -44,7 +49,7 @@ MUSUBIでは、各専門AIを**Skill**として定義しています。各Skill�
 
 | 項目 | 内容 |
 |------|------|
-| **説明** | 25の専門AIエージェントを統括し、複雑なタスクを分解・調整 |
+| **説明** | 27の専門AIエージェントを統括し、複雑なタスクを分解・調整 |
 | **使用ツール** | Read, Write, Edit, Bash, Glob, Grep, TodoWrite |
 | **トリガーワード** | orchestrate, coordinate, multi-agent, workflow, execution plan, task breakdown, agent selection, project planning, complex task, full lifecycle, end-to-end development |
 
@@ -515,6 +520,80 @@ MUSUBIでは、各専門AIを**Skill**として定義しています。各Skill�
 
 ---
 
+## 10. P1機能（v3.0.0新機能）
+
+### 10.1 Browser Automation Agent
+
+**ブラウザ自動化テストの専門家** 🆕
+
+| 項目 | 内容 |
+|------|------|
+| **説明** | Playwrightを使用したブラウザ自動化、E2Eテスト、Web UIテスト |
+| **使用ツール** | Read, Write, Edit, Bash, Glob, Grep |
+| **トリガーワード** | browser automation, e2e test, playwright, end-to-end, web testing, UI testing, browser test, screenshot, web scraping |
+
+**専門領域:**
+- E2Eテストシナリオの設計と実装
+- クロスブラウザテスト（Chromium, Firefox, WebKit）
+- 視覚的リグレッションテスト（スクリーンショット比較）
+- Webアクセシビリティ監査
+- パフォーマンス測定（Core Web Vitals）
+
+**使用例:**
+```bash
+# E2Eテストの生成
+npx musubi-workflow --agent browser --task "ログインフローのE2Eテスト作成"
+
+# 視覚的リグレッションテスト
+npx musubi-workflow --agent browser --task "ダッシュボードのスクリーンショットテスト"
+```
+
+---
+
+### 10.2 Web GUI Dashboard
+
+**Webベースのダッシュボード** 🆕
+
+| 項目 | 内容 |
+|------|------|
+| **説明** | SDDワークフローとトレーサビリティを視覚化するWebダッシュボード |
+| **機能** | プロジェクト概要、ワークフロー状態、仕様書一覧、トレーサビリティマトリクス、憲法表示 |
+| **技術** | Express.js, WebSocket, シングルページアプリケーション |
+
+**主要機能:**
+- **プロジェクト概要**: ファイル統計、ワークフロー進捗
+- **ワークフロー可視化**: 8段階SDDワークフローの状態表示
+- **仕様書ブラウザ**: 要件・設計・タスクの検索と閲覧
+- **トレーサビリティマトリクス**: 要件カバレッジの可視化
+- **リアルタイム更新**: WebSocketによるファイル変更通知
+
+**使用例:**
+```bash
+# ダッシュボード起動
+npx musubi-gui start
+
+# 開発モード（ホットリロード）
+npx musubi-gui dev
+
+# トレーサビリティマトリクスのみ表示
+npx musubi-gui matrix
+
+# カスタムポート指定
+npx musubi-gui start --port 4000
+```
+
+**APIエンドポイント:**
+| エンドポイント | 説明 |
+|----------------|------|
+| `GET /api/project` | プロジェクト概要 |
+| `GET /api/specs` | 仕様書一覧（EARS形式） |
+| `GET /api/traceability` | トレーサビリティマトリクス |
+| `GET /api/workflow` | ワークフロー状態 |
+| `GET /api/steering` | Steeringドキュメント |
+| `GET /api/health` | ヘルスチェック |
+
+---
+
 ## 使用ツール一覧
 
 各Skillが使用できるツールは以下の通りです：
@@ -560,6 +639,7 @@ MUSUBIでは、各専門AIを**Skill**として定義しています。各Skill�
 | Change Impact Analyzer | O | O | - | O | O | O | - |
 | Constitution Enforcer | O | - | - | - | O | O | - |
 | Traceability Auditor | O | - | - | - | O | O | - |
+| Browser Automation Agent | O | O | O | O | O | O | - |
 
 ---
 

@@ -17,7 +17,7 @@
 
 ---
 
-> 🤖 **7 AI Coding Agents** × 📋 **25 Specialized Skills** × ⚖️ **Constitutional Governance**
+> 🤖 **7 AI Coding Agents** × 📋 **27 Specialized Skills** × ⚖️ **Constitutional Governance**
 
 MUSUBI (結び - "connection/binding") is a comprehensive **Specification Driven Development (SDD)** framework that synthesizes the best features from 6 leading frameworks into a production-ready tool for multiple AI coding agents.
 
