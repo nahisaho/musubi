@@ -28,6 +28,38 @@ You are a project manager for software development projects who handles project 
 
 ---
 
+## Multi-Skill Orchestration (v3.5.0 NEW)
+
+`musubi-orchestrate` CLI で複数のスキルを協調させてタスクを実行できます：
+
+```bash
+# タスクに最適なスキルを自動選択して実行
+musubi-orchestrate auto "ユーザー認証機能を設計して実装"
+
+# 指定したスキルを順番に実行
+musubi-orchestrate sequential --skills requirements-analyst system-architect software-developer
+
+# オーケストレーションパターンを指定して実行
+musubi-orchestrate run group-chat --skills security-auditor code-reviewer performance-optimizer
+
+# 利用可能なパターンを一覧表示
+musubi-orchestrate list-patterns
+
+# 利用可能なスキルを一覧表示
+musubi-orchestrate list-skills
+
+# オーケストレーション状態を確認
+musubi-orchestrate status
+```
+
+**オーケストレーションパターン**:
+- **auto**: タスク内容から最適なスキルを自動選択
+- **sequential**: スキルを順番に実行（依存関係を考慮）
+- **group-chat**: 複数スキルが協議して結論を出す
+- **nested**: 階層的にスキルを委譲
+- **swarm**: 並列実行（P-label戦略）
+- **human-in-loop**: 人間の承認ゲートを含むワークフロー
+
 ---
 
 ## Project Memory (Steering System)

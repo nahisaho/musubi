@@ -5,6 +5,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.5.1] - 2025-12-08
+
+### Added
+
+**CLI Integration Across All Platforms**
+
+- Added CLI command references to 8 Claude Code skills:
+  - `orchestrator` - All 20 CLI commands with detailed options
+  - `issue-resolver` - `musubi-resolve` quick start guide
+  - `agent-assistant` - `musubi-remember` memory management
+  - `test-engineer` - `musubi-browser` E2E testing
+  - `ui-ux-designer` - `musubi-browser` UI testing
+  - `site-reliability-engineer` - `musubi-gui` dashboard
+  - `steering` - `musubi-remember` memory CLI
+  - `project-manager` - `musubi-orchestrate` multi-skill coordination
+
+- Added CLI Commands section to all 6 non-Claude platforms:
+  - GitHub Copilot (`AGENTS.md`)
+  - Cursor (`AGENTS.md`)
+  - Codex (`AGENTS.md`)
+  - Windsurf (`AGENTS.md`)
+  - Gemini CLI (`GEMINI.md`)
+  - Qwen Code (`QWEN.md`)
+
+### Changed
+
+- Updated Learn More sections with CLI Reference links across all platforms
+- Updated Agent↔CLI mapping in Orchestrator skill
+- Fixed documentation URLs from `your-org` to `nahisaho`
+
+### Documentation
+
+- Added v3.5.0 NEW CLI commands documentation:
+  - `musubi-orchestrate` - Multi-skill workflow orchestration
+  - `musubi-browser` - Browser automation & E2E testing
+  - `musubi-gui` - Web GUI dashboard
+  - `musubi-remember` - Agent memory management
+  - `musubi-resolve` - GitHub Issue auto-resolution
+  - `musubi-convert` - Format conversion (Spec Kit)
+
+---
+
 ## [3.4.0] - 2025-06-14
 
 ### Added - Phase 5 Advanced Features Complete 🎉

@@ -155,6 +155,27 @@ const preview = resolver.generatePreview(result);
 
 ### Issue to SDD Workflow
 
+**Quick Start with `musubi-resolve` CLI (v3.5.0 NEW)**:
+
+```bash
+# One-command issue resolution
+musubi-resolve 42
+
+# Analyze without resolution
+musubi-resolve analyze 42
+
+# Generate resolution plan
+musubi-resolve plan 42
+
+# Create PR from resolution
+musubi-resolve create-pr 42
+
+# Auto-resolve mode
+musubi-resolve 42 --auto
+```
+
+**Manual SDD Workflow**:
+
 ```bash
 # 1. Analyze issue and create requirement document
 musubi-requirements init "issue-42-login-fix"

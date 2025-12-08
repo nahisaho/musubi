@@ -160,11 +160,75 @@ const result = await critic.evaluate('requirements', context);
 #sdd-change-apply add-2fa
 ```
 
+## CLI Commands (v3.5.0)
+
+MUSUBI provides powerful CLI tools that can be used from any terminal. Install with:
+
+```bash
+npm install -g musubi-sdd
+# or use directly
+npx musubi-sdd <command>
+```
+
+### Core Workflow Commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-workflow` | Workflow state & metrics | `npx musubi-workflow status` |
+| `musubi-requirements` | EARS requirements management | `npx musubi-requirements init <feature>` |
+| `musubi-design` | C4 + ADR design documents | `npx musubi-design init <feature>` |
+| `musubi-tasks` | Task breakdown management | `npx musubi-tasks init <feature>` |
+| `musubi-trace` | Traceability analysis | `npx musubi-trace matrix` |
+| `musubi-change` | Change management (brownfield) | `npx musubi-change init <change-id>` |
+| `musubi-gaps` | Gap detection & coverage | `npx musubi-gaps detect` |
+| `musubi-validate` | Constitutional validation | `npx musubi-validate all` |
+
+### Supporting Commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-init` | Initialize MUSUBI in project | `npx musubi-init --copilot` |
+| `musubi-share` | Memory sharing across projects | `npx musubi-share export` |
+| `musubi-sync` | Sync steering files | `npx musubi-sync` |
+| `musubi-analyze` | Project analysis | `npx musubi-analyze complexity` |
+| `musubi-onboard` | AI platform onboarding | `npx musubi-onboard copilot` |
+
+### Advanced Commands (v3.5.0 NEW)
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-orchestrate` | Multi-skill workflow orchestration | `npx musubi-orchestrate auto <task>` |
+| `musubi-browser` | Browser automation & E2E testing | `npx musubi-browser run "click login"` |
+| `musubi-gui` | Web GUI dashboard | `npx musubi-gui start` |
+| `musubi-remember` | Agent memory management | `npx musubi-remember extract` |
+| `musubi-resolve` | GitHub Issue auto-resolution | `npx musubi-resolve <issue-number>` |
+| `musubi-convert` | Format conversion (Spec Kit) | `npx musubi-convert to-speckit` |
+
+### CLI + Prompt Integration
+
+Combine CLI commands with GitHub Copilot prompts for maximum efficiency:
+
+```bash
+# Initialize workflow, then use prompt
+npx musubi-workflow init user-auth
+#sdd-requirements user-auth
+
+# Analyze issues, then resolve
+npx musubi-resolve analyze 42
+#sdd-implement issue-42-fix
+
+# Start GUI dashboard for visual tracking
+npx musubi-gui start
+```
+
 ## Learn More
 
-- [MUSUBI Documentation](https://github.com/your-org/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/musubi)
+- [CLI Reference](https://github.com/nahisaho/musubi#cli-commands) - Detailed CLI options
 - [Constitutional Governance](steering/rules/constitution.md)
 - [8-Stage SDD Workflow](steering/rules/workflow.md)
+
+**Tip**: Run `npx musubi-sdd --help` for complete CLI documentation.
 
 ---
 

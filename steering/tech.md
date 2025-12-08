@@ -1,14 +1,14 @@
 # Technology Stack
 
-**Project**: MUSUBI (結び)
+**Project**: musubi
 **Last Updated**: 2025-12-08
-**Version**: 3.0.0
+**Version**: 1.0
 
 ---
 
 ## Overview
 
-This document defines the technology stack for MUSUBI - the Ultimate Specification Driven Development (SDD) Tool. MUSUBI is a Node.js CLI application supporting 7 AI coding platforms.
+This document defines the approved technology stack for musubi. All development MUST use these technologies unless explicitly approved via Phase -1 Gate (Article VIII: Anti-Abstraction).
 
 ---
 
@@ -16,255 +16,525 @@ This document defines the technology stack for MUSUBI - the Ultimate Specificati
 
 ### Programming Languages
 
-| Language   | Version | Usage                        | Notes                     |
-| ---------- | ------- | ---------------------------- | ------------------------- |
-| JavaScript | ES2022+ | Primary application language | Node.js runtime           |
-| Markdown   | -       | Documentation, prompts       | Skills, agents, docs      |
-| YAML       | 1.2     | Configuration files          | project.yml               |
-| TOML       | 1.0     | Gemini CLI commands          | Platform-specific format  |
+| Language             | Version        | Usage                        | Notes               |
+| -------------------- | -------------- | ---------------------------- | ------------------- |
+| {{PRIMARY_LANGUAGE}} | {{VERSION}}    | Primary application language | [Notes]             |
+| SQL                  | PostgreSQL 15+ | Database queries             | Via Prisma ORM      |
+| TypeScript           | 5.0+           | Type definitions             | Strict mode enabled |
 
 ### Runtime Environment
 
-- **Node.js**: 18.0.0+ (LTS)
-- **Package Manager**: npm 9.0+
+- **Node.js**: {{NODE_VERSION}}+ (LTS)
+- **Package Manager**: npm {{NPM_VERSION}}+ / pnpm {{PNPM_VERSION}}+
 
 ---
 
-## Core Dependencies
+## Frontend Stack
 
-### CLI Framework
+### Framework
 
-| Technology | Version | Purpose                |
-| ---------- | ------- | ---------------------- |
-| Commander  | 11.0+   | CLI argument parsing   |
-| Inquirer   | 9.0+    | Interactive prompts    |
-| Chalk      | 4.1+    | Terminal styling       |
+**Primary Framework**: {{FRONTEND_FRAMEWORK}}
 
-### File System & Processing
+| Technology             | Version     | Purpose                             |
+| ---------------------- | ----------- | ----------------------------------- |
+| {{FRONTEND_FRAMEWORK}} | {{VERSION}} | [Purpose]                           |
+| React                  | 18+         | UI library (if using Next.js/Remix) |
+| TypeScript             | 5.0+        | Type safety                         |
 
-| Technology | Version | Purpose                   |
-| ---------- | ------- | ------------------------- |
-| fs-extra   | 11.3+   | Enhanced file operations  |
-| glob       | 10.5+   | File pattern matching     |
-| gray-matter | 4.0+   | Frontmatter parsing       |
-| js-yaml    | 4.1+    | YAML parsing/generation   |
-| chokidar   | 3.5+    | File watching             |
+### UI Components
 
-### Web Server (GUI)
+| Library        | Version     | Purpose              |
+| -------------- | ----------- | -------------------- |
+| {{UI_LIBRARY}} | {{VERSION}} | Component library    |
+| Tailwind CSS   | 3.0+        | Utility-first CSS    |
+| shadcn/ui      | Latest      | Component primitives |
 
-| Technology | Version | Purpose               |
-| ---------- | ------- | --------------------- |
-| Express    | 4.18+   | HTTP server           |
-| cors       | 2.8+    | CORS middleware       |
-| ws         | 8.14+   | WebSocket support     |
+### State Management
 
-### Integrations
+| Library           | Version     | Purpose                       |
+| ----------------- | ----------- | ----------------------------- |
+| {{STATE_LIBRARY}} | {{VERSION}} | [Global state / Server state] |
+| React Context     | Built-in    | Local state                   |
+| React Query       | 5.0+        | Server state (if applicable)  |
 
-| Technology    | Version | Purpose                |
-| ------------- | ------- | ---------------------- |
-| @octokit/rest | 22.0+   | GitHub API integration |
-| Playwright    | 1.40+   | Browser automation     |
-| open          | 10.1+   | Open URLs in browser   |
+### Form Handling
+
+| Library         | Version | Purpose           |
+| --------------- | ------- | ----------------- |
+| React Hook Form | 7.0+    | Form management   |
+| Zod             | 3.0+    | Schema validation |
+
+---
+
+## Backend Stack
+
+### Framework
+
+**Primary Framework**: {{BACKEND_FRAMEWORK}}
+
+| Technology            | Version     | Purpose                           |
+| --------------------- | ----------- | --------------------------------- |
+| {{BACKEND_FRAMEWORK}} | {{VERSION}} | API server                        |
+| Express               | 4.0+        | Web framework (if using Node.js)  |
+| Next.js API Routes    | 14+         | Serverless API (if using Next.js) |
+
+### API Technologies
+
+| Technology | Version    | Purpose               |
+| ---------- | ---------- | --------------------- |
+| REST       | -          | Primary API style     |
+| GraphQL    | (Optional) | Complex data fetching |
+| OpenAPI    | 3.0+       | API specification     |
+
+---
+
+## Database Stack
+
+### Primary Database
+
+**Database**: {{DATABASE}}
+
+| Technology   | Version     | Purpose            |
+| ------------ | ----------- | ------------------ |
+| {{DATABASE}} | {{VERSION}} | Primary data store |
+| Prisma       | 5.0+        | ORM and migrations |
+
+### Database Schema
+
+```prisma
+// Example schema structure
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+### Caching Layer
+
+| Technology      | Version | Purpose                  |
+| --------------- | ------- | ------------------------ |
+| Redis           | 7.0+    | Session storage, caching |
+| In-memory cache | -       | Development only         |
+
+---
+
+## Authentication & Authorization
+
+### Authentication
+
+| Technology      | Version     | Purpose                           |
+| --------------- | ----------- | --------------------------------- |
+| {{AUTH_METHOD}} | {{VERSION}} | User authentication               |
+| bcrypt          | 5.0+        | Password hashing (cost factor 12) |
+| JWT             | -           | Session tokens                    |
+
+**Password Requirements**:
+
+- Hashing: bcrypt with cost factor 12 (Article III: Security)
+- Minimum length: 12 characters
+- Complexity: Uppercase, lowercase, number, special char
+
+### Authorization
+
+| Technology | Version | Purpose                          |
+| ---------- | ------- | -------------------------------- |
+| RBAC       | -       | Role-Based Access Control        |
+| CASL       | 6.0+    | Authorization library (optional) |
+
+---
+
+## Testing Stack
+
+### Test Frameworks
+
+| Technology         | Version     | Purpose                                      |
+| ------------------ | ----------- | -------------------------------------------- |
+| {{TEST_FRAMEWORK}} | {{VERSION}} | Unit testing                                 |
+| Jest               | 29+         | Test runner (if using JavaScript/TypeScript) |
+| Vitest             | 1.0+        | Fast test runner (alternative to Jest)       |
+
+### Testing Libraries
+
+| Library               | Version | Purpose               |
+| --------------------- | ------- | --------------------- |
+| React Testing Library | 14+     | Component testing     |
+| Supertest             | 6.0+    | API testing           |
+| Playwright            | 1.40+   | E2E testing           |
+| Testing Library       | Latest  | DOM testing utilities |
+
+### Test Databases
+
+- **Integration Tests**: Real PostgreSQL (Docker container)
+- **Unit Tests**: Mocked repository layer
+- **E2E Tests**: Dedicated test database
+
+**Docker Compose** for test services:
+
+```yaml
+services:
+  test-db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test
+    ports:
+      - '5432:5432'
+
+  test-redis:
+    image: redis:7-alpine
+    ports:
+      - '6379:6379'
+```
+
+**Constitutional Compliance (Article IX)**:
+
+- Integration tests MUST use real database
+- Integration tests MUST use real cache
+- Mocks only for external APIs without test environments
+
+---
+
+## Build & Development Tools
+
+### Build Tools
+
+| Tool           | Version     | Purpose               |
+| -------------- | ----------- | --------------------- |
+| {{BUILD_TOOL}} | {{VERSION}} | Build system          |
+| esbuild        | Latest      | Fast bundler          |
+| Turbo          | Latest      | Monorepo build system |
+
+### Code Quality
+
+| Tool        | Version | Purpose                       |
+| ----------- | ------- | ----------------------------- |
+| ESLint      | 8.0+    | JavaScript/TypeScript linting |
+| Prettier    | 3.0+    | Code formatting               |
+| TypeScript  | 5.0+    | Type checking                 |
+| Husky       | 8.0+    | Git hooks                     |
+| lint-staged | 14.0+   | Pre-commit linting            |
+
+**ESLint Configuration**:
+
+```json
+{
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "prettier"],
+  "rules": {
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-explicit-any": "warn"
+  }
+}
+```
+
+---
+
+## CI/CD Stack
+
+### CI/CD Platform
+
+| Technology         | Version | Purpose                           |
+| ------------------ | ------- | --------------------------------- |
+| {{CI_CD_PLATFORM}} | -       | Continuous Integration/Deployment |
+| GitHub Actions     | -       | CI/CD workflows                   |
+| GitLab CI          | -       | Alternative CI/CD                 |
+
+### Deployment
+
+| Technology     | Version | Purpose                        |
+| -------------- | ------- | ------------------------------ |
+| Docker         | 24.0+   | Containerization               |
+| Docker Compose | 2.0+    | Multi-container apps (dev)     |
+| Kubernetes     | 1.28+   | Container orchestration (prod) |
+
+---
+
+## Cloud Infrastructure
+
+### Cloud Provider
+
+**Primary Provider**: {{CLOUD_PROVIDER}}
+
+| Service              | Purpose             |
+| -------------------- | ------------------- |
+| {{COMPUTE_SERVICE}}  | Application hosting |
+| {{DATABASE_SERVICE}} | Managed database    |
+| {{STORAGE_SERVICE}}  | Object storage      |
+| {{CACHE_SERVICE}}    | Managed Redis       |
+
+### Infrastructure as Code
+
+| Technology   | Version     | Purpose                     |
+| ------------ | ----------- | --------------------------- |
+| {{IAC_TOOL}} | {{VERSION}} | Infrastructure provisioning |
+| Terraform    | 1.6+        | Cloud infrastructure        |
+| Bicep        | Latest      | Azure infrastructure        |
+
+---
+
+## Monitoring & Observability
+
+### Logging
+
+| Technology       | Version     | Purpose                       |
+| ---------------- | ----------- | ----------------------------- |
+| {{LOGGING_TOOL}} | {{VERSION}} | Log aggregation               |
+| Winston          | 3.0+        | Application logging (Node.js) |
+| Pino             | 8.0+        | Fast logging (alternative)    |
+
+**Log Format**: JSON
+
+```typescript
+// Example log entry
+{
+  "timestamp": "2025-11-16T10:00:00Z",
+  "level": "info",
+  "message": "User logged in",
+  "context": {
+    "userId": "uuid",
+    "ip": "192.168.1.1"
+  },
+  "traceId": "trace-id"
+}
+```
+
+### Monitoring
+
+| Technology          | Version     | Purpose                |
+| ------------------- | ----------- | ---------------------- |
+| {{MONITORING_TOOL}} | {{VERSION}} | Application monitoring |
+| Prometheus          | 2.0+        | Metrics collection     |
+| Grafana             | 10.0+       | Metrics visualization  |
+
+### Tracing
+
+| Technology       | Version     | Purpose             |
+| ---------------- | ----------- | ------------------- |
+| {{TRACING_TOOL}} | {{VERSION}} | Distributed tracing |
+| OpenTelemetry    | Latest      | Tracing standard    |
+| Jaeger           | 1.50+       | Tracing backend     |
+
+### Error Tracking
+
+| Technology | Version | Purpose                      |
+| ---------- | ------- | ---------------------------- |
+| Sentry     | Latest  | Error tracking and reporting |
+
+---
+
+## Documentation Tools
+
+### API Documentation
+
+| Tool               | Version | Purpose                |
+| ------------------ | ------- | ---------------------- |
+| OpenAPI/Swagger    | 3.0+    | REST API documentation |
+| GraphQL Playground | -       | GraphQL API explorer   |
+| Postman            | Latest  | API testing and docs   |
+
+### Code Documentation
+
+| Tool      | Version | Purpose                  |
+| --------- | ------- | ------------------------ |
+| TSDoc     | -       | TypeScript documentation |
+| JSDoc     | -       | JavaScript documentation |
+| Storybook | 7.0+    | Component documentation  |
 
 ---
 
 ## Development Tools
 
-### Testing
+### Code Editors
 
-| Technology | Version | Purpose           |
-| ---------- | ------- | ----------------- |
-| Jest       | 29.0+   | Test framework    |
-| Coverage   | -       | Code coverage     |
+- **Recommended**: Visual Studio Code
+- **Extensions**:
+  - ESLint
+  - Prettier
+  - TypeScript
+  - Prisma
+  - Tailwind CSS IntelliSense
 
-### Code Quality
+### Database Tools
 
-| Tool     | Version | Purpose                       |
-| -------- | ------- | ----------------------------- |
-| ESLint   | 8.50+   | JavaScript linting            |
-| Prettier | 3.0+    | Code formatting               |
+| Tool          | Version  | Purpose               |
+| ------------- | -------- | --------------------- |
+| Prisma Studio | Built-in | Database GUI          |
+| pgAdmin       | 4.0+     | PostgreSQL admin      |
+| TablePlus     | Latest   | Multi-database client |
 
-**ESLint Configuration** (eslint.config.js):
-- Uses eslint-config-prettier for format compatibility
+### API Testing
 
-### Scripts (package.json)
+| Tool     | Version | Purpose                  |
+| -------- | ------- | ------------------------ |
+| Postman  | Latest  | API testing              |
+| Insomnia | Latest  | REST/GraphQL client      |
+| curl     | -       | Command-line API testing |
+
+---
+
+## Security Tools
+
+### Security Scanning
+
+| Tool      | Version  | Purpose                           |
+| --------- | -------- | --------------------------------- |
+| npm audit | Built-in | Dependency vulnerability scanning |
+| Snyk      | Latest   | Continuous security monitoring    |
+| OWASP ZAP | Latest   | Security testing                  |
+
+### Secrets Management
+
+| Tool                | Version     | Purpose                    |
+| ------------------- | ----------- | -------------------------- |
+| {{SECRETS_TOOL}}    | {{VERSION}} | Secrets management         |
+| .env files          | -           | Local development secrets  |
+| AWS Secrets Manager | -           | Production secrets (AWS)   |
+| Azure Key Vault     | -           | Production secrets (Azure) |
+
+---
+
+## Package Management
+
+### Dependency Management
 
 ```json
+// package.json structure
 {
+  "name": "musubi",
+  "version": "1.0.0",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "test": "jest",
-    "test:watch": "jest --watch",
-    "test:coverage": "jest --coverage",
-    "lint": "eslint bin/ src/ tests/",
-    "lint:fix": "eslint bin/ src/ tests/ --fix",
-    "format": "prettier --write bin/ src/ tests/",
-    "format:check": "prettier --check 'bin/**/*.js' 'src/**/*.js' 'tests/**/*.js'"
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    // Production dependencies
+  },
+  "devDependencies": {
+    // Development dependencies
   }
 }
 ```
 
----
+### Version Pinning
 
-## Supported AI Platforms
-
-### Platform Configurations
-
-| Platform       | Command Prefix | Format     | Directory              |
-| -------------- | -------------- | ---------- | ---------------------- |
-| Claude Code    | `/sdd-*`       | Markdown   | `.claude/skills/`      |
-| GitHub Copilot | `#sdd-*`       | Markdown   | `.github/prompts/`     |
-| Cursor IDE     | `/sdd-*`       | Markdown   | `.cursor/commands/`    |
-| Gemini CLI     | `/sdd-*`       | TOML       | `.gemini/commands/`    |
-| Codex CLI      | `/prompts:*`   | Markdown   | `.codex/prompts/`      |
-| Qwen Code      | `/sdd-*`       | Markdown   | `.qwen/commands/`      |
-| Windsurf IDE   | `/sdd-*`       | Markdown   | `.windsurf/workflows/` |
-
-### Skills/Agents API Support
-
-| Platform       | Skills API | AGENTS.md | Notes                      |
-| -------------- | ---------- | --------- | -------------------------- |
-| Claude Code    | ✅ 25 skills | ✅       | Skills API + AGENTS.md     |
-| GitHub Copilot | ❌         | ✅ 25 agents | Official AGENTS.md support |
-| Cursor IDE     | ❌         | ✅ 25 agents | Official AGENTS.md support |
-| Gemini CLI     | ❌         | ✅ GEMINI.md | GEMINI.md integration      |
-| Codex CLI      | ❌         | ✅ 25 agents | AGENTS.md compatible       |
-| Qwen Code      | ❌         | ✅ 25 agents | AGENTS.md compatible       |
-| Windsurf IDE   | ❌         | ✅ 25 agents | AGENTS.md compatible       |
+- **Exact Versions**: Critical dependencies (database drivers, auth libraries)
+- **Caret Ranges**: UI libraries, utilities (`^1.2.3`)
+- **Lock Files**: Commit `package-lock.json` / `pnpm-lock.yaml`
 
 ---
 
-## MCP Integration (v2.0.0+)
+## Framework-Specific Configurations
 
-### CodeGraphMCPServer
+### {{PRIMARY_FRAMEWORK}} Configuration
 
-MUSUBI integrates with CodeGraphMCPServer for enhanced code analysis:
+[Include framework-specific configuration details]
 
-| Feature            | Description                      |
-| ------------------ | -------------------------------- |
-| 14 MCP Tools       | Graph query, code retrieval      |
-| 4 MCP Resources    | Entities, files, communities     |
-| 6 MCP Prompts      | Code review, feature impl        |
-| GraphRAG           | Semantic code search             |
-| 12 Languages       | Python, TS, JS, Rust, Go, etc.   |
+**Example for Next.js**:
 
-### Configuration
+```typescript
+// next.config.js
+const nextConfig = {
+  reactStrictMode: true,
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
+  },
+  experimental: {
+    serverActions: true,
+  },
+};
 
-```json
-{
-  "mcp.servers": {
-    "codegraph": {
-      "command": "codegraph-mcp",
-      "args": ["serve", "--repo", "${workspaceFolder}"]
-    }
-  }
-}
+export default nextConfig;
 ```
 
 ---
 
-## CI/CD
+## Anti-Abstraction Policy (Article VIII)
 
-### GitHub Actions
-
-MUSUBI uses GitHub Actions for CI/CD:
-
-| Workflow | Purpose                    |
-| -------- | -------------------------- |
-| ci.yml   | Tests, linting, coverage   |
-
-### npm Publishing
-
-```bash
-# Publish to npm
-npm publish
-```
-
----
-
-## Distribution
-
-### npm Package
-
-- **Package Name**: `musubi-sdd`
-- **Registry**: npmjs.com
-- **Entry Point**: `bin/musubi.js`
-
-### Binary Commands
-
-All 19 CLI commands are registered in package.json:
-
-```json
-{
-  "bin": {
-    "musubi-sdd": "bin/musubi.js",
-    "musubi": "bin/musubi.js",
-    "musubi-init": "bin/musubi-init.js",
-    "musubi-requirements": "bin/musubi-requirements.js",
-    ...
-  }
-}
-```
-
----
-
-## Constitutional Compliance (Article VIII)
-
-### Anti-Abstraction Policy
-
-MUSUBI uses framework APIs directly without custom wrappers:
+**CRITICAL**: Use framework APIs directly. Do NOT create custom abstraction layers.
 
 ### ✅ Allowed
 
-```javascript
-// Direct Commander usage
-const { program } = require('commander');
-program
-  .name('musubi')
-  .version('3.0.0')
-  .parse();
+```typescript
+// Use Prisma directly
+const user = await prisma.user.findUnique({ where: { id } });
 
-// Direct fs-extra usage
-const fs = require('fs-extra');
-await fs.ensureDir(path);
-await fs.writeJson(file, data);
+// Use bcrypt directly
+const hash = await bcrypt.hash(password, 12);
+
+// Use Next.js API routes directly
+export async function POST(request: Request) { ... }
 ```
 
-### ❌ Prohibited
+### ❌ Prohibited (Without Phase -1 Gate Approval)
 
-```javascript
-// ❌ Custom CLI wrapper
-class MyCLI {
-  parse() { ... }  // Wrapping Commander
+```typescript
+// ❌ Custom database wrapper
+class MyDatabase {
+  async find(id: string) { ... }  // Wrapping Prisma
 }
 
-// ❌ Custom file wrapper
-class MyFS {
-  async write() { ... }  // Wrapping fs-extra
+// ❌ Custom HTTP client
+class MyHttpClient {
+  async get(url: string) { ... }  // Wrapping fetch
 }
 ```
+
+**Exception**: Multi-framework support or justified architectural need requires Phase -1 Gate approval with:
+
+1. Multi-framework justification
+2. Team expertise analysis
+3. Migration path documentation
+4. Approval from @system-architect + @software-developer
 
 ---
 
-## Version Policy
+## Technology Selection Criteria
 
-### Semantic Versioning
+When evaluating new technologies:
 
-MUSUBI follows semver:
+1. **Community Support**: Active maintenance, large community
+2. **Documentation**: Comprehensive, up-to-date
+3. **Type Safety**: TypeScript support preferred
+4. **Performance**: Benchmarked performance metrics
+5. **Security**: Regular security updates
+6. **License**: Compatible with project (MIT, Apache 2.0 preferred)
+7. **Team Expertise**: Team familiarity with technology
+8. **Constitutional Alignment**: Supports Library-First, Test-First principles
 
-- **MAJOR**: Breaking changes
-- **MINOR**: New features (backward compatible)
-- **PATCH**: Bug fixes
+---
 
-### Current Version: 3.0.0
+## Deprecated Technologies
 
-Key milestones:
-- v0.8.x: Core SDD features
-- v0.9.x: Traceability enhancements
-- v2.0.0: MCP integration
-- v2.1.0: Workflow engine
-- v3.0.0: Multi-agent architecture
+| Technology | Deprecated Date | Replacement | Migration Deadline |
+| ---------- | --------------- | ----------- | ------------------ |
+| [Old Tech] | [Date]          | [New Tech]  | [Date]             |
+
+---
+
+## Changelog
+
+### Version 1.1 (Planned)
+
+- [Planned technology updates]
 
 ---
 
 **Last Updated**: 2025-12-08
-**Maintained By**: MUSUBI Contributors
+**Maintained By**: {{MAINTAINER}}

@@ -1,35 +1,17 @@
 # Project Structure
 
-**Project**: MUSUBI (結び)
+**Project**: musubi
 **Last Updated**: 2025-12-08
-**Version**: 3.0.0
+**Version**: 1.0
 
 ---
 
 ## Architecture Pattern
 
-**Primary Pattern**: Modular CLI Application with Multi-Agent Architecture
+**Primary Pattern**: {{ARCHITECTURE_PATTERN}}
 
-> MUSUBI is a specification-driven development (SDD) framework that uses a modular architecture
-> with specialized agents/skills. It follows a CLI-first design with separate modules for
-> generators, validators, analyzers, managers, and converters. The system supports 7 AI coding
-> platforms through a unified agent registry pattern.
-
----
-
-## Codebase Statistics (CodeGraph Analysis)
-
-| Metric | Value |
-|--------|-------|
-| Total Entities | 12,094 |
-| Total Relations | 74,338 |
-| Files Indexed | 2,154 |
-| Classes | 1,062 |
-| Functions | 4,330 |
-| Interfaces | 540 |
-| Methods | 4,109 |
-| Modules | 2,052 |
-| Communities | 140 |
+> [Description of the architecture pattern used in this project]
+> Examples: Monorepo with Library-First, Microservices, Modular Monolith, Serverless
 
 ---
 
@@ -39,200 +21,142 @@
 
 ```
 musubi/
-├── bin/                  # CLI entry points (19 commands)
-│   ├── musubi.js         # Main CLI entry point
-│   ├── musubi-init.js    # Project initialization
-│   ├── musubi-onboard.js # Existing project onboarding
-│   ├── musubi-requirements.js  # EARS requirements generator
-│   ├── musubi-design.js  # C4/ADR design generator
-│   ├── musubi-tasks.js   # Task breakdown
-│   ├── musubi-validate.js # Constitutional validation
-│   ├── musubi-trace.js   # Traceability management
-│   ├── musubi-gaps.js    # Gap detection
-│   ├── musubi-change.js  # Change management
-│   ├── musubi-workflow.js # Workflow engine
-│   ├── musubi-analyze.js # Code analysis
-│   ├── musubi-sync.js    # Steering sync
-│   ├── musubi-share.js   # Memory sharing
-│   ├── musubi-remember.js # Memory management
-│   ├── musubi-resolve.js # Issue resolution
-│   ├── musubi-convert.js # Format conversion
-│   ├── musubi-browser.js # Browser automation
-│   └── musubi-gui.js     # GUI server
-├── src/                  # Core source modules
-│   ├── agents/           # Agent registry & browser automation
-│   ├── generators/       # Document generators (requirements, design, tasks)
-│   ├── validators/       # Constitution & critic system
-│   ├── analyzers/        # Gap, security, stuck, traceability analysis
-│   ├── managers/         # Skill loading, workflow, memory, changes
-│   ├── resolvers/        # Issue resolution
-│   ├── converters/       # Format conversion (IR, parsers, writers)
-│   ├── integrations/     # External integrations (GitHub)
-│   ├── gui/              # Web GUI server
-│   └── templates/        # Document templates
-├── tests/                # Test suites (mirrors src/ structure)
+├── lib/                  # Reusable libraries (Article I: Library-First)
+├── app/                  # Application code (Next.js, etc.)
+├── api/                  # API routes/controllers
+├── components/           # UI components
+├── services/             # Business logic services
+├── tests/                # Test suites
 ├── docs/                 # Documentation
-│   ├── guides/           # User guides & tutorials
-│   ├── design/           # Design documents
-│   ├── requirements/     # Requirements documents
-│   ├── analysis/         # Framework analysis
-│   ├── plans/            # Project plans
-│   ├── Qiita/            # Qiita articles
-│   └── DevTo/            # Dev.to articles
 ├── storage/              # SDD artifacts
 │   ├── specs/            # Requirements, design, tasks
 │   ├── changes/          # Delta specifications (brownfield)
-│   └── features/         # Feature specifications
+│   └── validation/       # Validation reports
 ├── steering/             # Project memory (this directory)
 │   ├── structure.md      # This file
 │   ├── tech.md           # Technology stack
 │   ├── product.md        # Product context
-│   ├── rules/            # Constitutional governance
-│   ├── memories/         # Agent memories
-│   └── templates/        # Steering templates
-├── templates/            # Installable templates for platforms
-├── packages/             # Sub-packages
-│   └── vscode-extension/ # VS Code extension
-└── References/           # Reference implementations
-    └── OpenHands/        # OpenHands microagent reference
+│   └── rules/            # Constitutional governance
+├── templates/            # Document templates
+└── [Other directories]
 ```
 
 ---
 
-## Core Module Architecture
+## Library-First Pattern (Article I)
 
-### Agent System (src/agents/)
+All features begin as independent libraries in `lib/`.
 
-The agent system manages multi-platform support and skill registration.
+### Library Structure
 
-```
-src/agents/
-├── registry.js           # Agent definitions for 7 platforms
-│                         # - claude-code (Skills API)
-│                         # - github-copilot (AGENTS.md)
-│                         # - cursor (AGENTS.md)
-│                         # - gemini-cli (TOML + GEMINI.md)
-│                         # - codex-cli (AGENTS.md)
-│                         # - qwen-code (AGENTS.md)
-│                         # - windsurf (AGENTS.md)
-└── browser/              # Browser automation for web-based agents
-```
-
-### Generators (src/generators/)
-
-Document generation following EARS format and C4 model.
+Each library follows this structure:
 
 ```
-src/generators/
-├── requirements.js       # EARS requirements generator (5 patterns)
-├── design.js             # C4 model + ADR generator
-└── tasks.js              # Task breakdown generator
+lib/{{feature}}/
+├── src/
+│   ├── index.ts          # Public API exports
+│   ├── service.ts        # Business logic
+│   ├── repository.ts     # Data access
+│   ├── types.ts          # TypeScript types
+│   ├── errors.ts         # Custom errors
+│   └── validators.ts     # Input validation
+├── tests/
+│   ├── service.test.ts   # Unit tests
+│   ├── repository.test.ts # Integration tests (real DB)
+│   └── integration.test.ts # E2E tests
+├── cli.ts                # CLI interface (Article II)
+├── package.json          # Library metadata
+├── tsconfig.json         # TypeScript config
+└── README.md             # Library documentation
 ```
 
-### Validators (src/validators/)
+### Library Guidelines
 
-Constitutional governance and quality enforcement.
-
-```
-src/validators/
-├── constitution.js       # 9 Constitutional Articles validation
-└── critic-system.js      # Code review and critique system
-```
-
-### Analyzers (src/analyzers/)
-
-Code analysis and gap detection.
-
-```
-src/analyzers/
-├── gap-detector.js       # Orphaned requirements/untested code
-├── security-analyzer.js  # Security vulnerability scanning
-├── stuck-detector.js     # Development blockage detection
-└── traceability.js       # Req→Design→Code→Test mapping
-```
-
-### Managers (src/managers/)
-
-State management and workflow orchestration.
-
-```
-src/managers/
-├── agent-memory.js       # Agent context memory
-├── change.js             # Delta specification management
-├── memory-condenser.js   # Memory optimization
-├── repo-skill-manager.js # Repository-level skill management
-├── skill-loader.js       # Keyword-triggered skill loading
-└── workflow.js           # 9-stage workflow engine
-```
-
-### Converters (src/converters/)
-
-Format conversion between platforms.
-
-```
-src/converters/
-├── index.js              # Converter orchestration
-├── ir/                   # Intermediate representation
-├── parsers/              # Input format parsers
-└── writers/              # Output format writers
-```
-
-### Resolvers (src/resolvers/)
-
-Issue and conflict resolution.
-
-```
-src/resolvers/
-└── issue-resolver.js     # Automated issue resolution
-```
-
-### Integrations (src/integrations/)
-
-External service integrations.
-
-```
-src/integrations/
-└── github-client.js      # GitHub API integration
-```
-
-### GUI (src/gui/)
-
-Web-based graphical interface.
-
-```
-src/gui/
-├── server.js             # Express server
-├── public/               # Static assets
-└── services/             # GUI backend services
-```
+- **Independence**: Libraries MUST NOT depend on application code
+- **Public API**: All exports via `src/index.ts`
+- **Testing**: Independent test suite
+- **CLI**: All libraries expose CLI interface (Article II)
 
 ---
 
-## CLI Commands (bin/)
+## Application Structure
 
-MUSUBI provides 19 CLI commands:
+### Application Organization
 
-| Command | Purpose |
-|---------|---------|
-| `musubi` | Main CLI entry point |
-| `musubi-init` | Initialize new project |
-| `musubi-onboard` | Onboard existing project |
-| `musubi-requirements` | Generate EARS requirements |
-| `musubi-design` | Generate C4/ADR design |
-| `musubi-tasks` | Task breakdown |
-| `musubi-validate` | Constitutional validation |
-| `musubi-trace` | Traceability management |
-| `musubi-gaps` | Gap detection |
-| `musubi-change` | Change management |
-| `musubi-workflow` | Workflow engine |
-| `musubi-analyze` | Code analysis |
-| `musubi-sync` | Steering synchronization |
-| `musubi-share` | Memory sharing |
-| `musubi-remember` | Memory management |
-| `musubi-resolve` | Issue resolution |
-| `musubi-convert` | Format conversion |
-| `musubi-browser` | Browser automation |
-| `musubi-gui` | GUI server |
+```
+app/
+├── (auth)/               # Route groups (Next.js App Router)
+│   ├── login/
+│   │   └── page.tsx
+│   └── register/
+│       └── page.tsx
+├── dashboard/
+│   └── page.tsx
+├── api/                  # API routes
+│   ├── auth/
+│   │   └── route.ts
+│   └── users/
+│       └── route.ts
+├── layout.tsx            # Root layout
+└── page.tsx              # Home page
+```
+
+### Application Guidelines
+
+- **Library Usage**: Applications import from `lib/` modules
+- **Thin Controllers**: API routes delegate to library services
+- **No Business Logic**: Business logic belongs in libraries
+
+---
+
+## Component Organization
+
+### UI Components
+
+```
+components/
+├── ui/                   # Base UI components (shadcn/ui)
+│   ├── button.tsx
+│   ├── input.tsx
+│   └── card.tsx
+├── auth/                 # Feature-specific components
+│   ├── LoginForm.tsx
+│   └── RegisterForm.tsx
+├── dashboard/
+│   └── StatsCard.tsx
+└── shared/               # Shared components
+    ├── Header.tsx
+    └── Footer.tsx
+```
+
+### Component Guidelines
+
+- **Composition**: Prefer composition over props drilling
+- **Types**: All props typed with TypeScript
+- **Tests**: Component tests with React Testing Library
+
+---
+
+## Database Organization
+
+### Schema Organization
+
+```
+prisma/
+├── schema.prisma         # Prisma schema
+├── migrations/           # Database migrations
+│   ├── 001_create_users_table/
+│   │   └── migration.sql
+│   └── 002_create_sessions_table/
+│       └── migration.sql
+└── seed.ts               # Database seed data
+```
+
+### Database Guidelines
+
+- **Migrations**: All schema changes via migrations
+- **Naming**: snake_case for tables and columns
+- **Indexes**: Index foreign keys and frequently queried columns
 
 ---
 
@@ -242,26 +166,25 @@ MUSUBI provides 19 CLI commands:
 
 ```
 tests/
-├── cli.test.js           # CLI integration tests
-├── init-platforms.test.js # Platform initialization tests
-├── registry.test.js      # Agent registry tests
-├── agents/               # Agent module tests
-├── generators/           # Generator tests
-├── validators/           # Validator tests
-├── analyzers/            # Analyzer tests
-├── managers/             # Manager tests
-├── resolvers/            # Resolver tests
-├── converters/           # Converter tests
-├── gui/                  # GUI tests
-└── test-output/          # Test artifacts
+├── unit/                 # Unit tests (per library)
+│   └── auth/
+│       └── service.test.ts
+├── integration/          # Integration tests (real services)
+│   └── auth/
+│       └── login.test.ts
+├── e2e/                  # End-to-end tests
+│   └── auth/
+│       └── user-flow.test.ts
+└── fixtures/             # Test data and fixtures
+    └── users.ts
 ```
 
 ### Test Guidelines
 
 - **Test-First**: Tests written BEFORE implementation (Article III)
-- **Coverage**: Minimum 80% coverage required
-- **Naming**: `*.test.js` for all test files
-- **Jest**: Using Jest as test framework
+- **Real Services**: Integration tests use real DB/cache (Article IX)
+- **Coverage**: Minimum 80% coverage
+- **Naming**: `*.test.ts` for unit, `*.integration.test.ts` for integration
 
 ---
 
@@ -271,83 +194,18 @@ tests/
 
 ```
 docs/
-├── guides/               # User guides and tutorials
-│   ├── brownfield-tutorial.md
-│   ├── delta-spec-guide.md
-│   ├── change-management-workflow.md
-│   └── traceability-matrix-guide.md
-├── design/               # Design documents
-│   └── P1-roadmap.md
-├── requirements/         # Requirements documents
-├── analysis/             # Framework analysis
-│   ├── SDD-Framework-Analysis-Summary.md
-│   ├── SKILLS-AUDIT-REPORT.md
-│   └── SKILLS-GAP-ANALYSIS.md
-├── plans/                # Project plans
-├── Qiita/                # Qiita articles (Japanese)
-├── DevTo/                # Dev.to articles (English)
-└── assets/               # Demo assets and media
-```
-
----
-
-## Platform-Specific Installations
-
-MUSUBI installs different structures based on the target AI platform:
-
-### Claude Code
-```
-.claude/
-├── skills/               # 25 Skills API skills
-│   ├── sdd-requirements.md
-│   ├── sdd-design.md
-│   └── ...
-├── commands/             # Command definitions
-└── AGENTS.md             # Agent definitions
-```
-
-### GitHub Copilot
-```
-.github/
-├── prompts/              # Prompt templates
-│   ├── sdd-requirements.prompt.md
-│   └── ...
-└── AGENTS.md             # 25 agent definitions
-```
-
-### Cursor IDE
-```
-.cursor/
-├── commands/             # Command definitions
-└── AGENTS.md             # 25 agent definitions
-```
-
-### Gemini CLI
-```
-.gemini/
-├── commands/             # TOML format commands
-└── GEMINI.md             # Agent definitions
-```
-
----
-
-## Steering Directory (Project Memory)
-
-```
-steering/
-├── structure.md          # This file - architecture patterns
-├── tech.md               # Technology stack
-├── product.md            # Product context
-├── structure.ja.md       # Japanese version
-├── tech.ja.md            # Japanese version
-├── product.ja.md         # Japanese version
-├── project.yml           # Project configuration
-├── rules/                # Constitutional governance
-│   ├── constitution.md   # 9 Constitutional Articles
-│   ├── phase-gates.md    # Phase -1 Gates
-│   └── workflow.md       # 8-Stage SDD Workflow
-├── memories/             # Agent memories
-└── templates/            # Steering templates
+├── architecture/         # Architecture documentation
+│   ├── c4-diagrams/
+│   └── adr/              # Architecture Decision Records
+├── api/                  # API documentation
+│   ├── openapi.yaml
+│   └── graphql.schema
+├── guides/               # Developer guides
+│   ├── getting-started.md
+│   └── contributing.md
+└── runbooks/             # Operational runbooks
+    ├── deployment.md
+    └── troubleshooting.md
 ```
 
 ---
@@ -359,22 +217,19 @@ steering/
 ```
 storage/
 ├── specs/                # Specifications
-│   ├── requirements/     # EARS format requirements
-│   ├── design/           # C4 model + ADR designs
-│   └── tasks/            # Task breakdowns
+│   ├── auth-requirements.md
+│   ├── auth-design.md
+│   ├── auth-tasks.md
+│   └── payment-requirements.md
 ├── changes/              # Delta specifications (brownfield)
-└── features/             # Feature tracking
-```
-
-### Traceability
-
-All artifacts maintain bidirectional traceability:
-
-```
-REQ-AUTH-001 → DES-AUTH-001 → TASK-AUTH-001 → TEST-AUTH-001
-     ↓              ↓              ↓              ↓
-Requirements  →  Design    →   Tasks      →    Tests
-```
+│   ├── add-2fa.md
+│   └── upgrade-jwt.md
+├── features/             # Feature tracking
+│   ├── auth.json
+│   └── payment.json
+└── validation/           # Validation reports
+    ├── auth-validation-report.md
+    └── payment-validation-report.md
 ```
 
 ---
@@ -383,20 +238,115 @@ Requirements  →  Design    →   Tasks      →    Tests
 
 ### File Naming
 
-- **JavaScript**: `kebab-case.js` for modules (e.g., `skill-loader.js`)
-- **Tests**: `*.test.js`
-- **CLI Commands**: `musubi-*.js` (e.g., `musubi-init.js`)
+- **TypeScript**: `PascalCase.tsx` for components, `camelCase.ts` for utilities
+- **React Components**: `PascalCase.tsx` (e.g., `LoginForm.tsx`)
+- **Utilities**: `camelCase.ts` (e.g., `formatDate.ts`)
+- **Tests**: `*.test.ts` or `*.spec.ts`
+- **Constants**: `SCREAMING_SNAKE_CASE.ts` (e.g., `API_ENDPOINTS.ts`)
 
 ### Directory Naming
 
-- **Modules**: `kebab-case` (e.g., `skill-loader/`)
-- **Features**: `kebab-case` (e.g., `agents/`, `generators/`)
+- **Features**: `kebab-case` (e.g., `user-management/`)
+- **Components**: `kebab-case` or `PascalCase` (consistent within project)
 
 ### Variable Naming
 
 - **Variables**: `camelCase`
 - **Constants**: `SCREAMING_SNAKE_CASE`
-- **Classes**: `PascalCase`
+- **Types/Interfaces**: `PascalCase`
+- **Enums**: `PascalCase`
+
+---
+
+## Integration Patterns
+
+### Library → Application Integration
+
+```typescript
+// ✅ CORRECT: Application imports from library
+import { AuthService } from '@/lib/auth';
+
+const authService = new AuthService(repository);
+const result = await authService.login(credentials);
+```
+
+```typescript
+// ❌ WRONG: Library imports from application
+// Libraries must NOT depend on application code
+import { AuthContext } from '@/app/contexts/auth'; // Violation!
+```
+
+### Service → Repository Pattern
+
+```typescript
+// Service layer (business logic)
+export class AuthService {
+  constructor(private repository: UserRepository) {}
+
+  async login(credentials: LoginRequest): Promise<LoginResponse> {
+    // Business logic here
+    const user = await this.repository.findByEmail(credentials.email);
+    // ...
+  }
+}
+
+// Repository layer (data access)
+export class UserRepository {
+  constructor(private prisma: PrismaClient) {}
+
+  async findByEmail(email: string): Promise<User | null> {
+    return this.prisma.user.findUnique({ where: { email } });
+  }
+}
+```
+
+---
+
+## Deployment Structure
+
+### Deployment Units
+
+**Projects** (independently deployable):
+
+1. musubi - Main application
+
+> ⚠️ **Simplicity Gate (Article VII)**: Maximum 3 projects initially.
+> If adding more projects, document justification in Phase -1 Gate approval.
+
+### Environment Structure
+
+```
+environments/
+├── development/
+│   └── .env.development
+├── staging/
+│   └── .env.staging
+└── production/
+    └── .env.production
+```
+
+---
+
+## Multi-Language Support
+
+### Language Policy
+
+- **Primary Language**: English
+- **Documentation**: English first (`.md`), then Japanese (`.ja.md`)
+- **Code Comments**: English
+- **UI Strings**: i18n framework
+
+### i18n Organization
+
+```
+locales/
+├── en/
+│   ├── common.json
+│   └── auth.json
+└── ja/
+    ├── common.json
+    └── auth.json
+```
 
 ---
 
@@ -405,9 +355,10 @@ Requirements  →  Design    →   Tasks      →    Tests
 ### Branch Organization
 
 - `main` - Production branch
+- `develop` - Development branch
 - `feature/*` - Feature branches
-- `fix/*` - Bug fix branches
-- `docs/*` - Documentation branches
+- `hotfix/*` - Hotfix branches
+- `release/*` - Release branches
 
 ### Commit Message Convention
 
@@ -421,35 +372,15 @@ Requirements  →  Design    →   Tasks      →    Tests
 
 **Types**: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
 
----
-
-## Dependencies Graph
-
-Key module dependencies (from CodeGraph analysis):
+**Example**:
 
 ```
-bin/musubi.js
-  └── src/agents/registry.js
-        └── (Platform configurations)
+feat(auth): implement user login (REQ-AUTH-001)
 
-bin/musubi-requirements.js
-  └── src/generators/requirements.js
-        └── (EARS pattern generation)
+Add login functionality with email and password authentication.
+Session created with 24-hour expiry.
 
-bin/musubi-validate.js
-  └── src/validators/constitution.js
-        └── (9 Articles validation)
-  └── src/validators/critic-system.js
-        └── (Code review)
-
-bin/musubi-workflow.js
-  └── src/managers/workflow.js
-        └── (9-stage workflow)
-
-bin/musubi-gaps.js
-  └── src/analyzers/gap-detector.js
-        └── src/analyzers/traceability.js
-              └── (Req→Design→Code→Test mapping)
+Closes REQ-AUTH-001
 ```
 
 ---
@@ -458,18 +389,20 @@ bin/musubi-gaps.js
 
 This structure enforces:
 
-- **Article I**: Library-first pattern - Core modules in `src/`
-- **Article II**: CLI interfaces - All 19 commands in `bin/`
-- **Article III**: Test structure - Tests in `tests/` with 80% coverage
-- **Article IV**: EARS format - Requirements via `musubi-requirements`
-- **Article V**: Traceability - Via `musubi-trace` and `src/analyzers/traceability.js`
-- **Article VI**: Project memory - Steering files in `steering/`
-- **Article VII**: Simplicity Gate - Single deployable package
-- **Article VIII**: Anti-Abstraction - Direct framework usage
-- **Article IX**: Integration-First - Jest test framework
+- **Article I**: Library-first pattern in `lib/`
+- **Article II**: CLI interfaces per library
+- **Article III**: Test structure supports Test-First
+- **Article VI**: Steering files maintain project memory
+
+---
+
+## Changelog
+
+### Version 1.1 (Planned)
+
+- [Future changes]
 
 ---
 
 **Last Updated**: 2025-12-08
-**Maintained By**: MUSUBI Contributors
-**CodeGraph Index**: 12,094 entities, 74,338 relations, 2,154 files
+**Maintained By**: {{MAINTAINER}}

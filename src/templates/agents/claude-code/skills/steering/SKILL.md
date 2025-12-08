@@ -38,6 +38,36 @@ allowed-tools: [Read, Write, Bash, Glob, Grep]
 
 **Purpose**: Persistent knowledge across conversations, continuous learning, agent collaboration
 
+### Agent Memory CLI (v3.5.0 NEW)
+
+`musubi-remember` CLI でセッション間のメモリ管理ができます：
+
+```bash
+# セッションから学習を抽出
+musubi-remember extract
+
+# メモリをファイルにエクスポート
+musubi-remember export ./project-memory.json
+
+# 別プロジェクトからメモリをインポート
+musubi-remember import ./other-project-memory.json
+
+# コンテキストウィンドウに収めるためメモリを圧縮
+musubi-remember condense
+
+# 保存されたメモリを一覧表示
+musubi-remember list
+
+# セッションメモリをクリア
+musubi-remember clear
+```
+
+**ユースケース**:
+- セッション終了時の学習抽出・保存
+- チームメンバー間のナレッジ共有
+- プロジェクト間のベストプラクティス移植
+- 長時間セッションでのメモリ最適化
+
 ### 乖離検出と推奨事項
 
 - コードとsteeringドキュメントの不一致検出

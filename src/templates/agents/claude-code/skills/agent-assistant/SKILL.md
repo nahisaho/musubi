@@ -88,6 +88,28 @@ Extracts and persists learnings from agent sessions:
 - **Error Solutions**: Error-resolution mappings
 - **Project Structure**: Codebase knowledge
 
+**CLI Command (v3.5.0 NEW)**:
+
+```bash
+# Extract learnings from current session
+musubi-remember extract
+
+# Export memory to file
+musubi-remember export ./session-memory.json
+
+# Import memory from file
+musubi-remember import ./session-memory.json
+
+# Condense memory to fit context window
+musubi-remember condense
+
+# List stored memories
+musubi-remember list
+
+# Clear session memory
+musubi-remember clear
+```
+
 **Usage Example**:
 ```javascript
 const { AgentMemoryManager } = require('musubi/src/managers/agent-memory');
