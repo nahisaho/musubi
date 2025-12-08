@@ -5,6 +5,120 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.7.0] - 2025-12-09
+
+### Added
+
+**Major Feature Release** 🚀
+
+#### GUI & Browser Integration
+- **WebSocket Real-time Replanning Updates** (`src/gui/ws-handler.js`)
+  - Live replanning state synchronization via WebSocket
+  - `replan:triggered`, `replan:progress`, `replan:completed` events
+  - Real-time plan update broadcasting to connected clients
+
+- **Browser Agent Tests** (`tests/agents/browser-agent.test.js`)
+  - Comprehensive test coverage for musubi-browser functionality
+
+#### GitHub Actions Integration
+- **musubi-action** (`.github/actions/musubi-action/`)
+  - GitHub Action for CI/CD integration
+  - Reusable workflow for MUSUBI validation
+  - Automatic MUSUBI checks in pull requests
+
+#### Conversion & Interoperability
+- **OpenAPI/Swagger Converter** (`src/converters/openapi-converter.js`)
+  - Convert OpenAPI 3.x and Swagger 2.x specs to MUSUBI format
+  - Automatic API endpoint discovery and documentation
+  - Integration with Spec Kit ecosystem
+  - CLI: `musubi-convert openapi <spec-file>`
+  - 29 tests passing
+
+#### Multi-language Templates
+- **LocaleManager** (`src/templates/locale-manager.js`)
+  - 7 language support: English, Japanese, Chinese, Korean, Spanish, German, French
+  - Automatic locale detection from project files
+  - CLI: `musubi-init --locale <lang>`
+  - Templates: `requirements.{en,ja,zh,ko,es,de,fr}.md`
+  - 31 tests passing
+
+#### Local LLM Integration
+- **Ollama Provider** (`src/llm-providers/ollama-provider.js`)
+  - Full Ollama API integration for local LLM inference
+  - 9 model presets: llama3.2, codellama, mistral, deepseek-coder, qwen2.5, etc.
+  - Streaming support with async generators
+  - Embedding generation via nomic-embed-text
+  - Model management: pull, list, info
+  - 26 tests passing + 12 E2E tests with real Ollama server
+
+#### Cost Tracking & Monitoring
+- **CostTracker** (`src/monitoring/cost-tracker.js`)
+  - Token usage and cost tracking per provider
+  - Session and lifetime statistics
+  - Budget alerts with configurable thresholds
+  - Pricing for OpenAI, Anthropic, Google, Local (free)
+  - Report generation in text/JSON/CSV formats
+  - CLI: `musubi-costs`, `musubi-costs report`, `musubi-costs budget`
+  - 39 tests passing
+
+#### Checkpoint Management
+- **CheckpointManager** (`src/managers/checkpoint-manager.js`)
+  - Development state snapshots with file preservation
+  - Create, restore, compare, archive checkpoints
+  - Tag-based organization
+  - Automatic backup before restore
+  - Auto-checkpoint with configurable interval
+  - CLI: `musubi-checkpoint create/list/restore/compare`
+  - 44 tests passing
+
+### CLI Commands (v3.7.0 NEW)
+
+| Command | Purpose |
+|---------|---------|
+| `musubi-init --locale <lang>` | Initialize with specific language |
+| `musubi-convert openapi <spec>` | Convert OpenAPI to MUSUBI |
+| `musubi-costs` | View current session costs |
+| `musubi-costs report` | Generate cost report |
+| `musubi-costs budget <amount>` | Set budget limit |
+| `musubi-checkpoint create` | Create state checkpoint |
+| `musubi-checkpoint list` | List all checkpoints |
+| `musubi-checkpoint restore <id>` | Restore a checkpoint |
+| `musubi-checkpoint compare <id1> <id2>` | Compare checkpoints |
+
+### New Files Created
+
+```
+.github/actions/musubi-action/
+bin/musubi-costs.js
+bin/musubi-checkpoint.js
+src/converters/openapi-converter.js
+src/llm-providers/ollama-provider.js
+src/monitoring/cost-tracker.js
+src/managers/checkpoint-manager.js
+src/managers/index.js
+src/templates/index.js
+src/templates/locale-manager.js
+steering/templates/requirements.zh.md
+steering/templates/requirements.ko.md
+steering/templates/requirements.es.md
+steering/templates/requirements.de.md
+steering/templates/requirements.fr.md
+tests/e2e/ollama-e2e.test.js
+tests/converters/openapi-converter.test.js
+tests/llm-providers/ollama-provider.test.js
+tests/monitoring/cost-tracker.test.js
+tests/managers/checkpoint-manager.test.js
+tests/templates/locale-manager.test.js
+```
+
+### Tests
+
+- New tests: 181 tests added
+- E2E Tests: 12 Ollama integration tests with real server
+- Total estimated: 2000+ tests passing
+
+---
+
 ## [3.6.1] - 2025-12-09
 
 ### Added
