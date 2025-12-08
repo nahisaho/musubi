@@ -12,6 +12,7 @@ const FileWatcher = require('./services/file-watcher');
 const ProjectScanner = require('./services/project-scanner');
 const WorkflowService = require('./services/workflow-service');
 const TraceabilityService = require('./services/traceability-service');
+const { ReplanningService } = require('./services/replanning-service');
 
 /**
  * @typedef {Object} GUIServerOptions
@@ -47,6 +48,7 @@ class GUIServer {
     this.projectScanner = new ProjectScanner(this.projectPath);
     this.workflowService = new WorkflowService(this.projectPath);
     this.traceabilityService = new TraceabilityService(this.projectPath);
+    this.replanningService = new ReplanningService(this.projectPath);
 
     this.setupMiddleware();
     this.setupRoutes();
@@ -195,6 +197,62 @@ class GUIServer {
       try {
         const workflows = await this.workflowService.getAllWorkflows();
         res.json(workflows);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    // Replanning routes
+    this.app.get('/api/replanning', async (req, res) => {
+      try {
+        const state = await this.replanningService.getState();
+        res.json(state);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    this.app.get('/api/replanning/summary', async (req, res) => {
+      try {
+        const summary = await this.replanningService.getSummary();
+        res.json(summary);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    this.app.get('/api/replanning/goals', async (req, res) => {
+      try {
+        const goals = await this.replanningService.getGoalProgress();
+        res.json(goals);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    this.app.get('/api/replanning/optimization', async (req, res) => {
+      try {
+        const optimization = await this.replanningService.getPathOptimization();
+        res.json(optimization);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    this.app.get('/api/replanning/history', async (req, res) => {
+      try {
+        const limit = parseInt(req.query.limit) || 20;
+        const history = await this.replanningService.getHistory(limit);
+        res.json(history);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
+
+    this.app.get('/api/replanning/metrics', async (req, res) => {
+      try {
+        const metrics = await this.replanningService.getMetrics();
+        res.json(metrics);
       } catch (error) {
         res.status(500).json({ error: error.message });
       }

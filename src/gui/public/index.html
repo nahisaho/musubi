@@ -405,6 +405,143 @@
         display: none;
       }
     }
+
+    /* Replanning Styles */
+    .replan-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+      border-radius: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .replan-status.idle {
+      background: rgba(148, 163, 184, 0.1);
+      border: 1px solid var(--text-muted);
+    }
+
+    .replan-status.monitoring {
+      background: rgba(14, 165, 233, 0.1);
+      border: 1px solid var(--secondary);
+    }
+
+    .replan-status.replanning {
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid var(--warning);
+    }
+
+    .replan-status.optimizing {
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid var(--primary);
+    }
+
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status-indicator.idle { background: var(--text-muted); animation: none; }
+    .status-indicator.monitoring { background: var(--secondary); }
+    .status-indicator.replanning { background: var(--warning); }
+    .status-indicator.optimizing { background: var(--primary); }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .goal-progress {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .goal-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem;
+      background: rgba(99, 102, 241, 0.05);
+      border-radius: 0.5rem;
+    }
+
+    .goal-progress-bar {
+      flex: 1;
+      height: 8px;
+      background: var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .goal-progress-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.3s ease;
+    }
+
+    .goal-progress-fill.low { background: var(--error); }
+    .goal-progress-fill.medium { background: var(--warning); }
+    .goal-progress-fill.high { background: var(--success); }
+
+    .optimization-card {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 1rem;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .optimization-suggestion {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 0.25rem;
+    }
+
+    .history-timeline {
+      position: relative;
+      padding-left: 1.5rem;
+    }
+
+    .history-timeline::before {
+      content: '';
+      position: absolute;
+      left: 0.5rem;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .history-item {
+      position: relative;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .history-item::before {
+      content: '';
+      position: absolute;
+      left: -1.25rem;
+      top: 1rem;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--primary);
+    }
+
+    .history-item.success::before { background: var(--success); }
+    .history-item.warning::before { background: var(--warning); }
+    .history-item.error::before { background: var(--error); }
   </style>
 </head>
 <body>
@@ -434,6 +571,9 @@
         </div>
         <div class="nav-item" data-view="traceability">
           🔗 Traceability
+        </div>
+        <div class="nav-item" data-view="replanning">
+          🔄 Replanning
         </div>
         <div class="nav-item" data-view="constitution">
           📜 Constitution
@@ -574,6 +714,46 @@
       }
     }
 
+    async function loadReplanning() {
+      try {
+        const response = await fetch('/api/replanning/summary');
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to load replanning:', error);
+        return null;
+      }
+    }
+
+    async function loadReplanningGoals() {
+      try {
+        const response = await fetch('/api/replanning/goals');
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to load replanning goals:', error);
+        return { goals: [], overallProgress: 0 };
+      }
+    }
+
+    async function loadReplanningHistory() {
+      try {
+        const response = await fetch('/api/replanning/history?limit=10');
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to load replanning history:', error);
+        return [];
+      }
+    }
+
+    async function loadReplanningOptimization() {
+      try {
+        const response = await fetch('/api/replanning/optimization');
+        return await response.json();
+      } catch (error) {
+        console.error('Failed to load optimization:', error);
+        return { status: 'idle', suggestions: [] };
+      }
+    }
+
     // Navigation
     function setupNavigation() {
       document.querySelectorAll('.nav-item').forEach(item => {
@@ -608,6 +788,9 @@
           break;
         case 'traceability':
           renderTraceability(content);
+          break;
+        case 'replanning':
+          renderReplanning(content);
           break;
         case 'constitution':
           renderConstitution(content);
@@ -821,6 +1004,191 @@
               <div>${article.title}</div>
             </div>
           `).join('')}
+        </div>
+      `;
+    }
+
+    async function renderReplanning(container) {
+      container.innerHTML = '<div class="loading"><div class="loading-spinner"></div>Loading replanning state...</div>';
+      
+      const [summary, goals, history, optimization] = await Promise.all([
+        loadReplanning(),
+        loadReplanningGoals(),
+        loadReplanningHistory(),
+        loadReplanningOptimization()
+      ]);
+
+      const statusLabels = {
+        idle: 'Idle',
+        monitoring: 'Monitoring',
+        evaluating: 'Evaluating',
+        replanning: 'Replanning',
+        optimizing: 'Optimizing'
+      };
+
+      const statusIcons = {
+        idle: '⏸️',
+        monitoring: '👁️',
+        evaluating: '🔍',
+        replanning: '🔄',
+        optimizing: '⚡'
+      };
+
+      const status = summary?.status || 'idle';
+      
+      container.innerHTML = `
+        <h2 style="margin-bottom: 1.5rem;">🔄 Replanning Engine</h2>
+        
+        <!-- Status Card -->
+        <div class="replan-status ${status}">
+          <span class="status-indicator ${status}"></span>
+          <span style="font-weight: 600;">${statusIcons[status]} ${statusLabels[status]}</span>
+          <span style="color: var(--text-muted); margin-left: auto;">v3.6.0</span>
+        </div>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid" style="margin-bottom: 1.5rem;">
+          <div class="stat-card">
+            <div class="label">Total Replans</div>
+            <div class="value">${summary?.metrics?.totalReplans || 0}</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Success Rate</div>
+            <div class="value">${summary?.metrics?.successRate || 100}%</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Goal Progress</div>
+            <div class="value">${summary?.goalProgress?.overall || 0}%</div>
+          </div>
+          <div class="stat-card">
+            <div class="label">Optimizations</div>
+            <div class="value">${summary?.metrics?.optimizationsApplied || 0}</div>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <!-- Goal Progress -->
+          <div class="card">
+            <h3>🎯 Goal Progress</h3>
+            <div class="goal-progress">
+              ${goals.goals?.length > 0 ? goals.goals.slice(0, 5).map(goal => {
+                const progress = goal.progress || 0;
+                const level = progress < 33 ? 'low' : progress < 66 ? 'medium' : 'high';
+                return `
+                  <div class="goal-item">
+                    <span style="flex-shrink: 0; width: 80px; font-size: 0.875rem;">${goal.id || 'Goal'}</span>
+                    <div class="goal-progress-bar">
+                      <div class="goal-progress-fill ${level}" style="width: ${progress}%"></div>
+                    </div>
+                    <span style="flex-shrink: 0; width: 40px; text-align: right; font-size: 0.875rem;">${progress}%</span>
+                  </div>
+                `;
+              }).join('') : `
+                <div style="color: var(--text-muted); padding: 1rem; text-align: center;">
+                  <p>No goals registered</p>
+                  <p style="font-size: 0.875rem; margin-top: 0.5rem;">Use <code>npx musubi-orchestrate goal register</code></p>
+                </div>
+              `}
+            </div>
+            ${goals.goals?.length > 0 ? `
+              <div class="progress-bar" style="margin-top: 1rem;">
+                <div class="progress-bar-fill" style="width: ${goals.overallProgress || 0}%"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; font-size: 0.75rem; color: var(--text-muted);">
+                <span>Active: ${summary?.goalProgress?.active || 0}</span>
+                <span>Completed: ${summary?.goalProgress?.completed || 0}</span>
+              </div>
+            ` : ''}
+          </div>
+
+          <!-- Path Optimization -->
+          <div class="card">
+            <h3>⚡ Path Optimization</h3>
+            <div class="optimization-card">
+              <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span class="status-indicator ${optimization.status || 'idle'}"></span>
+                <span style="font-weight: 500;">${optimization.status === 'active' ? 'Optimization Active' : 'Awaiting Optimization'}</span>
+              </div>
+              ${optimization.potentialSavings ? `
+                <div style="color: var(--success); font-size: 0.875rem;">
+                  💡 Potential savings: ${optimization.potentialSavings}%
+                </div>
+              ` : ''}
+            </div>
+            
+            <h4 style="font-size: 0.875rem; color: var(--text-muted); margin-bottom: 0.5rem;">Suggestions</h4>
+            ${optimization.suggestions?.length > 0 ? optimization.suggestions.slice(0, 3).map(sug => `
+              <div class="optimization-suggestion">
+                <span>💡</span>
+                <span style="font-size: 0.875rem;">${sug.description || sug}</span>
+              </div>
+            `).join('') : `
+              <div style="color: var(--text-muted); padding: 0.5rem; text-align: center; font-size: 0.875rem;">
+                No optimization suggestions
+              </div>
+            `}
+            <div style="margin-top: 1rem;">
+              <code style="font-size: 0.75rem; color: var(--text-muted);">npx musubi-orchestrate optimize run</code>
+            </div>
+          </div>
+        </div>
+
+        <!-- Replan History -->
+        <div class="card" style="margin-top: 1rem;">
+          <h3>📜 Recent Replan History</h3>
+          ${history?.length > 0 ? `
+            <div class="history-timeline">
+              ${history.slice(0, 8).map(event => {
+                const eventClass = event.success === false ? 'error' : 
+                                   event.trigger === 'warning' ? 'warning' : 'success';
+                const time = event.timestamp ? new Date(event.timestamp).toLocaleString('ja-JP') : 'Unknown';
+                return `
+                  <div class="history-item ${eventClass}">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                      <span style="font-weight: 500;">${event.trigger || event.type || 'Replan'}</span>
+                      <span style="font-size: 0.75rem; color: var(--text-muted);">${time}</span>
+                    </div>
+                    <div style="font-size: 0.875rem; color: var(--text-muted);">
+                      ${event.reason || event.description || 'Plan adjusted'}
+                    </div>
+                    ${event.confidence ? `
+                      <div style="font-size: 0.75rem; color: var(--primary); margin-top: 0.25rem;">
+                        Confidence: ${Math.round(event.confidence * 100)}%
+                      </div>
+                    ` : ''}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          ` : `
+            <div style="color: var(--text-muted); padding: 1rem; text-align: center;">
+              <p>No replan history yet</p>
+              <p style="font-size: 0.875rem; margin-top: 0.5rem;">Replanning events will appear here</p>
+            </div>
+          `}
+        </div>
+
+        <!-- CLI Commands Reference -->
+        <div class="card" style="margin-top: 1rem; background: rgba(99, 102, 241, 0.05);">
+          <h3>🛠️ CLI Commands</h3>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; font-size: 0.875rem;">
+            <div style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 0.25rem;">
+              <code>npx musubi-orchestrate replan &lt;context-id&gt;</code>
+              <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Trigger manual replan</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 0.25rem;">
+              <code>npx musubi-orchestrate goal status</code>
+              <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">View goal progress</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 0.25rem;">
+              <code>npx musubi-orchestrate optimize suggest</code>
+              <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Get optimization suggestions</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 0.25rem;">
+              <code>npx musubi-orchestrate path analyze</code>
+              <p style="color: var(--text-muted); font-size: 0.75rem; margin-top: 0.25rem;">Analyze current path</p>
+            </div>
+          </div>
         </div>
       `;
     }
