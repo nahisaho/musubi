@@ -105,6 +105,15 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 | `musubi-resolve`    | GitHub Issue auto-resolution      | `musubi-resolve <issue-number>`            |
 | `musubi-convert`    | Format conversion (Spec Kit)      | `musubi-convert to-speckit`                |
 
+### Replanning Commands (v3.6.0 NEW)
+
+| Command                        | Purpose                      | Example                                           |
+| ------------------------------ | ---------------------------- | ------------------------------------------------- |
+| `musubi-orchestrate replan`    | Execute dynamic replanning   | `musubi-orchestrate replan <context-id>`          |
+| `musubi-orchestrate goal`      | Goal management              | `musubi-orchestrate goal register --name "Deploy"`|
+| `musubi-orchestrate optimize`  | Path optimization            | `musubi-orchestrate optimize run <path-id>`       |
+| `musubi-orchestrate path`      | Path analysis                | `musubi-orchestrate path analyze <path-id>`       |
+
 ### Detailed Command Options
 
 **musubi-workflow** (v2.1.0 NEW):
@@ -227,6 +236,17 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `from-speckit` - Convert Spec Kit to MUSUBI format
 - `analyze` - Analyze format compatibility
 - `--output <dir>` - Specify output directory
+
+**musubi-orchestrate replanning** (v3.6.0 NEW):
+
+- `replan <context-id>` - Execute dynamic replanning for a context
+- `goal register --name <name>` - Register a new goal
+- `goal update <goal-id> --progress <percentage>` - Update goal progress
+- `goal status [goal-id]` - View goal status (all goals or specific)
+- `optimize run <path-id>` - Run path optimization
+- `optimize suggest <path-id>` - Get optimization suggestions
+- `path analyze <path-id>` - Analyze execution path
+- `path optimize <path-id>` - Optimize execution path
 
 ---
 

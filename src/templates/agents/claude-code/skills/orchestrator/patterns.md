@@ -226,6 +226,8 @@ Before Production Release:
 | Design review | Group Chat | Multi-perspective feedback |
 | Production release | Human-in-Loop | Critical validation |
 | Unclear request | Auto | Let orchestrator decide |
+| Long-running workflows | Replanning | Handle failures gracefully |
+| Resilient execution | Replanning | Automatic recovery |
 
 ---
 
@@ -264,3 +266,90 @@ Sequential Phase (continue):
 Human Gate:
 → Release approval
 ```
+
+---
+
+## Pattern 7: Replanning Pattern (v3.6.0 NEW)
+
+**Description**: Dynamic replanning when tasks fail, timeout, or encounter obstacles. The ReplanningEngine monitors execution and adjusts plans in real-time.
+
+```
+Execute Task
+    ↓
+Monitor (failure/timeout/quality issue?)
+    ↓ Yes
+Trigger Replan
+    ↓
+Analyze Context
+    ↓
+Generate Alternative Plan
+    ↓
+Execute Alternative
+```
+
+**Use When**:
+- Tasks may fail or timeout
+- Alternative approaches exist
+- Resilience is critical
+- Long-running workflows
+
+**Components**:
+
+| Component | Purpose | CLI Command |
+|-----------|---------|-------------|
+| ReplanningEngine | Core replanning logic | `musubi-orchestrate replan <context-id>` |
+| GoalProgressTracker | Track goal completion | `musubi-orchestrate goal status` |
+| ProactivePathOptimizer | Optimize execution paths | `musubi-orchestrate optimize run <path-id>` |
+| AdaptiveGoalModifier | Adjust goals dynamically | `musubi-orchestrate goal update <goal-id>` |
+
+**Example**:
+```
+User: "Deploy API to production"
+
+Initial Plan:
+1. Build → 2. Test → 3. Deploy
+
+Execution:
+1. Build ✓
+2. Test → FAILURE (timeout)
+
+Replan Triggered:
+- Reason: timeout
+- Decision: retry with smaller test subset
+- Alternative: 2a. Run critical tests only
+
+Continue:
+2a. Critical Tests ✓
+3. Deploy ✓
+```
+
+**Trigger Types**:
+- `failure` - Task execution failed
+- `timeout` - Task exceeded time limit
+- `quality` - Output quality below threshold
+- `manual` - Human-triggered replan
+- `dependency` - Dependency unavailable
+
+**Decision Types**:
+- `continue` - Proceed with next task
+- `retry` - Retry the failed task
+- `alternative` - Use alternative approach
+- `abort` - Stop execution
+- `human` - Escalate to human decision
+
+**CLI Usage**:
+```bash
+# Execute replanning for a context
+musubi-orchestrate replan ctx-12345
+
+# Register and track goals
+musubi-orchestrate goal register --name "Deploy API" --target 100
+musubi-orchestrate goal update goal-1 --progress 50
+musubi-orchestrate goal status
+
+# Optimize execution paths
+musubi-orchestrate path analyze path-1
+musubi-orchestrate optimize suggest path-1
+musubi-orchestrate optimize run path-1
+```
+
