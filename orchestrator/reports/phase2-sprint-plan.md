@@ -101,14 +101,24 @@ Enable brownfield (existing project) support with delta specification tracking a
 
 ## Sprint Breakdown
 
-### Sprint 2.1 (Week 1-2)
-- [ ] Delta format parser
-- [ ] Delta spec validator
-- [ ] Storage workflow
+### Sprint 2.1 (Week 1-2) ✅ COMPLETE
+- [x] Delta format parser (`DeltaSpecManager.parseDeltas`)
+- [x] Delta spec validator (`DeltaFormatValidator`)
+- [x] Storage workflow (`storage/changes/` + `delta-spec.js`)
+- [x] CLI enhancements (show, impact, approve, reject, create, validate-all)
+- [x] 24 unit tests (all passing)
 
-### Sprint 2.2 (Week 3-4)
-- [ ] Change workflow commands (init, apply, archive)
-- [ ] Archive mechanism
+### Sprint 2.2 (Week 3-4) ✅ COMPLETE
+- [x] Impact Analyzer (`src/analyzers/impact-analyzer.js`)
+  - Full dependency chain analysis
+  - Risk identification and recommendations
+  - Category and level-based impact scoring
+- [x] Archive mechanism enhanced (DeltaSpecManager integration)
+- [x] CLI enhancements:
+  - Enhanced `impact` command with full analysis
+  - New `diff` command for before/after comparison
+  - New `status` command for workflow summary
+- [x] 29 unit tests for Impact Analyzer (all passing)
 
 ### Sprint 2.3 (Week 5-6)
 - [ ] Traceability validation

@@ -23,6 +23,7 @@ const chalk = require('chalk');
 const ChangeManager = require('../src/managers/change.js');
 const { DeltaSpecManager, DeltaType } = require('../src/managers/delta-spec.js');
 const { DeltaFormatValidator } = require('../src/validators/delta-format.js');
+const { ImpactAnalyzer } = require('../src/analyzers/impact-analyzer.js');
 
 const program = new Command();
 
@@ -123,23 +124,49 @@ program
   .description('Archive completed change to specs/')
   .option('--changes <dir>', 'Changes directory', 'storage/changes')
   .option('--specs <dir>', 'Specs archive directory', 'specs')
+  .option('--force', 'Force archive even if not in implemented status')
   .action(async (changeId, options) => {
     try {
       const workspaceRoot = process.cwd();
-      const manager = new ChangeManager(workspaceRoot);
+      const deltaManager = new DeltaSpecManager(workspaceRoot);
+      const changeManager = new ChangeManager(workspaceRoot);
 
       console.log(chalk.blue('📦 Archiving change...'));
 
-      const result = await manager.archiveChange(changeId, {
-        changesDir: options.changes,
-        specsDir: options.specs,
-      });
+      // Try DeltaSpecManager first (new workflow)
+      const delta = deltaManager.load(changeId);
+      
+      if (delta) {
+        // Check status
+        if (delta.status !== 'implemented' && !options.force) {
+          console.log(chalk.yellow(`⚠ Change ${changeId} is in "${delta.status}" status.`));
+          console.log(chalk.dim('Use --force to archive anyway, or update status first:'));
+          console.log(chalk.dim(`  musubi-change approve ${changeId}`));
+          console.log(chalk.dim(`  # implement the change`));
+          console.log(chalk.dim(`  musubi-change apply ${changeId}`));
+          process.exit(1);
+        }
 
-      console.log(chalk.green('✓ Change archived successfully'));
-      console.log(chalk.dim(`Source: ${result.source}`));
-      console.log(chalk.dim(`Archive: ${result.archive}`));
-      console.log();
-      console.log(chalk.yellow('Delta merged to canonical specification'));
+        const result = deltaManager.archive(changeId);
+        
+        console.log(chalk.green('✓ Change archived successfully'));
+        console.log(chalk.dim(`Merged to: ${result.mergedTo}`));
+        console.log(chalk.dim(`Archive: ${result.archivePath}`));
+        console.log();
+        console.log(chalk.yellow('Delta merged to canonical specification'));
+      } else {
+        // Fall back to ChangeManager (legacy workflow)
+        const result = await changeManager.archiveChange(changeId, {
+          changesDir: options.changes,
+          specsDir: options.specs,
+        });
+
+        console.log(chalk.green('✓ Change archived successfully'));
+        console.log(chalk.dim(`Source: ${result.source}`));
+        console.log(chalk.dim(`Archive: ${result.archive}`));
+        console.log();
+        console.log(chalk.yellow('Delta merged to canonical specification'));
+      }
     } catch (error) {
       console.error(chalk.red('✗ Failed to archive change'));
       console.error(chalk.dim(error.message));
@@ -340,54 +367,117 @@ program
 // Impact analysis
 program
   .command('impact <change-id>')
-  .description('Show impact analysis for a change')
+  .description('Show detailed impact analysis for a change')
   .option('--changes <dir>', 'Changes directory', 'storage/changes')
+  .option('--full', 'Show full impact report with affected files')
+  .option('--format <format>', 'Output format (text|json|markdown)', 'text')
   .action(async (changeId, options) => {
     try {
       const workspaceRoot = process.cwd();
       const deltaManager = new DeltaSpecManager(workspaceRoot);
+      const impactAnalyzer = new ImpactAnalyzer(workspaceRoot);
 
       console.log(chalk.blue('🔍 Analyzing impact...'));
       console.log();
 
-      const report = deltaManager.generateImpactReport(changeId);
+      // Load delta
+      const delta = deltaManager.load(changeId);
+      if (!delta) {
+        console.error(chalk.red(`✗ Change not found: ${changeId}`));
+        process.exit(1);
+      }
 
+      // Run full impact analysis
+      const report = await impactAnalyzer.analyzeImpact(delta);
+
+      if (options.format === 'json') {
+        console.log(JSON.stringify(report, null, 2));
+        return;
+      }
+
+      if (options.format === 'markdown') {
+        console.log(impactAnalyzer.generateSummary(report));
+        return;
+      }
+
+      // Text format
       console.log(chalk.bold.blue(`Impact Report: ${report.id}`));
       console.log(chalk.dim('─'.repeat(50)));
       console.log();
       
       console.log(`${chalk.bold('Type:')}        ${report.type}`);
       console.log(`${chalk.bold('Target:')}      ${report.target}`);
-      console.log(`${chalk.bold('Status:')}      ${report.status}`);
+      console.log(`${chalk.bold('Analyzed:')}    ${report.timestamp}`);
       console.log();
-      
-      console.log(chalk.bold('Description:'));
-      console.log(chalk.dim(report.description));
+
+      // Summary
+      console.log(chalk.bold('Summary:'));
+      console.log(`  Total Affected: ${report.summary.totalAffected}`);
       console.log();
-      
-      if (report.impactedAreas && report.impactedAreas.length > 0) {
-        console.log(chalk.bold('Impacted Areas:'));
-        report.impactedAreas.forEach(area => {
-          console.log(chalk.yellow(`  • ${area}`));
+
+      // Impact by level
+      const levelColors = {
+        critical: chalk.red,
+        high: chalk.yellow,
+        medium: chalk.blue,
+        low: chalk.green,
+        info: chalk.dim
+      };
+
+      console.log(chalk.bold('Impact Levels:'));
+      Object.entries(report.summary.byLevel).forEach(([level, count]) => {
+        if (count > 0) {
+          const color = levelColors[level] || chalk.white;
+          console.log(`  ${color(`${level}: ${count}`)}`);
+        }
+      });
+      console.log();
+
+      // Impact by category
+      console.log(chalk.bold('Categories:'));
+      Object.entries(report.summary.byCategory).forEach(([category, count]) => {
+        if (count > 0) {
+          console.log(`  ${category}: ${count}`);
+        }
+      });
+      console.log();
+
+      // Show affected items if --full
+      if (options.full && report.affectedItems.length > 0) {
+        console.log(chalk.bold('Affected Items:'));
+        report.affectedItems.slice(0, 20).forEach(item => {
+          const levelColor = levelColors[item.level] || chalk.white;
+          console.log(`  ${levelColor('●')} ${item.path}`);
+          console.log(chalk.dim(`    ${item.reason}`));
+        });
+        if (report.affectedItems.length > 20) {
+          console.log(chalk.dim(`  ... and ${report.affectedItems.length - 20} more`));
+        }
+        console.log();
+      }
+
+      // Risks
+      if (report.risks.length > 0) {
+        console.log(chalk.bold.red('Risks:'));
+        report.risks.forEach(risk => {
+          const riskColor = risk.level === 'high' ? chalk.red : chalk.yellow;
+          console.log(riskColor(`  ⚠ ${risk.description}`));
+          console.log(chalk.dim(`    Mitigation: ${risk.mitigation}`));
         });
         console.log();
       }
-      
-      if (report.affectedFiles && report.affectedFiles.length > 0) {
-        console.log(chalk.bold(`Affected Files (${report.affectedFiles.length}):`));
-        report.affectedFiles.forEach(file => {
-          console.log(chalk.dim(`  • ${file}`));
-        });
-        console.log();
-      } else {
-        console.log(chalk.dim('No directly affected files found.'));
-        console.log();
-      }
-      
-      if (report.recommendations && report.recommendations.length > 0) {
+
+      // Recommendations
+      if (report.recommendations.length > 0) {
         console.log(chalk.bold('Recommendations:'));
-        report.recommendations.forEach((rec, i) => {
-          console.log(chalk.cyan(`  ${i + 1}. ${rec}`));
+        report.recommendations.forEach(rec => {
+          const emoji = {
+            critical: '🔴',
+            high: '🟠',
+            medium: '🟡',
+            info: 'ℹ️'
+          }[rec.priority] || '•';
+          console.log(`  ${emoji} ${rec.message}`);
         });
         console.log();
       }
@@ -567,6 +657,205 @@ program
       }
     } catch (error) {
       console.error(chalk.red('✗ Failed to validate'));
+      console.error(chalk.dim(error.message));
+      process.exit(1);
+    }
+  });
+
+// Diff command - show before/after comparison
+program
+  .command('diff <change-id>')
+  .description('Show before/after diff for a change')
+  .option('--changes <dir>', 'Changes directory', 'storage/changes')
+  .option('--context <lines>', 'Lines of context to show', '3')
+  .action(async (changeId, options) => {
+    try {
+      const workspaceRoot = process.cwd();
+      const deltaManager = new DeltaSpecManager(workspaceRoot);
+
+      const delta = deltaManager.load(changeId);
+      if (!delta) {
+        console.error(chalk.red(`✗ Change not found: ${changeId}`));
+        process.exit(1);
+      }
+
+      console.log();
+      console.log(chalk.bold.blue(`Diff: ${delta.id}`));
+      console.log(chalk.dim('─'.repeat(50)));
+      console.log();
+
+      const typeColors = {
+        ADDED: chalk.green,
+        MODIFIED: chalk.yellow,
+        REMOVED: chalk.red,
+        RENAMED: chalk.cyan
+      };
+      const typeColor = typeColors[delta.type] || chalk.white;
+
+      console.log(`${chalk.bold('Type:')} ${typeColor(delta.type)}`);
+      console.log(`${chalk.bold('Target:')} ${delta.target}`);
+      console.log();
+
+      switch (delta.type) {
+        case 'ADDED':
+          console.log(chalk.green('+ New Component'));
+          console.log(chalk.dim('─'.repeat(40)));
+          if (delta.after) {
+            if (typeof delta.after === 'object') {
+              console.log(chalk.green(JSON.stringify(delta.after, null, 2)));
+            } else {
+              console.log(chalk.green(delta.after));
+            }
+          } else {
+            console.log(chalk.green(delta.description));
+          }
+          break;
+
+        case 'REMOVED':
+          console.log(chalk.red('- Removed Component'));
+          console.log(chalk.dim('─'.repeat(40)));
+          if (delta.before) {
+            if (typeof delta.before === 'object') {
+              console.log(chalk.red(JSON.stringify(delta.before, null, 2)));
+            } else {
+              console.log(chalk.red(delta.before));
+            }
+          } else {
+            console.log(chalk.red(`Removing: ${delta.target}`));
+          }
+          break;
+
+        case 'MODIFIED':
+          console.log(chalk.yellow('~ Modified Component'));
+          console.log(chalk.dim('─'.repeat(40)));
+          console.log();
+          console.log(chalk.red.bold('BEFORE:'));
+          if (delta.before) {
+            if (typeof delta.before === 'object') {
+              Object.entries(delta.before).forEach(([key, value]) => {
+                console.log(chalk.red(`- ${key}: ${JSON.stringify(value)}`));
+              });
+            } else {
+              console.log(chalk.red(`- ${delta.before}`));
+            }
+          }
+          console.log();
+          console.log(chalk.green.bold('AFTER:'));
+          if (delta.after) {
+            if (typeof delta.after === 'object') {
+              Object.entries(delta.after).forEach(([key, value]) => {
+                console.log(chalk.green(`+ ${key}: ${JSON.stringify(value)}`));
+              });
+            } else {
+              console.log(chalk.green(`+ ${delta.after}`));
+            }
+          }
+          break;
+
+        case 'RENAMED':
+          console.log(chalk.cyan('⇒ Renamed Component'));
+          console.log(chalk.dim('─'.repeat(40)));
+          console.log(chalk.red(`- ${delta.before || delta.target}`));
+          console.log(chalk.green(`+ ${delta.after || 'new name'}`));
+          break;
+
+        default:
+          console.log(chalk.dim('No diff information available.'));
+      }
+
+      console.log();
+      console.log(chalk.bold('Description:'));
+      console.log(chalk.dim(delta.description));
+      
+      if (delta.rationale) {
+        console.log();
+        console.log(chalk.bold('Rationale:'));
+        console.log(chalk.dim(delta.rationale));
+      }
+
+      console.log();
+    } catch (error) {
+      console.error(chalk.red('✗ Failed to show diff'));
+      console.error(chalk.dim(error.message));
+      process.exit(1);
+    }
+  });
+
+// Status command - show workflow status summary
+program
+  .command('status')
+  .description('Show status summary of all changes')
+  .option('--changes <dir>', 'Changes directory', 'storage/changes')
+  .action(async (options) => {
+    try {
+      const workspaceRoot = process.cwd();
+      const deltaManager = new DeltaSpecManager(workspaceRoot);
+
+      const deltas = deltaManager.list();
+
+      if (deltas.length === 0) {
+        console.log(chalk.dim('No delta specifications found.'));
+        return;
+      }
+
+      const statusCounts = {
+        proposed: 0,
+        approved: 0,
+        rejected: 0,
+        implemented: 0,
+        archived: 0
+      };
+
+      const typeCounts = {
+        ADDED: 0,
+        MODIFIED: 0,
+        REMOVED: 0,
+        RENAMED: 0
+      };
+
+      deltas.forEach(d => {
+        statusCounts[d.status] = (statusCounts[d.status] || 0) + 1;
+        typeCounts[d.type] = (typeCounts[d.type] || 0) + 1;
+      });
+
+      console.log();
+      console.log(chalk.bold.blue('Change Status Summary'));
+      console.log(chalk.dim('─'.repeat(40)));
+      console.log();
+
+      console.log(chalk.bold('By Status:'));
+      console.log(`  ${chalk.yellow('●')} Proposed:    ${statusCounts.proposed}`);
+      console.log(`  ${chalk.blue('●')} Approved:    ${statusCounts.approved}`);
+      console.log(`  ${chalk.red('●')} Rejected:    ${statusCounts.rejected}`);
+      console.log(`  ${chalk.cyan('●')} Implemented: ${statusCounts.implemented}`);
+      console.log(`  ${chalk.green('●')} Archived:    ${statusCounts.archived}`);
+      console.log();
+
+      console.log(chalk.bold('By Type:'));
+      console.log(`  ${chalk.green('+')} ADDED:    ${typeCounts.ADDED}`);
+      console.log(`  ${chalk.yellow('~')} MODIFIED: ${typeCounts.MODIFIED}`);
+      console.log(`  ${chalk.red('-')} REMOVED:  ${typeCounts.REMOVED}`);
+      console.log(`  ${chalk.cyan('⇒')} RENAMED:  ${typeCounts.RENAMED}`);
+      console.log();
+
+      console.log(`${chalk.bold('Total:')} ${deltas.length} delta(s)`);
+      console.log();
+
+      // Show pending items
+      const pending = deltas.filter(d => 
+        d.status === 'proposed' || d.status === 'approved'
+      );
+
+      if (pending.length > 0) {
+        console.log(chalk.bold('Pending Actions:'));
+        pending.forEach(d => {
+          const statusColor = d.status === 'proposed' ? chalk.yellow : chalk.blue;
+          console.log(`  ${statusColor('●')} ${d.id} (${d.status})`);
+        });
+        console.log();
+      }
+    } catch (error) {
+      console.error(chalk.red('✗ Failed to get status'));
       console.error(chalk.dim(error.message));
       process.exit(1);
     }
