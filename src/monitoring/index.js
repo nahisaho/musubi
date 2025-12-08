@@ -600,6 +600,7 @@ function createMonitoringConfig(options = {}) {
 // Import sub-modules
 const releaseManagerModule = require('./release-manager');
 const incidentManagerModule = require('./incident-manager');
+const observabilityModule = require('./observability');
 
 module.exports = {
   // Classes
@@ -625,5 +626,8 @@ module.exports = {
   ...releaseManagerModule,
   
   // Incident Manager
-  ...incidentManagerModule
+  ...incidentManagerModule,
+  
+  // Observability
+  ...observabilityModule
 };
