@@ -5,6 +5,68 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0] - 2025-06-14
+
+### Added - Phase 5 Advanced Features Complete 🎉
+
+**MUSUBI v3.4.0 completes Phase 5 of the project roadmap.**
+
+#### Phase 5 Deliverables (4 Sprints)
+
+| Sprint | Description | Status |
+|--------|-------------|--------|
+| Sprint 5.1 | Steering Auto-Update | ✅ Complete |
+| Sprint 5.2 | Template Constraints | ✅ Complete |
+| Sprint 5.3 | Quality Metrics Dashboard | ✅ Complete |
+| Sprint 5.4 | Advanced Validation | ✅ Complete |
+
+#### New Features
+
+**Steering Auto-Update** (`src/steering/auto-updater.js`):
+- `ChangeDetector` - Detect file changes affecting steering files
+- `SteeringUpdater` - Generate updates for structure/tech/product
+- `ProjectYmlSync` - Sync project.yml with package.json
+- `CustomSteeringRules` - Custom update rules from markdown
+- `SteeringAutoUpdater` - Full auto-update orchestration
+
+**Template Constraints** (`src/steering/template-constraints.js`):
+- `Constraint` - Validation constraints with custom validators
+- `ChecklistItem` / `Checklist` - Required checklists with validation
+- `UncertaintyParser` - Parse {?unknown?}, {~estimate~}, {!todo!} markers
+- `TemplateSection` - Section definitions with dependencies
+- `TemplateDefinition` - Full template with sections and checklists
+- `TemplateConstraintEngine` - LLM-constraining syntax validation
+
+**Quality Metrics Dashboard** (`src/steering/quality-metrics.js`):
+- `Metric` / `CoverageMetric` / `ComplianceMetric` - Metric types
+- `HealthIndicator` - Health status with async checkers
+- `TrendAnalyzer` - Trend detection (up/down/stable)
+- `QualityScoreCalculator` - A-F grade calculation
+- `QualityMetricsDashboard` - Full dashboard with reports
+
+**Advanced Validation** (`src/steering/advanced-validation.js`):
+- `ConsistencyChecker` - Cross-artifact consistency validation
+- `GapDetector` - Gap detection between requirements/design/tests
+- `CompletenessChecker` - Required fields and sections validation
+- `DependencyValidator` - Dependency cycle detection
+- `ReferenceValidator` - Reference validation (REQ-xxx, DES-xxx)
+- `AdvancedValidator` - Unified validation with reporting
+
+#### Test Coverage
+
+| Module | Tests |
+|--------|-------|
+| Steering Auto-Update | 28 |
+| Template Constraints | 54 |
+| Quality Metrics | 57 |
+| Advanced Validation | 50 |
+| Index Integration | 44 |
+| **Phase 5 Total** | **233** |
+
+**Total Tests: 1490 (56 suites)**
+
+---
+
 ## [3.3.0] - 2025-06-14
 
 ### Added - Phase 4 Monitoring & Operations Complete 🎉
