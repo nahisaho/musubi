@@ -8,8 +8,9 @@
  * - Technical debt detection
  * - Dependency analysis
  * - Security vulnerabilities
+ * - CodeGraph MCP integration for code structure analysis
  *
- * @version 0.5.0
+ * @version 3.6.1
  */
 
 const fs = require('fs-extra');
@@ -17,6 +18,7 @@ const path = require('path');
 const chalk = require('chalk');
 const { program } = require('commander');
 const { glob } = require('glob');
+const { execSync, spawn } = require('child_process');
 
 // ============================================================================
 // Configuration
@@ -59,12 +61,14 @@ const CONFIG = {
 program
   .name('musubi-analyze')
   .description('Analyze codebase for quality, complexity, and technical debt')
-  .version('0.5.0')
-  .option('-t, --type <type>', 'Analysis type: quality, dependencies, security, stuck, all', 'all')
+  .version('3.6.1')
+  .option('-t, --type <type>', 'Analysis type: quality, dependencies, security, stuck, codegraph, all', 'all')
   .option('-o, --output <file>', 'Output file for analysis report')
   .option('--json', 'Output in JSON format')
   .option('--threshold <level>', 'Quality threshold: low, medium, high', 'medium')
   .option('--detect-stuck', 'Detect stuck agent patterns (repetitive errors, circular edits)')
+  .option('--codegraph', 'Run CodeGraph MCP index and update steering/memories/codegraph.md')
+  .option('--codegraph-full', 'Run full CodeGraph MCP index (not incremental)')
   .option('-v, --verbose', 'Verbose output')
   .parse(process.argv);
 
@@ -407,6 +411,255 @@ async function generateReport(analysisData) {
 }
 
 // ============================================================================
+// CodeGraph MCP Integration
+// ============================================================================
+
+/**
+ * Check if CodeGraph MCP is installed
+ * @returns {boolean} True if codegraph-mcp is available
+ */
+function isCodeGraphInstalled() {
+  try {
+    execSync('codegraph-mcp --version', { stdio: 'pipe' });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Run CodeGraph MCP index command
+ * @param {boolean} full - Whether to run full index (not incremental)
+ * @returns {Promise<Object>} Index results
+ */
+async function runCodeGraphIndex(full = false) {
+  return new Promise((resolve, reject) => {
+    const args = ['index', '.'];
+    if (full) {
+      args.push('--full');
+    }
+    
+    log(`Running CodeGraph MCP index (${full ? 'full' : 'incremental'})...`, 'analyze');
+    
+    const proc = spawn('codegraph-mcp', args, {
+      cwd: process.cwd(),
+      stdio: ['inherit', 'pipe', 'pipe']
+    });
+    
+    let stdout = '';
+    let stderr = '';
+    
+    proc.stdout.on('data', (data) => {
+      stdout += data.toString();
+      if (options.verbose) {
+        process.stdout.write(data);
+      }
+    });
+    
+    proc.stderr.on('data', (data) => {
+      stderr += data.toString();
+    });
+    
+    proc.on('close', (code) => {
+      if (code === 0) {
+        resolve({ success: true, output: stdout });
+      } else {
+        reject(new Error(`CodeGraph index failed: ${stderr}`));
+      }
+    });
+  });
+}
+
+/**
+ * Get CodeGraph MCP statistics
+ * @returns {Promise<Object>} Statistics object
+ */
+async function getCodeGraphStats() {
+  return new Promise((resolve, reject) => {
+    const proc = spawn('codegraph-mcp', ['stats', '.'], {
+      cwd: process.cwd(),
+      stdio: ['inherit', 'pipe', 'pipe']
+    });
+    
+    let stdout = '';
+    
+    proc.stdout.on('data', (data) => {
+      stdout += data.toString();
+    });
+    
+    proc.on('close', (code) => {
+      if (code === 0) {
+        // Parse the stats output
+        const stats = parseCodeGraphStats(stdout);
+        resolve(stats);
+      } else {
+        reject(new Error('Failed to get CodeGraph stats'));
+      }
+    });
+  });
+}
+
+/**
+ * Parse CodeGraph MCP stats output
+ * @param {string} output - Raw stats output
+ * @returns {Object} Parsed statistics
+ */
+function parseCodeGraphStats(output) {
+  const stats = {
+    entities: 0,
+    relations: 0,
+    communities: 0,
+    files: 0,
+    entityTypes: {}
+  };
+  
+  const lines = output.split('\n');
+  let inEntityTypes = false;
+  
+  for (const line of lines) {
+    if (line.startsWith('Entities:')) {
+      stats.entities = parseInt(line.split(':')[1].trim(), 10);
+    } else if (line.startsWith('Relations:')) {
+      stats.relations = parseInt(line.split(':')[1].trim(), 10);
+    } else if (line.startsWith('Communities:')) {
+      stats.communities = parseInt(line.split(':')[1].trim(), 10);
+    } else if (line.startsWith('Files:')) {
+      stats.files = parseInt(line.split(':')[1].trim(), 10);
+    } else if (line.includes('Entities by type:')) {
+      inEntityTypes = true;
+    } else if (inEntityTypes && line.trim().startsWith('-')) {
+      const match = line.match(/-\s*(\w+):\s*(\d+)/);
+      if (match) {
+        stats.entityTypes[match[1]] = parseInt(match[2], 10);
+      }
+    }
+  }
+  
+  return stats;
+}
+
+/**
+ * Generate CodeGraph report in steering/memories/codegraph.md
+ * @param {Object} stats - CodeGraph statistics
+ */
+async function generateCodeGraphReport(stats) {
+  const reportPath = 'steering/memories/codegraph.md';
+  const timestamp = new Date().toISOString();
+  const version = require('../package.json').version;
+  
+  let report = `# CodeGraph MCP Index Report
+
+**Generated**: ${timestamp}
+**Version**: MUSUBI v${version}
+**Indexed by**: CodeGraph MCP Server
+
+---
+
+## Graph Statistics
+
+| Metric | Value |
+|--------|-------|
+| Entities | ${stats.entities.toLocaleString()} |
+| Relations | ${stats.relations.toLocaleString()} |
+| Communities | ${stats.communities} |
+| Files Indexed | ${stats.files.toLocaleString()} |
+
+## Entity Types
+
+| Type | Count |
+|------|-------|
+`;
+
+  for (const [type, count] of Object.entries(stats.entityTypes)) {
+    report += `| ${type} | ${count.toLocaleString()} |\n`;
+  }
+
+  report += `
+---
+
+## Usage
+
+CodeGraph MCP provides AI assistants with deep code understanding:
+
+\`\`\`bash
+# Re-index (incremental)
+codegraph-mcp index .
+
+# Full re-index
+codegraph-mcp index . --full
+
+# View stats
+codegraph-mcp stats .
+
+# Start MCP server
+codegraph-mcp serve --repo .
+\`\`\`
+
+---
+
+*Generated by MUSUBI v${version} using CodeGraph MCP Server*
+`;
+
+  fs.ensureDirSync(path.dirname(reportPath));
+  fs.writeFileSync(reportPath, report);
+  
+  log(`CodeGraph report saved to: ${reportPath}`, 'success');
+  
+  return reportPath;
+}
+
+/**
+ * Run CodeGraph MCP analysis
+ * @param {boolean} full - Whether to run full index
+ * @returns {Promise<Object>} Analysis results
+ */
+async function analyzeCodeGraph(full = false) {
+  log('CodeGraph MCP Analysis', 'analyze');
+  console.log();
+  
+  // Check if CodeGraph MCP is installed
+  if (!isCodeGraphInstalled()) {
+    log('CodeGraph MCP is not installed. Install with:', 'warning');
+    console.log(chalk.cyan('  pipx install codegraph-mcp-server'));
+    console.log();
+    return null;
+  }
+  
+  try {
+    // Run index
+    await runCodeGraphIndex(full);
+    console.log();
+    
+    // Get statistics
+    const stats = await getCodeGraphStats();
+    
+    // Display stats
+    console.log(chalk.bold('CodeGraph Statistics:'));
+    console.log(`  Entities:    ${chalk.green(stats.entities.toLocaleString())}`);
+    console.log(`  Relations:   ${chalk.green(stats.relations.toLocaleString())}`);
+    console.log(`  Communities: ${chalk.green(stats.communities)}`);
+    console.log(`  Files:       ${chalk.green(stats.files.toLocaleString())}`);
+    console.log();
+    
+    if (Object.keys(stats.entityTypes).length > 0) {
+      console.log(chalk.bold('Entity Types:'));
+      for (const [type, count] of Object.entries(stats.entityTypes)) {
+        console.log(`  ${type}: ${chalk.cyan(count.toLocaleString())}`);
+      }
+      console.log();
+    }
+    
+    // Generate report
+    await generateCodeGraphReport(stats);
+    
+    return stats;
+  } catch (error) {
+    log(`CodeGraph analysis failed: ${error.message}`, 'error');
+    return null;
+  }
+}
+
+// ============================================================================
 // Stuck Detection Analysis
 // ============================================================================
 
@@ -620,6 +873,20 @@ async function main() {
   const analysisData = {};
 
   try {
+    // Handle --codegraph or --codegraph-full options
+    if (options.codegraph || options.codegraphFull || options.type === 'codegraph') {
+      analysisData.codegraph = await analyzeCodeGraph(options.codegraphFull);
+      
+      if (options.json && analysisData.codegraph) {
+        console.log(JSON.stringify(analysisData.codegraph, null, 2));
+      }
+      
+      if (options.type === 'codegraph') {
+        log('CodeGraph analysis complete!', 'success');
+        process.exit(0);
+      }
+    }
+
     // Handle --detect-stuck option
     if (options.detectStuck || options.type === 'stuck') {
       analysisData.stuck = await analyzeStuckPatterns();
@@ -643,6 +910,11 @@ async function main() {
 
     if (options.type === 'security' || options.type === 'all') {
       analysisData.security = await analyzeSecurity();
+    }
+
+    // Run CodeGraph analysis in 'all' mode if codegraph-mcp is available
+    if (options.type === 'all' && isCodeGraphInstalled() && !analysisData.codegraph) {
+      analysisData.codegraph = await analyzeCodeGraph(false);
     }
 
     // Generate report if output specified
