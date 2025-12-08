@@ -1,7 +1,7 @@
 /**
  * @fileoverview Replanning Module Exports for MUSUBI
  * @module orchestration/replanning
- * @version 1.0.0
+ * @version 1.1.0
  */
 
 'use strict';
@@ -18,6 +18,28 @@ const {
   mergeConfig,
   validateConfig
 } = require('./config');
+
+// v3.6.0+ Advanced Replanning Components
+const { 
+  ProactivePathOptimizer, 
+  PathAnalyzer, 
+  OptimizationStrategy 
+} = require('./proactive-path-optimizer');
+const { 
+  GoalProgressTracker, 
+  ProgressCalculator, 
+  MilestoneManager, 
+  DeviationDetector, 
+  ProjectionEngine 
+} = require('./goal-progress-tracker');
+const { 
+  AdaptiveGoalModifier, 
+  ImpactAnalyzer, 
+  ModificationStrategy, 
+  ModificationHistoryManager,
+  ModificationReason,
+  ModificationType 
+} = require('./adaptive-goal-modifier');
 
 module.exports = {
   // Core Engine
@@ -36,5 +58,25 @@ module.exports = {
   ReplanDecision,
   defaultReplanningConfig,
   mergeConfig,
-  validateConfig
+  validateConfig,
+
+  // v3.6.0+ Proactive Path Optimization
+  ProactivePathOptimizer,
+  PathAnalyzer,
+  OptimizationStrategy,
+
+  // v3.6.0+ Goal Progress Tracking
+  GoalProgressTracker,
+  ProgressCalculator,
+  MilestoneManager,
+  DeviationDetector,
+  ProjectionEngine,
+
+  // v3.6.0+ Adaptive Goal Modification
+  AdaptiveGoalModifier,
+  ImpactAnalyzer,
+  ModificationStrategy,
+  ModificationHistoryManager,
+  ModificationReason,
+  ModificationType
 };
