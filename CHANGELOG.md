@@ -5,6 +5,96 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2025-06-14
+
+### Added - Phase 4 Monitoring & Operations Complete 🎉
+
+**MUSUBI v3.3.0 completes Phase 4 of the project roadmap.**
+
+#### Phase 4 Deliverables (2 Sprints)
+
+| Sprint | Description | Status |
+|--------|-------------|--------|
+| Sprint 4.1 | SRE Capabilities | ✅ Complete |
+| Sprint 4.2 | Observability Architecture | ✅ Complete |
+
+#### New Features
+
+**SRE Capabilities** (`src/monitoring/index.js`):
+- `SLI` / `SLO` - Service Level Indicator/Objective definitions
+- `AlertRule` - Prometheus-compatible alert expressions
+- `HealthCheck` - Health check patterns with dependencies
+- `MonitoringConfig` - Unified monitoring configuration
+- `SLOTemplates` / `AlertTemplates` - Pre-defined templates
+
+**Release Management** (`src/monitoring/release-manager.js`):
+- `Release` - Full release lifecycle (planning → production → completed)
+- `FeatureFlag` - Feature flag with percentage rollout
+- `ReleaseManager` - Release coordination with rollback procedures
+- Release notes generation (Markdown/JSON)
+- Canary deployment support
+
+**Incident Management** (`src/monitoring/incident-manager.js`):
+- `Incident` - SEV1-SEV5 severity levels with timeline tracking
+- `Runbook` - Runbook definitions with step tracking
+- `RunbookExecution` - Runbook execution context
+- `PostMortem` - Blameless post-mortem generation
+- `IncidentManager` - On-call and incident lifecycle
+- MTTR/MTTA metrics calculation
+
+**Observability** (`src/monitoring/observability.js`):
+- `Logger` - Structured logging with levels and child loggers
+- `ConsoleOutput` / `FileOutput` - Multiple output destinations
+- `MetricsCollector` - Counter, Gauge, Histogram metrics
+- Prometheus export format support
+- `Span` / `Tracer` - Distributed tracing
+- `CorrelationContext` - HTTP header propagation
+- `ObservabilityProvider` - Unified observability access
+
+### Statistics
+- **Total Tests**: 1257 (174 new in Phase 4)
+- **Test Suites**: 51
+- **New Modules**: 4 (monitoring, release-manager, incident-manager, observability)
+
+---
+
+## [3.2.0] - 2025-06-14
+
+### Added - Phase 3 Multi-Skill Orchestration Complete 🎉
+
+**MUSUBI v3.2.0 completes Phase 3 of the project roadmap.**
+
+#### Phase 3 Deliverables (4 Sprints)
+
+| Sprint | Description | Status |
+|--------|-------------|--------|
+| Sprint 3.1 | Orchestration Core | ✅ Complete |
+| Sprint 3.2 | Advanced Patterns | ✅ Complete |
+| Sprint 3.3 | Parallel Execution | ✅ Complete |
+| Sprint 3.4 | Workflow Orchestrator | ✅ Complete |
+
+#### New Features
+
+**Orchestration Engine** (`src/orchestration/engine.js`):
+- Multi-skill execution engine
+- Context management across skills
+- Result aggregation and error handling
+
+**Patterns**:
+- `AutoPattern` - Autonomous skill selection
+- `SequentialPattern` - Ordered skill execution
+- `NestedPattern` - Hierarchical orchestration
+- `GroupChatPattern` - Multi-agent discussion
+- `HumanInLoopPattern` - Human approval gates
+- `SwarmPattern` - P-label parallel execution
+
+**Workflow Orchestrator** (`src/orchestration/workflow-orchestrator.js`):
+- Complex multi-pattern workflows
+- 6 step types: SKILL, CONDITION, LOOP, PARALLEL, HUMAN_GATE, NESTED
+- 3 SDD templates: SIMPLE_FEATURE, FULL_SDD, CODE_REVIEW
+
+---
+
 ## [3.1.0] - 2025-12-08
 
 ### Added - Phase 2 Change Management Complete 🎉
