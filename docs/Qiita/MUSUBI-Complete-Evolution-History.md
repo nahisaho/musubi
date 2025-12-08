@@ -6,7 +6,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 
 **MUSUBI（Specification Driven Development）** は、AIエージェントを活用した仕様駆動開発フレームワークです。しかし、MUSUBIは突然生まれたわけではありません。**Spec-Copilot** → **MUSUHI** → **MUSUBI** という3つのプロジェクトを経て、現在の形に進化してきました。
 
-本記事では、2025年11月の最初のプロジェクトから現在のv3.0.0までの完全な変遷を振り返り、各段階で何が追加され、どのような開発体験が可能になったかを詳説します。
+本記事では、2025年11月の最初のプロジェクトから現在のv3.5.1までの完全な変遷を振り返り、各段階で何が追加され、どのような開発体験が可能になったかを詳説します。
 
 **対象読者:**
 - MUSUBIを使用中/検討中の開発者
@@ -19,6 +19,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 - MUSUBI v0.1.x: 25スキルと7プラットフォーム対応
 - MUSUBI v0.7.0-v1.0.0: 憲法ガバナンスとCLI基盤
 - MUSUBI v2.x-v3.0.0: MCP統合、ワークフロー、ブラウザ自動化
+- MUSUBI v3.3.0-v3.5.1: モニタリング、Steering高度化、CLI統合
 
 ---
 
@@ -772,9 +773,135 @@ musubi-convert to-speckit ./storage
 
 ---
 
-# 第9章 バージョン比較まとめ
+# 第9章 v3.3.0-v3.5.1 - モニタリング、Steering高度化、CLI統合
 
-## 9.1 機能進化の概要
+## 9.1 v3.3.0 - Phase 4 モニタリング＆運用
+
+**リリース日:** 2025-06-14
+
+Phase 4でSRE機能とモニタリング機能を完備しました。
+
+### 新モジュール
+
+| モジュール | 説明 |
+|-----------|------|
+| **Observability** | ログ、メトリクス、トレースの統合監視 |
+| **IncidentManager** | インシデント管理と対応フロー |
+| **ReleaseManager** | リリース管理とデプロイメント |
+
+## 9.2 v3.4.0 - Phase 5 Steering高度化
+
+**リリース日:** 2025-06-14
+
+Phase 5でSteeringシステムの高度な機能を追加しました。
+
+### 新モジュール（233テスト追加）
+
+| スプリント | モジュール | 説明 |
+|-----------|-----------|------|
+| Sprint 5.1 | **Steering Auto-Update** | ファイル変更を検知してsteering自動更新 |
+| Sprint 5.2 | **Template Constraints** | LLM制約構文、不確実性マーカー |
+| Sprint 5.3 | **Quality Metrics Dashboard** | A-Fグレード品質スコア算出 |
+| Sprint 5.4 | **Advanced Validation** | クロスアーティファクト整合性検証 |
+
+### 詳細機能
+
+```javascript
+// Steering Auto-Update
+ChangeDetector       // ファイル変更検知
+SteeringUpdater      // structure/tech/product自動更新
+ProjectYmlSync       // package.jsonとの同期
+
+// Template Constraints
+Constraint           // カスタムバリデーション制約
+UncertaintyParser    // {?unknown?}, {~estimate~}, {!todo!} マーカー
+TemplateDefinition   // セクション定義とチェックリスト
+
+// Quality Metrics Dashboard
+Metric               // 計測メトリクス
+HealthIndicator      // ヘルスステータス
+TrendAnalyzer        // トレンド分析（up/down/stable）
+QualityScoreCalculator // A-Fグレード算出
+
+// Advanced Validation
+ConsistencyChecker   // クロスアーティファクト整合性
+GapDetector          // 要件/設計/テスト間ギャップ
+CompletenessChecker  // 必須フィールド検証
+DependencyValidator  // 循環依存検出
+ReferenceValidator   // REQ-xxx, DES-xxx参照検証
+```
+
+## 9.3 v3.5.0 - 20 CLIコマンド完備
+
+**リリース日:** 2025-12-08
+
+全てのCLIコマンドが完備され、実用レベルに到達しました。
+
+### 新CLIコマンド（6個追加）
+
+| コマンド | 機能 | 例 |
+|---------|------|-----|
+| `musubi-orchestrate` | マルチスキルワークフロー | `musubi-orchestrate auto <task>` |
+| `musubi-browser` | ブラウザ自動化・E2Eテスト | `musubi-browser run "click login"` |
+| `musubi-gui` | Web GUIダッシュボード | `musubi-gui start` |
+| `musubi-remember` | エージェントメモリ管理 | `musubi-remember extract` |
+| `musubi-resolve` | GitHub Issue自動解決 | `musubi-resolve <issue-number>` |
+| `musubi-convert` | フォーマット変換 | `musubi-convert to-speckit` |
+
+### 20 CLIコマンド一覧
+
+| カテゴリ | コマンド |
+|---------|---------|
+| **コアワークフロー** | `musubi`, `musubi-init`, `musubi-workflow` |
+| **ドキュメント生成** | `musubi-requirements`, `musubi-design`, `musubi-tasks` |
+| **トレーサビリティ** | `musubi-trace`, `musubi-gaps`, `musubi-change` |
+| **検証・分析** | `musubi-validate`, `musubi-analyze` |
+| **統合・共有** | `musubi-sync`, `musubi-share`, `musubi-onboard` |
+| **高度な機能** | `musubi-orchestrate`, `musubi-browser`, `musubi-gui`, `musubi-remember`, `musubi-resolve`, `musubi-convert` |
+
+## 9.4 v3.5.1 - 全プラットフォームCLI統合
+
+**リリース日:** 2025-12-08
+
+全7プラットフォームからCLIコマンドにアクセス可能になりました。
+
+### 変更内容
+
+**Claude Codeスキル更新（8スキル）:**
+
+| スキル | 追加CLI |
+|--------|---------|
+| `orchestrator` | 全20 CLIコマンドの詳細オプション |
+| `issue-resolver` | `musubi-resolve` クイックスタート |
+| `agent-assistant` | `musubi-remember` メモリ管理 |
+| `test-engineer` | `musubi-browser` E2Eテスト |
+| `ui-ux-designer` | `musubi-browser` UIテスト |
+| `site-reliability-engineer` | `musubi-gui` ダッシュボード |
+| `steering` | `musubi-remember` メモリCLI |
+| `project-manager` | `musubi-orchestrate` 統合 |
+
+**他プラットフォーム対応（6プラットフォーム）:**
+
+| プラットフォーム | ファイル | CLI参照数 |
+|-----------------|---------|----------|
+| GitHub Copilot | `AGENTS.md` | 24 |
+| Cursor | `AGENTS.md` | 14 |
+| Codex | `AGENTS.md` | 14 |
+| Windsurf | `AGENTS.md` | 14 |
+| Gemini CLI | `GEMINI.md` | 14 |
+| Qwen Code | `QWEN.md` | 14 |
+
+### v3.5.1で可能になったこと
+
+- ✅ **全プラットフォームからCLI利用**: どのAI環境でも同じCLI体験
+- ✅ **スキル内CLI統合**: 各スキルから関連CLIコマンドに直接アクセス
+- ✅ **詳細ドキュメント参照**: Learn Moreセクションから完全CLI参照へ誘導
+
+---
+
+# 第10章 バージョン比較まとめ
+
+## 10.1 機能進化の概要
 
 | プロジェクト/バージョン | リリース日 | 主要機能 | テスト数 | エージェント数 |
 |----------------------|-----------|---------|---------|--------------|
@@ -794,8 +921,12 @@ musubi-convert to-speckit ./storage
 | **MUSUBI** v2.1.0 | 2025-12-05 | Workflow Engine | 213 | 25 |
 | **MUSUBI** v2.2.0 | 2025-12-07 | OpenHands 8モジュール | 483 | 19 |
 | **MUSUBI** v3.0.0 | 2025-12-07 | Browser Agent + Web GUI | 673 | 27 |
+| **MUSUBI** v3.3.0 | 2025-06-14 | Phase 4 モニタリング | 1,024 | 27 |
+| **MUSUBI** v3.4.0 | 2025-06-14 | Phase 5 Steering高度化 | 1,490 | 27 |
+| **MUSUBI** v3.5.0 | 2025-12-08 | 20 CLIコマンド完備 | 1,490 | 27 |
+| **MUSUBI** v3.5.1 | 2025-12-08 | 全プラットフォームCLI統合 | 1,490 | 27 |
 
-## 9.2 各バージョンの「できること」
+## 10.2 各バージョンの「できること」
 
 ### Spec-Copilot
 
@@ -884,11 +1015,35 @@ musubi-convert to-speckit ./storage
 | Spec Kit相互変換 | ✅ |
 | 27の専門AIエージェント | ✅ |
 
+### MUSUBI v3.3.0-v3.4.0
+
+| 機能 | ステータス |
+|------|----------|
+| SRE機能とモニタリング | ✅ |
+| インシデント管理 | ✅ |
+| Steering自動更新 | ✅ |
+| テンプレート制約と不確実性マーカー | ✅ |
+| 品質メトリクスダッシュボード（A-Fグレード） | ✅ |
+| 高度なバリデーション（クロスアーティファクト整合性） | ✅ |
+| 1,490テスト | ✅ |
+
+### MUSUBI v3.5.0-v3.5.1
+
+| 機能 | ステータス |
+|------|----------|
+| 20 CLIコマンド完備 | ✅ |
+| マルチスキルオーケストレーション | ✅ |
+| ブラウザ自動化CLI | ✅ |
+| エージェントメモリ管理CLI | ✅ |
+| GitHub Issue自動解決CLI | ✅ |
+| 全7プラットフォームからCLI利用可能 | ✅ |
+| スキル内CLI統合 | ✅ |
+
 ---
 
-# 第10章 アップグレード方法
+# 第11章 アップグレード方法
 
-## 10.1 新規インストール
+## 11.1 新規インストール
 
 ```bash
 # 常に最新版を使用（推奨）
@@ -900,7 +1055,7 @@ npx musubi-sdd@latest init --copilot      # GitHub Copilot
 npx musubi-sdd@latest init --cursor       # Cursor IDE
 ```
 
-## 10.2 既存プロジェクトのアップグレード
+## 11.2 既存プロジェクトのアップグレード
 
 ```bash
 # 同じコマンドで最新版に更新
@@ -909,7 +1064,7 @@ npx musubi-sdd@latest init
 # Skills、エージェント、CLIコマンドが自動更新されます
 ```
 
-## 10.3 CodeGraph MCP Server（v2.0.0機能）
+## 11.3 CodeGraph MCP Server（v2.0.0機能）
 
 ```bash
 # pipxでインストール
@@ -923,7 +1078,7 @@ codegraph-mcp index /path/to/project --full
 
 # まとめ
 
-MUSUBIは、2025年11月5日に公開されたSpec-Copilotを起源とし、MUSUHI、そしてMUSUBIへと進化を遂げたプロジェクトです。約1ヶ月強でv0.1.0からv3.0.0まで劇的な成長を遂げました。
+MUSUBIは、2025年11月5日に公開されたSpec-Copilotを起源とし、MUSUHI、そしてMUSUBIへと進化を遂げたプロジェクトです。約1ヶ月強でv0.1.0からv3.5.1まで劇的な成長を遂げました。
 
 ```mermaid
 flowchart TB
@@ -948,7 +1103,10 @@ flowchart TB
     subgraph Phase5["✨ Phase 5: MUSUBI ユーザー体験革新（v3.0）"]
         P5["ブラウザ自動化、Web GUI、27エージェント"]
     end
-    Origin --> Evolution --> Phase1 --> Phase2 --> Phase3 --> Phase4 --> Phase5
+    subgraph Phase6["🌐 Phase 6: MUSUBI CLI統合（v3.5.1）"]
+        P6["20 CLIコマンド、全プラットフォームCLI統合、1,490テスト"]
+    end
+    Origin --> Evolution --> Phase1 --> Phase2 --> Phase3 --> Phase4 --> Phase5 --> Phase6
 ```
 
 **Key Milestones:**
@@ -963,8 +1121,10 @@ flowchart TB
 | 本番リリース | MUSUBI v1.0.0 | 実用レベルの品質達成 |
 | MCP統合 | MUSUBI v2.0.0 | 高度なコード解析能力 |
 | 673テスト | MUSUBI v3.0.0 | 堅牢な品質保証 |
+| Steering高度化 | MUSUBI v3.4.0 | 1,490テスト、Phase 5完了 |
+| 全プラットフォームCLI | MUSUBI v3.5.1 | 20 CLI、7プラットフォーム統合 |
 
-Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて、MUSUBIは単なる仕様管理ツールから、**包括的なAI支援開発プラットフォーム**へと成長しました。
+Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて、MUSUBIは単なる仕様管理ツールから、**包括的なAI支援開発プラットフォーム**へと成長しました。v3.5.1では、20のCLIコマンドと7つのAIプラットフォームの完全統合を達成し、どの環境でも同じSDD体験を提供できるようになりました。
 
 ---
 
@@ -974,6 +1134,7 @@ Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて�
 - [MUSUHI GitHub](https://github.com/nahisaho/musuhi)（前身プロジェクト）
 - [Spec-Copilot GitHub](https://github.com/nahisaho/spec-copilot)（起源プロジェクト）
 - [MUSUBI v3.0.0 完全ガイド](https://qiita.com/nahisaho/items/musubi-v3-agents)
+- [MUSUBI v3.5.1 CLI統合ガイド](https://qiita.com/nahisaho/items/musubi-cli-integration)
 - [MUSUBI初心者ガイド](https://qiita.com/nahisaho/items/musubi-beginners-guide)
 
 ## タグ
