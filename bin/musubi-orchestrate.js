@@ -26,6 +26,15 @@ const {
   Priority
 } = require('../src/orchestration');
 
+const {
+  ReplanningEngine,
+  GoalProgressTracker,
+  Goal,
+  AdaptiveGoalModifier,
+  ProactivePathOptimizer,
+  ModificationReason
+} = require('../src/orchestration/replanning');
+
 const program = new Command();
 
 program
@@ -399,6 +408,306 @@ program
           }
         }
       }
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+// ============================================================================
+// Replanning Commands
+// ============================================================================
+
+// Goal tracking command
+program
+  .command('goal')
+  .description('Manage goals for goal-driven replanning')
+  .argument('<action>', 'Action: list, add, update, remove, status')
+  .option('-n, --name <name>', 'Goal name')
+  .option('-d, --description <desc>', 'Goal description')
+  .option('-p, --priority <priority>', 'Priority (1-10)', '5')
+  .option('--deadline <date>', 'Deadline (ISO date)')
+  .option('--progress <progress>', 'Progress (0-1)')
+  .option('--id <id>', 'Goal ID')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (action, options) => {
+    try {
+      const tracker = new GoalProgressTracker();
+      
+      switch (action) {
+        case 'add': {
+          if (!options.name) {
+            console.error(chalk.red('Error: --name is required'));
+            process.exit(1);
+          }
+          
+          const goal = tracker.registerGoal({
+            name: options.name,
+            description: options.description || '',
+            priority: parseInt(options.priority, 10),
+            deadline: options.deadline ? new Date(options.deadline).getTime() : null
+          });
+          
+          console.log(chalk.green(`\n✓ Goal created: ${goal.id}\n`));
+          console.log(chalk.cyan(`  Name: ${goal.name}`));
+          console.log(chalk.dim(`  Priority: ${goal.priority}`));
+          if (goal.deadline) {
+            console.log(chalk.dim(`  Deadline: ${new Date(goal.deadline).toISOString()}`));
+          }
+          console.log('');
+          break;
+        }
+        
+        case 'list': {
+          console.log(chalk.bold('\n🎯 Registered Goals\n'));
+          
+          const goals = Array.from(tracker.goals.values());
+          
+          if (options.format === 'json') {
+            console.log(JSON.stringify(goals.map(g => g.toJSON()), null, 2));
+          } else if (goals.length === 0) {
+            console.log(chalk.yellow('  No goals registered'));
+          } else {
+            for (const goal of goals) {
+              const statusIcon = goal.isComplete() ? chalk.green('✓') : 
+                                 goal.status === 'in-progress' ? chalk.yellow('◐') : 
+                                 chalk.dim('○');
+              console.log(`  ${statusIcon} ${chalk.cyan(goal.name)} (${goal.id})`);
+              console.log(chalk.dim(`     Progress: ${(goal.progress * 100).toFixed(0)}% | Priority: ${goal.priority} | Status: ${goal.status}`));
+            }
+          }
+          console.log('');
+          break;
+        }
+        
+        case 'update': {
+          if (!options.id) {
+            console.error(chalk.red('Error: --id is required'));
+            process.exit(1);
+          }
+          
+          if (options.progress) {
+            tracker.updateProgress(options.id, parseFloat(options.progress));
+            console.log(chalk.green(`\n✓ Goal ${options.id} updated to ${(parseFloat(options.progress) * 100).toFixed(0)}% progress\n`));
+          }
+          break;
+        }
+        
+        case 'status': {
+          console.log(chalk.bold('\n📊 Goal Tracking Status\n'));
+          console.log(`  Goals: ${tracker.goals.size}`);
+          console.log(`  Tracking: ${tracker.isTracking ? chalk.green('Active') : chalk.dim('Inactive')}`);
+          console.log('');
+          break;
+        }
+        
+        default:
+          console.error(chalk.red(`Unknown action: ${action}`));
+          console.log('Available actions: list, add, update, remove, status');
+          process.exit(1);
+      }
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+// Replan command
+program
+  .command('replan')
+  .description('Trigger replanning analysis')
+  .option('-p, --plan <json>', 'Current plan as JSON')
+  .option('-f, --plan-file <file>', 'Plan file path')
+  .option('--trigger <type>', 'Trigger type (failure|timeout|manual|resource)', 'manual')
+  .option('--context <json>', 'Execution context as JSON')
+  .option('-o, --output <file>', 'Output file for alternatives')
+  .option('--format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🔄 Replanning Analysis\n'));
+      
+      let plan;
+      if (options.planFile) {
+        plan = await fs.readJson(options.planFile);
+      } else if (options.plan) {
+        plan = JSON.parse(options.plan);
+      } else {
+        // Demo plan
+        plan = {
+          id: 'demo-plan',
+          name: 'Demo Plan',
+          tasks: [
+            { id: 't1', skill: 'requirements-analyst', name: 'Analyze Requirements' },
+            { id: 't2', skill: 'system-architect', name: 'Design Architecture', dependencies: ['t1'] },
+            { id: 't3', skill: 'code-generator', name: 'Generate Code', dependencies: ['t2'] }
+          ]
+        };
+        console.log(chalk.dim('  Using demo plan (provide --plan or --plan-file for custom plan)\n'));
+      }
+      
+      const engine = new ReplanningEngine();
+      const normalized = engine.normalizePlan(plan);
+      
+      console.log(chalk.bold('  Plan:'));
+      console.log(`    ID: ${chalk.cyan(normalized.id)}`);
+      console.log(`    Tasks: ${normalized.tasks.length}`);
+      
+      // Show tasks
+      for (const task of normalized.tasks) {
+        console.log(chalk.dim(`      - ${task.name || task.skill} (${task.id})`));
+      }
+      
+      console.log(chalk.bold('\n  Analysis:'));
+      console.log(`    Trigger: ${chalk.yellow(options.trigger)}`);
+      console.log(`    Status: ${chalk.green('Ready for replanning')}`);
+      
+      if (options.output) {
+        await fs.writeJson(options.output, {
+          plan: normalized,
+          trigger: options.trigger,
+          timestamp: new Date().toISOString()
+        }, { spaces: 2 });
+        console.log(chalk.dim(`\n  Output written to: ${options.output}`));
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+// Goal modification command
+program
+  .command('modify-goal')
+  .description('Adaptively modify a goal based on constraints')
+  .option('--id <id>', 'Goal ID to modify')
+  .option('--reason <reason>', 'Modification reason (time|resource|dependency|priority)', 'time')
+  .option('--approve', 'Auto-approve modification')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🔧 Adaptive Goal Modification\n'));
+      
+      const modifier = new AdaptiveGoalModifier({ requireApproval: !options.approve });
+      
+      // Demo goal if no ID provided
+      const goal = modifier.registerGoal({
+        id: options.id || 'demo-goal',
+        name: 'Demo Goal',
+        priority: 'high',
+        targetDate: new Date(Date.now() + 86400000 * 7).toISOString(),
+        deliverables: [
+          { id: 'd1', name: 'Core Feature', priority: 'critical' },
+          { id: 'd2', name: 'Documentation', priority: 'normal' }
+        ]
+      });
+      
+      const reasonMap = {
+        time: ModificationReason.TIME_CONSTRAINT,
+        resource: ModificationReason.RESOURCE_CONSTRAINT,
+        dependency: ModificationReason.DEPENDENCY_FAILURE,
+        priority: ModificationReason.PRIORITY_SHIFT
+      };
+      
+      const trigger = { reason: reasonMap[options.reason] || ModificationReason.TIME_CONSTRAINT };
+      
+      console.log(chalk.bold('  Goal:'));
+      console.log(`    ID: ${chalk.cyan(goal.id)}`);
+      console.log(`    Name: ${goal.name}`);
+      console.log(`    Priority: ${goal.priority}`);
+      
+      console.log(chalk.bold('\n  Trigger:'));
+      console.log(`    Reason: ${chalk.yellow(trigger.reason)}`);
+      
+      const result = await modifier.triggerModification(goal.id, trigger);
+      
+      console.log(chalk.bold('\n  Result:'));
+      console.log(`    Status: ${result.status === 'applied' ? chalk.green(result.status) : chalk.yellow(result.status)}`);
+      
+      if (result.modification) {
+        console.log(`    Strategy: ${chalk.cyan(result.modification.strategy.type)}`);
+        console.log(`    Confidence: ${(result.modification.confidence * 100).toFixed(0)}%`);
+        
+        if (result.modification.impact) {
+          console.log(`    Impact Score: ${(result.modification.impact.totalScore * 100).toFixed(0)}%`);
+          console.log(`    Risk Level: ${result.modification.impact.riskLevel}`);
+        }
+      }
+      
+      if (options.format === 'json') {
+        console.log('\n' + JSON.stringify(result, null, 2));
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+// Path optimization command
+program
+  .command('optimize-path')
+  .description('Analyze and optimize execution path')
+  .option('-p, --path <json>', 'Execution path as JSON')
+  .option('-f, --path-file <file>', 'Path file')
+  .option('--format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n⚡ Path Optimization Analysis\n'));
+      
+      const optimizer = new ProactivePathOptimizer(null);
+      
+      let pathData;
+      if (options.pathFile) {
+        pathData = await fs.readJson(options.pathFile);
+      } else if (options.path) {
+        pathData = JSON.parse(options.path);
+      } else {
+        // Demo path
+        pathData = {
+          pending: [
+            { id: 't1', name: 'Task 1', estimatedDuration: 10000, dependencies: [] },
+            { id: 't2', name: 'Task 2', estimatedDuration: 5000, dependencies: [] },
+            { id: 't3', name: 'Task 3', estimatedDuration: 8000, dependencies: ['t1'] },
+            { id: 't4', name: 'Task 4', estimatedDuration: 3000, dependencies: ['t2', 't3'] }
+          ]
+        };
+        console.log(chalk.dim('  Using demo path (provide --path or --path-file for custom)\n'));
+      }
+      
+      const metrics = optimizer.calculatePathMetrics(pathData);
+      
+      console.log(chalk.bold('  Path Metrics:'));
+      console.log(`    Estimated Time: ${chalk.cyan(metrics.estimatedTime + 'ms')}`);
+      console.log(`    Parallelization Factor: ${(metrics.parallelizationFactor * 100).toFixed(0)}%`);
+      console.log(`    Risk Score: ${metrics.riskScore.toFixed(2)}`);
+      console.log(`    Overall Score: ${metrics.getScore().toFixed(2)}`);
+      
+      console.log(chalk.bold('\n  Tasks:'));
+      for (const task of pathData.pending) {
+        const deps = task.dependencies?.length ? ` -> [${task.dependencies.join(', ')}]` : '';
+        console.log(chalk.dim(`    - ${task.name} (${task.id})${deps}`));
+      }
+      
+      if (options.format === 'json') {
+        console.log('\n' + JSON.stringify({
+          path: pathData,
+          metrics: {
+            estimatedTime: metrics.estimatedTime,
+            parallelizationFactor: metrics.parallelizationFactor,
+            riskScore: metrics.riskScore,
+            score: metrics.getScore()
+          }
+        }, null, 2));
+      }
+      
+      console.log('');
       
     } catch (error) {
       console.error(chalk.red(`\n✗ Error: ${error.message}\n`));

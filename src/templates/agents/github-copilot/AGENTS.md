@@ -204,6 +204,19 @@ npx musubi-sdd <command>
 | `musubi-resolve` | GitHub Issue auto-resolution | `npx musubi-resolve <issue-number>` |
 | `musubi-convert` | Format conversion (Spec Kit) | `npx musubi-convert to-speckit` |
 
+### Replanning Commands (v3.6.0 NEW)
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-orchestrate replan` | Execute dynamic replanning | `npx musubi-orchestrate replan <context-id>` |
+| `musubi-orchestrate goal register` | Register a new goal | `npx musubi-orchestrate goal register --name "Deploy API"` |
+| `musubi-orchestrate goal update` | Update goal progress | `npx musubi-orchestrate goal update <goal-id> --progress 50` |
+| `musubi-orchestrate goal status` | View goal status | `npx musubi-orchestrate goal status [goal-id]` |
+| `musubi-orchestrate optimize run` | Run path optimization | `npx musubi-orchestrate optimize run <path-id>` |
+| `musubi-orchestrate optimize suggest` | Get optimization suggestions | `npx musubi-orchestrate optimize suggest <path-id>` |
+| `musubi-orchestrate path analyze` | Analyze execution path | `npx musubi-orchestrate path analyze <path-id>` |
+| `musubi-orchestrate path optimize` | Optimize execution path | `npx musubi-orchestrate path optimize <path-id>` |
+
 ### CLI + Prompt Integration
 
 Combine CLI commands with GitHub Copilot prompts for maximum efficiency:

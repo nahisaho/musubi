@@ -233,6 +233,51 @@ MUSUBI enforces 9 immutable constitutional articles:
 /sdd-change-archive add-2fa
 ```
 
+## CLI Commands (v3.5.0)
+
+MUSUBI provides powerful CLI tools that can be used from any terminal. Install with:
+
+```bash
+npm install -g musubi-sdd
+# or use directly
+npx musubi-sdd <command>
+```
+
+### Core Commands
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-workflow` | Workflow state & metrics | `npx musubi-workflow status` |
+| `musubi-requirements` | EARS requirements | `npx musubi-requirements init <feature>` |
+| `musubi-design` | C4 + ADR design | `npx musubi-design init <feature>` |
+| `musubi-tasks` | Task breakdown | `npx musubi-tasks init <feature>` |
+| `musubi-trace` | Traceability | `npx musubi-trace matrix` |
+| `musubi-validate` | Constitutional validation | `npx musubi-validate all` |
+
+### Advanced Commands (v3.5.0 NEW)
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-orchestrate` | Multi-skill orchestration | `npx musubi-orchestrate auto <task>` |
+| `musubi-browser` | Browser automation & E2E | `npx musubi-browser run "click login"` |
+| `musubi-gui` | Web GUI dashboard | `npx musubi-gui start` |
+| `musubi-remember` | Agent memory management | `npx musubi-remember extract` |
+| `musubi-resolve` | GitHub Issue resolution | `npx musubi-resolve <issue-number>` |
+| `musubi-convert` | Format conversion | `npx musubi-convert to-speckit` |
+
+### Replanning Commands (v3.6.0 NEW)
+
+| Command | Purpose | Example |
+|---------|---------|---------|
+| `musubi-orchestrate replan` | Execute dynamic replanning | `npx musubi-orchestrate replan <context-id>` |
+| `musubi-orchestrate goal register` | Register a new goal | `npx musubi-orchestrate goal register --name "Deploy API"` |
+| `musubi-orchestrate goal update` | Update goal progress | `npx musubi-orchestrate goal update <goal-id> --progress 50` |
+| `musubi-orchestrate goal status` | View goal status | `npx musubi-orchestrate goal status [goal-id]` |
+| `musubi-orchestrate optimize run` | Run path optimization | `npx musubi-orchestrate optimize run <path-id>` |
+| `musubi-orchestrate optimize suggest` | Get optimization suggestions | `npx musubi-orchestrate optimize suggest <path-id>` |
+| `musubi-orchestrate path analyze` | Analyze execution path | `npx musubi-orchestrate path analyze <path-id>` |
+| `musubi-orchestrate path optimize` | Optimize execution path | `npx musubi-orchestrate path optimize <path-id>` |
+
 ## Learn More
 
 - [MUSUBI Documentation](https://github.com/your-org/musubi)
