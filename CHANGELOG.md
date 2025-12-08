@@ -5,6 +5,84 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2025-12-08
+
+### Added - Phase 2 Change Management Complete 🎉
+
+**MUSUBI v3.1.0 completes Phase 2 of the project roadmap.**
+
+#### Phase 2 Deliverables (5 Sprints)
+
+| Sprint | Description | Status |
+|--------|-------------|--------|
+| Sprint 2.1 | Delta Specification System | ✅ Complete |
+| Sprint 2.2 | Impact Analyzer | ✅ Complete |
+| Sprint 2.3 | Validation Gates | ✅ Complete |
+| Sprint 2.4 | Bidirectional Traceability & CI | ✅ Complete |
+| Sprint 2.5 | Documentation | ✅ Complete |
+
+#### New Features
+
+**Delta Specification System**:
+- `DeltaSpecManager` - Manage change proposals with ADDED/MODIFIED/REMOVED/RENAMED markers
+- `DeltaFormatValidator` - Validate delta specification format
+- Change workflow: init → review → approve → apply → archive
+
+**Impact Analyzer**:
+- `ImpactAnalyzer` - Full dependency chain analysis
+- Risk assessment (LOW/MEDIUM/HIGH/CRITICAL)
+- Recommendations for affected components
+
+**Validation Gates**:
+- `TraceabilityValidator` - Configurable strictness levels (strict/standard/relaxed)
+- `CoverageReporter` - Multiple output formats (markdown/json/html/text)
+- Rule-based validation with severity levels (ERROR/WARNING/INFO)
+
+**Bidirectional Traceability**:
+- Forward traceability: Requirements → Design → Tasks → Code → Tests
+- Backward traceability: Tests → Code → Tasks → Design → Requirements
+- Orphaned item detection
+
+**Interactive HTML Reports**:
+- `TraceabilityMatrixReport` - Visual traceability matrix
+- Light/dark theme support
+- Interactive filtering and search
+- Collapsible sections
+
+**CI/CD Integration**:
+- GitHub Action workflow for traceability checks
+- `ci-check` command with exit codes
+- `strict-validate` command for 100% coverage validation
+- PR comments with coverage summary
+
+#### New CLI Commands
+
+| Command | Description |
+|---------|-------------|
+| `musubi-trace bidirectional` | Analyze forward/backward traceability |
+| `musubi-trace html-report` | Generate interactive HTML report |
+| `musubi-trace ci-check` | CI/CD integration with exit codes |
+| `musubi-trace strict-validate` | 100% coverage validation mode |
+| `musubi-change diff` | View before/after comparison |
+| `musubi-change status` | Workflow summary |
+
+#### New Documentation
+
+- **Delta Specs Guide** - Format, workflow, and best practices
+- **Brownfield Tutorial** - Step-by-step conversion guide
+- **Change Management Guide** - Full lifecycle documentation
+- **Traceability Examples** - Practical matrix examples
+
+#### Test Coverage
+
+- **798 tests** passing (up from 726)
+- 27 new tests for TraceabilityMatrixReport
+- 24 new tests for TraceabilityValidator
+- 21 new tests for CoverageReporter
+- 29 new tests for ImpactAnalyzer
+
+---
+
 ## [3.0.1] - 2025-12-08
 
 ### Added - Phase 1 Core Framework Complete 🎉
