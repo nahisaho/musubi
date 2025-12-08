@@ -1,42 +1,52 @@
 # Product Context
 
-**Project**: musubi
-**Last Updated**: 2025-12-08
-**Version**: 1.0
+**Project**: MUSUBI (Ultimate Specification Driven Development)
+**Last Updated**: 2025-12-09
+**Version**: 3.6.1
 
 ---
 
 ## Product Vision
 
-**Vision Statement**: {{VISION_STATEMENT}}
+**Vision Statement**: Enable AI-native specification-driven development with constitutional governance
 
-> [1-2 paragraph description of what this product aims to achieve and why it exists]
+MUSUBI transforms software development by making AI agents first-class participants in the development lifecycle. Through 9 Constitutional Articles, MUSUBI ensures that AI-generated code adheres to architectural principles, security standards, and team conventions.
 
-**Mission**: {{MISSION_STATEMENT}}
-
-> [How the product achieves its vision]
+**Mission**: Provide a comprehensive framework and toolset that bridges human intent and AI execution through structured specifications, enabling reliable, traceable, and governable AI-assisted development.
 
 ---
 
 ## Product Overview
 
-### What is musubi?
+### What is MUSUBI?
 
-A software project using MUSUBI SDD
+MUSUBI (Ultimate Specification Driven Development) is an AI-native development framework that enforces constitutional governance through structured specifications. It provides:
 
-> [2-3 paragraphs explaining the product, its purpose, and core value proposition]
+1. **9 Constitutional Articles**: Governance rules for AI development
+2. **8-Stage SDD Workflow**: Structured development phases
+3. **Multi-Agent Orchestration**: Coordinate multiple AI agents
+4. **Replanning Engine**: Dynamic task adaptation
+5. **Web GUI**: Visual dashboard for monitoring
 
 ### Problem Statement
 
-**Problem**: {{PROBLEM_STATEMENT}}
+**Problem**: AI coding assistants lack governance
 
-> [What problem does this product solve? What pain points does it address?]
+Current AI assistants generate code without understanding project architecture, security requirements, or team conventions. This leads to:
+- Inconsistent code quality
+- Security vulnerabilities
+- Architectural drift
+- Untraceable decisions
 
 ### Solution
 
-**Solution**: {{SOLUTION_STATEMENT}}
+**Solution**: Constitutional AI Development
 
-> [How does this product solve the problem? What makes it unique?]
+MUSUBI provides:
+- Structured specifications that AI agents can understand
+- Constitutional rules that enforce best practices
+- Traceability from requirements to implementation
+- Multi-agent orchestration with replanning
 
 ---
 
@@ -44,40 +54,22 @@ A software project using MUSUBI SDD
 
 ### Primary Users
 
-#### User Persona 1: {{PERSONA_1_NAME}}
+#### User Persona 1: AI-First Developer
 
 **Demographics**:
-
-- **Role**: {{ROLE}}
-- **Organization Size**: {{ORG_SIZE}}
-- **Technical Level**: {{TECH_LEVEL}}
+- **Role**: Software Developer using AI assistants
+- **Organization Size**: Any
+- **Technical Level**: Intermediate to Advanced
 
 **Goals**:
-
-- [Goal 1]
-- [Goal 2]
-- [Goal 3]
-
-**Pain Points**:
-
-- [Pain point 1]
-- [Pain point 2]
-- [Pain point 3]
+- Maintain code quality with AI assistance
+- Enforce team conventions automatically
+- Trace AI decisions to requirements
 
 **Use Cases**:
-
-- [Use case 1]
-- [Use case 2]
-- [Use case 3]
-
----
-
-#### User Persona 2: {{PERSONA_2_NAME}}
-
-**Demographics**:
-
-- **Role**: {{ROLE}}
-- **Organization Size**: {{ORG_SIZE}}
+- Initialize new projects with SDD structure
+- Generate specifications from requirements
+- Validate AI-generated code against constitution
 - **Technical Level**: {{TECH_LEVEL}}
 
 **Goals**:

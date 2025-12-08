@@ -1,14 +1,14 @@
 # Technology Stack
 
-**Project**: musubi
-**Last Updated**: 2025-12-08
-**Version**: 1.0
+**Project**: MUSUBI (Ultimate Specification Driven Development)
+**Last Updated**: 2025-12-09
+**Version**: 3.6.1
 
 ---
 
 ## Overview
 
-This document defines the approved technology stack for musubi. All development MUST use these technologies unless explicitly approved via Phase -1 Gate (Article VIII: Anti-Abstraction).
+MUSUBI is an AI-native SDD (Specification Driven Development) framework that enforces constitutional governance through 9 Articles and provides comprehensive tooling for specification-first development.
 
 ---
 
@@ -16,67 +16,49 @@ This document defines the approved technology stack for musubi. All development 
 
 ### Programming Languages
 
-| Language             | Version        | Usage                        | Notes               |
-| -------------------- | -------------- | ---------------------------- | ------------------- |
-| {{PRIMARY_LANGUAGE}} | {{VERSION}}    | Primary application language | [Notes]             |
-| SQL                  | PostgreSQL 15+ | Database queries             | Via Prisma ORM      |
-| TypeScript           | 5.0+           | Type definitions             | Strict mode enabled |
+| Language   | Version | Usage                        | Notes                    |
+| ---------- | ------- | ---------------------------- | ------------------------ |
+| JavaScript | ES2020+ | Primary application language | Node.js runtime          |
+| HTML/CSS   | 5/3     | Web GUI                      | Vanilla + custom styling |
+| Markdown   | GFM     | Documentation & specs        | GitHub Flavored Markdown |
+| YAML       | 1.2     | Configuration                | Project steering files   |
 
 ### Runtime Environment
 
-- **Node.js**: {{NODE_VERSION}}+ (LTS)
-- **Package Manager**: npm {{NPM_VERSION}}+ / pnpm {{PNPM_VERSION}}+
+- **Node.js**: 18.0+ (LTS)
+- **Package Manager**: npm 9.0+
 
 ---
 
-## Frontend Stack
+## Core Dependencies
 
-### Framework
+### Production Dependencies (14)
 
-**Primary Framework**: {{FRONTEND_FRAMEWORK}}
+| Package            | Version | Purpose                 |
+| ------------------ | ------- | ----------------------- |
+| express            | ^4.21   | Web server for GUI      |
+| open               | ^10.1   | Browser automation      |
+| ws                 | ^8.18   | WebSocket support       |
+| js-yaml            | ^4.1    | YAML parsing            |
+| marked             | ^15.0   | Markdown processing     |
+| highlight.js       | ^11.10  | Syntax highlighting     |
+| cli-progress       | ^3.12   | CLI progress bars       |
+| chalk              | ^4.1    | CLI colorization        |
+| commander          | ^12.1   | CLI framework           |
+| inquirer           | ^8.0    | Interactive prompts     |
+| uuid               | ^11.0   | Unique ID generation    |
+| glob               | ^11.0   | File pattern matching   |
+| cosmiconfig        | ^9.0    | Configuration loading   |
+| dotenv             | ^16.4   | Environment variables   |
 
-| Technology             | Version     | Purpose                             |
-| ---------------------- | ----------- | ----------------------------------- |
-| {{FRONTEND_FRAMEWORK}} | {{VERSION}} | [Purpose]                           |
-| React                  | 18+         | UI library (if using Next.js/Remix) |
-| TypeScript             | 5.0+        | Type safety                         |
+### Development Dependencies (4)
 
-### UI Components
-
-| Library        | Version     | Purpose              |
-| -------------- | ----------- | -------------------- |
-| {{UI_LIBRARY}} | {{VERSION}} | Component library    |
-| Tailwind CSS   | 3.0+        | Utility-first CSS    |
-| shadcn/ui      | Latest      | Component primitives |
-
-### State Management
-
-| Library           | Version     | Purpose                       |
-| ----------------- | ----------- | ----------------------------- |
-| {{STATE_LIBRARY}} | {{VERSION}} | [Global state / Server state] |
-| React Context     | Built-in    | Local state                   |
-| React Query       | 5.0+        | Server state (if applicable)  |
-
-### Form Handling
-
-| Library         | Version | Purpose           |
-| --------------- | ------- | ----------------- |
-| React Hook Form | 7.0+    | Form management   |
-| Zod             | 3.0+    | Schema validation |
-
----
-
-## Backend Stack
-
-### Framework
-
-**Primary Framework**: {{BACKEND_FRAMEWORK}}
-
-| Technology            | Version     | Purpose                           |
-| --------------------- | ----------- | --------------------------------- |
-| {{BACKEND_FRAMEWORK}} | {{VERSION}} | API server                        |
-| Express               | 4.0+        | Web framework (if using Node.js)  |
-| Next.js API Routes    | 14+         | Serverless API (if using Next.js) |
+| Package          | Version | Purpose        |
+| ---------------- | ------- | -------------- |
+| jest             | ^29.7   | Testing        |
+| eslint           | ^8.50+  | Linting        |
+| prettier         | ^3.0+   | Formatting     |
+| npm-run-all      | ^4.1    | Script running |
 
 ### API Technologies
 

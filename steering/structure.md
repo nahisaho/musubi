@@ -1,17 +1,16 @@
 # Project Structure
 
-**Project**: musubi
-**Last Updated**: 2025-12-08
-**Version**: 1.0
+**Project**: MUSUBI (Ultimate Specification Driven Development)
+**Last Updated**: 2025-12-09
+**Version**: 3.6.1
 
 ---
 
 ## Architecture Pattern
 
-**Primary Pattern**: {{ARCHITECTURE_PATTERN}}
+**Primary Pattern**: Modular Monolith with CLI-First Design
 
-> [Description of the architecture pattern used in this project]
-> Examples: Monorepo with Library-First, Microservices, Modular Monolith, Serverless
+MUSUBI follows a modular architecture where each major capability is organized as an independent module with CLI exposure (Article II: CLI-First).
 
 ---
 
@@ -21,24 +20,45 @@
 
 ```
 musubi/
-├── lib/                  # Reusable libraries (Article I: Library-First)
-├── app/                  # Application code (Next.js, etc.)
-├── api/                  # API routes/controllers
-├── components/           # UI components
-├── services/             # Business logic services
-├── tests/                # Test suites
+├── bin/                  # CLI entry points (19 commands)
+│   ├── musubi.js         # Main CLI entry
+│   ├── musubi-init.js    # Project initialization
+│   ├── musubi-requirements.js
+│   ├── musubi-design.js
+│   ├── musubi-tasks.js
+│   ├── musubi-validate.js
+│   ├── musubi-orchestrate.js
+│   ├── musubi-gui.js
+│   └── ...
+├── src/                  # Source modules
+│   ├── agents/           # AI agent implementations
+│   ├── analyzers/        # Code analysis tools
+│   ├── converters/       # Format converters
+│   ├── generators/       # Document generators
+│   ├── gui/              # Web GUI server & services
+│   ├── integrations/     # Platform integrations
+│   ├── managers/         # Resource managers
+│   ├── monitoring/       # Monitoring tools
+│   ├── orchestration/    # Task orchestration & replanning
+│   ├── reporters/        # Report generators
+│   ├── resolvers/        # Dependency resolvers
+│   ├── steering/         # Steering document handlers
+│   ├── templates/        # Template management
+│   └── validators/       # Validation tools
+├── tests/                # Test suites (1874 tests)
 ├── docs/                 # Documentation
 ├── storage/              # SDD artifacts
-│   ├── specs/            # Requirements, design, tasks
-│   ├── changes/          # Delta specifications (brownfield)
-│   └── validation/       # Validation reports
-├── steering/             # Project memory (this directory)
+│   ├── specs/            # Specifications
+│   ├── changes/          # Delta specifications
+│   └── features/         # Feature specs
+├── steering/             # Project memory
 │   ├── structure.md      # This file
 │   ├── tech.md           # Technology stack
 │   ├── product.md        # Product context
+│   ├── memories/         # AI memories
 │   └── rules/            # Constitutional governance
 ├── templates/            # Document templates
-└── [Other directories]
+└── website/              # Documentation site
 ```
 
 ---
