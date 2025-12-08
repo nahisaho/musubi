@@ -71,6 +71,19 @@ const {
   createWorkflowOrchestrator
 } = require('./workflow-orchestrator');
 
+const {
+  ReplanningEngine,
+  PlanMonitor,
+  PlanEvaluator,
+  AlternativeGenerator,
+  ReplanHistory,
+  ReplanTrigger,
+  ReplanDecision,
+  defaultReplanningConfig,
+  mergeConfig: mergeReplanningConfig,
+  validateConfig: validateReplanningConfig
+} = require('./replanning');
+
 /**
  * Create a fully configured orchestration engine
  * with default patterns registered
@@ -160,6 +173,18 @@ module.exports = {
   WorkflowState,
   SDDWorkflowTemplates,
   createWorkflowOrchestrator,
+
+  // Replanning Engine
+  ReplanningEngine,
+  PlanMonitor,
+  PlanEvaluator,
+  AlternativeGenerator,
+  ReplanHistory,
+  ReplanTrigger,
+  ReplanDecision,
+  defaultReplanningConfig,
+  mergeReplanningConfig,
+  validateReplanningConfig,
 
   // Constants
   PatternType,

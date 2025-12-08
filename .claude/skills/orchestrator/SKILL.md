@@ -94,6 +94,17 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 | `musubi-analyze` | Project analysis               | `musubi-analyze complexity`          |
 | `musubi-onboard` | AI platform onboarding         | `musubi-onboard <platform>`          |
 
+### Advanced Commands (v3.5.0 NEW)
+
+| Command             | Purpose                           | Example                                    |
+| ------------------- | --------------------------------- | ------------------------------------------ |
+| `musubi-orchestrate`| Multi-skill workflow orchestration| `musubi-orchestrate auto <task>`           |
+| `musubi-browser`    | Browser automation & E2E testing  | `musubi-browser run "click login button"`  |
+| `musubi-gui`        | Web GUI dashboard                 | `musubi-gui start`                         |
+| `musubi-remember`   | Agent memory management           | `musubi-remember extract`                  |
+| `musubi-resolve`    | GitHub Issue auto-resolution      | `musubi-resolve <issue-number>`            |
+| `musubi-convert`    | Format conversion (Spec Kit)      | `musubi-convert to-speckit`                |
+
 ### Detailed Command Options
 
 **musubi-workflow** (v2.1.0 NEW):
@@ -165,6 +176,57 @@ The Orchestrator can leverage all MUSUBI CLI commands to execute tasks efficient
 - `gates` - Validate Phase -1 Gates
 - `complexity` - Validate complexity limits
 - `all` - Run all validations
+
+**musubi-orchestrate** (v3.5.0 NEW):
+
+- `auto <task>` - Auto-select and execute skill based on task
+- `sequential --skills <skills...>` - Execute skills sequentially
+- `run <pattern> --skills <skills...>` - Execute pattern with skills
+- `list-patterns` - List available orchestration patterns
+- `list-skills` - List available skills
+- `status` - Show orchestration status
+
+**musubi-browser** (v3.5.0 NEW):
+
+- `run "<command>"` - Execute natural language browser command
+- `script <file>` - Execute script file with commands
+- `compare <expected> <actual>` - Compare screenshots with AI
+- `generate-test --history <file>` - Generate Playwright test from history
+- Interactive mode: Start with `musubi-browser` for REPL
+
+**musubi-gui** (v3.5.0 NEW):
+
+- `start` - Start Web GUI server (default: port 3000)
+- `start -p <port>` - Start on custom port
+- `start -d <path>` - Start with custom project directory
+- `dev` - Start in development mode with hot reload
+- `status` - Check GUI server status
+- `matrix` - Open traceability matrix view
+
+**musubi-remember** (v3.5.0 NEW):
+
+- `extract` - Extract learnings from current session
+- `export <file>` - Export memory to file
+- `import <file>` - Import memory from file
+- `condense` - Condense memory to fit context window
+- `list` - List stored memories
+- `clear` - Clear session memory
+
+**musubi-resolve** (v3.5.0 NEW):
+
+- `<issue-number>` - Analyze and resolve GitHub issue
+- `analyze <issue-number>` - Analyze issue without resolution
+- `plan <issue-number>` - Generate resolution plan
+- `create-pr <issue-number>` - Create PR from resolution
+- `list` - List open issues
+- `--auto` - Enable auto-resolution mode
+
+**musubi-convert** (v3.5.0 NEW):
+
+- `to-speckit` - Convert MUSUBI to Spec Kit format
+- `from-speckit` - Convert Spec Kit to MUSUBI format
+- `analyze` - Analyze format compatibility
+- `--output <dir>` - Specify output directory
 
 ---
 
@@ -417,11 +479,11 @@ codegraph-mcp community "/path/to/project"
 
 ### Orchestration & Governance (3 agents)
 
-| Agent                     | Specialty                 | Key Deliverables                        |
-| ------------------------- | ------------------------- | --------------------------------------- |
-| **Orchestrator**          | Multi-agent coordination  | Execution plans, integrated reports     |
-| **Steering**              | Project memory management | Steering files (structure/tech/product) |
-| **Constitution Enforcer** | Constitutional validation | Compliance reports, violation alerts    |
+| Agent                     | Specialty                 | Key Deliverables                        | CLI Command           |
+| ------------------------- | ------------------------- | --------------------------------------- | --------------------- |
+| **Orchestrator**          | Multi-agent coordination  | Execution plans, integrated reports     | `musubi-orchestrate`  |
+| **Steering**              | Project memory management | Steering files (structure/tech/product) | `musubi-remember`     |
+| **Constitution Enforcer** | Constitutional validation | Compliance reports, violation alerts    | `musubi-validate`     |
 
 ### Design & Architecture (5 agents)
 
@@ -435,35 +497,35 @@ codegraph-mcp community "/path/to/project"
 
 ### Development & Quality (7 agents)
 
-| Agent                     | Specialty                    | Key Deliverables                                              | CLI Command       |
-| ------------------------- | ---------------------------- | ------------------------------------------------------------- | ----------------- |
-| **Software Developer**    | Code implementation          | Production-ready source code, unit tests, integration tests   | -                 |
-| **Code Reviewer**         | Code review                  | Review reports, improvement suggestions, refactoring plans    | -                 |
-| **Test Engineer**         | Test design & implementation | Test code, test design documents, test cases                  | `musubi-tasks`    |
-| **Security Auditor**      | Security auditing            | Vulnerability reports, remediation plans, security guidelines | -                 |
-| **Quality Assurance**     | Quality assurance strategy   | Test plans, quality metrics, QA reports                       | `musubi-validate` |
-| **Bug Hunter**            | Bug investigation & fixes    | Bug reports, root cause analysis, fix code                    | -                 |
-| **Performance Optimizer** | Performance optimization     | Performance reports, optimization code, benchmarks            | -                 |
+| Agent                     | Specialty                    | Key Deliverables                                              | CLI Command        |
+| ------------------------- | ---------------------------- | ------------------------------------------------------------- | ------------------ |
+| **Software Developer**    | Code implementation          | Production-ready source code, unit tests, integration tests   | -                  |
+| **Code Reviewer**         | Code review                  | Review reports, improvement suggestions, refactoring plans    | -                  |
+| **Test Engineer**         | Test design & implementation | Test code, test design documents, test cases                  | `musubi-tasks`     |
+| **Security Auditor**      | Security auditing            | Vulnerability reports, remediation plans, security guidelines | -                  |
+| **Quality Assurance**     | Quality assurance strategy   | Test plans, quality metrics, QA reports                       | `musubi-validate`  |
+| **Bug Hunter**            | Bug investigation & fixes    | Bug reports, root cause analysis, fix code                    | `musubi-resolve`   |
+| **Performance Optimizer** | Performance optimization     | Performance reports, optimization code, benchmarks            | -                  |
 
 ### Operations & Infrastructure (5 agents)
 
-| Agent                         | Specialty                         | Key Deliverables                                     | CLI Command    |
-| ----------------------------- | --------------------------------- | ---------------------------------------------------- | -------------- |
-| **Project Manager**           | Project management                | Project plans, WBS, Gantt charts, risk registers     | `musubi-tasks` |
-| **DevOps Engineer**           | CI/CD & infrastructure automation | Pipeline definitions, Dockerfiles, K8s manifests     | -              |
-| **Technical Writer**          | Technical documentation           | API docs, README, user guides, runbooks              | -              |
-| **Site Reliability Engineer** | SRE & observability               | SLI/SLO/SLA definitions, monitoring configs          | -              |
-| **Release Coordinator**       | Release management                | Release notes, deployment plans, rollback procedures | -              |
+| Agent                         | Specialty                         | Key Deliverables                                     | CLI Command      |
+| ----------------------------- | --------------------------------- | ---------------------------------------------------- | ---------------- |
+| **Project Manager**           | Project management                | Project plans, WBS, Gantt charts, risk registers     | `musubi-tasks`   |
+| **DevOps Engineer**           | CI/CD & infrastructure automation | Pipeline definitions, Dockerfiles, K8s manifests     | -                |
+| **Technical Writer**          | Technical documentation           | API docs, README, user guides, runbooks              | -                |
+| **Site Reliability Engineer** | SRE & observability               | SLI/SLO/SLA definitions, monitoring configs          | `musubi-gui`     |
+| **Release Coordinator**       | Release management                | Release notes, deployment plans, rollback procedures | -                |
 
 ### Specialized Experts (5 agents)
 
-| Agent                      | Specialty                    | Key Deliverables                                                      | CLI Command     |
-| -------------------------- | ---------------------------- | --------------------------------------------------------------------- | --------------- |
-| **UI/UX Designer**         | UI/UX design & prototyping   | Wireframes, mockups, interactive prototypes, design systems           | -               |
-| **Database Administrator** | Database operations & tuning | Performance tuning reports, backup/recovery plans, HA configurations  | -               |
-| **AI/ML Engineer**         | ML model development & MLOps | Trained models, model cards, deployment pipelines, evaluation reports | -               |
-| **Change Impact Analyzer** | Impact analysis              | Impact reports, affected components, effort estimates                 | `musubi-change` |
-| **Traceability Auditor**   | Traceability verification    | Traceability matrices, coverage reports, gap analysis                 | `musubi-trace`  |
+| Agent                      | Specialty                    | Key Deliverables                                                      | CLI Command      |
+| -------------------------- | ---------------------------- | --------------------------------------------------------------------- | ---------------- |
+| **UI/UX Designer**         | UI/UX design & prototyping   | Wireframes, mockups, interactive prototypes, design systems           | `musubi-browser` |
+| **Database Administrator** | Database operations & tuning | Performance tuning reports, backup/recovery plans, HA configurations  | -                |
+| **AI/ML Engineer**         | ML model development & MLOps | Trained models, model cards, deployment pipelines, evaluation reports | -                |
+| **Change Impact Analyzer** | Impact analysis              | Impact reports, affected components, effort estimates                 | `musubi-change`  |
+| **Traceability Auditor**   | Traceability verification    | Traceability matrices, coverage reports, gap analysis                 | `musubi-trace`   |
 
 **Total: 25 Specialized Agents**
 

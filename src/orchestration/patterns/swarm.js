@@ -3,6 +3,8 @@
  * 
  * Enables concurrent execution of multiple skills with
  * P-label task decomposition and dependency tracking.
+ * 
+ * v1.1.0: Added replanning support for dynamic task recovery
  */
 
 const { BasePattern } = require('../pattern-registry');
@@ -37,16 +39,18 @@ class SwarmPattern extends BasePattern {
       name: PatternType.SWARM,
       type: PatternType.SWARM,
       description: 'Execute multiple skills concurrently with dependency tracking',
-      version: '1.0.0',
-      tags: ['parallel', 'concurrent', 'swarm', 'distributed'],
+      version: '1.1.0',
+      tags: ['parallel', 'concurrent', 'swarm', 'distributed', 'replanning'],
       useCases: [
         'Parallel task execution',
         'Independent subtask processing',
         'Load distribution',
-        'Multi-perspective analysis'
+        'Multi-perspective analysis',
+        'Dynamic task recovery with replanning'
       ],
       complexity: 'high',
       supportsParallel: true,
+      supportsReplanning: true,
       requiresHuman: false
     });
 
@@ -58,6 +62,10 @@ class SwarmPattern extends BasePattern {
       retryAttempts: options.retryAttempts || 3,
       quorumThreshold: options.quorumThreshold || 0.5,
       priorityOrder: options.priorityOrder || [PLabel.P0, PLabel.P1, PLabel.P2, PLabel.P3],
+      // Replanning options
+      enableReplanning: options.enableReplanning || false,
+      replanningEngine: options.replanningEngine || null,
+      fallbackSkill: options.fallbackSkill || null,
       ...options
     };
   }
@@ -196,10 +204,47 @@ class SwarmPattern extends BasePattern {
               error: result.reason
             });
 
-            // Retry logic
+            // Try replanning if enabled
+            if (this.options.enableReplanning && this.options.replanningEngine) {
+              const alternative = await this._tryReplanning(
+                task,
+                result.reason,
+                engine,
+                context,
+                sharedContext,
+                results
+              );
+              
+              if (alternative) {
+                // Add alternative task to pending
+                pending.add(alternative.id || alternative.skill);
+                sortedTasks.push(alternative);
+                failed.delete(taskId);
+                
+                engine.emit('swarmTaskReplanned', {
+                  context,
+                  originalTaskId: taskId,
+                  alternativeTask: alternative
+                });
+                continue;
+              }
+            }
+
+            // Retry logic (fallback if replanning not available or failed)
             if (this.options.retryFailed && task.retryCount < this.options.retryAttempts) {
               task.retryCount = (task.retryCount || 0) + 1;
               pending.add(taskId);
+              failed.delete(taskId);
+            } else if (this.options.fallbackSkill) {
+              // Use fallback skill
+              const fallbackTask = {
+                ...task,
+                skill: this.options.fallbackSkill,
+                id: `${taskId}-fallback`,
+                originalTaskId: taskId
+              };
+              pending.add(fallbackTask.id);
+              sortedTasks.push(fallbackTask);
               failed.delete(taskId);
             }
           }
@@ -316,6 +361,68 @@ class SwarmPattern extends BasePattern {
     return new Promise((_, reject) => {
       setTimeout(() => reject(new Error(`Task ${taskId} timed out after ${ms}ms`)), ms);
     });
+  }
+
+  /**
+   * Try to replan a failed task using ReplanningEngine
+   * @param {Object} task - Failed task
+   * @param {Error} error - Error that caused failure
+   * @param {OrchestrationEngine} engine - Orchestration engine
+   * @param {ExecutionContext} context - Parent context
+   * @param {Object} sharedContext - Shared context
+   * @param {Map} previousResults - Previous results
+   * @returns {Promise<Object|null>} Alternative task or null
+   * @private
+   */
+  async _tryReplanning(task, error, engine, context, sharedContext, previousResults) {
+    const replanningEngine = this.options.replanningEngine;
+    
+    try {
+      // Create context for replanning
+      const replanContext = {
+        completed: [...previousResults.entries()].filter(([, v]) => !v.error).map(([id, result]) => ({
+          id,
+          result
+        })),
+        pending: [],
+        failed: [{
+          id: task.id || task.skill,
+          ...task,
+          error
+        }],
+        sharedContext
+      };
+
+      // Generate alternatives
+      const alternatives = await replanningEngine.generator.generateAlternatives(
+        { ...task, error },
+        replanContext
+      );
+
+      if (alternatives.length > 0) {
+        const best = alternatives[0];
+        
+        // Only use alternatives with sufficient confidence
+        if (best.confidence >= (replanningEngine.config.alternatives?.minConfidence || 0.5)) {
+          return {
+            ...best.task,
+            id: best.task.id || `${task.id || task.skill}-replan`,
+            priority: task.priority,
+            originalTaskId: task.id || task.skill,
+            replanSource: 'llm',
+            replanConfidence: best.confidence
+          };
+        }
+      }
+    } catch (replanError) {
+      engine.emit('swarmReplanFailed', {
+        context,
+        taskId: task.id || task.skill,
+        error: replanError
+      });
+    }
+
+    return null;
   }
 
   /**

@@ -28,6 +28,33 @@ You design user interfaces and experiences, optimize user interactions, create w
 
 ---
 
+## Browser Automation for UI Testing (v3.5.0 NEW)
+
+`musubi-browser` CLI でブラウザ操作とUI検証を自動化できます：
+
+```bash
+# インタラクティブモードでブラウザ操作
+musubi-browser
+
+# 自然言語でUI操作テスト
+musubi-browser run "ホームページを開いてナビゲーションメニューをクリック"
+
+# スクリーンショット取得
+musubi-browser run "ログインページのスクリーンショットを保存"
+
+# UI比較（期待デザイン vs 実装）
+musubi-browser compare design-mockup.png actual-screenshot.png --threshold 0.90
+
+# 操作履歴からE2Eテスト自動生成
+musubi-browser generate-test --history ./user-flow.json --output tests/e2e/user-flow.spec.ts
+```
+
+**UI/UXテストに活用**:
+- ワイヤーフレーム → 実装の視覚的比較
+- ユーザーフロー操作の自動化
+- レスポンシブデザインの確認（複数画面サイズ）
+- アクセシビリティチェック
+
 ---
 
 ## Project Memory (Steering System)

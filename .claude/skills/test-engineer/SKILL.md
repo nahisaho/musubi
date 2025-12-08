@@ -190,6 +190,27 @@ musubi-workflow feedback testing requirements -r "要件の不整合を発見"
 - [ ] リグレッションテスト完了
 - [ ] テストレポート生成完了
 
+### Browser Automation & E2E Testing (v3.5.0 NEW)
+
+`musubi-browser` CLIを使用して自然言語でブラウザテストを作成・実行できます：
+
+```bash
+# インタラクティブモードでブラウザ操作
+musubi-browser
+
+# 自然言語コマンドでテスト実行
+musubi-browser run "ログインページを開いてユーザー名を入力しログインボタンをクリック"
+
+# スクリプトファイルからテスト実行
+musubi-browser script ./e2e-tests/login-flow.txt
+
+# スクリーンショット比較（期待値 vs 実際）
+musubi-browser compare expected.png actual.png --threshold 0.95
+
+# 操作履歴からPlaywrightテストを自動生成
+musubi-browser generate-test --history actions.json --output tests/e2e/login.spec.ts
+```
+
 ---
 
 ## 3. Documentation Language Policy
