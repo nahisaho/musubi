@@ -6,7 +6,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 
 **MUSUBI（Specification Driven Development）** は、AIエージェントを活用した仕様駆動開発フレームワークです。しかし、MUSUBIは突然生まれたわけではありません。**Spec-Copilot** → **MUSUHI** → **MUSUBI** という3つのプロジェクトを経て、現在の形に進化してきました。
 
-本記事では、2025年11月の最初のプロジェクトから現在のv3.5.1までの完全な変遷を振り返り、各段階で何が追加され、どのような開発体験が可能になったかを詳説します。
+本記事では、2025年11月の最初のプロジェクトから現在のv3.6.1までの完全な変遷を振り返り、各段階で何が追加され、どのような開発体験が可能になったかを詳説します。
 
 **対象読者:**
 - MUSUBIを使用中/検討中の開発者
@@ -20,6 +20,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 - MUSUBI v0.7.0-v1.0.0: 憲法ガバナンスとCLI基盤
 - MUSUBI v2.x-v3.0.0: MCP統合、ワークフロー、ブラウザ自動化
 - MUSUBI v3.3.0-v3.5.1: モニタリング、Steering高度化、CLI統合
+- MUSUBI v3.6.0-v3.6.1: Dynamic Replanning Engine、目標管理、パス最適化
 
 ---
 
@@ -899,7 +900,99 @@ ReferenceValidator   // REQ-xxx, DES-xxx参照検証
 
 ---
 
-# 第10章 バージョン比較まとめ
+# 第10章 v3.6.0-v3.6.1 - Dynamic Replanning Engine
+
+## 10.1 v3.6.0 - Dynamic Replanning Engine
+
+**リリース日:** 2025-12-09
+
+AIエージェントがタスク失敗、タイムアウト、障害発生時に動的に実行計画を調整できる知的リプランニングシステムを追加しました。
+
+### 新機能
+
+**LLM Provider Abstraction (`src/llm-providers/`)**
+
+| コンポーネント | 説明 |
+|--------------|------|
+| `BaseLLMProvider` | 全LLMプロバイダーの抽象基底クラス |
+| `CopilotProvider` | GitHub Copilot LM API統合（優先プロバイダー） |
+| `AnthropicProvider` | Anthropic Claude API統合 |
+| `OpenAIProvider` | OpenAI GPT API統合 |
+| `LLMProviderFactory` | プロバイダーの自動検出とインスタンス化 |
+
+**Replanning Core (`src/orchestration/replanning/`)**
+
+| コンポーネント | 説明 |
+|--------------|------|
+| `ReplanningEngine` | 動的リプランニングのコアエンジン |
+| `PlanMonitor` | リアルタイム実行監視とイベント発行 |
+| `PlanEvaluator` | 進捗評価、効率メトリクス、推奨事項 |
+| `AlternativeGenerator` | LLMによる代替パス生成 |
+| `ReplanHistory` | JSONL永続化による監査ログ |
+| `ReplanTrigger` | トリガータイプ（failure, timeout, quality, manual, dependency） |
+| `ReplanDecision` | 決定タイプ（continue, retry, alternative, abort, human） |
+
+### v3.6.0で可能になったこと
+
+- ✅ **動的リプランニング**: タスク失敗時の自動代替プラン生成
+- ✅ **マルチLLMサポート**: Copilot、Anthropic、OpenAIの自動切替
+- ✅ **リアルタイム監視**: 失敗、タイムアウト、品質低下の検知
+- ✅ **信頼度ベース判断**: 閾値0.7で人間の承認を要求
+- ✅ **監査ログ**: 完全な監査証跡とエクスポート機能
+
+---
+
+## 10.2 v3.6.1 - 高度リプランニングコンポーネント
+
+**リリース日:** 2025-12-09
+
+v3.6.0のDynamic Replanning Engineをベースに、プロアクティブ最適化と目標管理のための3つの強力なコンポーネントを追加しました。
+
+### 新コンポーネント
+
+**ProactivePathOptimizer**
+- 成功実行中でも継続的なパス最適化
+- リソース利用分析とボトルネック検出
+- 並列実行機会の特定
+- 信頼度スコア付き最適化提案
+
+**GoalProgressTracker**
+- パーセンテージ追跡によるリアルタイム目標進捗監視
+- 自動進捗計算付きマイルストーン管理
+- 目標依存関係追跡とブロッキング検出
+- 進捗速度とETA推定
+
+**AdaptiveGoalModifier**
+- 実行コンテキストに基づく動的目標調整
+- 達成不可能な目標の制約緩和
+- 複雑な目標の分割
+- 依存関係に基づく優先度再計算
+
+### 新CLIコマンド
+
+| コマンド | 用途 |
+|---------|------|
+| `musubi-orchestrate replan <context-id>` | 動的リプランニング実行 |
+| `musubi-orchestrate goal register` | 新規目標登録 |
+| `musubi-orchestrate goal update <goal-id>` | 目標進捗更新 |
+| `musubi-orchestrate goal status` | 目標状態表示 |
+| `musubi-orchestrate optimize run <path-id>` | パス最適化実行 |
+| `musubi-orchestrate optimize suggest <path-id>` | 最適化提案取得 |
+| `musubi-orchestrate path analyze <path-id>` | パス分析 |
+| `musubi-orchestrate path optimize <path-id>` | パス最適化 |
+
+### v3.6.1で可能になったこと
+
+- ✅ **プロアクティブ最適化**: 成功時も継続的に最適パスを探索
+- ✅ **目標管理**: リアルタイム目標進捗トラッキング
+- ✅ **動的調整**: 状況に応じた目標の自動調整
+- ✅ **8つの新CLIコマンド**: リプランニング操作の完全CLI化
+- ✅ **全7プラットフォーム対応**: 全エージェントテンプレート更新
+- ✅ **1,841テスト**: 122リプランニングテスト追加
+
+---
+
+# 第11章 バージョン比較まとめ
 
 ## 10.1 機能進化の概要
 
@@ -925,6 +1018,8 @@ ReferenceValidator   // REQ-xxx, DES-xxx参照検証
 | **MUSUBI** v3.4.0 | 2025-06-14 | Phase 5 Steering高度化 | 1,490 | 27 |
 | **MUSUBI** v3.5.0 | 2025-12-08 | 20 CLIコマンド完備 | 1,490 | 27 |
 | **MUSUBI** v3.5.1 | 2025-12-08 | 全プラットフォームCLI統合 | 1,490 | 27 |
+| **MUSUBI** v3.6.0 | 2025-12-09 | Dynamic Replanning Engine | 1,797 | 27 |
+| **MUSUBI** v3.6.1 | 2025-12-09 | 高度リプランニングコンポーネント | 1,841 | 27 |
 
 ## 10.2 各バージョンの「できること」
 
@@ -1039,9 +1134,23 @@ ReferenceValidator   // REQ-xxx, DES-xxx参照検証
 | 全7プラットフォームからCLI利用可能 | ✅ |
 | スキル内CLI統合 | ✅ |
 
+### MUSUBI v3.6.0-v3.6.1
+
+| 機能 | ステータス |
+|------|----------|
+| Dynamic Replanning Engine | ✅ |
+| マルチLLMプロバイダー（Copilot、Anthropic、OpenAI） | ✅ |
+| リアルタイムプラン監視 | ✅ |
+| LLMによる代替パス生成 | ✅ |
+| ProactivePathOptimizer（プロアクティブ最適化） | ✅ |
+| GoalProgressTracker（目標進捗トラッキング） | ✅ |
+| AdaptiveGoalModifier（動的目標調整） | ✅ |
+| 8つのリプランニングCLIコマンド | ✅ |
+| 1,841テスト（122リプランニングテスト） | ✅ |
+
 ---
 
-# 第11章 アップグレード方法
+# 第12章 アップグレード方法
 
 ## 11.1 新規インストール
 
@@ -1078,7 +1187,7 @@ codegraph-mcp index /path/to/project --full
 
 # まとめ
 
-MUSUBIは、2025年11月5日に公開されたSpec-Copilotを起源とし、MUSUHI、そしてMUSUBIへと進化を遂げたプロジェクトです。約1ヶ月強でv0.1.0からv3.5.1まで劇的な成長を遂げました。
+MUSUBIは、2025年11月5日に公開されたSpec-Copilotを起源とし、MUSUHI、そしてMUSUBIへと進化を遂げたプロジェクトです。約1ヶ月強でv0.1.0からv3.6.1まで劇的な成長を遂げました。
 
 ```mermaid
 flowchart TB
@@ -1106,7 +1215,10 @@ flowchart TB
     subgraph Phase6["🌐 Phase 6: MUSUBI CLI統合（v3.5.1）"]
         P6["20 CLIコマンド、全プラットフォームCLI統合、1,490テスト"]
     end
-    Origin --> Evolution --> Phase1 --> Phase2 --> Phase3 --> Phase4 --> Phase5 --> Phase6
+    subgraph Phase7["🧠 Phase 7: MUSUBI Dynamic Replanning（v3.6.1）"]
+        P7["リプランニングエンジン、目標管理、パス最適化、1,841テスト"]
+    end
+    Origin --> Evolution --> Phase1 --> Phase2 --> Phase3 --> Phase4 --> Phase5 --> Phase6 --> Phase7
 ```
 
 **Key Milestones:**
@@ -1123,8 +1235,10 @@ flowchart TB
 | 673テスト | MUSUBI v3.0.0 | 堅牢な品質保証 |
 | Steering高度化 | MUSUBI v3.4.0 | 1,490テスト、Phase 5完了 |
 | 全プラットフォームCLI | MUSUBI v3.5.1 | 20 CLI、7プラットフォーム統合 |
+| Dynamic Replanning | MUSUBI v3.6.0 | LLMによる動的リプランニング |
+| 高度リプランニング | MUSUBI v3.6.1 | 目標管理、パス最適化、1,841テスト |
 
-Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて、MUSUBIは単なる仕様管理ツールから、**包括的なAI支援開発プラットフォーム**へと成長しました。v3.5.1では、20のCLIコマンドと7つのAIプラットフォームの完全統合を達成し、どの環境でも同じSDD体験を提供できるようになりました。
+Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて、MUSUBIは単なる仕様管理ツールから、**包括的なAI支援開発プラットフォーム**へと成長しました。v3.6.1では、Dynamic Replanning Engineにより、AIエージェントがタスク失敗時に自動で代替プランを生成し、目標進捗を追跡し、実行パスを最適化できるようになりました。1,841のテストと28のCLIコマンドで、堅牢で信頼性の高いSDD体験を提供します。
 
 ---
 
@@ -1133,10 +1247,11 @@ Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて�
 - [MUSUBI GitHub](https://github.com/nahisaho/musubi)
 - [MUSUHI GitHub](https://github.com/nahisaho/musuhi)（前身プロジェクト）
 - [Spec-Copilot GitHub](https://github.com/nahisaho/spec-copilot)（起源プロジェクト）
+- [MUSUBI v3.6.1 Replanning Guide](https://qiita.com/nahisaho/items/musubi-v3-replanning)
 - [MUSUBI v3.0.0 完全ガイド](https://qiita.com/nahisaho/items/musubi-v3-agents)
 - [MUSUBI v3.5.1 CLI統合ガイド](https://qiita.com/nahisaho/items/musubi-cli-integration)
 - [MUSUBI初心者ガイド](https://qiita.com/nahisaho/items/musubi-beginners-guide)
 
 ## タグ
 
-`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP`
+`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning`
