@@ -52,6 +52,27 @@ class GUIServer {
 
     this.setupMiddleware();
     this.setupRoutes();
+    this.setupReplanningEvents();
+  }
+
+  /**
+   * Setup replanning event handlers for real-time updates
+   */
+  setupReplanningEvents() {
+    // Forward replanning events to WebSocket clients
+    this.replanningService.on('state:updated', (state) => {
+      this.broadcast({ 
+        type: 'replanning:state', 
+        data: state 
+      });
+    });
+
+    this.replanningService.on('replan:recorded', (event) => {
+      this.broadcast({ 
+        type: 'replanning:event', 
+        data: event 
+      });
+    });
   }
 
   /**

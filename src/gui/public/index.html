@@ -453,6 +453,16 @@
       50% { opacity: 0.5; }
     }
 
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    @keyframes slideOut {
+      from { transform: translateX(0); opacity: 1; }
+      to { transform: translateX(100%); opacity: 0; }
+    }
+
     .goal-progress {
       display: flex;
       flex-direction: column;
@@ -660,7 +670,72 @@
           renderCurrentView();
           loadCoverage();
           break;
+        case 'replanning:state':
+          handleReplanningStateUpdate(message.data);
+          break;
+        case 'replanning:event':
+          handleReplanningEvent(message.data);
+          break;
       }
+    }
+
+    // Replanning real-time handlers
+    function handleReplanningStateUpdate(state) {
+      // Update replanning panel if visible
+      const replanPanel = document.querySelector('.replan-status');
+      if (replanPanel) {
+        const statusText = replanPanel.querySelector('.status-text');
+        if (statusText) {
+          statusText.textContent = state.status.charAt(0).toUpperCase() + state.status.slice(1);
+        }
+        // Update status indicator class
+        replanPanel.className = 'replan-status ' + state.status;
+      }
+      // Show toast notification for status changes
+      if (state.status === 'replanning') {
+        showToast('Replanning in progress...', 'warning');
+      } else if (state.status === 'optimizing') {
+        showToast('Optimizing execution path...', 'info');
+      }
+      // Refresh replanning view if active
+      if (currentView === 'replanning') {
+        renderReplanningView();
+      }
+    }
+
+    function handleReplanningEvent(event) {
+      // Show notification for replan events
+      const message = event.success 
+        ? `Replan completed: ${event.reason || 'Optimization applied'}`
+        : `Replan failed: ${event.error || 'Unknown error'}`;
+      showToast(message, event.success ? 'success' : 'error');
+      // Refresh replanning view if active
+      if (currentView === 'replanning') {
+        renderReplanningView();
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      toast.style.cssText = `
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        padding: 12px 20px;
+        border-radius: 8px;
+        color: white;
+        font-size: 14px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        background: ${type === 'success' ? 'var(--success)' : type === 'error' ? 'var(--error)' : type === 'warning' ? 'var(--warning)' : 'var(--secondary)'};
+      `;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
     }
 
     // API calls
