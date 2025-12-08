@@ -752,6 +752,262 @@ program
     }
   });
 
+// CI/CD integration check
+program
+  .command('ci-check')
+  .description('Run traceability check for CI/CD pipeline (returns exit code)')
+  .option('--strictness <level>', 'Strictness level (strict|standard|relaxed)', 'standard')
+  .option('--threshold <percent>', 'Minimum coverage threshold', '80')
+  .option('--format <type>', 'Output format (json|text)', 'text')
+  .option('-o, --output <path>', 'Output report path')
+  .action(async options => {
+    try {
+      const { TraceabilityValidator, Severity } = require('../src/validators/traceability-validator.js');
+
+      const validator = new TraceabilityValidator(process.cwd(), {
+        thresholds: {
+          design: parseInt(options.threshold),
+          tasks: parseInt(options.threshold),
+          code: parseInt(options.threshold),
+          tests: parseInt(options.threshold),
+          overall: parseInt(options.threshold),
+        },
+      });
+      validator.applyStrictness(options.strictness);
+
+      const result = await validator.validate();
+
+      if (options.format === 'json') {
+        const output = JSON.stringify({
+          passed: result.valid,
+          coverage: result.coverage,
+          gaps: result.gaps,
+          violations: result.violations,
+          warnings: result.warnings,
+          timestamp: new Date().toISOString(),
+        }, null, 2);
+
+        if (options.output) {
+          const fs = require('fs-extra');
+          await fs.writeFile(options.output, output, 'utf-8');
+        } else {
+          console.log(output);
+        }
+      } else {
+        if (result.valid) {
+          console.log(chalk.green('✅ Traceability check PASSED'));
+        } else {
+          console.log(chalk.red('❌ Traceability check FAILED'));
+        }
+        console.log();
+        console.log(chalk.bold('Coverage:'));
+        console.log(`  Design: ${result.coverage?.designCoverage || 0}%`);
+        console.log(`  Tasks: ${result.coverage?.tasksCoverage || 0}%`);
+        console.log(`  Code: ${result.coverage?.codeCoverage || 0}%`);
+        console.log(`  Tests: ${result.coverage?.testsCoverage || 0}%`);
+        console.log(`  Overall: ${result.coverage?.overall || 0}%`);
+
+        if (result.violations.length > 0) {
+          console.log();
+          console.log(chalk.red(`Errors: ${result.violations.length}`));
+          result.violations.forEach(v => console.log(chalk.red(`  - ${v.message}`)));
+        }
+
+        if (result.warnings.length > 0) {
+          console.log();
+          console.log(chalk.yellow(`Warnings: ${result.warnings.length}`));
+          result.warnings.slice(0, 5).forEach(v => console.log(chalk.yellow(`  - ${v.message}`)));
+          if (result.warnings.length > 5) {
+            console.log(chalk.yellow(`  ... and ${result.warnings.length - 5} more`));
+          }
+        }
+      }
+
+      process.exit(result.valid ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Strict validation mode
+program
+  .command('strict-validate')
+  .description('Run strict validation (100% coverage required)')
+  .option('--fail-on-warning', 'Treat warnings as errors')
+  .option('-o, --output <path>', 'Output report path')
+  .action(async options => {
+    try {
+      const { TraceabilityValidator } = require('../src/validators/traceability-validator.js');
+
+      console.log(chalk.bold('\n🔒 Running Strict Validation\n'));
+
+      const validator = new TraceabilityValidator(process.cwd());
+      validator.applyStrictness('strict');
+
+      const result = await validator.validate();
+
+      const hasErrors = result.violations.length > 0;
+      const hasWarnings = result.warnings.length > 0;
+      const failed = hasErrors || (options.failOnWarning && hasWarnings);
+
+      // Display summary
+      if (result.valid && !failed) {
+        console.log(chalk.green.bold('✅ STRICT VALIDATION PASSED'));
+      } else {
+        console.log(chalk.red.bold('❌ STRICT VALIDATION FAILED'));
+      }
+
+      console.log();
+      console.log(chalk.bold('Coverage:'));
+      console.log(`  Overall: ${result.coverage?.overall || 0}%`);
+
+      if (hasErrors) {
+        console.log();
+        console.log(chalk.red.bold(`❌ Errors (${result.violations.length}):`));
+        result.violations.forEach(v => {
+          console.log(chalk.red(`  • ${v.rule}: ${v.message}`));
+        });
+      }
+
+      if (hasWarnings) {
+        console.log();
+        console.log(chalk.yellow.bold(`⚠️ Warnings (${result.warnings.length}):`));
+        result.warnings.forEach(v => {
+          console.log(chalk.yellow(`  • ${v.rule}: ${v.message}`));
+        });
+      }
+
+      if (options.output) {
+        const fs = require('fs-extra');
+        const report = validator.generateReport(result);
+        await fs.writeFile(options.output, report, 'utf-8');
+        console.log();
+        console.log(chalk.green(`✓ Report saved to ${options.output}`));
+      }
+
+      process.exit(failed ? 1 : 0);
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Bidirectional traceability analysis
+program
+  .command('bidirectional')
+  .description('Analyze bidirectional traceability (forward and backward)')
+  .option('--format <type>', 'Output format (text|json|html)', 'text')
+  .option('-o, --output <path>', 'Output file path')
+  .option('--theme <theme>', 'HTML theme (light|dark)', 'light')
+  .action(async options => {
+    try {
+      console.log(chalk.bold('\n🔄 Analyzing Bidirectional Traceability\n'));
+
+      const analyzer = new TraceabilityAnalyzer(process.cwd());
+      const result = await analyzer.analyzeBidirectional();
+
+      if (options.format === 'json') {
+        const output = JSON.stringify(result, null, 2);
+        if (options.output) {
+          const fs = require('fs-extra');
+          await fs.writeFile(options.output, output, 'utf-8');
+          console.log(chalk.green(`✓ Report saved to ${options.output}`));
+        } else {
+          console.log(output);
+        }
+      } else if (options.format === 'html') {
+        const { TraceabilityMatrixReport, ReportFormat } = require('../src/reporters/traceability-matrix-report.js');
+        const reporter = new TraceabilityMatrixReport(process.cwd(), {
+          theme: options.theme,
+          interactive: true,
+        });
+        
+        const html = await reporter.generate(result, ReportFormat.HTML);
+        
+        if (options.output) {
+          const fs = require('fs-extra');
+          await fs.writeFile(options.output, html, 'utf-8');
+          console.log(chalk.green(`✓ HTML report saved to ${options.output}`));
+        } else {
+          console.log(html);
+        }
+      } else {
+        // Text format
+        console.log(chalk.bold('📊 Forward Traceability (Requirements → Tests)'));
+        console.log(chalk.dim(`   Complete: ${result.completeness.forwardComplete}/${result.completeness.forwardTotal} (${result.completeness.forwardPercentage}%)`));
+        console.log();
+
+        console.log(chalk.bold('🔙 Backward Traceability (Tests → Requirements)'));
+        console.log(chalk.dim(`   Complete: ${result.completeness.backwardComplete}/${result.completeness.backwardTotal} (${result.completeness.backwardPercentage}%)`));
+        console.log();
+
+        // Show orphaned items
+        const totalOrphaned = Object.values(result.orphaned).reduce((sum, arr) => sum + arr.length, 0);
+        if (totalOrphaned > 0) {
+          console.log(chalk.yellow.bold(`⚠️ Orphaned Items (${totalOrphaned}):`));
+          ['requirements', 'design', 'tasks', 'code', 'tests'].forEach(cat => {
+            const items = result.orphaned[cat];
+            if (items && items.length > 0) {
+              console.log(chalk.yellow(`   ${cat}: ${items.length}`));
+            }
+          });
+        } else {
+          console.log(chalk.green('✅ No orphaned items found'));
+        }
+      }
+
+      console.log();
+      process.exit(0);
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Generate HTML matrix report
+program
+  .command('html-report')
+  .description('Generate interactive HTML traceability matrix report')
+  .option('-o, --output <path>', 'Output file path', 'traceability-report.html')
+  .option('--theme <theme>', 'Theme (light|dark)', 'light')
+  .option('--no-interactive', 'Disable interactive features')
+  .option('--no-orphaned', 'Exclude orphaned items section')
+  .action(async options => {
+    try {
+      console.log(chalk.bold('\n📊 Generating HTML Traceability Report\n'));
+
+      const { TraceabilityMatrixReport, ReportFormat } = require('../src/reporters/traceability-matrix-report.js');
+      const analyzer = new TraceabilityAnalyzer(process.cwd());
+      
+      const traceabilityData = await analyzer.analyzeBidirectional();
+      
+      const reporter = new TraceabilityMatrixReport(process.cwd(), {
+        theme: options.theme,
+        interactive: options.interactive !== false,
+        includeOrphaned: options.orphaned !== false,
+      });
+
+      const html = await reporter.generate(traceabilityData, ReportFormat.HTML);
+
+      const fs = require('fs-extra');
+      await fs.writeFile(options.output, html, 'utf-8');
+
+      console.log(chalk.green(`✓ HTML report generated: ${options.output}`));
+      console.log();
+      console.log(chalk.dim('Summary:'));
+      console.log(chalk.dim(`  Forward coverage: ${traceabilityData.completeness.forwardPercentage}%`));
+      console.log(chalk.dim(`  Backward coverage: ${traceabilityData.completeness.backwardPercentage}%`));
+      console.log(chalk.dim(`  Orphaned items: ${Object.values(traceabilityData.orphaned).reduce((s, a) => s + a.length, 0)}`));
+      console.log();
+
+      process.exit(0);
+    } catch (error) {
+      console.error(chalk.red('✗ Error:'), error.message);
+      process.exit(1);
+    }
+  });
+
 program.parse(process.argv);
 
 if (!process.argv.slice(2).length) {
