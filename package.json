@@ -23,7 +23,8 @@
     "musubi-resolve": "bin/musubi-resolve.js",
     "musubi-convert": "bin/musubi-convert.js",
     "musubi-browser": "bin/musubi-browser.js",
-    "musubi-gui": "bin/musubi-gui.js"
+    "musubi-gui": "bin/musubi-gui.js",
+    "musubi-orchestrate": "bin/musubi-orchestrate.js"
   },
   "scripts": {
     "test": "jest",

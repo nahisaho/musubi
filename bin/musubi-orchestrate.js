@@ -1,0 +1,456 @@
+#!/usr/bin/env node
+
+/**
+ * MUSUBI Orchestration CLI
+ *
+ * Multi-skill orchestration with ag2-inspired patterns
+ *
+ * Usage:
+ *   musubi-orchestrate run <pattern> --skills <skills...>  # Execute pattern with skills
+ *   musubi-orchestrate auto <task>                          # Auto-select and execute skill
+ *   musubi-orchestrate sequential --skills <skills...>      # Execute skills sequentially
+ *   musubi-orchestrate list-patterns                        # List available patterns
+ *   musubi-orchestrate list-skills                          # List available skills
+ *   musubi-orchestrate status                               # Show orchestration status
+ */
+
+const { Command } = require('commander');
+const chalk = require('chalk');
+const path = require('path');
+const fs = require('fs-extra');
+
+const {
+  createOrchestrationEngine,
+  PatternType,
+  ExecutionStatus,
+  Priority
+} = require('../src/orchestration');
+
+const program = new Command();
+
+program
+  .name('musubi-orchestrate')
+  .description('MUSUBI Orchestration - Multi-skill workflow orchestration')
+  .version('1.0.0');
+
+/**
+ * Load skills from templates
+ */
+async function loadSkills(projectPath) {
+  const skills = new Map();
+  const skillsPath = path.join(projectPath, 'src', 'templates', 'skills');
+  
+  if (await fs.pathExists(skillsPath)) {
+    const skillDirs = await fs.readdir(skillsPath);
+    
+    for (const skillDir of skillDirs) {
+      const skillPath = path.join(skillsPath, skillDir);
+      const stat = await fs.stat(skillPath);
+      
+      if (stat.isDirectory()) {
+        const metaPath = path.join(skillPath, 'skill.json');
+        
+        if (await fs.pathExists(metaPath)) {
+          try {
+            const meta = await fs.readJson(metaPath);
+            skills.set(skillDir, {
+              name: skillDir,
+              ...meta,
+              execute: async (input) => {
+                // Placeholder for actual skill execution
+                return { skill: skillDir, input, executed: true };
+              }
+            });
+          } catch (e) {
+            // Skip invalid skills
+          }
+        } else {
+          // Create minimal skill entry
+          skills.set(skillDir, {
+            name: skillDir,
+            description: `${skillDir} skill`,
+            keywords: [skillDir],
+            execute: async (input) => {
+              return { skill: skillDir, input, executed: true };
+            }
+          });
+        }
+      }
+    }
+  }
+  
+  // Add built-in mock skills for demonstration
+  if (skills.size === 0) {
+    const mockSkills = [
+      { name: 'requirements-analyst', keywords: ['requirement', 'ears', 'specification'], categories: ['requirements'] },
+      { name: 'system-architect', keywords: ['architecture', 'design', 'c4'], categories: ['design'] },
+      { name: 'task-decomposer', keywords: ['task', 'breakdown', 'decompose'], categories: ['implementation'] },
+      { name: 'code-generator', keywords: ['code', 'implement', 'generate'], categories: ['implementation'] },
+      { name: 'test-engineer', keywords: ['test', 'testing', 'qa'], categories: ['testing'] },
+      { name: 'documentation-writer', keywords: ['document', 'readme', 'guide'], categories: ['documentation'] },
+      { name: 'security-analyst', keywords: ['security', 'vulnerability', 'audit'], categories: ['security'] },
+      { name: 'performance-engineer', keywords: ['performance', 'optimize', 'benchmark'], categories: ['performance'] }
+    ];
+    
+    for (const skill of mockSkills) {
+      skills.set(skill.name, {
+        ...skill,
+        description: `${skill.name} skill`,
+        execute: async (input) => {
+          return { skill: skill.name, input, executed: true, mock: true };
+        }
+      });
+    }
+  }
+  
+  return skills;
+}
+
+/**
+ * Create configured engine
+ */
+async function createEngine(projectPath) {
+  const engine = createOrchestrationEngine({
+    maxConcurrent: 5,
+    timeout: 300000
+  });
+  
+  // Load and register skills
+  const skills = await loadSkills(projectPath);
+  for (const [name, skill] of skills) {
+    engine.registerSkill(name, skill);
+  }
+  
+  return engine;
+}
+
+/**
+ * Format execution result
+ */
+function formatResult(result, format = 'text') {
+  if (format === 'json') {
+    return JSON.stringify(result, null, 2);
+  }
+  
+  let output = '';
+  
+  if (result.selectedSkill) {
+    output += chalk.bold(`Selected Skill: `) + chalk.cyan(result.selectedSkill) + '\n';
+    output += chalk.bold(`Confidence: `) + formatConfidence(result.confidence) + '\n';
+  }
+  
+  if (result.results) {
+    output += chalk.bold('\nExecution Results:\n');
+    for (const r of result.results) {
+      const status = r.status === ExecutionStatus.COMPLETED 
+        ? chalk.green('✓') 
+        : chalk.red('✗');
+      const step = r.step ? `Step ${r.step}: ` : '';
+      output += `  ${status} ${step}${chalk.cyan(r.skill)}`;
+      if (r.error) {
+        output += ` - ${chalk.red(r.error)}`;
+      }
+      output += '\n';
+    }
+  }
+  
+  if (result.summary) {
+    output += chalk.bold('\nSummary:\n');
+    output += `  Total Steps: ${result.summary.totalSteps}\n`;
+    output += `  Completed: ${chalk.green(result.summary.completed)}\n`;
+    output += `  Failed: ${chalk.red(result.summary.failed)}\n`;
+    output += `  Success Rate: ${result.summary.successRate}\n`;
+  }
+  
+  return output;
+}
+
+/**
+ * Format confidence level
+ */
+function formatConfidence(confidence) {
+  if (confidence >= 0.8) return chalk.green(`${(confidence * 100).toFixed(0)}% (High)`);
+  if (confidence >= 0.5) return chalk.yellow(`${(confidence * 100).toFixed(0)}% (Medium)`);
+  return chalk.red(`${(confidence * 100).toFixed(0)}% (Low)`);
+}
+
+// Run pattern command
+program
+  .command('run <pattern>')
+  .description('Execute an orchestration pattern')
+  .option('-s, --skills <skills...>', 'Skills to execute')
+  .option('-t, --task <task>', 'Task description')
+  .option('-i, --input <json>', 'Input data as JSON')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (pattern, options) => {
+    try {
+      console.log(chalk.bold(`\n🎭 Running ${pattern} pattern\n`));
+      
+      const engine = await createEngine(process.cwd());
+      
+      const input = options.input ? JSON.parse(options.input) : {};
+      if (options.skills) {
+        input.skills = options.skills;
+      }
+      
+      const context = await engine.execute(pattern, {
+        task: options.task || `Execute ${pattern} pattern`,
+        input
+      });
+      
+      if (context.status === ExecutionStatus.COMPLETED) {
+        console.log(chalk.green('✓ Pattern execution completed\n'));
+        console.log(formatResult(context.output, options.format));
+      } else {
+        console.log(chalk.red(`✗ Pattern execution failed: ${context.error}\n`));
+        process.exit(1);
+      }
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      if (process.env.DEBUG) {
+        console.error(error.stack);
+      }
+      process.exit(1);
+    }
+  });
+
+// Auto pattern command
+program
+  .command('auto <task>')
+  .description('Automatically select and execute the best skill for a task')
+  .option('-i, --input <json>', 'Input data as JSON')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .option('--multi', 'Execute multiple matching skills')
+  .action(async (task, options) => {
+    try {
+      console.log(chalk.bold('\n🤖 Auto Pattern - Intelligent Skill Selection\n'));
+      console.log(chalk.dim(`Task: ${task}\n`));
+      
+      const engine = await createEngine(process.cwd());
+      
+      const input = options.input ? JSON.parse(options.input) : {};
+      input.task = task;
+      
+      // Update auto pattern config if multi mode
+      if (options.multi) {
+        const autoPattern = engine.getPattern(PatternType.AUTO);
+        if (autoPattern) {
+          autoPattern.options.multiMatch = true;
+        }
+      }
+      
+      const context = await engine.execute(PatternType.AUTO, {
+        task,
+        input
+      });
+      
+      if (context.status === ExecutionStatus.COMPLETED) {
+        console.log(chalk.green('✓ Auto execution completed\n'));
+        console.log(formatResult(context.output, options.format));
+      } else {
+        console.log(chalk.red(`✗ Auto execution failed: ${context.error}\n`));
+        process.exit(1);
+      }
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      if (process.env.DEBUG) {
+        console.error(error.stack);
+      }
+      process.exit(1);
+    }
+  });
+
+// Sequential pattern command
+program
+  .command('sequential')
+  .description('Execute skills in sequence')
+  .requiredOption('-s, --skills <skills...>', 'Skills to execute in order')
+  .option('-i, --input <json>', 'Initial input data as JSON')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .option('--continue-on-error', 'Continue execution on error')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🔗 Sequential Pattern - Step-by-Step Execution\n'));
+      console.log(chalk.dim(`Skills: ${options.skills.join(' → ')}\n`));
+      
+      const engine = await createEngine(process.cwd());
+      
+      const initialInput = options.input ? JSON.parse(options.input) : {};
+      
+      const context = await engine.execute(PatternType.SEQUENTIAL, {
+        task: `Sequential execution of ${options.skills.length} skills`,
+        input: {
+          skills: options.skills,
+          initialInput
+        }
+      });
+      
+      if (context.status === ExecutionStatus.COMPLETED) {
+        console.log(chalk.green('\n✓ Sequential execution completed\n'));
+        console.log(formatResult(context.output, options.format));
+      } else {
+        console.log(chalk.red(`\n✗ Sequential execution failed: ${context.error}\n`));
+        process.exit(1);
+      }
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      if (process.env.DEBUG) {
+        console.error(error.stack);
+      }
+      process.exit(1);
+    }
+  });
+
+// List patterns command
+program
+  .command('list-patterns')
+  .description('List available orchestration patterns')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🎭 Available Orchestration Patterns\n'));
+      
+      const engine = await createEngine(process.cwd());
+      const patterns = engine.listPatterns();
+      
+      if (options.format === 'json') {
+        const patternData = patterns.map(name => {
+          const pattern = engine.getPattern(name);
+          return {
+            name,
+            metadata: pattern.metadata || { name }
+          };
+        });
+        console.log(JSON.stringify(patternData, null, 2));
+      } else {
+        if (patterns.length === 0) {
+          console.log(chalk.yellow('No patterns registered'));
+        } else {
+          for (const name of patterns) {
+            const pattern = engine.getPattern(name);
+            const meta = pattern.metadata || {};
+            console.log(chalk.cyan(`  ${name}`));
+            if (meta.description) {
+              console.log(chalk.dim(`    ${meta.description}`));
+            }
+          }
+        }
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+// List skills command
+program
+  .command('list-skills')
+  .description('List available skills')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .option('--category <category>', 'Filter by category')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🛠️  Available Skills\n'));
+      
+      const engine = await createEngine(process.cwd());
+      const skillNames = engine.listSkills();
+      
+      let skills = skillNames.map(name => {
+        const skill = engine.getSkill(name);
+        return { name, ...skill };
+      });
+      
+      // Filter by category
+      if (options.category) {
+        skills = skills.filter(s => 
+          s.categories && s.categories.includes(options.category)
+        );
+      }
+      
+      if (options.format === 'json') {
+        console.log(JSON.stringify(skills, null, 2));
+      } else {
+        if (skills.length === 0) {
+          console.log(chalk.yellow('No skills found'));
+        } else {
+          // Group by category
+          const byCategory = {};
+          for (const skill of skills) {
+            const cat = (skill.categories && skill.categories[0]) || 'other';
+            if (!byCategory[cat]) byCategory[cat] = [];
+            byCategory[cat].push(skill);
+          }
+          
+          for (const [category, catSkills] of Object.entries(byCategory)) {
+            console.log(chalk.bold(`  ${category}:`));
+            for (const skill of catSkills) {
+              console.log(chalk.cyan(`    ${skill.name}`));
+              if (skill.keywords && skill.keywords.length > 0) {
+                console.log(chalk.dim(`      Keywords: ${skill.keywords.join(', ')}`));
+              }
+            }
+            console.log('');
+          }
+        }
+      }
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+// Status command
+program
+  .command('status')
+  .description('Show orchestration engine status')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n📊 Orchestration Status\n'));
+      
+      const engine = await createEngine(process.cwd());
+      const status = engine.getStatus();
+      
+      if (options.format === 'json') {
+        console.log(JSON.stringify(status, null, 2));
+      } else {
+        console.log(chalk.bold('Patterns:'));
+        console.log(`  Registered: ${chalk.cyan(status.patterns.length)}`);
+        for (const p of status.patterns) {
+          console.log(`    - ${p}`);
+        }
+        
+        console.log(chalk.bold('\nSkills:'));
+        console.log(`  Registered: ${chalk.cyan(status.skills.length)}`);
+        
+        console.log(chalk.bold('\nActive Executions:'));
+        console.log(`  Count: ${chalk.cyan(status.activeExecutions)}`);
+        
+        if (status.contexts.length > 0) {
+          console.log(chalk.bold('\nActive Contexts:'));
+          for (const ctx of status.contexts) {
+            console.log(`  - ${ctx.id}: ${ctx.task} (${ctx.status})`);
+          }
+        }
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+program.parse(process.argv);
+
+if (!process.argv.slice(2).length) {
+  program.outputHelp();
+}
