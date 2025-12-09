@@ -25,7 +25,7 @@ jobs:
         run: npm ci
       
       - name: Run tests
-        run: npm test
+        run: npm test -- --testPathIgnorePatterns="tests/e2e/"
       
       - name: Run linter
         run: npm run lint

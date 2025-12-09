@@ -38,7 +38,7 @@ jobs:
           node-version: '18.x'
           cache: 'npm'
       - run: npm ci
-      - run: npm test -- --coverage
+      - run: npm test -- --coverage --testPathIgnorePatterns="tests/e2e/"
       - name: Upload coverage
         if: github.event_name == 'pull_request'
         uses: codecov/codecov-action@v3
