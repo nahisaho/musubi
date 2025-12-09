@@ -105,6 +105,24 @@ const {
   validateConfig: validateReplanningConfig
 } = require('./replanning');
 
+const {
+  BaseGuardrail,
+  GuardrailChain,
+  GuardrailTripwireException,
+  InputGuardrail,
+  createInputGuardrail,
+  OutputGuardrail,
+  createOutputGuardrail,
+  SecretPatterns,
+  RuleType,
+  SecurityPatterns,
+  RuleBuilder,
+  RuleRegistry,
+  rules,
+  CommonRuleSets,
+  globalRuleRegistry
+} = require('./guardrails');
+
 /**
  * Create a fully configured orchestration engine
  * with default patterns registered
@@ -223,6 +241,23 @@ module.exports = {
   defaultReplanningConfig,
   mergeReplanningConfig,
   validateReplanningConfig,
+
+  // Guardrails System
+  BaseGuardrail,
+  GuardrailChain,
+  GuardrailTripwireException,
+  InputGuardrail,
+  createInputGuardrail,
+  OutputGuardrail,
+  createOutputGuardrail,
+  SecretPatterns,
+  RuleType,
+  SecurityPatterns,
+  RuleBuilder,
+  RuleRegistry,
+  rules,
+  CommonRuleSets,
+  globalRuleRegistry,
 
   // Constants
   PatternType,
