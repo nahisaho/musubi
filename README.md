@@ -71,31 +71,29 @@ musubi init --windsurf  # Windsurf IDE
 
 ---
 
-## 📊 What's New in v3.9.0
+## 📊 What's New in v3.11.0
 
-- 🛡️ **Guardrails System** - OpenAI Agents SDK inspired input/output validation and safety checks
-- ✅ **InputGuardrail** - Input validation, PII detection, injection attack prevention
-- ✅ **OutputGuardrail** - Output sanitization, sensitive data redaction, content policy enforcement  
-- ⚖️ **SafetyCheckGuardrail** - Constitutional Articles compliance, content safety analysis
-- 🔧 **GuardrailRules DSL** - Fluent API for building validation rules with RuleBuilder
-- 🔗 **GuardrailChain** - Compose multiple guardrails with sequential/parallel execution
-- 🖥️ **CLI Commands** - `musubi-validate guardrails` and `guardrails-chain` commands
+- 🎯 **Skill System Architecture** - OpenAI Agents SDK inspired skill registry and execution
+- 📋 **Skill Registry** - Centralized skill registration with metadata, tags, and dependency validation
+- ⚡ **Skill Executor** - Parallel/sequential execution with P-labels (P0-P3), guardrail integration
+- 🔗 **Agent-Skill Binding** - Dynamic capability-based skill assignment with scoring
+- 🔌 **MCP Tool Adapters** - Bidirectional MCP-Skill adapters for external tool integration
+- 🔄 **Workflow Executor** - End-to-end workflows with 8 step types and variable resolution
+- 🛡️ **Error Handler** - Circuit breaker, graceful degradation, retry with backoff
+- 📁 **5 Workflow Templates** - Feature dev, CI/CD, code review, incident response, documentation
 
 ```bash
-# Input validation with security preset
-npx musubi-validate guardrails "user input" --type input --preset security
+# Execute skills with orchestration
+npx musubi-orchestrate run-skill analyze-requirements --input "specs.md"
 
-# Output validation with PII redaction
-npx musubi-validate guardrails "output" --type output --redact
+# Execute workflow from template
+npx musubi-orchestrate run-workflow feature-development --feature "new-auth"
 
-# Safety check with constitutional compliance
-npx musubi-validate guardrails "code" --type safety --constitutional --level high
-
-# Run guardrail chain in parallel
-npx musubi-validate guardrails-chain "content" --parallel
+# Parallel skill execution with P-labels
+npx musubi-orchestrate parallel P0:analyze,P1:design,P2:implement
 ```
 
-### Previous (v3.7.1)
+### Previous (v3.10.0)
 
 - 🌐 **WebSocket Real-time GUI** - Live replanning updates with `musubi-browser` dashboard
 - 📋 **GUI Quick Actions** - Modal dialog for New Requirement, Validate Project, Export Report

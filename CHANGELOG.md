@@ -5,6 +5,81 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.11.0] - 2025-12-10
+
+### Added
+
+**Phase 3: Skill System Architecture & Advanced Workflows** 🎯
+
+Complete implementation of OpenAI Agents SDK inspired skill architecture and advanced workflow execution.
+
+#### Skill System Architecture
+- **Skill Registry** (`src/orchestration/skill-registry.js`)
+  - Centralized skill registration and discovery
+  - Skill metadata with inputs/outputs/tags
+  - Category-based and tag-based filtering
+  - Dependency validation and resolution
+  - Health monitoring and circuit breaker integration
+
+- **Skill Executor** (`src/orchestration/skill-executor.js`)
+  - Parallel and sequential execution with P-labels (P0-P3)
+  - Input/output validation with JSON Schema
+  - Retry logic with exponential backoff
+  - Execution hooks (before/after/onError)
+  - Guardrail integration for safety checks
+  - Comprehensive metrics and event emission
+
+- **Agent-Skill Binding** (`src/orchestration/agent-skill-binding.js`)
+  - Dynamic capability-based skill binding
+  - Agent capability scoring system
+  - Permission and context-based matching
+  - Skill affinity management
+
+- **MCP Tool Adapters** (`src/orchestration/mcp-tool-adapters.js`)
+  - MCP-to-Skill adapter for external tools
+  - Skill-to-MCP adapter for tool exposure
+  - Automatic schema conversion
+  - Event emission for tool operations
+
+#### Advanced Workflows
+- **Workflow Executor** (`src/orchestration/workflow-executor.js`)
+  - End-to-end workflow execution engine
+  - 8 step types: task, parallel, conditional, loop, human-approval, error-handler, transform, aggregate
+  - Variable resolution with ${variable} syntax
+  - Condition evaluation with operators ($eq, $and, $or, $gt, $lt, etc.)
+  - Checkpoint management for rollback
+  - Pause/resume/cancel execution control
+
+- **Error Handler** (`src/orchestration/error-handler.js`)
+  - Error classification with pattern matching
+  - Circuit breaker for service protection (closed/open/half-open)
+  - Graceful degradation with fallback strategies
+  - Retry with exponential backoff
+  - Error aggregation and reporting
+
+- **Workflow Templates** (`src/orchestration/workflow-examples.js`)
+  - 5 real-world workflow templates:
+    - Feature development workflow
+    - CI/CD pipeline workflow
+    - Code review workflow
+    - Incident response workflow
+    - Documentation workflow
+
+### Documentation
+- Added `docs/guides/incremental-adoption.md` - Migration guide for gradual adoption
+
+### Tests
+- Added 286+ new tests for skill system and workflows
+- Skill Registry: 42 tests
+- Skill Executor: 56 tests
+- Agent-Skill Binding: 34 tests
+- MCP Tool Adapters: 68 tests
+- Workflow Executor: 36 tests
+- Error Handler: 50 tests
+- All 2574 tests passing
+
+---
+
 ## [3.10.0] - 2025-12-09
 
 ### Added
