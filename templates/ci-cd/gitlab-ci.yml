@@ -1,0 +1,199 @@
+# MUSUBI GitLab CI/CD Template
+# Add this to your .gitlab-ci.yml
+#
+# Features:
+# - EARS requirement validation
+# - Constitutional compliance checking
+# - Traceability matrix generation
+# - Test coverage reporting
+
+stages:
+  - validate
+  - test
+  - build
+  - deploy
+
+variables:
+  NODE_VERSION: "20"
+  MUSUBI_STRICT: "true"
+
+# Cache node_modules between jobs
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+    - .npm/
+
+# Hidden job for common setup
+.setup:
+  before_script:
+    - npm ci --cache .npm --prefer-offline
+    - npx musubi-sdd --version
+
+# ================================================
+# Stage: Validate
+# ================================================
+
+validate:ears:
+  extends: .setup
+  stage: validate
+  script:
+    - echo "🔍 Validating EARS requirements..."
+    - npx musubi-validate ears
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  artifacts:
+    reports:
+      junit: reports/ears-validation.xml
+    when: always
+
+validate:constitution:
+  extends: .setup
+  stage: validate
+  script:
+    - echo "📜 Checking constitutional compliance..."
+    - npx musubi-validate constitution
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+validate:traceability:
+  extends: .setup
+  stage: validate
+  script:
+    - echo "🔗 Generating traceability matrix..."
+    - npx musubi-trace --output reports/traceability.md
+  artifacts:
+    paths:
+      - reports/traceability.md
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+validate:delta:
+  extends: .setup
+  stage: validate
+  script:
+    - echo "📊 Validating delta specifications..."
+    - npx musubi-validate delta
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+      changes:
+        - storage/changes/**/*
+        - storage/specs/**/*
+
+# ================================================
+# Stage: Test
+# ================================================
+
+test:unit:
+  extends: .setup
+  stage: test
+  script:
+    - echo "🧪 Running unit tests..."
+    - npm test -- --coverage
+  coverage: '/All files[^|]*\|[^|]*\s+([\d\.]+)/'
+  artifacts:
+    reports:
+      junit: reports/junit.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 1 week
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+test:integration:
+  extends: .setup
+  stage: test
+  script:
+    - echo "🔄 Running integration tests..."
+    - npm run test:integration
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  allow_failure: true
+
+# ================================================
+# Stage: Build
+# ================================================
+
+build:
+  extends: .setup
+  stage: build
+  script:
+    - echo "🏗️ Building project..."
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+# ================================================
+# Stage: Deploy
+# ================================================
+
+deploy:staging:
+  stage: deploy
+  script:
+    - echo "🚀 Deploying to staging..."
+    # Add your deployment commands here
+  environment:
+    name: staging
+    url: https://staging.example.com
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  when: manual
+
+deploy:production:
+  stage: deploy
+  script:
+    - echo "🚀 Deploying to production..."
+    # Add your deployment commands here
+  environment:
+    name: production
+    url: https://example.com
+  rules:
+    - if: $CI_COMMIT_TAG
+  when: manual
+
+# ================================================
+# Merge Request Specific Jobs
+# ================================================
+
+mr:review:
+  extends: .setup
+  stage: validate
+  script:
+    - echo "👀 Running code review checks..."
+    - npx musubi-validate all
+    - npx musubi-gaps
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  allow_failure: true
+
+# ================================================
+# Scheduled Jobs
+# ================================================
+
+scheduled:full-validation:
+  extends: .setup
+  stage: validate
+  script:
+    - echo "📋 Full validation suite..."
+    - npx musubi-validate all
+    - npx musubi-trace --output reports/full-traceability.md
+    - npx musubi-gaps --output reports/gaps.md
+  artifacts:
+    paths:
+      - reports/
+    expire_in: 1 month
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"

@@ -1,0 +1,178 @@
+// MUSUBI Jenkins Pipeline Template
+// Add this to your Jenkinsfile
+//
+// Features:
+// - EARS requirement validation
+// - Constitutional compliance checking
+// - Traceability matrix generation
+// - Test coverage reporting
+// - Parallel execution for faster builds
+
+pipeline {
+    agent any
+    
+    environment {
+        NODE_VERSION = '20'
+        MUSUBI_STRICT = 'true'
+    }
+    
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        timeout(time: 30, unit: 'MINUTES')
+        timestamps()
+    }
+    
+    stages {
+        stage('Setup') {
+            steps {
+                script {
+                    // Use NodeJS plugin or nvm
+                    sh '''
+                        npm ci
+                        npx musubi-sdd --version
+                    '''
+                }
+            }
+        }
+        
+        stage('Validate') {
+            parallel {
+                stage('EARS Validation') {
+                    steps {
+                        sh '''
+                            echo "🔍 Validating EARS requirements..."
+                            npx musubi-validate ears || true
+                        '''
+                    }
+                    post {
+                        always {
+                            // Archive validation results
+                            archiveArtifacts artifacts: 'reports/ears-*.xml', allowEmptyArchive: true
+                        }
+                    }
+                }
+                
+                stage('Constitutional Compliance') {
+                    steps {
+                        sh '''
+                            echo "📜 Checking constitutional compliance..."
+                            npx musubi-validate constitution
+                        '''
+                    }
+                }
+                
+                stage('Traceability') {
+                    steps {
+                        sh '''
+                            echo "🔗 Generating traceability matrix..."
+                            npx musubi-trace --output reports/traceability.md
+                        '''
+                    }
+                    post {
+                        always {
+                            archiveArtifacts artifacts: 'reports/traceability.md', allowEmptyArchive: true
+                        }
+                    }
+                }
+            }
+        }
+        
+        stage('Test') {
+            parallel {
+                stage('Unit Tests') {
+                    steps {
+                        sh '''
+                            echo "🧪 Running unit tests..."
+                            npm test -- --coverage --reporters=default --reporters=jest-junit
+                        '''
+                    }
+                    post {
+                        always {
+                            junit 'reports/junit.xml'
+                            publishHTML([
+                                allowMissing: false,
+                                alwaysLinkToLastBuild: true,
+                                keepAll: true,
+                                reportDir: 'coverage/lcov-report',
+                                reportFiles: 'index.html',
+                                reportName: 'Coverage Report'
+                            ])
+                        }
+                    }
+                }
+                
+                stage('Integration Tests') {
+                    steps {
+                        sh '''
+                            echo "🔄 Running integration tests..."
+                            npm run test:integration || true
+                        '''
+                    }
+                }
+            }
+        }
+        
+        stage('Build') {
+            when {
+                anyOf {
+                    branch 'main'
+                    branch 'develop'
+                }
+            }
+            steps {
+                sh '''
+                    echo "🏗️ Building project..."
+                    npm run build
+                '''
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+                }
+            }
+        }
+        
+        stage('Deploy to Staging') {
+            when {
+                branch 'develop'
+            }
+            steps {
+                script {
+                    input message: 'Deploy to staging?', ok: 'Deploy'
+                    sh '''
+                        echo "🚀 Deploying to staging..."
+                        # Add your deployment commands here
+                    '''
+                }
+            }
+        }
+        
+        stage('Deploy to Production') {
+            when {
+                branch 'main'
+            }
+            steps {
+                script {
+                    input message: 'Deploy to production?', ok: 'Deploy'
+                    sh '''
+                        echo "🚀 Deploying to production..."
+                        # Add your deployment commands here
+                    '''
+                }
+            }
+        }
+    }
+    
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            echo '✅ Pipeline completed successfully!'
+        }
+        failure {
+            echo '❌ Pipeline failed!'
+            // Add notification (Slack, email, etc.)
+        }
+    }
+}
