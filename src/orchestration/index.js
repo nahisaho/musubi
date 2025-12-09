@@ -159,6 +159,40 @@ const {
   createWorkflowFromTemplate
 } = require('./workflow-examples');
 
+// Sprint 3.1-3.3: Skill System Architecture
+const {
+  SkillRegistry,
+  SkillDefinition,
+  SkillHealth,
+  SkillCategory
+} = require('./skill-registry');
+
+const {
+  SkillExecutor,
+  ExecutionPriority,
+  ParallelExecutor,
+  ValidationError,
+  GuardrailError
+} = require('./skill-executor');
+
+const {
+  AgentSkillBinding,
+  AgentDefinition,
+  BindingRecord,
+  AgentStatus,
+  CapabilityMatcher
+} = require('./agent-skill-binding');
+
+const {
+  MCPTransport,
+  AdapterDirection,
+  MCPToolDefinition,
+  SchemaTranslator,
+  MCPToSkillAdapter,
+  SkillToMCPAdapter,
+  MCPAdapterManager
+} = require('./mcp-tool-adapters');
+
 /**
  * Create a fully configured orchestration engine
  * with default patterns registered
@@ -330,5 +364,34 @@ module.exports = {
   codeReviewWorkflow,
   incidentResponseWorkflow,
   dataPipelineWorkflow,
-  createWorkflowFromTemplate
+  createWorkflowFromTemplate,
+
+  // Skill Registry (Sprint 3.1)
+  SkillRegistry,
+  SkillDefinition,
+  SkillHealth,
+  SkillCategory,
+
+  // Skill Executor (Sprint 3.2)
+  SkillExecutor,
+  ExecutionPriority,
+  ParallelExecutor,
+  ValidationError,
+  GuardrailError,
+
+  // Agent-Skill Binding (Sprint 3.3)
+  AgentSkillBinding,
+  AgentDefinition,
+  BindingRecord,
+  AgentStatus,
+  CapabilityMatcher,
+
+  // MCP Tool Adapters (Sprint 3.3.5)
+  MCPTransport,
+  AdapterDirection,
+  MCPToolDefinition,
+  SchemaTranslator,
+  MCPToSkillAdapter,
+  SkillToMCPAdapter,
+  MCPAdapterManager
 };
