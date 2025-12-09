@@ -8,6 +8,8 @@
  * - GroupChat: Multi-skill collaborative discussion
  * - Swarm: Parallel skill execution
  * - HumanInLoop: Validation gates
+ * - Handoff: Agent delegation (v3.8.0)
+ * - Triage: Request classification and routing (v3.8.0)
  */
 
 const EventEmitter = require('events');
@@ -21,7 +23,9 @@ const PatternType = {
   NESTED: 'nested',
   GROUP_CHAT: 'group-chat',
   SWARM: 'swarm',
-  HUMAN_IN_LOOP: 'human-in-loop'
+  HUMAN_IN_LOOP: 'human-in-loop',
+  HANDOFF: 'handoff',
+  TRIAGE: 'triage'
 };
 
 /**

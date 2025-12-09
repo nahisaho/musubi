@@ -5,6 +5,82 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.8.0] - 2025-12-09
+
+### Added
+
+**Swarm Enhancement Phase 1 - OpenAI Agents SDK Inspired Patterns** 🤖
+
+#### HandoffPattern - Explicit Agent Delegation
+- **HandoffPattern class** (`src/orchestration/patterns/handoff.js`)
+  - Explicit agent-to-agent task delegation
+  - Multiple strategies: SINGLE, FIRST_MATCH, ROUND_ROBIN, WEIGHTED, CONDITIONAL
+  - Handoff chain tracking across multiple delegations
+  - Configurable timeout and max handoffs limit
+
+- **Input/Output Filters**
+  - `removeAllTools` - Strip tool information from history
+  - `userMessagesOnly` - Keep only user messages
+  - `lastN(n)` - Keep last N messages
+  - `summarize` - Create summary of conversation
+  - `keepAll` - Preserve full history
+
+- **EscalationData** - Structured escalation context
+  - Priority levels (low, normal, high, urgent)
+  - Callback support for escalation handling
+  - Source/target agent tracking
+
+#### TriagePattern - Request Classification & Routing
+- **TriagePattern class** (`src/orchestration/patterns/triage.js`)
+  - Intelligent request classification and agent routing
+  - Multiple classification strategies: KEYWORD, INTENT, CAPABILITY, HYBRID, LLM
+  - Agent capability scoring with priority and load balancing
+
+- **Classification Categories**
+  - BILLING, SUPPORT, SALES, TECHNICAL, REFUND, GENERAL, ESCALATION, UNKNOWN
+  - Configurable keyword mappings per category
+  - Intent detection with confidence scoring
+
+- **AgentCapability** - Agent skill definition
+  - Category handling declarations
+  - Keyword matching
+  - Load balancing with max concurrent limits
+
+#### CLI Integration
+- **`musubi-orchestrate handoff`** - Delegate tasks between agents
+  - `--from`/`--to` for source/target agents
+  - `--filter` for input filtering options
+  - `--reason` for documentation
+  - `--priority` for task urgency
+
+- **`musubi-orchestrate triage`** - Classify and route requests
+  - `--message` for request text
+  - `--strategy` for classification method
+  - `--threshold` for confidence cutoff
+  - `--auto-handoff` for automatic delegation
+
+- **`musubi-orchestrate triage-categories`** - List available categories
+
+#### Orchestration Engine Integration
+- Added `PatternType.HANDOFF` and `PatternType.TRIAGE`
+- Auto-registration of new patterns in `createOrchestrationEngine()`
+- Event emission for pattern lifecycle (started, completed, failed)
+
+### Tests
+- 30 unit tests for HandoffPattern
+- 43 unit tests for TriagePattern
+- 17 integration tests for combined workflows
+- Total: 90 new tests (516 orchestration tests total)
+
+### Documentation
+- `docs/plans/SWARM-ENHANCEMENT-ROADMAP.md` - 4-phase implementation roadmap
+  - Phase 1: Handoff + Triage (Current)
+  - Phase 2: Guardrails System
+  - Phase 3: Agent Loop
+  - Phase 4: Advanced Features
+
+---
+
 ## [3.7.1] - 2025-12-09
 
 ### Fixed

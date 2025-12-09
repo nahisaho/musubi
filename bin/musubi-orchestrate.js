@@ -9,6 +9,8 @@
  *   musubi-orchestrate run <pattern> --skills <skills...>  # Execute pattern with skills
  *   musubi-orchestrate auto <task>                          # Auto-select and execute skill
  *   musubi-orchestrate sequential --skills <skills...>      # Execute skills sequentially
+ *   musubi-orchestrate handoff --from <agent> --to <agent>  # Delegate to another agent
+ *   musubi-orchestrate triage --message <msg>               # Classify and route request
  *   musubi-orchestrate list-patterns                        # List available patterns
  *   musubi-orchestrate list-skills                          # List available skills
  *   musubi-orchestrate status                               # Show orchestration status
@@ -23,7 +25,15 @@ const {
   createOrchestrationEngine,
   PatternType,
   ExecutionStatus,
-  Priority
+  Priority,
+  HandoffPattern,
+  HandoffFilters,
+  HandoffConfig,
+  handoff,
+  TriagePattern,
+  TriageCategory,
+  TriageStrategy,
+  AgentCapability
 } = require('../src/orchestration');
 
 const {
@@ -757,6 +767,312 @@ program
       process.exit(1);
     }
   });
+
+// Handoff command - Explicit agent-to-agent delegation
+program
+  .command('handoff')
+  .description('Execute handoff pattern - Delegate task to another agent')
+  .requiredOption('-t, --task <task>', 'Task to handoff')
+  .requiredOption('--from <agent>', 'Source agent')
+  .requiredOption('--to <agent>', 'Target agent')
+  .option('-s, --skills <skills...>', 'Available skills/agents')
+  .option('--filter <filter>', 'Input filter (removeAllTools|userMessagesOnly|lastN|summarize|keepAll)', 'keepAll')
+  .option('--filter-n <n>', 'N value for lastN filter', '10')
+  .option('--reason <reason>', 'Handoff reason')
+  .option('--priority <priority>', 'Priority (low|normal|high|urgent)', 'normal')
+  .option('-i, --input <json>', 'Additional input data as JSON')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🤝 Handoff Pattern - Agent Delegation\n'));
+      console.log(chalk.dim(`From: ${options.from} → To: ${options.to}\n`));
+      
+      const engine = await createEngine(process.cwd());
+      
+      // Parse additional input
+      const additionalInput = options.input ? JSON.parse(options.input) : {};
+      
+      // Select input filter
+      let inputFilter;
+      switch (options.filter) {
+        case 'removeAllTools':
+          inputFilter = HandoffFilters.removeAllTools;
+          break;
+        case 'userMessagesOnly':
+          inputFilter = HandoffFilters.userMessagesOnly;
+          break;
+        case 'lastN':
+          inputFilter = HandoffFilters.lastN(parseInt(options.filterN, 10));
+          break;
+        case 'summarize':
+          inputFilter = HandoffFilters.summarize;
+          break;
+        default:
+          inputFilter = HandoffFilters.keepAll;
+      }
+      
+      // Create handoff configuration
+      const handoffConfig = new HandoffConfig({
+        targetAgent: options.to,
+        reason: options.reason || `Handoff from ${options.from} to ${options.to}`,
+        inputFilter,
+        priority: options.priority
+      });
+      
+      // Prepare agent definitions
+      const agents = [];
+      const skills = options.skills || [options.from, options.to];
+      
+      for (const skillName of skills) {
+        const skill = engine.getSkill(skillName);
+        if (skill) {
+          agents.push({
+            name: skillName,
+            ...skill,
+            handoffs: skillName === options.from ? [handoffConfig] : []
+          });
+        } else {
+          // Create placeholder agent
+          agents.push({
+            name: skillName,
+            description: `${skillName} agent`,
+            execute: async (input) => ({ agent: skillName, input, executed: true }),
+            handoffs: skillName === options.from ? [handoffConfig] : []
+          });
+        }
+      }
+      
+      // Create target agents array as required by HandoffPattern
+      const targetAgent = agents.find(a => a.name === options.to) || {
+        name: options.to,
+        description: `${options.to} agent`,
+        execute: async (input) => ({ agent: options.to, input, executed: true })
+      };
+      
+      const context = await engine.execute(PatternType.HANDOFF, {
+        task: options.task,
+        input: {
+          sourceAgent: options.from,
+          targetAgents: [targetAgent],  // Array of target agents
+          agents,
+          reason: options.reason || `Handoff from ${options.from} to ${options.to}`,
+          ...additionalInput
+        }
+      });
+      
+      if (options.format === 'json') {
+        console.log(JSON.stringify({
+          success: context.status === ExecutionStatus.COMPLETED,
+          sourceAgent: options.from,
+          targetAgent: options.to,
+          result: context.output,
+          handoffChain: context.output?.handoffChain || []
+        }, null, 2));
+      } else {
+        if (context.status === ExecutionStatus.COMPLETED) {
+          console.log(chalk.green('✓ Handoff completed successfully\n'));
+          
+          if (context.output?.handoffChain) {
+            console.log(chalk.bold('Handoff Chain:'));
+            for (const hop of context.output.handoffChain) {
+              console.log(`  ${chalk.cyan(hop.from)} → ${chalk.yellow(hop.to)}`);
+              if (hop.reason) {
+                console.log(chalk.dim(`    Reason: ${hop.reason}`));
+              }
+            }
+            console.log('');
+          }
+          
+          console.log(chalk.bold('Result:'));
+          console.log(`  Final Agent: ${chalk.cyan(context.output?.finalAgent || options.to)}`);
+          console.log(`  Status: ${chalk.green('Completed')}`);
+        } else {
+          console.log(chalk.red(`✗ Handoff failed: ${context.error}\n`));
+          process.exit(1);
+        }
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      if (process.env.DEBUG) {
+        console.error(error.stack);
+      }
+      process.exit(1);
+    }
+  });
+
+// Triage command - Request classification and routing
+program
+  .command('triage')
+  .description('Execute triage pattern - Classify and route request to appropriate agent')
+  .requiredOption('-m, --message <message>', 'Message/request to classify')
+  .option('-s, --skills <skills...>', 'Available agents/skills to route to')
+  .option('--strategy <strategy>', 'Classification strategy (keyword|intent|capability|hybrid|llm)', 'hybrid')
+  .option('--default-category <category>', 'Default category if no match', 'general')
+  .option('--threshold <threshold>', 'Confidence threshold (0-1)', '0.3')
+  .option('--auto-handoff', 'Automatically handoff to selected agent', false)
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n🎯 Triage Pattern - Request Classification\n'));
+      console.log(chalk.dim(`Message: "${options.message.substring(0, 50)}${options.message.length > 50 ? '...' : ''}"\n`));
+      
+      const engine = await createEngine(process.cwd());
+      
+      // Map strategy string to enum
+      const strategyMap = {
+        'keyword': TriageStrategy.KEYWORD,
+        'intent': TriageStrategy.INTENT,
+        'capability': TriageStrategy.CAPABILITY,
+        'hybrid': TriageStrategy.HYBRID,
+        'llm': TriageStrategy.LLM
+      };
+      
+      const strategy = strategyMap[options.strategy] || TriageStrategy.HYBRID;
+      
+      // Prepare agents with capabilities
+      const agents = [];
+      const defaultSkills = [
+        { name: 'billing-agent', categories: [TriageCategory.BILLING, TriageCategory.REFUND], keywords: ['invoice', 'payment', 'refund', 'charge', 'billing'] },
+        { name: 'support-agent', categories: [TriageCategory.SUPPORT], keywords: ['help', 'issue', 'problem', 'broken', 'support'] },
+        { name: 'sales-agent', categories: [TriageCategory.SALES], keywords: ['buy', 'purchase', 'pricing', 'discount', 'order'] },
+        { name: 'technical-agent', categories: [TriageCategory.TECHNICAL], keywords: ['api', 'bug', 'error', 'integration', 'code'] },
+        { name: 'general-agent', categories: [TriageCategory.GENERAL], keywords: [] }
+      ];
+      
+      const skillNames = options.skills || defaultSkills.map(s => s.name);
+      
+      for (const skillName of skillNames) {
+        const skill = engine.getSkill(skillName);
+        const defaultSkill = defaultSkills.find(s => s.name === skillName);
+        
+        const agentObj = {
+          name: skillName,
+          description: skill?.description || `${skillName} agent`,
+          execute: skill?.execute || (async (input) => ({ agent: skillName, input, executed: true }))
+        };
+        
+        agentObj.capability = new AgentCapability({
+          agent: agentObj,  // Reference to agent object
+          categories: defaultSkill?.categories || [TriageCategory.GENERAL],
+          keywords: defaultSkill?.keywords || [],
+          priority: 1
+        });
+        
+        agents.push(agentObj);
+      }
+      
+      const context = await engine.execute(PatternType.TRIAGE, {
+        task: 'Classify and route request',
+        input: {
+          message: options.message,
+          agents,
+          strategy,
+          defaultCategory: options.defaultCategory.toUpperCase(),
+          confidenceThreshold: parseFloat(options.threshold),
+          enableHandoff: options.autoHandoff  // Only handoff if explicitly requested
+        }
+      });
+      
+      if (options.format === 'json') {
+        console.log(JSON.stringify({
+          success: context.status === ExecutionStatus.COMPLETED,
+          classification: context.output?.classification,
+          selectedAgent: context.output?.selectedAgent,
+          confidence: context.output?.confidence,
+          category: context.output?.category
+        }, null, 2));
+      } else {
+        if (context.status === ExecutionStatus.COMPLETED) {
+          console.log(chalk.green('✓ Triage completed\n'));
+          
+          const classification = context.output?.classification || context.output;
+          
+          console.log(chalk.bold('Classification Result:'));
+          console.log(`  Category: ${chalk.cyan(classification?.category || 'N/A')}`);
+          console.log(`  Confidence: ${formatConfidence(classification?.confidence || 0)}`);
+          if (classification?.reasoning) {
+            console.log(`  Reasoning: ${chalk.dim(classification.reasoning)}`);
+          }
+          console.log('');
+          
+          if (context.output?.selectedAgent) {
+            console.log(chalk.bold('Routing Decision:'));
+            console.log(`  Selected Agent: ${chalk.yellow(context.output.selectedAgent)}`);
+            console.log(`  Agent Score: ${(context.output.agentScore || 0).toFixed(2)}`);
+          }
+          
+          if (options.autoHandoff && context.output?.handoffResult) {
+            console.log('');
+            console.log(chalk.bold('Handoff Result:'));
+            console.log(`  Status: ${chalk.green('Executed')}`);
+          }
+        } else {
+          console.log(chalk.red(`✗ Triage failed: ${context.error}\n`));
+          process.exit(1);
+        }
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      if (process.env.DEBUG) {
+        console.error(error.stack);
+      }
+      process.exit(1);
+    }
+  });
+
+// Triage categories command - List available categories
+program
+  .command('triage-categories')
+  .description('List available triage categories')
+  .option('-f, --format <type>', 'Output format (text|json)', 'text')
+  .action(async (options) => {
+    try {
+      console.log(chalk.bold('\n📋 Triage Categories\n'));
+      
+      const categories = Object.entries(TriageCategory).map(([key, value]) => ({
+        key,
+        value,
+        description: getCategoryDescription(value)
+      }));
+      
+      if (options.format === 'json') {
+        console.log(JSON.stringify(categories, null, 2));
+      } else {
+        for (const cat of categories) {
+          console.log(`  ${chalk.cyan(cat.value.padEnd(12))} - ${cat.description}`);
+        }
+      }
+      
+      console.log('');
+      
+    } catch (error) {
+      console.error(chalk.red(`\n✗ Error: ${error.message}\n`));
+      process.exit(1);
+    }
+  });
+
+/**
+ * Get category description
+ */
+function getCategoryDescription(category) {
+  const descriptions = {
+    [TriageCategory.BILLING]: 'Billing, invoices, payments, refunds',
+    [TriageCategory.SUPPORT]: 'General support, help requests, issues',
+    [TriageCategory.SALES]: 'Sales inquiries, purchases, pricing',
+    [TriageCategory.TECHNICAL]: 'Technical issues, bugs, API, integrations',
+    [TriageCategory.REFUND]: 'Refund requests and processing',
+    [TriageCategory.GENERAL]: 'General inquiries, catch-all category',
+    [TriageCategory.ESCALATION]: 'Escalated issues requiring supervisor attention',
+    [TriageCategory.UNKNOWN]: 'Unclassified requests'
+  };
+  return descriptions[category] || 'Unknown category';
+}
 
 program.parse(process.argv);
 

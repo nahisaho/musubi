@@ -6,8 +6,10 @@
  * - Sequential: Linear skill execution
  * - Nested: Hierarchical skill delegation
  * - GroupChat: Multi-skill collaborative discussion
- * - Swarm: Parallel skill execution (coming soon)
+ * - Swarm: Parallel skill execution
  * - HumanInLoop: Validation gates
+ * - Handoff: Explicit agent-to-agent delegation (OpenAI Agents SDK inspired)
+ * - Triage: Request classification and routing (OpenAI Agents SDK inspired)
  */
 
 const { 
@@ -64,6 +66,25 @@ const {
 } = require('./patterns/swarm');
 
 const {
+  HandoffPattern,
+  HandoffFilters,
+  EscalationData,
+  HandoffConfig,
+  handoff,
+  createHandoffPattern
+} = require('./patterns/handoff');
+
+const {
+  TriagePattern,
+  TriageCategory,
+  TriageStrategy,
+  AgentCapability,
+  TriageResult,
+  DEFAULT_KEYWORD_MAPPINGS,
+  createTriagePattern
+} = require('./patterns/triage');
+
+const {
   WorkflowOrchestrator,
   StepType,
   WorkflowState,
@@ -102,6 +123,8 @@ function createOrchestrationEngine(options = {}) {
   registry.register(PatternType.GROUP_CHAT, createGroupChatPattern());
   registry.register(PatternType.HUMAN_IN_LOOP, createHumanInLoopPattern());
   registry.register(PatternType.SWARM, createSwarmPattern());
+  registry.register(PatternType.HANDOFF, createHandoffPattern());
+  registry.register(PatternType.TRIAGE, createTriagePattern());
 
   // Register patterns with engine
   registry.registerWithEngine(engine);
@@ -166,6 +189,21 @@ module.exports = {
   PLabel,
   SwarmStrategy,
   createSwarmPattern,
+
+  HandoffPattern,
+  HandoffFilters,
+  EscalationData,
+  HandoffConfig,
+  handoff,
+  createHandoffPattern,
+
+  TriagePattern,
+  TriageCategory,
+  TriageStrategy,
+  AgentCapability,
+  TriageResult,
+  DEFAULT_KEYWORD_MAPPINGS,
+  createTriagePattern,
 
   // Workflow Orchestrator
   WorkflowOrchestrator,
