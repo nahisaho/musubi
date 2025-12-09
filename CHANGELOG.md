@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.10.0] - 2025-12-09
+
+### Added
+
+**Phase 3: Multi-Skill Orchestration Documentation** 📚
+
+Comprehensive documentation for orchestration patterns, P-label parallelization, and guardrails system.
+
+#### Orchestration Patterns Guide
+- **Complete pattern documentation** (`docs/guides/orchestration-patterns.md`)
+  - All 9 patterns: Auto, Sequential, Nested, Group Chat, Swarm, Human-in-Loop, Handoff, Triage
+  - CLI examples for each pattern
+  - Complete workflow examples (end-to-end feature development)
+  - Integration with guardrails
+  - Best practices and recommendations
+
+#### P-Label Parallelization Tutorial
+- **P-label priority system** (`docs/guides/p-label-parallelization.md`)
+  - P0-P3 priority levels explained
+  - Execution order and timing diagrams
+  - Real-world examples (feature development, code review, testing)
+  - Dependency management
+  - Execution strategies (all, first, majority, quorum)
+  - Error handling and retry configuration
+  - Performance optimization tips
+  - Integration with replanning engine
+
+#### Guardrails System Guide
+- **Comprehensive guardrails documentation** (`docs/guides/guardrails-guide.md`)
+  - InputGuardrail, OutputGuardrail, SafetyCheckGuardrail
+  - GuardrailChain for pipeline execution
+  - GuardrailRules DSL with RuleBuilder
+  - CLI reference with examples
+  - Integration with orchestration patterns
+  - Constitutional compliance checking
+  - Tripwire behavior explanation
+  - Best practices for security
+
+### Documentation
+- Added `docs/guides/orchestration-patterns.md`
+- Added `docs/guides/p-label-parallelization.md`
+- Added `docs/guides/guardrails-guide.md`
+
+---
+
 ## [3.9.0] - 2025-12-09
 
 ### Added
