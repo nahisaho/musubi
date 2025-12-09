@@ -127,6 +127,38 @@ const {
   globalRuleRegistry
 } = require('./guardrails');
 
+// Sprint 3.5: Advanced Workflows
+const {
+  WorkflowExecutor,
+  WorkflowDefinition,
+  ExecutionContext: WorkflowExecutionContext,
+  StepResult,
+  StepType: WorkflowStepType,
+  ExecutionState,
+  RecoveryStrategy
+} = require('./workflow-executor');
+
+const {
+  ErrorHandler,
+  ErrorClassifier,
+  ErrorAggregator,
+  CircuitBreaker,
+  GracefulDegradation,
+  WorkflowError,
+  ErrorSeverity,
+  ErrorCategory,
+  CircuitState
+} = require('./error-handler');
+
+const {
+  featureDevelopmentWorkflow,
+  cicdPipelineWorkflow,
+  codeReviewWorkflow,
+  incidentResponseWorkflow,
+  dataPipelineWorkflow,
+  createWorkflowFromTemplate
+} = require('./workflow-examples');
+
 /**
  * Create a fully configured orchestration engine
  * with default patterns registered
@@ -270,5 +302,33 @@ module.exports = {
   // Constants
   PatternType,
   ExecutionStatus,
-  Priority
+  Priority,
+
+  // Workflow Executor (Sprint 3.5)
+  WorkflowExecutor,
+  WorkflowDefinition,
+  WorkflowExecutionContext,
+  StepResult,
+  WorkflowStepType,
+  ExecutionState,
+  RecoveryStrategy,
+
+  // Error Handler (Sprint 3.5)
+  ErrorHandler,
+  ErrorClassifier,
+  ErrorAggregator,
+  CircuitBreaker,
+  GracefulDegradation,
+  WorkflowError,
+  ErrorSeverity,
+  ErrorCategory,
+  CircuitState,
+
+  // Workflow Examples (Sprint 3.5)
+  featureDevelopmentWorkflow,
+  cicdPipelineWorkflow,
+  codeReviewWorkflow,
+  incidentResponseWorkflow,
+  dataPipelineWorkflow,
+  createWorkflowFromTemplate
 };
