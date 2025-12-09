@@ -14,6 +14,12 @@ const { BaseGuardrail, GuardrailChain, GuardrailTripwireException } = require('.
 const { InputGuardrail, createInputGuardrail } = require('./input-guardrail');
 const { OutputGuardrail, createOutputGuardrail, SecretPatterns } = require('./output-guardrail');
 const {
+  SafetyCheckGuardrail,
+  createSafetyCheckGuardrail,
+  SafetyLevel,
+  ConstitutionalMapping
+} = require('./safety-check');
+const {
   RuleType,
   SecurityPatterns,
   RuleBuilder,
@@ -37,6 +43,12 @@ module.exports = {
   OutputGuardrail,
   createOutputGuardrail,
   SecretPatterns,
+
+  // Safety check with constitutional integration
+  SafetyCheckGuardrail,
+  createSafetyCheckGuardrail,
+  SafetyLevel,
+  ConstitutionalMapping,
 
   // Rules DSL
   RuleType,

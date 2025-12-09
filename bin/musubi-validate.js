@@ -11,12 +11,20 @@
  *   musubi-validate article <1-9>   # Validate specific article
  *   musubi-validate gates           # Validate Phase -1 Gates
  *   musubi-validate complexity      # Validate complexity limits
+ *   musubi-validate guardrails      # Validate content with guardrails
  *   musubi-validate all             # Run all validations
  */
 
 const { Command } = require('commander');
 const chalk = require('chalk');
 const ConstitutionValidator = require('../src/validators/constitution');
+const {
+  createInputGuardrail,
+  createOutputGuardrail,
+  createSafetyCheckGuardrail,
+  GuardrailChain,
+  SafetyLevel
+} = require('../src/orchestration/guardrails');
 
 const program = new Command();
 
@@ -103,6 +111,134 @@ program
       process.exit(results.passed ? 0 : 1);
     } catch (error) {
       console.error(chalk.red('✗ Validation error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Guardrails validation
+program
+  .command('guardrails')
+  .description('Validate content with input/output guardrails')
+  .argument('[content]', 'Content to validate (or use --file)')
+  .option('--file <path>', 'Read content from file')
+  .option('-t, --type <type>', 'Guardrail type (input|output|safety)', 'input')
+  .option('-l, --level <level>', 'Safety level (basic|standard|strict|paranoid)', 'standard')
+  .option('--constitutional', 'Enable constitutional compliance checks')
+  .option('--redact', 'Enable redaction for output guardrails')
+  .option('-f, --format <type>', 'Output format (console|json)', 'console')
+  .action(async (content, options) => {
+    try {
+      // Get content from argument, file, or stdin
+      let inputContent = content;
+      
+      if (options.file) {
+        const fs = require('fs');
+        const path = require('path');
+        const filePath = path.resolve(process.cwd(), options.file);
+        inputContent = fs.readFileSync(filePath, 'utf-8');
+      } else if (!inputContent && !process.stdin.isTTY) {
+        // Read from stdin
+        const chunks = [];
+        for await (const chunk of process.stdin) {
+          chunks.push(chunk);
+        }
+        inputContent = Buffer.concat(chunks).toString('utf-8');
+      }
+
+      if (!inputContent) {
+        console.error(chalk.red('✗ No content provided. Use --file or pipe content.'));
+        process.exit(1);
+      }
+
+      let guardrail;
+      const guardrailType = options.type.toLowerCase();
+
+      switch (guardrailType) {
+        case 'input':
+          guardrail = createInputGuardrail('userInput', {
+            sanitize: true
+          });
+          break;
+        
+        case 'output':
+          guardrail = createOutputGuardrail(options.redact ? 'redact' : 'safe');
+          break;
+        
+        case 'safety':
+          guardrail = createSafetyCheckGuardrail(options.level, {
+            enforceConstitution: options.constitutional
+          });
+          break;
+        
+        default:
+          console.error(chalk.red(`✗ Unknown guardrail type: ${guardrailType}`));
+          process.exit(1);
+      }
+
+      console.log(chalk.dim(`\n🛡️  Running ${guardrailType} guardrail validation...\n`));
+
+      const result = await guardrail.run(inputContent);
+
+      displayGuardrailResults(result, options);
+      process.exit(result.passed ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red('✗ Guardrail validation error:'), error.message);
+      process.exit(1);
+    }
+  });
+
+// Guardrails chain validation
+program
+  .command('guardrails-chain')
+  .description('Run a chain of guardrails on content')
+  .argument('[content]', 'Content to validate')
+  .option('--file <path>', 'Read content from file')
+  .option('--parallel', 'Run guardrails in parallel')
+  .option('--stop-on-failure', 'Stop on first failure')
+  .option('-f, --format <type>', 'Output format (console|json)', 'console')
+  .action(async (content, options) => {
+    try {
+      // Get content
+      let inputContent = content;
+      
+      if (options.file) {
+        const fs = require('fs');
+        const path = require('path');
+        const filePath = path.resolve(process.cwd(), options.file);
+        inputContent = fs.readFileSync(filePath, 'utf-8');
+      } else if (!inputContent && !process.stdin.isTTY) {
+        const chunks = [];
+        for await (const chunk of process.stdin) {
+          chunks.push(chunk);
+        }
+        inputContent = Buffer.concat(chunks).toString('utf-8');
+      }
+
+      if (!inputContent) {
+        console.error(chalk.red('✗ No content provided. Use --file or pipe content.'));
+        process.exit(1);
+      }
+
+      // Create guardrail chain
+      const chain = new GuardrailChain({
+        name: 'ValidationChain',
+        parallel: options.parallel || false,
+        stopOnFirstFailure: options.stopOnFailure || false
+      });
+
+      // Add default guardrails
+      chain.add(createInputGuardrail('security'));
+      chain.add(createSafetyCheckGuardrail('standard'));
+      chain.add(createOutputGuardrail('safe'));
+
+      console.log(chalk.dim('\n🔗 Running guardrail chain validation...\n'));
+
+      const result = await chain.run(inputContent);
+
+      displayChainResults(result, options);
+      process.exit(result.passed ? 0 : 1);
+    } catch (error) {
+      console.error(chalk.red('✗ Guardrail chain error:'), error.message);
       process.exit(1);
     }
   });
@@ -341,6 +477,104 @@ function displayMarkdown(title, results) {
   if (results.summary) {
     console.log('## Summary\n');
     console.log(results.summary);
+    console.log();
+  }
+}
+
+/**
+ * Display guardrail validation results
+ */
+function displayGuardrailResults(result, options) {
+  if (options.format === 'json') {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  console.log(chalk.bold('Guardrail Validation Results'));
+  console.log(chalk.bold('━'.repeat(50)));
+
+  if (result.passed) {
+    console.log(chalk.green(`\n✓ PASSED - ${result.guardrailName}\n`));
+  } else {
+    console.log(chalk.red(`\n✗ FAILED - ${result.guardrailName}\n`));
+  }
+
+  if (result.message) {
+    console.log(chalk.dim(`Message: ${result.message}`));
+  }
+
+  console.log(chalk.dim(`Execution time: ${result.executionTimeMs}ms\n`));
+
+  if (result.violations && result.violations.length > 0) {
+    console.log(chalk.bold.red('Violations:'));
+    result.violations.forEach(violation => {
+      const severityIcon = violation.severity === 'error' ? '✗' : 
+                           violation.severity === 'warning' ? '⚠' : 'ℹ';
+      const severityColor = violation.severity === 'error' ? chalk.red :
+                            violation.severity === 'warning' ? chalk.yellow : chalk.blue;
+      console.log(severityColor(`  ${severityIcon} [${violation.code}] ${violation.message}`));
+    });
+    console.log();
+  }
+
+  // Show metadata if redaction was applied
+  if (result.metadata?.redactionApplied) {
+    console.log(chalk.bold.blue('Redaction Applied:'));
+    console.log(chalk.dim(`  ${result.metadata.redactionCount} item(s) redacted`));
+    if (result.metadata.redactions) {
+      result.metadata.redactions.forEach(r => {
+        console.log(chalk.dim(`    - ${r.type}: ${r.count}`));
+      });
+    }
+    console.log();
+  }
+
+  // Show quality scores if available
+  if (result.metadata?.qualityScores) {
+    console.log(chalk.bold.blue('Quality Scores:'));
+    Object.entries(result.metadata.qualityScores).forEach(([name, score]) => {
+      console.log(chalk.dim(`  ${name}: ${(score * 100).toFixed(1)}%`));
+    });
+    console.log();
+  }
+}
+
+/**
+ * Display guardrail chain results
+ */
+function displayChainResults(result, options) {
+  if (options.format === 'json') {
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  console.log(chalk.bold('Guardrail Chain Results'));
+  console.log(chalk.bold('━'.repeat(50)));
+
+  if (result.passed) {
+    console.log(chalk.green(`\n✓ PASSED - ${result.chainName}\n`));
+  } else {
+    console.log(chalk.red(`\n✗ FAILED - ${result.chainName}\n`));
+  }
+
+  console.log(chalk.dim(`Guardrails executed: ${result.executedCount}/${result.guardrailCount}`));
+  console.log(chalk.dim(`Total time: ${result.executionTimeMs}ms\n`));
+
+  // Show individual guardrail results
+  console.log(chalk.bold('Individual Results:'));
+  result.results.forEach((r, index) => {
+    const icon = r.passed ? chalk.green('✓') : chalk.red('✗');
+    console.log(`  ${icon} ${r.guardrailName} (${r.executionTimeMs}ms)`);
+  });
+  console.log();
+
+  // Show all violations
+  if (result.violations && result.violations.length > 0) {
+    console.log(chalk.bold.red('All Violations:'));
+    result.violations.forEach(violation => {
+      const severityColor = violation.severity === 'error' ? chalk.red : chalk.yellow;
+      console.log(severityColor(`  • [${violation.code}] ${violation.message}`));
+    });
     console.log();
   }
 }
