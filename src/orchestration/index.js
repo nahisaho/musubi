@@ -197,17 +197,21 @@ const {
 const phase4 = require('../phase4-integration');
 const {
   createIntegratedAgent,
-  // Sprint 4.2
-  CodebaseIntelligence,
-  createCodebaseIntelligence,
-  // Sprint 4.3
+  // Sprint 4.2: Codebase Intelligence
+  RepositoryMap,
+  ASTExtractor,
+  ContextOptimizer,
+  createRepositoryMap,
+  createASTExtractor,
+  createContextOptimizer,
+  // Sprint 4.3: Agentic Reasoning
   ReasoningEngine,
   PlanningEngine,
   SelfCorrection,
   createReasoningEngine,
   createPlanningEngine,
   createSelfCorrection,
-  // Sprint 4.4
+  // Sprint 4.4: Agentic Features
   CodeGenerator,
   CodeReviewer,
   createCodeGenerator,
@@ -455,8 +459,12 @@ module.exports = {
   // Phase 4: Agent Loop & Agentic Features
   phase4,
   createIntegratedAgent,
-  CodebaseIntelligence,
-  createCodebaseIntelligence,
+  RepositoryMap,
+  ASTExtractor,
+  ContextOptimizer,
+  createRepositoryMap,
+  createASTExtractor,
+  createContextOptimizer,
   ReasoningEngine,
   PlanningEngine,
   SelfCorrection,
