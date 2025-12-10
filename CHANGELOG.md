@@ -5,6 +5,77 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.5.0] - 2025-12-10
+
+### Added
+
+**Enterprise-Scale Analysis & Rust Migration Support** 🏢🦀
+
+Major improvements based on analysis of GCC codebase (10+ million lines, 100,000+ files).
+
+#### Large Project Analyzer (`src/analyzers/large-project-analyzer.js`)
+- **Scale-aware analysis**: Automatically detects project size and selects appropriate strategy
+  - Small (≤100 files): Batch analysis
+  - Medium (≤1,000 files): Batch analysis with optimizations
+  - Large (≤10,000 files): Chunked analysis
+  - Massive (>10,000 files): Streaming analysis
+- **Memory-efficient processing**: Chunk-based processing with garbage collection
+- **Multi-language support**: JavaScript, TypeScript, C, C++, Python, Rust, Go, Java
+- **Giant function detection**: Flags functions with 100+ (warning), 500+ (critical), 1000+ (extreme) lines
+- **Progress tracking**: Real-time progress callbacks and memory monitoring
+
+#### CodeGraph MCP Integration (`src/integrations/codegraph-mcp.js`)
+- **Deep code graph analysis**: Integration with CodeGraph MCP for relationship analysis
+- **Call graph generation**: Track callers and callees with configurable depth
+- **Impact analysis**: Identify affected files when code changes
+- **Circular dependency detection**: Find cycles in module dependencies
+- **Hotspot identification**: Detect highly-connected entities (refactoring candidates)
+- **Community detection**: Group related code modules
+
+#### Enhanced Complexity Analyzer (`src/analyzers/complexity-analyzer.js`)
+- **Cyclomatic complexity**: Standard decision-point counting
+- **Cognitive complexity**: SonarSource-style readability measurement
+- **Severity levels**: Ideal → Warning → Critical → Extreme thresholds
+- **Automatic recommendations**: Split function suggestions, complexity reduction tips
+- **Multi-language patterns**: Language-specific function detection
+
+#### Rust Migration Generator (`src/generators/rust-migration-generator.js`)
+- **Unsafe pattern detection**:
+  - Memory management: malloc, calloc, realloc, free
+  - Buffer overflow: strcpy, strcat, sprintf, gets
+  - Pointer operations: arithmetic, casts, double pointers
+  - Concurrency: pthread, volatile misuse
+  - Format strings: printf with variable format
+- **Security component identification**: Stack protection, sanitizers, crypto, auth
+- **Risk scoring**: Weighted calculation based on pattern severity
+- **Migration planning**: Phased approach with effort estimation
+- **Report generation**: Markdown reports with priorities and recommendations
+
+#### Hierarchical Reporter (`src/reporters/hierarchical-reporter.js`)
+- **Directory-based grouping**: Aggregate stats by directory hierarchy
+- **Drill-down support**: Navigate from project → module → file
+- **Hotspot visualization**: Highlight problem areas
+- **Health scoring**: Overall project health (0-100)
+- **Multiple formats**: Markdown and JSON output
+
+### Thresholds (Configurable)
+
+| Metric | Ideal | Warning | Critical | Extreme |
+|--------|-------|---------|----------|---------|
+| Function Lines | 50 | 100 | 500 | 1,000 |
+| Cyclomatic Complexity | 5 | 10 | 25 | 50 |
+| Cognitive Complexity | 8 | 15 | 30 | 60 |
+| File Lines | 300 | 500 | 1,000 | 2,000 |
+
+### Tests
+- 75 new tests for enterprise features
+- All tests passing
+
+### Documentation
+- `docs/analysis/GCC-ANALYSIS-IMPROVEMENTS.md`: Detailed improvement proposals from GCC analysis
+
+---
+
 ## [5.4.0] - 2025-12-10
 
 ### Added

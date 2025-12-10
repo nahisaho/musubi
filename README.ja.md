@@ -71,7 +71,27 @@ musubi init --windsurf  # Windsurf IDE
 
 ---
 
-## 📊 v5.4.0 の新機能
+## 📊 v5.5.0 の新機能
+
+- 🏢 **エンタープライズスケール分析** - 1,000万行+のプロジェクト（GCCレベル）に対応
+- 🦀 **Rustマイグレーション支援** - C/C++コードの安全性リスク検出とRust移行計画生成
+- 🔗 **CodeGraph MCP統合強化** - コールグラフ、影響分析、循環依存検出
+- 📊 **認知複雑度計測** - SonarSource方式の読みやすさ分析
+- 📈 **階層的レポート** - ドリルダウン可能なディレクトリ別分析
+- 🎯 **巨大関数検出** - 100行/500行/1000行超の関数を自動検出・分割提案
+
+```bash
+# 大規模プロジェクト分析（ストリーミングモード自動選択）
+musubi analyze --streaming
+
+# Rustマイグレーション分析
+musubi analyze --rust-migration
+
+# CodeGraph統合分析
+musubi analyze --codegraph --impact-analysis
+```
+
+### 以前のバージョン (v5.4.0)
 
 - 🔗 **GitHub参照機能** - 成功したリポジトリからパターンとプラクティスを参照
 - 📦 **複数リポジトリ対応** - `-r` / `--reference` オプションで複数指定可能
