@@ -105,7 +105,7 @@ initCommand.option(
 initCommand.option(
   '--reference <repo>',
   'Reference GitHub repository for improvements (can be specified multiple times)',
-  (value, previous) => previous ? [...previous, value] : [value],
+  (value, previous) => (previous ? [...previous, value] : [value]),
   []
 );
 
@@ -113,7 +113,7 @@ initCommand.option(
 initCommand.option(
   '-r, --ref <repo>',
   'Alias for --reference',
-  (value, previous) => previous ? [...previous, value] : [value],
+  (value, previous) => (previous ? [...previous, value] : [value]),
   []
 );
 

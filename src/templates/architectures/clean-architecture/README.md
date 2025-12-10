@@ -101,12 +101,13 @@ src/
 
 ## Testing Strategy
 
-| Layer | Test Type | Dependencies |
-|-------|-----------|--------------|
-| Domain | Unit | None |
-| Application | Unit + Integration | Mocked ports |
-| Infrastructure | Integration | Real DB/Services |
-| Interface | E2E | Full stack |
+| Layer          | Test Type          | Dependencies     |
+| -------------- | ------------------ | ---------------- |
+| Domain         | Unit               | None             |
+| Application    | Unit + Integration | Mocked ports     |
+| Infrastructure | Integration        | Real DB/Services |
+| Interface      | E2E                | Full stack       |
 
 ---
-*Clean Architecture Template - MUSUBI SDD*
+
+_Clean Architecture Template - MUSUBI SDD_

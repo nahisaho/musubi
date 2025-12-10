@@ -72,8 +72,7 @@ describe('External Specification Reference', () => {
     });
 
     it('should extract description from first paragraph', () => {
-      const content =
-        '# Title\n\nThis is the description of the specification.\n\n## Section';
+      const content = '# Title\n\nThis is the description of the specification.\n\n## Section';
       const lines = content.split('\n').slice(0, 50);
       let title = '';
       let description = '';

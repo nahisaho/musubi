@@ -23,6 +23,7 @@ The following layer definitions apply regardless of programming language:
 
 **Purpose**: Business logic and domain models
 **Rules**:
+
 - MUST NOT depend on any other layer
 - Contains: Entities, Value Objects, Domain Services, Domain Events
 - No framework dependencies, no I/O
@@ -40,6 +41,7 @@ The following layer definitions apply regardless of programming language:
 
 **Purpose**: Orchestrate domain logic, implement use cases
 **Rules**:
+
 - Depends only on Domain layer
 - Contains: Application Services, Commands, Queries, DTOs
 - No direct I/O (uses ports/interfaces)
@@ -57,6 +59,7 @@ The following layer definitions apply regardless of programming language:
 
 **Purpose**: External integrations (DB, APIs, messaging)
 **Rules**:
+
 - Depends on Application layer (implements ports)
 - Contains: Repositories, API Clients, Message Publishers
 - All I/O operations here
@@ -74,6 +77,7 @@ The following layer definitions apply regardless of programming language:
 
 **Purpose**: Entry points (CLI, API, Web UI)
 **Rules**:
+
 - Depends on Application layer
 - Contains: Controllers, CLI handlers, API routes
 - Input validation and response formatting

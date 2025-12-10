@@ -106,10 +106,10 @@ class OrderFulfillmentSaga {
   async handle(event: OrderPlaced): Promise<void> {
     // Step 1: Reserve inventory
     await this.dispatch(new ReserveInventory(event.orderId));
-    
+
     // Step 2: Process payment
     await this.dispatch(new ProcessPayment(event.orderId));
-    
+
     // Step 3: Ship order (triggered by PaymentReceived)
   }
 
@@ -134,12 +134,12 @@ events/
 
 ## Message Broker Integration
 
-| Broker | Use Case | Configuration |
-|--------|----------|---------------|
-| Kafka | High-throughput, ordered events | Topics, partitions |
-| RabbitMQ | Complex routing, reliability | Exchanges, queues |
-| AWS SQS/SNS | Serverless, AWS integration | Queues, topics |
-| Redis Streams | Low-latency, in-memory | Streams, consumer groups |
+| Broker        | Use Case                        | Configuration            |
+| ------------- | ------------------------------- | ------------------------ |
+| Kafka         | High-throughput, ordered events | Topics, partitions       |
+| RabbitMQ      | Complex routing, reliability    | Exchanges, queues        |
+| AWS SQS/SNS   | Serverless, AWS integration     | Queues, topics           |
+| Redis Streams | Low-latency, in-memory          | Streams, consumer groups |
 
 ## Key Principles
 
@@ -150,12 +150,13 @@ events/
 
 ## Testing Strategy
 
-| Component | Test Type | Approach |
-|-----------|-----------|----------|
-| Events | Schema | JSON Schema validation |
-| Handlers | Unit | Mock event publisher |
-| Sagas | Integration | In-memory event store |
-| E2E | Contract | Consumer-driven contracts |
+| Component | Test Type   | Approach                  |
+| --------- | ----------- | ------------------------- |
+| Events    | Schema      | JSON Schema validation    |
+| Handlers  | Unit        | Mock event publisher      |
+| Sagas     | Integration | In-memory event store     |
+| E2E       | Contract    | Consumer-driven contracts |
 
 ---
-*Event-Driven Architecture Template - MUSUBI SDD*
+
+_Event-Driven Architecture Template - MUSUBI SDD_

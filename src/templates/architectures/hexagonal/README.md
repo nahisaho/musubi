@@ -118,12 +118,13 @@ const userController = new UserController(userService);
 
 ## Testing Strategy
 
-| Component | Test Type | Approach |
-|-----------|-----------|----------|
-| Domain | Unit | Pure functions, no mocks |
-| Ports | Contract | Interface compliance |
-| Application | Unit | Mock outbound ports |
-| Adapters | Integration | Real external systems |
+| Component   | Test Type   | Approach                 |
+| ----------- | ----------- | ------------------------ |
+| Domain      | Unit        | Pure functions, no mocks |
+| Ports       | Contract    | Interface compliance     |
+| Application | Unit        | Mock outbound ports      |
+| Adapters    | Integration | Real external systems    |
 
 ---
-*Hexagonal Architecture Template - MUSUBI SDD*
+
+_Hexagonal Architecture Template - MUSUBI SDD_

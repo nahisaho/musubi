@@ -1,6 +1,6 @@
 /**
  * Tests for GitHub Reference Feature
- * 
+ *
  * Tests the --reference option for referencing GitHub repositories
  * to analyze patterns and generate improvement suggestions.
  */
@@ -39,7 +39,10 @@ describe('GitHub Reference Feature', () => {
     const _patterns = [
       { input: 'owner/repo', expected: { owner: 'owner', repo: 'repo', branch: 'main' } },
       { input: 'facebook/react', expected: { owner: 'facebook', repo: 'react', branch: 'main' } },
-      { input: 'owner/repo@develop', expected: { owner: 'owner', repo: 'repo', branch: 'develop' } },
+      {
+        input: 'owner/repo@develop',
+        expected: { owner: 'owner', repo: 'repo', branch: 'develop' },
+      },
       { input: 'https://github.com/owner/repo', expected: { owner: 'owner', repo: 'repo' } },
       { input: 'https://github.com/owner/repo.git', expected: { owner: 'owner', repo: 'repo' } },
       { input: 'git@github.com:owner/repo.git', expected: { owner: 'owner', repo: 'repo' } },
@@ -50,15 +53,15 @@ describe('GitHub Reference Feature', () => {
     });
 
     it('should handle owner/repo format', () => {
-      expect(initContent).toContain("simpleMatch = repoRef.match");
+      expect(initContent).toContain('simpleMatch = repoRef.match');
     });
 
     it('should handle https://github.com format', () => {
-      expect(initContent).toContain("httpsMatch = repoRef.match");
+      expect(initContent).toContain('httpsMatch = repoRef.match');
     });
 
     it('should handle git@github.com format', () => {
-      expect(initContent).toContain("sshMatch = repoRef.match");
+      expect(initContent).toContain('sshMatch = repoRef.match');
     });
 
     it('should support branch specification with @', () => {
@@ -76,11 +79,11 @@ describe('GitHub Reference Feature', () => {
     });
 
     it('should fetch repository metadata from GitHub API', () => {
-      expect(initContent).toContain("fetchGitHubAPI(`/repos/${owner}/${repo}`)");
+      expect(initContent).toContain('fetchGitHubAPI(`/repos/${owner}/${repo}`)');
     });
 
     it('should support GITHUB_TOKEN environment variable', () => {
-      expect(initContent).toContain("process.env.GITHUB_TOKEN");
+      expect(initContent).toContain('process.env.GITHUB_TOKEN');
     });
 
     it('should fetch key files like README.md and package.json', () => {
@@ -90,11 +93,11 @@ describe('GitHub Reference Feature', () => {
     });
 
     it('should handle rate limit errors gracefully', () => {
-      expect(initContent).toContain("GitHub API rate limit exceeded");
+      expect(initContent).toContain('GitHub API rate limit exceeded');
     });
 
     it('should handle repository not found errors', () => {
-      expect(initContent).toContain("Repository not found");
+      expect(initContent).toContain('Repository not found');
     });
   });
 
@@ -222,32 +225,32 @@ describe('GitHub Reference Feature', () => {
     it('should add --reference option to init command', () => {
       const musubiPath = path.join(__dirname, '..', 'bin', 'musubi.js');
       const musubiContent = require('fs').readFileSync(musubiPath, 'utf8');
-      expect(musubiContent).toContain("--reference <repo>");
+      expect(musubiContent).toContain('--reference <repo>');
     });
 
     it('should add -r/--ref shorthand alias', () => {
       const musubiPath = path.join(__dirname, '..', 'bin', 'musubi.js');
       const musubiContent = require('fs').readFileSync(musubiPath, 'utf8');
-      expect(musubiContent).toContain("-r, --ref <repo>");
+      expect(musubiContent).toContain('-r, --ref <repo>');
     });
 
     it('should support multiple references', () => {
       const musubiPath = path.join(__dirname, '..', 'bin', 'musubi.js');
       const musubiContent = require('fs').readFileSync(musubiPath, 'utf8');
-      expect(musubiContent).toContain("can be specified multiple times");
+      expect(musubiContent).toContain('can be specified multiple times');
     });
 
     it('should merge --reference and --ref options', () => {
       const musubiPath = path.join(__dirname, '..', 'bin', 'musubi.js');
       const musubiContent = require('fs').readFileSync(musubiPath, 'utf8');
-      expect(musubiContent).toContain("(options.reference || [])");
-      expect(musubiContent).toContain("(options.ref || [])");
+      expect(musubiContent).toContain('(options.reference || [])');
+      expect(musubiContent).toContain('(options.ref || [])');
     });
 
     it('should pass references to init options', () => {
       const musubiPath = path.join(__dirname, '..', 'bin', 'musubi.js');
       const musubiContent = require('fs').readFileSync(musubiPath, 'utf8');
-      expect(musubiContent).toContain("references:");
+      expect(musubiContent).toContain('references:');
     });
   });
 
@@ -328,6 +331,6 @@ describe('Error Handling', () => {
   });
 
   it('should filter out repos with errors before analysis', () => {
-    expect(initContent).toContain("referenceRepos.filter(r => !r.error)");
+    expect(initContent).toContain('referenceRepos.filter(r => !r.error)');
   });
 });

@@ -123,7 +123,9 @@ function parseGitHubRepo(repoRef) {
   }
 
   // Handle https://github.com/owner/repo format
-  const httpsMatch = repoRef.match(/github\.com\/([^/]+)\/([^/@#\s]+?)(?:\.git)?(?:@([^#]+))?(?:#(.+))?$/);
+  const httpsMatch = repoRef.match(
+    /github\.com\/([^/]+)\/([^/@#\s]+?)(?:\.git)?(?:@([^#]+))?(?:#(.+))?$/
+  );
   if (httpsMatch) {
     owner = httpsMatch[1];
     repo = httpsMatch[2];
@@ -133,7 +135,9 @@ function parseGitHubRepo(repoRef) {
   }
 
   // Handle git@github.com:owner/repo.git format
-  const sshMatch = repoRef.match(/git@github\.com:([^/]+)\/([^/.]+)(?:\.git)?(?:@([^#]+))?(?:#(.+))?$/);
+  const sshMatch = repoRef.match(
+    /git@github\.com:([^/]+)\/([^/.]+)(?:\.git)?(?:@([^#]+))?(?:#(.+))?$/
+  );
   if (sshMatch) {
     owner = sshMatch[1];
     repo = sshMatch[2];
@@ -173,63 +177,73 @@ async function fetchGitHubRepo(repoRef) {
   };
 
   // Helper to fetch from GitHub API
-  const fetchGitHubAPI = (endpoint) => new Promise((resolve, reject) => {
-    const options = {
-      hostname: 'api.github.com',
-      path: endpoint,
-      headers: {
-        'User-Agent': 'MUSUBI-SDD',
-        'Accept': 'application/vnd.github.v3+json',
-      },
-    };
+  const fetchGitHubAPI = endpoint =>
+    new Promise((resolve, reject) => {
+      const options = {
+        hostname: 'api.github.com',
+        path: endpoint,
+        headers: {
+          'User-Agent': 'MUSUBI-SDD',
+          Accept: 'application/vnd.github.v3+json',
+        },
+      };
 
-    // Add GitHub token if available
-    if (process.env.GITHUB_TOKEN) {
-      options.headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
-    }
+      // Add GitHub token if available
+      if (process.env.GITHUB_TOKEN) {
+        options.headers['Authorization'] = `token ${process.env.GITHUB_TOKEN}`;
+      }
 
-    https.get(options, (res) => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        if (res.statusCode === 200) {
-          try {
-            resolve(JSON.parse(data));
-          } catch {
-            reject(new Error('Invalid JSON response'));
-          }
-        } else if (res.statusCode === 404) {
-          reject(new Error(`Repository not found: ${owner}/${repo}`));
-        } else if (res.statusCode === 403) {
-          reject(new Error('GitHub API rate limit exceeded. Set GITHUB_TOKEN environment variable.'));
-        } else {
-          reject(new Error(`GitHub API error: ${res.statusCode}`));
-        }
-      });
-    }).on('error', reject);
-  });
+      https
+        .get(options, res => {
+          let data = '';
+          res.on('data', chunk => (data += chunk));
+          res.on('end', () => {
+            if (res.statusCode === 200) {
+              try {
+                resolve(JSON.parse(data));
+              } catch {
+                reject(new Error('Invalid JSON response'));
+              }
+            } else if (res.statusCode === 404) {
+              reject(new Error(`Repository not found: ${owner}/${repo}`));
+            } else if (res.statusCode === 403) {
+              reject(
+                new Error('GitHub API rate limit exceeded. Set GITHUB_TOKEN environment variable.')
+              );
+            } else {
+              reject(new Error(`GitHub API error: ${res.statusCode}`));
+            }
+          });
+        })
+        .on('error', reject);
+    });
 
   // Fetch raw file content
-  const fetchRawFile = (filePath) => new Promise((resolve, reject) => {
-    const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
-    https.get(rawUrl, (res) => {
-      if (res.statusCode === 302 || res.statusCode === 301) {
-        https.get(res.headers.location, (res2) => {
+  const fetchRawFile = filePath =>
+    new Promise((resolve, reject) => {
+      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filePath}`;
+      https
+        .get(rawUrl, res => {
+          if (res.statusCode === 302 || res.statusCode === 301) {
+            https
+              .get(res.headers.location, res2 => {
+                let data = '';
+                res2.on('data', chunk => (data += chunk));
+                res2.on('end', () => resolve(data));
+              })
+              .on('error', reject);
+            return;
+          }
+          if (res.statusCode !== 200) {
+            resolve(null); // File not found is OK
+            return;
+          }
           let data = '';
-          res2.on('data', chunk => data += chunk);
-          res2.on('end', () => resolve(data));
-        }).on('error', reject);
-        return;
-      }
-      if (res.statusCode !== 200) {
-        resolve(null); // File not found is OK
-        return;
-      }
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => resolve(data));
-    }).on('error', reject);
-  });
+          res.on('data', chunk => (data += chunk));
+          res.on('end', () => resolve(data));
+        })
+        .on('error', reject);
+    });
 
   try {
     // Fetch repository metadata
@@ -246,7 +260,9 @@ async function fetchGitHubRepo(repoRef) {
     };
 
     // Fetch directory structure (root level)
-    const treePath = subPath ? `/repos/${owner}/${repo}/contents/${subPath}` : `/repos/${owner}/${repo}/contents`;
+    const treePath = subPath
+      ? `/repos/${owner}/${repo}/contents/${subPath}`
+      : `/repos/${owner}/${repo}/contents`;
     try {
       const contents = await fetchGitHubAPI(treePath);
       if (Array.isArray(contents)) {
@@ -288,7 +304,6 @@ async function fetchGitHubRepo(repoRef) {
         // Ignore individual file fetch errors
       }
     }
-
   } catch (err) {
     result.error = err.message;
   }
@@ -303,23 +318,27 @@ async function fetchGitHubRepo(repoRef) {
  */
 async function fetchGitHubRepos(repos) {
   const results = [];
-  
+
   for (const repoRef of repos) {
     console.log(chalk.cyan(`  📦 Fetching ${repoRef}...`));
     const repoData = await fetchGitHubRepo(repoRef);
-    
+
     if (repoData.error) {
       console.log(chalk.yellow(`    ⚠️ ${repoData.error}`));
     } else {
-      console.log(chalk.green(`    ✓ ${repoData.metadata.name || repoData.repo} (${repoData.metadata.language || 'unknown'})`));
+      console.log(
+        chalk.green(
+          `    ✓ ${repoData.metadata.name || repoData.repo} (${repoData.metadata.language || 'unknown'})`
+        )
+      );
       if (repoData.metadata.description) {
         console.log(chalk.gray(`      ${repoData.metadata.description.slice(0, 80)}`));
       }
     }
-    
+
     results.push(repoData);
   }
-  
+
   return results;
 }
 
@@ -349,7 +368,9 @@ function analyzeReposForImprovements(repos) {
       analysis.architectures.push({
         repo: repo.repo,
         pattern: 'clean-architecture',
-        evidence: dirs.filter(d => ['domain', 'application', 'infrastructure', 'interface'].includes(d)),
+        evidence: dirs.filter(d =>
+          ['domain', 'application', 'infrastructure', 'interface'].includes(d)
+        ),
       });
     }
 
@@ -363,7 +384,13 @@ function analyzeReposForImprovements(repos) {
     }
 
     // Check for DDD patterns
-    if (dirs.some(d => ['aggregates', 'entities', 'valueobjects', 'repositories', 'services'].includes(d.toLowerCase()))) {
+    if (
+      dirs.some(d =>
+        ['aggregates', 'entities', 'valueobjects', 'repositories', 'services'].includes(
+          d.toLowerCase()
+        )
+      )
+    ) {
       analysis.patterns.push({
         repo: repo.repo,
         pattern: 'domain-driven-design',
@@ -372,7 +399,11 @@ function analyzeReposForImprovements(repos) {
     }
 
     // Check for monorepo patterns
-    if (dirs.includes('packages') || dirs.includes('apps') || files.includes('pnpm-workspace.yaml')) {
+    if (
+      dirs.includes('packages') ||
+      dirs.includes('apps') ||
+      files.includes('pnpm-workspace.yaml')
+    ) {
       analysis.patterns.push({
         repo: repo.repo,
         pattern: 'monorepo',
@@ -385,7 +416,7 @@ function analyzeReposForImprovements(repos) {
       try {
         const pkg = JSON.parse(repo.files['package.json']);
         const deps = { ...pkg.dependencies, ...pkg.devDependencies };
-        
+
         // Detect frameworks
         if (deps['react']) analysis.technologies.push({ repo: repo.repo, tech: 'react' });
         if (deps['vue']) analysis.technologies.push({ repo: repo.repo, tech: 'vue' });
@@ -394,12 +425,12 @@ function analyzeReposForImprovements(repos) {
         if (deps['fastify']) analysis.technologies.push({ repo: repo.repo, tech: 'fastify' });
         if (deps['next']) analysis.technologies.push({ repo: repo.repo, tech: 'nextjs' });
         if (deps['typescript']) analysis.technologies.push({ repo: repo.repo, tech: 'typescript' });
-        
+
         // Detect testing frameworks
         if (deps['jest']) analysis.configurations.push({ repo: repo.repo, config: 'jest' });
         if (deps['vitest']) analysis.configurations.push({ repo: repo.repo, config: 'vitest' });
         if (deps['mocha']) analysis.configurations.push({ repo: repo.repo, config: 'mocha' });
-        
+
         // Detect linting/formatting
         if (deps['eslint']) analysis.configurations.push({ repo: repo.repo, config: 'eslint' });
         if (deps['prettier']) analysis.configurations.push({ repo: repo.repo, config: 'prettier' });
@@ -423,16 +454,19 @@ function analyzeReposForImprovements(repos) {
     // Analyze pyproject.toml for Python patterns
     if (repo.files['pyproject.toml']) {
       const pyproj = repo.files['pyproject.toml'];
-      if (pyproj.includes('fastapi')) analysis.technologies.push({ repo: repo.repo, tech: 'fastapi' });
-      if (pyproj.includes('django')) analysis.technologies.push({ repo: repo.repo, tech: 'django' });
+      if (pyproj.includes('fastapi'))
+        analysis.technologies.push({ repo: repo.repo, tech: 'fastapi' });
+      if (pyproj.includes('django'))
+        analysis.technologies.push({ repo: repo.repo, tech: 'django' });
       if (pyproj.includes('flask')) analysis.technologies.push({ repo: repo.repo, tech: 'flask' });
-      if (pyproj.includes('pytest')) analysis.configurations.push({ repo: repo.repo, config: 'pytest' });
+      if (pyproj.includes('pytest'))
+        analysis.configurations.push({ repo: repo.repo, config: 'pytest' });
     }
 
     // Extract README insights
     if (repo.files['README.md']) {
       const readme = repo.files['README.md'];
-      
+
       // Check for badges that indicate good practices
       if (readme.includes('coverage')) {
         analysis.suggestions.push({
@@ -473,7 +507,9 @@ function analyzeReposForImprovements(repos) {
     for (const tech of analysis.technologies) {
       techCounts[tech.tech] = (techCounts[tech.tech] || 0) + 1;
     }
-    const popular = Object.entries(techCounts).sort((a, b) => b[1] - a[1]).slice(0, 3);
+    const popular = Object.entries(techCounts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3);
     for (const [tech, count] of popular) {
       analysis.suggestions.push({
         type: 'technology',
@@ -693,7 +729,10 @@ async function saveSpecReference(specResult, projectPath) {
   // Create spec reference file
   const timestamp = new Date().toISOString().split('T')[0];
   const safeName = specResult.metadata.summary?.title
-    ? specResult.metadata.summary.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 50)
+    ? specResult.metadata.summary.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .slice(0, 50)
     : 'external-spec';
   const filename = `${safeName}-${timestamp}.md`;
 
@@ -881,7 +920,9 @@ async function main(agent, agentKey, options = {}) {
           `✓ Loaded specification: ${externalSpec.metadata.summary?.title || externalSpec.source}`
         )
       );
-      console.log(chalk.gray(`  Format: ${externalSpec.metadata.format}, Type: ${externalSpec.type}\n`));
+      console.log(
+        chalk.gray(`  Format: ${externalSpec.metadata.format}, Type: ${externalSpec.type}\n`)
+      );
     }
   }
 
@@ -891,20 +932,26 @@ async function main(agent, agentKey, options = {}) {
   if (options.references && options.references.length > 0) {
     console.log(chalk.cyan(`\n📚 Fetching ${options.references.length} GitHub reference(s)...`));
     referenceRepos = await fetchGitHubRepos(options.references);
-    
+
     // Analyze repositories for improvements
     const validRepos = referenceRepos.filter(r => !r.error);
     if (validRepos.length > 0) {
       console.log(chalk.cyan('\n🔍 Analyzing repositories for patterns and improvements...'));
       repoAnalysis = analyzeReposForImprovements(validRepos);
-      
+
       if (repoAnalysis.suggestions.length > 0) {
-        console.log(chalk.green(`\n💡 Found ${repoAnalysis.suggestions.length} improvement suggestion(s):`));
+        console.log(
+          chalk.green(`\n💡 Found ${repoAnalysis.suggestions.length} improvement suggestion(s):`)
+        );
         for (const suggestion of repoAnalysis.suggestions.slice(0, 5)) {
           if (suggestion.type === 'architecture') {
-            console.log(chalk.white(`  • ${suggestion.suggestion} (from ${suggestion.repos.join(', ')})`));
+            console.log(
+              chalk.white(`  • ${suggestion.suggestion} (from ${suggestion.repos.join(', ')})`)
+            );
           } else if (suggestion.type === 'technology') {
-            console.log(chalk.white(`  • ${suggestion.suggestion} (used by ${suggestion.count} repo(s))`));
+            console.log(
+              chalk.white(`  • ${suggestion.suggestion} (used by ${suggestion.count} repo(s))`)
+            );
           } else {
             console.log(chalk.white(`  • ${suggestion.suggestion}`));
           }
@@ -1309,9 +1356,8 @@ async function main(agent, agentKey, options = {}) {
 
   // Generate language-specific dependency files (for single-package projects)
   if (answers.projectStructure !== 'workspace' && answers.projectStructure !== 'microservices') {
-    const primaryLang = answers.languages && answers.languages[0] !== 'undecided' 
-      ? answers.languages[0] 
-      : null;
+    const primaryLang =
+      answers.languages && answers.languages[0] !== 'undecided' ? answers.languages[0] : null;
     if (primaryLang) {
       await generateDependencyFiles(primaryLang, answers);
       console.log(chalk.green(`  Generated ${primaryLang} project files`));
@@ -1957,7 +2003,10 @@ testpaths = ["tests"]
       const srcDir = `src/${safeName.replace(/-/g, '_')}`;
       await fs.ensureDir(srcDir);
       if (!(await fs.pathExists(`${srcDir}/__init__.py`))) {
-        await fs.writeFile(`${srcDir}/__init__.py`, `"""${answers.description || projectName}"""\n\n__version__ = "0.1.0"\n`);
+        await fs.writeFile(
+          `${srcDir}/__init__.py`,
+          `"""${answers.description || projectName}"""\n\n__version__ = "0.1.0"\n`
+        );
       }
     }
   } else if (primaryLang === 'go') {

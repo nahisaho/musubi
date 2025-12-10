@@ -144,10 +144,7 @@ describe('Reference Architecture Templates', () => {
     });
 
     it('should document hexagonal ports and adapters', async () => {
-      const content = await fs.readFile(
-        path.join(templatesDir, 'hexagonal', 'README.md'),
-        'utf8'
-      );
+      const content = await fs.readFile(path.join(templatesDir, 'hexagonal', 'README.md'), 'utf8');
       expect(content).toContain('Ports');
       expect(content).toContain('Adapters');
       expect(content).toContain('Inbound');

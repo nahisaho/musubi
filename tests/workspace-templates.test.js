@@ -81,7 +81,7 @@ describe('Workspace/Monorepo Templates', () => {
       await fs.writeFile(configPath, workspaceConfig);
 
       const content = await fs.readFile(configPath, 'utf8');
-      expect(content).toContain("packages:");
+      expect(content).toContain('packages:');
       expect(content).toContain("'packages/*'");
     });
 
