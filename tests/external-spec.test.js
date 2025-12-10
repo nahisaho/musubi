@@ -31,7 +31,7 @@ describe('External Specification Reference', () => {
     // We'll test the format detection logic
     it('should detect JSON format from extension', () => {
       const source = 'spec.json';
-      const content = '{"openapi": "3.0.0"}';
+      const _content = '{"openapi": "3.0.0"}'; // Used for documentation purposes
       // Extension-based detection
       expect(path.extname(source).toLowerCase()).toBe('.json');
     });

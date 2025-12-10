@@ -11,8 +11,8 @@ const path = require('path');
 jest.mock('fs-extra');
 jest.mock('https');
 
-const fs = require('fs-extra');
-const https = require('https');
+const _fs = require('fs-extra'); // Mocked, kept for potential future use
+const _https = require('https'); // Mocked, kept for potential future use
 
 // Extract functions from musubi-init.js for testing
 // We need to read the file and eval specific functions
@@ -20,7 +20,7 @@ const initPath = path.join(__dirname, '..', 'bin', 'musubi-init.js');
 const initContent = require('fs').readFileSync(initPath, 'utf8');
 
 // Helper to extract and create function from source
-function extractFunction(name) {
+function _extractFunction(name) {
   // Simple extraction for testing - look for function definition
   const funcRegex = new RegExp(`(function ${name}|const ${name} = |async function ${name})`, 'g');
   if (!funcRegex.test(initContent)) {
@@ -36,14 +36,14 @@ describe('GitHub Reference Feature', () => {
 
   describe('parseGitHubRepo', () => {
     // Since we can't easily extract the function, we'll test the patterns
-    const patterns = [
+    const _patterns = [
       { input: 'owner/repo', expected: { owner: 'owner', repo: 'repo', branch: 'main' } },
       { input: 'facebook/react', expected: { owner: 'facebook', repo: 'react', branch: 'main' } },
       { input: 'owner/repo@develop', expected: { owner: 'owner', repo: 'repo', branch: 'develop' } },
       { input: 'https://github.com/owner/repo', expected: { owner: 'owner', repo: 'repo' } },
       { input: 'https://github.com/owner/repo.git', expected: { owner: 'owner', repo: 'repo' } },
       { input: 'git@github.com:owner/repo.git', expected: { owner: 'owner', repo: 'repo' } },
-    ];
+    ]; // Kept for documentation of expected patterns
 
     it('should have parseGitHubRepo function defined', () => {
       expect(initContent).toContain('function parseGitHubRepo');
@@ -278,13 +278,13 @@ describe('Pattern Detection', () => {
   describe('Architecture Detection Rules', () => {
     it('should detect clean architecture by directory names', () => {
       // Clean architecture directories
-      const cleanArchDirs = ['domain', 'application', 'infrastructure', 'interface'];
+      const _cleanArchDirs = ['domain', 'application', 'infrastructure', 'interface']; // Reference docs
       expect(initContent).toContain("['domain', 'application', 'infrastructure', 'interface']");
     });
 
     it('should detect hexagonal architecture by directory names', () => {
       // Hexagonal architecture directories
-      const hexDirs = ['adapters', 'ports', 'core', 'hexagon'];
+      const _hexDirs = ['adapters', 'ports', 'core', 'hexagon']; // Reference docs
       expect(initContent).toContain("['adapters', 'ports', 'core', 'hexagon']");
     });
 
