@@ -8,7 +8,11 @@
  * - Report generation
  */
 
-const { RustMigrationGenerator, UNSAFE_PATTERNS, SECURITY_COMPONENTS } = require('../../src/generators/rust-migration-generator');
+const {
+  RustMigrationGenerator,
+  UNSAFE_PATTERNS,
+  SECURITY_COMPONENTS,
+} = require('../../src/generators/rust-migration-generator');
 
 describe('RustMigrationGenerator', () => {
   describe('Unsafe Pattern Detection', () => {
@@ -28,7 +32,9 @@ describe('RustMigrationGenerator', () => {
     });
 
     test('should detect malloc', () => {
-      const pattern = UNSAFE_PATTERNS.memoryManagement.find(p => p.pattern.source.includes('malloc'));
+      const pattern = UNSAFE_PATTERNS.memoryManagement.find(p =>
+        p.pattern.source.includes('malloc')
+      );
       expect(pattern).toBeDefined();
       expect(pattern.risk).toBe('high');
     });
@@ -40,7 +46,9 @@ describe('RustMigrationGenerator', () => {
     });
 
     test('should detect sprintf as critical', () => {
-      const pattern = UNSAFE_PATTERNS.bufferOverflow.find(p => p.pattern.source.includes('sprintf'));
+      const pattern = UNSAFE_PATTERNS.bufferOverflow.find(p =>
+        p.pattern.source.includes('sprintf')
+      );
       expect(pattern).toBeDefined();
       expect(pattern.risk).toBe('critical');
     });
@@ -176,10 +184,21 @@ describe('RustMigrationGenerator', () => {
           { category: 'memoryManagement', occurrences: 10 },
         ],
         securityComponents: [
-          { component: 'Stack Protection', rustCrate: 'rust-ssp', files: ['ssp.c'], totalRiskScore: 25 },
+          {
+            component: 'Stack Protection',
+            rustCrate: 'rust-ssp',
+            files: ['ssp.c'],
+            totalRiskScore: 25,
+          },
         ],
         priorities: [
-          { rank: 1, file: 'test.c', riskScore: 50, rustBenefit: 'critical', topIssues: ['strcpy'] },
+          {
+            rank: 1,
+            file: 'test.c',
+            riskScore: 50,
+            rustBenefit: 'critical',
+            topIssues: ['strcpy'],
+          },
         ],
         summary: {
           totalFiles: 100,

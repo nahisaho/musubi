@@ -40,7 +40,10 @@ class HierarchicalReporter {
       generatedAt: new Date().toISOString(),
       projectPath: analysis.projectPath || process.cwd(),
       summary: this.generateSummary(analysis),
-      hierarchy: this.buildHierarchy(analysis.files || analysis.results?.files || [], mergedOptions.groupingDepth),
+      hierarchy: this.buildHierarchy(
+        analysis.files || analysis.results?.files || [],
+        mergedOptions.groupingDepth
+      ),
       hotspots: this.identifyHotspots(analysis, mergedOptions.hotspotThreshold),
       trends: this.analyzeTrends(analysis),
       recommendations: this.generateRecommendations(analysis),
@@ -60,8 +63,10 @@ class HierarchicalReporter {
       totalFiles: files.length,
       totalLines: summary.totalLines || files.reduce((sum, f) => sum + (f.lines || 0), 0),
       averageComplexity: summary.averageComplexity || this.calculateAverage(files, 'complexity'),
-      averageMaintainability: summary.averageMaintainability || this.calculateAverage(files, 'maintainability'),
-      languageDistribution: summary.languageDistribution || this.calculateLanguageDistribution(files),
+      averageMaintainability:
+        summary.averageMaintainability || this.calculateAverage(files, 'maintainability'),
+      languageDistribution:
+        summary.languageDistribution || this.calculateLanguageDistribution(files),
       issueCount: this.countIssues(files),
       healthScore: this.calculateHealthScore(files),
     };
@@ -115,14 +120,14 @@ class HierarchicalReporter {
         current.stats.files++;
         current.stats.lines += file.lines || 0;
         current.stats.complexity += file.complexity || 0;
-        current.stats.issues += file.issueCount || (file.issues?.length || 0);
+        current.stats.issues += file.issueCount || file.issues?.length || 0;
       }
 
       // Add to root
       tree.stats.files++;
       tree.stats.lines += file.lines || 0;
       tree.stats.complexity += file.complexity || 0;
-      tree.stats.issues += file.issueCount || (file.issues?.length || 0);
+      tree.stats.issues += file.issueCount || file.issues?.length || 0;
     }
 
     // Calculate averages for each node
@@ -155,7 +160,7 @@ class HierarchicalReporter {
     // File-level hotspots
     for (const file of files) {
       const complexity = file.complexity || 0;
-      const issues = file.issueCount || (file.issues?.length || 0);
+      const issues = file.issueCount || file.issues?.length || 0;
 
       if (complexity >= threshold || issues >= 3) {
         hotspots.push({
@@ -272,7 +277,8 @@ class HierarchicalReporter {
     }
 
     // Low maintainability
-    const avgMaintainability = summary.averageMaintainability || this.calculateAverage(files, 'maintainability');
+    const avgMaintainability =
+      summary.averageMaintainability || this.calculateAverage(files, 'maintainability');
     if (avgMaintainability < 40) {
       recommendations.push({
         priority: 'P2',
@@ -290,7 +296,9 @@ class HierarchicalReporter {
     }
 
     // Language diversity
-    const languages = Object.keys(summary.languageDistribution || this.calculateLanguageDistribution(files));
+    const languages = Object.keys(
+      summary.languageDistribution || this.calculateLanguageDistribution(files)
+    );
     if (languages.length > 5) {
       recommendations.push({
         priority: 'P3',
@@ -331,7 +339,7 @@ class HierarchicalReporter {
    * Count total issues across files
    */
   countIssues(files) {
-    return files.reduce((sum, f) => sum + (f.issueCount || (f.issues?.length || 0)), 0);
+    return files.reduce((sum, f) => sum + (f.issueCount || f.issues?.length || 0), 0);
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * MUSUBI SDD - Main Export Module
- * 
+ *
  * This file exports all public modules for use as a library.
  */
 
@@ -15,8 +15,15 @@ function tryRequire(modulePath) {
 }
 
 // Analyzers
-const { LargeProjectAnalyzer, THRESHOLDS: LARGE_PROJECT_THRESHOLDS, CHUNK_SIZE } = require('./analyzers/large-project-analyzer');
-const { ComplexityAnalyzer, THRESHOLDS: COMPLEXITY_THRESHOLDS } = require('./analyzers/complexity-analyzer');
+const {
+  LargeProjectAnalyzer,
+  THRESHOLDS: LARGE_PROJECT_THRESHOLDS,
+  CHUNK_SIZE,
+} = require('./analyzers/large-project-analyzer');
+const {
+  ComplexityAnalyzer,
+  THRESHOLDS: COMPLEXITY_THRESHOLDS,
+} = require('./analyzers/complexity-analyzer');
 const { AstExtractor } = require('./analyzers/ast-extractor');
 const { GapDetector } = require('./analyzers/gap-detector');
 const { ImpactAnalyzer } = require('./analyzers/impact-analyzer');
@@ -26,7 +33,11 @@ const { StuckDetector } = require('./analyzers/stuck-detector');
 const { createTraceabilityMatrix } = require('./analyzers/traceability');
 
 // Generators
-const { RustMigrationGenerator, UNSAFE_PATTERNS, SECURITY_COMPONENTS } = require('./generators/rust-migration-generator');
+const {
+  RustMigrationGenerator,
+  UNSAFE_PATTERNS,
+  SECURITY_COMPONENTS,
+} = require('./generators/rust-migration-generator');
 const { DesignGenerator } = require('./generators/design');
 const { RequirementsGenerator } = require('./generators/requirements');
 const { TaskGenerator } = require('./generators/tasks');

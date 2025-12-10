@@ -180,13 +180,13 @@ console.log(`Security Components: ${analysis.securityComponents.length}`);
 
 ### Unsafe Pattern Detection (27 Types)
 
-| Category | Patterns |
-|----------|----------|
-| **Memory Management** | malloc, calloc, realloc, free |
-| **Buffer Overflow** | strcpy, strcat, sprintf, gets |
+| Category               | Patterns                                   |
+| ---------------------- | ------------------------------------------ |
+| **Memory Management**  | malloc, calloc, realloc, free              |
+| **Buffer Overflow**    | strcpy, strcat, sprintf, gets              |
 | **Pointer Operations** | Pointer arithmetic, casts, double pointers |
-| **Concurrency** | pthread misuse, volatile misuse |
-| **Format Strings** | printf with variable format |
+| **Concurrency**        | pthread misuse, volatile misuse            |
+| **Format Strings**     | printf with variable format                |
 
 ### Security Component Identification
 
@@ -200,11 +200,11 @@ console.log(`Security Components: ${analysis.securityComponents.length}`);
 ```javascript
 // Risk weights
 const RISK_WEIGHTS = {
-  buffer_overflow: 10,   // Critical: strcpy, gets, etc.
-  memory_management: 8,  // High: malloc/free misuse
-  pointer_operation: 7,  // High: pointer arithmetic
-  format_string: 9,      // Critical: format string vulns
-  concurrency: 6         // Medium: race conditions
+  buffer_overflow: 10, // Critical: strcpy, gets, etc.
+  memory_management: 8, // High: malloc/free misuse
+  pointer_operation: 7, // High: pointer arithmetic
+  format_string: 9, // Critical: format string vulns
+  concurrency: 6, // Medium: race conditions
 };
 
 // Calculate total risk
@@ -219,7 +219,6 @@ const totalRisk = analysis.riskScore; // 0-100 scale
 4. **Track security improvements** post-migration
 
 ---
-
 
 ## Project Memory (Steering System)
 

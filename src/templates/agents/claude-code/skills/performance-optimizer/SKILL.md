@@ -41,36 +41,36 @@ const { LargeProjectAnalyzer, LARGE_PROJECT_THRESHOLDS } = require('musubi-sdd')
 const analyzer = new LargeProjectAnalyzer({
   maxMemoryMB: 4096,
   chunkSize: 100,
-  enableGC: true
+  enableGC: true,
 });
 
 const result = await analyzer.analyze('/path/to/large-project', {
-  onProgress: (progress) => {
+  onProgress: progress => {
     console.log(`${progress.percentage}% - ${progress.filesProcessed}/${progress.totalFiles}`);
-  }
+  },
 });
 
-console.log(`Scale: ${result.scale}`);  // small, medium, large, massive
+console.log(`Scale: ${result.scale}`); // small, medium, large, massive
 console.log(`Total Files: ${result.totalFiles}`);
 console.log(`Giant Functions: ${result.giantFunctions.length}`);
 ```
 
 ### Scale-Based Strategy
 
-| Scale | Files | Strategy | Memory Usage |
-|-------|-------|----------|--------------|
-| **Small** | ≤100 | Batch analysis | Low |
-| **Medium** | ≤1,000 | Optimized batch | Moderate |
-| **Large** | ≤10,000 | Chunked analysis | Managed |
-| **Massive** | >10,000 | Streaming analysis | Controlled |
+| Scale       | Files   | Strategy           | Memory Usage |
+| ----------- | ------- | ------------------ | ------------ |
+| **Small**   | ≤100    | Batch analysis     | Low          |
+| **Medium**  | ≤1,000  | Optimized batch    | Moderate     |
+| **Large**   | ≤10,000 | Chunked analysis   | Managed      |
+| **Massive** | >10,000 | Streaming analysis | Controlled   |
 
 ### Giant Function Detection
 
-| Lines | Level | Action |
-|-------|-------|--------|
-| 100+ | Warning | Consider splitting |
-| 500+ | Critical | Refactoring required |
-| 1000+ | Extreme | Urgent refactoring |
+| Lines | Level    | Action               |
+| ----- | -------- | -------------------- |
+| 100+  | Warning  | Consider splitting   |
+| 500+  | Critical | Refactoring required |
+| 1000+ | Extreme  | Urgent refactoring   |
 
 ### Multi-Language Support
 

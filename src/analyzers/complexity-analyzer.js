@@ -134,11 +134,13 @@ class ComplexityAnalyzer {
   countCodeLines(lines) {
     return lines.filter(line => {
       const trimmed = line.trim();
-      return trimmed.length > 0 &&
+      return (
+        trimmed.length > 0 &&
         !trimmed.startsWith('//') &&
         !trimmed.startsWith('/*') &&
         !trimmed.startsWith('*') &&
-        !trimmed.startsWith('#');
+        !trimmed.startsWith('#')
+      );
     }).length;
   }
 
@@ -202,23 +204,14 @@ class ComplexityAnalyzer {
         /(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?\([^)]*\)\s*=>/g,
         /(\w+)\s*\([^)]*\)\s*:\s*\w+\s*\{/g,
       ],
-      c: [
-        /(?:static\s+)?(?:inline\s+)?(?:\w+\s+)+(\w+)\s*\([^)]*\)\s*\{/g,
-      ],
+      c: [/(?:static\s+)?(?:inline\s+)?(?:\w+\s+)+(\w+)\s*\([^)]*\)\s*\{/g],
       cpp: [
         /(?:static\s+)?(?:inline\s+)?(?:virtual\s+)?(?:\w+\s+)+(\w+)\s*\([^)]*\)(?:\s*const)?\s*(?:override)?\s*\{/g,
         /(\w+)::(\w+)\s*\([^)]*\)\s*\{/g,
       ],
-      python: [
-        /def\s+(\w+)\s*\(/g,
-        /async\s+def\s+(\w+)\s*\(/g,
-      ],
-      rust: [
-        /(?:pub\s+)?(?:async\s+)?fn\s+(\w+)/g,
-      ],
-      go: [
-        /func\s+(?:\([^)]+\)\s+)?(\w+)/g,
-      ],
+      python: [/def\s+(\w+)\s*\(/g, /async\s+def\s+(\w+)\s*\(/g],
+      rust: [/(?:pub\s+)?(?:async\s+)?fn\s+(\w+)/g],
+      go: [/func\s+(?:\([^)]+\)\s+)?(\w+)/g],
       java: [
         /(?:public|private|protected)?\s*(?:static)?\s*(?:\w+)\s+(\w+)\s*\([^)]*\)\s*(?:throws\s+[\w,\s]+)?\s*\{/g,
       ],
@@ -462,8 +455,8 @@ class ComplexityAnalyzer {
     }
 
     // Aggregate function issues
-    const giantFunctions = analysis.functions.filter(f =>
-      f.lines >= THRESHOLDS.functionLines.extreme
+    const giantFunctions = analysis.functions.filter(
+      f => f.lines >= THRESHOLDS.functionLines.extreme
     );
     if (giantFunctions.length > 0) {
       issues.push({
@@ -504,7 +497,8 @@ class ComplexityAnalyzer {
     if (func.cyclomaticComplexity >= THRESHOLDS.cyclomaticComplexity.warning) {
       recommendations.push({
         type: 'reduce-complexity',
-        priority: func.cyclomaticComplexity >= THRESHOLDS.cyclomaticComplexity.extreme ? 'P0' : 'P1',
+        priority:
+          func.cyclomaticComplexity >= THRESHOLDS.cyclomaticComplexity.extreme ? 'P0' : 'P1',
         title: 'Reduce cyclomatic complexity',
         description: `Current complexity: ${func.cyclomaticComplexity}, target: <${THRESHOLDS.cyclomaticComplexity.warning}`,
         actions: [

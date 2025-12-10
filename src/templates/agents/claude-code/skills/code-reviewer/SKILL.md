@@ -148,12 +148,12 @@ console.log(`Severity: ${fileAnalysis.severity}`);
 
 ### Complexity Thresholds
 
-| Level | Cyclomatic | Cognitive | Action |
-|-------|------------|-----------|--------|
-| **Ideal** | ≤10 | ≤15 | No action needed |
-| **Warning** | 11-20 | 16-30 | Consider refactoring |
-| **Critical** | 21-50 | 31-60 | Refactoring required |
-| **Extreme** | >50 | >60 | Urgent refactoring |
+| Level        | Cyclomatic | Cognitive | Action               |
+| ------------ | ---------- | --------- | -------------------- |
+| **Ideal**    | ≤10        | ≤15       | No action needed     |
+| **Warning**  | 11-20      | 16-30     | Consider refactoring |
+| **Critical** | 21-50      | 31-60     | Refactoring required |
+| **Extreme**  | >50        | >60       | Urgent refactoring   |
 
 ### Multi-Language Support
 

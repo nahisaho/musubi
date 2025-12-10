@@ -25,7 +25,11 @@ const UNSAFE_PATTERNS = {
     { pattern: /\bmalloc\s*\(/g, risk: 'high', description: 'Manual memory allocation' },
     { pattern: /\bcalloc\s*\(/g, risk: 'high', description: 'Manual memory allocation' },
     { pattern: /\brealloc\s*\(/g, risk: 'high', description: 'Manual memory reallocation' },
-    { pattern: /\bfree\s*\(/g, risk: 'medium', description: 'Manual memory deallocation (potential double-free)' },
+    {
+      pattern: /\bfree\s*\(/g,
+      risk: 'medium',
+      description: 'Manual memory deallocation (potential double-free)',
+    },
     { pattern: /\bnew\s+\w+\s*\[/g, risk: 'medium', description: 'Array new (prefer std::vector)' },
     { pattern: /\bdelete\s*\[/g, risk: 'medium', description: 'Array delete' },
   ],
@@ -35,31 +39,67 @@ const UNSAFE_PATTERNS = {
     { pattern: /\bsprintf\s*\(/g, risk: 'critical', description: 'Unbounded formatted output' },
     { pattern: /\bgets\s*\(/g, risk: 'critical', description: 'Unbounded input (deprecated)' },
     { pattern: /\bscanf\s*\([^,]*%s/g, risk: 'critical', description: 'Unbounded scanf string' },
-    { pattern: /\bmemcpy\s*\(/g, risk: 'medium', description: 'Memory copy (needs size validation)' },
-    { pattern: /\bmemmove\s*\(/g, risk: 'medium', description: 'Memory move (needs size validation)' },
+    {
+      pattern: /\bmemcpy\s*\(/g,
+      risk: 'medium',
+      description: 'Memory copy (needs size validation)',
+    },
+    {
+      pattern: /\bmemmove\s*\(/g,
+      risk: 'medium',
+      description: 'Memory move (needs size validation)',
+    },
   ],
   pointerOperations: [
     { pattern: /\*\s*\(\s*\w+\s*\+/g, risk: 'high', description: 'Pointer arithmetic' },
-    { pattern: /\[\s*-?\d+\s*\]/g, risk: 'medium', description: 'Array indexing (potential out-of-bounds)' },
+    {
+      pattern: /\[\s*-?\d+\s*\]/g,
+      risk: 'medium',
+      description: 'Array indexing (potential out-of-bounds)',
+    },
     { pattern: /reinterpret_cast/g, risk: 'high', description: 'Type-unsafe cast' },
     { pattern: /\(void\s*\*\)/g, risk: 'medium', description: 'Void pointer cast' },
     { pattern: /\*\*\w+/g, risk: 'medium', description: 'Double pointer' },
   ],
   concurrency: [
-    { pattern: /\bpthread_/g, risk: 'medium', description: 'POSIX threads (consider Rust std::thread)' },
+    {
+      pattern: /\bpthread_/g,
+      risk: 'medium',
+      description: 'POSIX threads (consider Rust std::thread)',
+    },
     { pattern: /\batomic_/g, risk: 'low', description: 'Atomic operations' },
     { pattern: /\bmutex/g, risk: 'low', description: 'Mutex usage' },
-    { pattern: /\bvolatile\b/g, risk: 'medium', description: 'Volatile (often misused for concurrency)' },
+    {
+      pattern: /\bvolatile\b/g,
+      risk: 'medium',
+      description: 'Volatile (often misused for concurrency)',
+    },
   ],
   formatString: [
     { pattern: /\bprintf\s*\(\s*\w+/g, risk: 'high', description: 'Format string from variable' },
-    { pattern: /\bfprintf\s*\([^,]+,\s*\w+/g, risk: 'high', description: 'Format string from variable' },
-    { pattern: /\bsyslog\s*\([^,]+,\s*\w+/g, risk: 'high', description: 'Syslog format string vulnerability' },
+    {
+      pattern: /\bfprintf\s*\([^,]+,\s*\w+/g,
+      risk: 'high',
+      description: 'Format string from variable',
+    },
+    {
+      pattern: /\bsyslog\s*\([^,]+,\s*\w+/g,
+      risk: 'high',
+      description: 'Syslog format string vulnerability',
+    },
   ],
   integerOverflow: [
-    { pattern: /\+\+\w+\s*[<>=]/g, risk: 'low', description: 'Increment in comparison (potential overflow)' },
+    {
+      pattern: /\+\+\w+\s*[<>=]/g,
+      risk: 'low',
+      description: 'Increment in comparison (potential overflow)',
+    },
     { pattern: /<<\s*\d{2,}/g, risk: 'medium', description: 'Large bit shift' },
-    { pattern: /\bunsigned\s+\w+\s*-/g, risk: 'medium', description: 'Unsigned subtraction (potential underflow)' },
+    {
+      pattern: /\bunsigned\s+\w+\s*-/g,
+      risk: 'medium',
+      description: 'Unsigned subtraction (potential underflow)',
+    },
   ],
 };
 
@@ -69,10 +109,26 @@ const UNSAFE_PATTERNS = {
 
 const SECURITY_COMPONENTS = [
   { pattern: /ssp|stack.*smash|canary/i, component: 'Stack Protection', rustCrate: 'rust-ssp' },
-  { pattern: /backtrace|stack.*trace|unwind/i, component: 'Backtrace', rustCrate: 'rust-backtrace' },
-  { pattern: /sanitizer|asan|msan|tsan|ubsan/i, component: 'Sanitizers', rustCrate: 'rust-sanitizer' },
-  { pattern: /vtv|vtable|virtual.*table/i, component: 'VTable Verification', rustCrate: 'rust-vtv' },
-  { pattern: /crypt|encrypt|decrypt|cipher/i, component: 'Cryptography', rustCrate: 'ring or rustcrypto' },
+  {
+    pattern: /backtrace|stack.*trace|unwind/i,
+    component: 'Backtrace',
+    rustCrate: 'rust-backtrace',
+  },
+  {
+    pattern: /sanitizer|asan|msan|tsan|ubsan/i,
+    component: 'Sanitizers',
+    rustCrate: 'rust-sanitizer',
+  },
+  {
+    pattern: /vtv|vtable|virtual.*table/i,
+    component: 'VTable Verification',
+    rustCrate: 'rust-vtv',
+  },
+  {
+    pattern: /crypt|encrypt|decrypt|cipher/i,
+    component: 'Cryptography',
+    rustCrate: 'ring or rustcrypto',
+  },
   { pattern: /auth|login|password|credential/i, component: 'Authentication', rustCrate: 'argon2' },
   { pattern: /parse|lexer|tokenize/i, component: 'Parser', rustCrate: 'nom or pest' },
   { pattern: /network|socket|tcp|udp|http/i, component: 'Networking', rustCrate: 'tokio' },
@@ -279,7 +335,8 @@ class RustMigrationGenerator {
 
     const patternDistribution = {};
     for (const pattern of analysis.unsafePatterns) {
-      patternDistribution[pattern.category] = (patternDistribution[pattern.category] || 0) + pattern.occurrences;
+      patternDistribution[pattern.category] =
+        (patternDistribution[pattern.category] || 0) + pattern.occurrences;
     }
 
     return {
@@ -297,7 +354,9 @@ class RustMigrationGenerator {
    * Estimate migration effort
    */
   estimateMigrationEffort(analysis) {
-    const highPriorityFiles = analysis.priorities.filter(p => p.rustBenefit === 'critical' || p.rustBenefit === 'high').length;
+    const highPriorityFiles = analysis.priorities.filter(
+      p => p.rustBenefit === 'critical' || p.rustBenefit === 'high'
+    ).length;
     const totalLines = analysis.fileAnalyses.reduce((sum, f) => sum + f.lines, 0);
 
     // Rough estimation: 1 day per 500 lines for high-risk files
@@ -306,9 +365,10 @@ class RustMigrationGenerator {
     return {
       estimatedDays: days,
       highPriorityFiles,
-      recommendation: highPriorityFiles > 10
-        ? 'Consider phased migration starting with security-critical components'
-        : 'Direct migration feasible',
+      recommendation:
+        highPriorityFiles > 10
+          ? 'Consider phased migration starting with security-critical components'
+          : 'Direct migration feasible',
     };
   }
 
@@ -355,7 +415,9 @@ class RustMigrationGenerator {
     }
 
     // Phase 3: Medium-risk files
-    const mediumRisk = analysis.priorities.filter(p => p.rustBenefit === 'high' || p.rustBenefit === 'medium');
+    const mediumRisk = analysis.priorities.filter(
+      p => p.rustBenefit === 'high' || p.rustBenefit === 'medium'
+    );
     if (mediumRisk.length > 0) {
       plan.phases.push({
         phase: 3,
@@ -414,7 +476,8 @@ class RustMigrationGenerator {
 
     if (analysis.securityComponents.length > 0) {
       report += '## Security-Critical Components\n\n';
-      report += '| Component | Suggested Rust Crate | Files | Risk Score |\n|-----------|---------------------|-------|------------|\n';
+      report +=
+        '| Component | Suggested Rust Crate | Files | Risk Score |\n|-----------|---------------------|-------|------------|\n';
       for (const comp of analysis.securityComponents) {
         report += `| ${comp.component} | ${comp.rustCrate} | ${comp.files.length} | ${comp.totalRiskScore} |\n`;
       }
@@ -422,7 +485,8 @@ class RustMigrationGenerator {
     }
 
     report += '## Top 20 Migration Priorities\n\n';
-    report += '| Rank | File | Risk Score | Rust Benefit | Top Issues |\n|------|------|------------|--------------|------------|\n';
+    report +=
+      '| Rank | File | Risk Score | Rust Benefit | Top Issues |\n|------|------|------------|--------------|------------|\n';
     for (const p of analysis.priorities.slice(0, 20)) {
       const issues = p.topIssues.join('; ').substring(0, 50);
       report += `| ${p.rank} | ${p.file} | ${p.riskScore} | ${p.rustBenefit} | ${issues}... |\n`;
@@ -430,11 +494,16 @@ class RustMigrationGenerator {
     report += '\n';
 
     report += '## Recommendations\n\n';
-    report += '1. **Start with Security Components**: Migrate stack protection, sanitizers, and authentication code first\n';
-    report += '2. **Use Safe Abstractions**: Replace raw pointers with Rust references, Box, Rc, or Arc\n';
-    report += '3. **Leverage Rust Libraries**: Use well-tested crates like `ring` for crypto, `tokio` for async\n';
-    report += '4. **FFI Bridge**: Create a clean C-compatible interface between Rust and existing C++ code\n';
-    report += '5. **Incremental Migration**: Migrate one component at a time with thorough testing\n';
+    report +=
+      '1. **Start with Security Components**: Migrate stack protection, sanitizers, and authentication code first\n';
+    report +=
+      '2. **Use Safe Abstractions**: Replace raw pointers with Rust references, Box, Rc, or Arc\n';
+    report +=
+      '3. **Leverage Rust Libraries**: Use well-tested crates like `ring` for crypto, `tokio` for async\n';
+    report +=
+      '4. **FFI Bridge**: Create a clean C-compatible interface between Rust and existing C++ code\n';
+    report +=
+      '5. **Incremental Migration**: Migrate one component at a time with thorough testing\n';
 
     return report;
   }

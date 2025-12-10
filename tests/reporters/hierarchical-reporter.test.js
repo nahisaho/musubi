@@ -95,9 +95,7 @@ describe('HierarchicalReporter', () => {
       const analysis = {
         files: [],
         results: {
-          giantFunctions: [
-            { file: 'src/big.js', name: 'giantFunc', lines: 2000 },
-          ],
+          giantFunctions: [{ file: 'src/big.js', name: 'giantFunc', lines: 2000 }],
         },
       };
 
@@ -112,8 +110,22 @@ describe('HierarchicalReporter', () => {
     test('should generate correct summary', () => {
       const analysis = {
         files: [
-          { path: 'a.js', lines: 100, complexity: 10, maintainability: 80, language: 'javascript', issues: [] },
-          { path: 'b.py', lines: 200, complexity: 20, maintainability: 60, language: 'python', issues: [1] },
+          {
+            path: 'a.js',
+            lines: 100,
+            complexity: 10,
+            maintainability: 80,
+            language: 'javascript',
+            issues: [],
+          },
+          {
+            path: 'b.py',
+            lines: 200,
+            complexity: 20,
+            maintainability: 60,
+            language: 'python',
+            issues: [1],
+          },
         ],
       };
 
@@ -145,9 +157,7 @@ describe('HierarchicalReporter', () => {
       const analysis = {
         files: [],
         results: {
-          giantFunctions: [
-            { file: 'a.js', name: 'giant', lines: 2000 },
-          ],
+          giantFunctions: [{ file: 'a.js', name: 'giant', lines: 2000 }],
         },
       };
 
@@ -159,9 +169,7 @@ describe('HierarchicalReporter', () => {
 
     test('should recommend addressing hotspots', () => {
       const analysis = {
-        files: [
-          { path: 'complex.js', complexity: 100, issues: [] },
-        ],
+        files: [{ path: 'complex.js', complexity: 100, issues: [] }],
         results: { giantFunctions: [] },
       };
 
@@ -229,14 +237,26 @@ describe('HierarchicalReporter', () => {
         },
         hierarchy: {
           children: {
-            src: { name: 'src', path: 'src', stats: { files: 80, lines: 8000, averageComplexity: 15, issues: 20 }, children: {} },
+            src: {
+              name: 'src',
+              path: 'src',
+              stats: { files: 80, lines: 8000, averageComplexity: 15, issues: 20 },
+              children: {},
+            },
           },
         },
         hotspots: [
           { type: 'file', path: 'src/complex.js', severity: 'critical', reason: 'high-complexity' },
         ],
         recommendations: [
-          { priority: 'P0', title: 'Refactor', category: 'refactoring', impact: 'High', effort: 'Medium', description: 'Test' },
+          {
+            priority: 'P0',
+            title: 'Refactor',
+            category: 'refactoring',
+            impact: 'High',
+            effort: 'Medium',
+            description: 'Test',
+          },
         ],
         trends: {
           complexityDistribution: { low: 50, medium: 30, high: 15, extreme: 5 },

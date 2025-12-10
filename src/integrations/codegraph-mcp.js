@@ -125,22 +125,32 @@ class CodeGraphIntegration {
     this.ensureOpen();
 
     const entityCount = this.db.prepare('SELECT COUNT(*) as count FROM entities').get().count;
-    const fileCount = this.db.prepare("SELECT COUNT(*) as count FROM entities WHERE type = 'module'").get().count;
+    const fileCount = this.db
+      .prepare("SELECT COUNT(*) as count FROM entities WHERE type = 'module'")
+      .get().count;
     const relationCount = this.db.prepare('SELECT COUNT(*) as count FROM relations').get().count;
 
-    const entityTypes = this.db.prepare(`
+    const entityTypes = this.db
+      .prepare(
+        `
       SELECT type, COUNT(*) as count
       FROM entities
       GROUP BY type
       ORDER BY count DESC
-    `).all();
+    `
+      )
+      .all();
 
-    const relationTypes = this.db.prepare(`
+    const relationTypes = this.db
+      .prepare(
+        `
       SELECT type, COUNT(*) as count
       FROM relations
       GROUP BY type
       ORDER BY count DESC
-    `).all();
+    `
+      )
+      .all();
 
     return {
       entities: entityCount,
@@ -167,12 +177,16 @@ class CodeGraphIntegration {
     };
 
     // Get function entity
-    const entity = this.db.prepare(`
+    const entity = this.db
+      .prepare(
+        `
       SELECT id, name, file, start_line, end_line
       FROM entities
       WHERE name = ? AND type = 'function'
       LIMIT 1
-    `).get(functionName);
+    `
+      )
+      .get(functionName);
 
     if (!entity) {
       return { error: `Function "${functionName}" not found` };
@@ -200,14 +214,18 @@ class CodeGraphIntegration {
     if (depth <= 0 || visited.has(entityId)) return [];
     visited.add(entityId);
 
-    const callees = this.db.prepare(`
+    const callees = this.db
+      .prepare(
+        `
       SELECT e.id, e.name, e.file, e.start_line, r.type as relation_type
       FROM relations r
       JOIN entities e ON r.target_id = e.id
       WHERE r.source_id = ?
         AND r.type IN ('calls', 'invokes', 'references')
         AND e.type = 'function'
-    `).all(entityId);
+    `
+      )
+      .all(entityId);
 
     return callees.map(callee => ({
       ...callee,
@@ -222,14 +240,18 @@ class CodeGraphIntegration {
     if (depth <= 0 || visited.has(entityId)) return [];
     visited.add(entityId);
 
-    const callers = this.db.prepare(`
+    const callers = this.db
+      .prepare(
+        `
       SELECT e.id, e.name, e.file, e.start_line, r.type as relation_type
       FROM relations r
       JOIN entities e ON r.source_id = e.id
       WHERE r.target_id = ?
         AND r.type IN ('calls', 'invokes', 'references')
         AND e.type = 'function'
-    `).all(entityId);
+    `
+      )
+      .all(entityId);
 
     return callers.map(caller => ({
       ...caller,
@@ -255,20 +277,28 @@ class CodeGraphIntegration {
 
     for (const file of changedFiles) {
       // Get all entities in changed file
-      const entities = this.db.prepare(`
+      const entities = this.db
+        .prepare(
+          `
         SELECT id, name, type
         FROM entities
         WHERE file LIKE ?
-      `).all(`%${file}%`);
+      `
+        )
+        .all(`%${file}%`);
 
       for (const entity of entities) {
         // Find all entities that depend on changed entities
-        const dependents = this.db.prepare(`
+        const dependents = this.db
+          .prepare(
+            `
           SELECT DISTINCT e.file, e.name, e.type
           FROM relations r
           JOIN entities e ON r.source_id = e.id
           WHERE r.target_id = ?
-        `).all(entity.id);
+        `
+          )
+          .all(entity.id);
 
         for (const dep of dependents) {
           if (!changedFiles.includes(dep.file)) {
@@ -290,17 +320,25 @@ class CodeGraphIntegration {
       if (checked.has(file)) continue;
       checked.add(file);
 
-      const entities = this.db.prepare(`
+      const entities = this.db
+        .prepare(
+          `
         SELECT id FROM entities WHERE file LIKE ?
-      `).all(`%${file}%`);
+      `
+        )
+        .all(`%${file}%`);
 
       for (const entity of entities) {
-        const dependents = this.db.prepare(`
+        const dependents = this.db
+          .prepare(
+            `
           SELECT DISTINCT e.file
           FROM relations r
           JOIN entities e ON r.source_id = e.id
           WHERE r.target_id = ?
-        `).all(entity.id);
+        `
+          )
+          .all(entity.id);
 
         for (const dep of dependents) {
           if (!checked.has(dep.file) && !changedFiles.includes(dep.file)) {
@@ -315,8 +353,8 @@ class CodeGraphIntegration {
 
     // Find affected tests
     const allAffected = [...impact.directlyAffected, ...impact.transitivelyAffected];
-    impact.affectedTests = allAffected.filter(f =>
-      f.includes('test') || f.includes('spec') || f.includes('__tests__')
+    impact.affectedTests = allAffected.filter(
+      f => f.includes('test') || f.includes('spec') || f.includes('__tests__')
     );
 
     // Calculate risk level
@@ -350,7 +388,9 @@ class CodeGraphIntegration {
   getLargestFunctions(limit = 50) {
     this.ensureOpen();
 
-    return this.db.prepare(`
+    return this.db
+      .prepare(
+        `
       SELECT 
         name,
         file,
@@ -362,7 +402,9 @@ class CodeGraphIntegration {
         AND end_line > start_line
       ORDER BY (end_line - start_line) DESC
       LIMIT ?
-    `).all(limit);
+    `
+      )
+      .all(limit);
   }
 
   /**
@@ -371,7 +413,9 @@ class CodeGraphIntegration {
   getMostConnected(limit = 50) {
     this.ensureOpen();
 
-    return this.db.prepare(`
+    return this.db
+      .prepare(
+        `
       SELECT 
         e.name,
         e.file,
@@ -385,7 +429,9 @@ class CodeGraphIntegration {
       GROUP BY e.id
       ORDER BY total_connections DESC
       LIMIT ?
-    `).all(limit);
+    `
+      )
+      .all(limit);
   }
 
   /**
@@ -398,9 +444,13 @@ class CodeGraphIntegration {
     const visited = new Set();
 
     // Get all modules
-    const modules = this.db.prepare(`
+    const modules = this.db
+      .prepare(
+        `
       SELECT id, name, file FROM entities WHERE type = 'module' LIMIT 1000
-    `).all();
+    `
+      )
+      .all();
 
     for (const module of modules) {
       const path = [module.file];
@@ -417,14 +467,18 @@ class CodeGraphIntegration {
     if (depth <= 0) return;
     if (visited.has(entityId)) return;
 
-    const deps = this.db.prepare(`
+    const deps = this.db
+      .prepare(
+        `
       SELECT DISTINCT e.id, e.file
       FROM relations r
       JOIN entities e ON r.target_id = e.id
       WHERE r.source_id = ?
         AND e.type = 'module'
         AND r.type IN ('imports', 'includes', 'requires')
-    `).all(entityId);
+    `
+      )
+      .all(entityId);
 
     for (const dep of deps) {
       if (path.includes(dep.file)) {
@@ -444,7 +498,9 @@ class CodeGraphIntegration {
   getFileDependencies(filePath) {
     this.ensureOpen();
 
-    const imports = this.db.prepare(`
+    const imports = this.db
+      .prepare(
+        `
       SELECT DISTINCT 
         target.file as imported_file,
         target.name as imported_name,
@@ -455,9 +511,13 @@ class CodeGraphIntegration {
       WHERE source.file LIKE ?
         AND r.type IN ('imports', 'includes', 'requires', 'references')
         AND target.type = 'module'
-    `).all(`%${filePath}%`);
+    `
+      )
+      .all(`%${filePath}%`);
 
-    const exports = this.db.prepare(`
+    const exports = this.db
+      .prepare(
+        `
       SELECT DISTINCT 
         source.file as importing_file,
         source.name as importing_name,
@@ -468,7 +528,9 @@ class CodeGraphIntegration {
       WHERE target.file LIKE ?
         AND r.type IN ('imports', 'includes', 'requires', 'references')
         AND source.type = 'module'
-    `).all(`%${filePath}%`);
+    `
+      )
+      .all(`%${filePath}%`);
 
     return { imports, exports };
   }
@@ -508,7 +570,9 @@ class CodeGraphIntegration {
     this.ensureOpen();
 
     try {
-      return this.db.prepare(`
+      return this.db
+        .prepare(
+          `
         SELECT 
           community_id,
           COUNT(*) as member_count,
@@ -518,7 +582,9 @@ class CodeGraphIntegration {
         GROUP BY community_id
         ORDER BY member_count DESC
         LIMIT 50
-      `).all();
+      `
+        )
+        .all();
     } catch (error) {
       return { error: 'Community data not available. Re-index without --no-community flag.' };
     }

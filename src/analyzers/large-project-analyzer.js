@@ -267,7 +267,9 @@ class LargeProjectAnalyzer {
     const chunkSize = this.options.chunkSize;
     const results = [];
 
-    console.log(`🚀 Streaming mode: Processing ${files.length.toLocaleString()} files in chunks of ${chunkSize}`);
+    console.log(
+      `🚀 Streaming mode: Processing ${files.length.toLocaleString()} files in chunks of ${chunkSize}`
+    );
 
     for (let i = 0; i < files.length; i += chunkSize) {
       const chunk = files.slice(i, i + chunkSize);
@@ -419,12 +421,22 @@ class LargeProjectAnalyzer {
     const lines = code.split('\n');
     const codeLines = lines.filter(line => {
       const trimmed = line.trim();
-      return trimmed.length > 0 && !trimmed.startsWith('//') && !trimmed.startsWith('/*') && !trimmed.startsWith('#');
+      return (
+        trimmed.length > 0 &&
+        !trimmed.startsWith('//') &&
+        !trimmed.startsWith('/*') &&
+        !trimmed.startsWith('#')
+      );
     }).length;
 
     const commentLines = lines.filter(line => {
       const trimmed = line.trim();
-      return trimmed.startsWith('//') || trimmed.startsWith('/*') || trimmed.startsWith('*') || trimmed.startsWith('#');
+      return (
+        trimmed.startsWith('//') ||
+        trimmed.startsWith('/*') ||
+        trimmed.startsWith('*') ||
+        trimmed.startsWith('#')
+      );
     }).length;
 
     const commentRatio = codeLines > 0 ? commentLines / codeLines : 0;
@@ -445,8 +457,10 @@ class LargeProjectAnalyzer {
 
     // Simple function detection patterns
     const patterns = {
-      javascript: /(?:function\s+(\w+)|(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:function|\([^)]*\)\s*=>))/g,
-      typescript: /(?:function\s+(\w+)|(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:function|\([^)]*\)\s*=>))/g,
+      javascript:
+        /(?:function\s+(\w+)|(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:function|\([^)]*\)\s*=>))/g,
+      typescript:
+        /(?:function\s+(\w+)|(?:const|let|var)\s+(\w+)\s*=\s*(?:async\s+)?(?:function|\([^)]*\)\s*=>))/g,
       c: /(?:static\s+)?(?:inline\s+)?(?:\w+\s+)+(\w+)\s*\([^)]*\)\s*\{/g,
       cpp: /(?:static\s+)?(?:inline\s+)?(?:virtual\s+)?(?:\w+\s+)+(\w+)\s*\([^)]*\)(?:\s*const)?\s*(?:override)?\s*\{/g,
       python: /def\s+(\w+)\s*\(/g,
@@ -659,12 +673,14 @@ class LargeProjectAnalyzer {
     this.results.summary = {
       totalFiles: files.length,
       totalLines: files.reduce((sum, f) => sum + f.lines, 0),
-      averageComplexity: files.length > 0
-        ? Math.round(files.reduce((sum, f) => sum + f.complexity, 0) / files.length)
-        : 0,
-      averageMaintainability: files.length > 0
-        ? Math.round(files.reduce((sum, f) => sum + f.maintainability, 0) / files.length)
-        : 0,
+      averageComplexity:
+        files.length > 0
+          ? Math.round(files.reduce((sum, f) => sum + f.complexity, 0) / files.length)
+          : 0,
+      averageMaintainability:
+        files.length > 0
+          ? Math.round(files.reduce((sum, f) => sum + f.maintainability, 0) / files.length)
+          : 0,
       giantFunctions: this.results.giantFunctions.length,
       hotspots: this.results.hotspots.length,
       languageDistribution: this.calculateLanguageDistribution(files),
@@ -700,9 +716,9 @@ class LargeProjectAnalyzer {
         type: 'refactoring',
         title: 'Split Giant Functions',
         message: `${this.results.giantFunctions.length} functions exceed 1000 lines. These require immediate refactoring.`,
-        items: this.results.giantFunctions.slice(0, 5).map(f =>
-          `${f.file}:${f.name} (${f.lines} lines)`
-        ),
+        items: this.results.giantFunctions
+          .slice(0, 5)
+          .map(f => `${f.file}:${f.name} (${f.lines} lines)`),
       });
     }
 
@@ -713,9 +729,9 @@ class LargeProjectAnalyzer {
         type: 'complexity',
         title: 'Address Complexity Hotspots',
         message: `${this.results.hotspots.length} files have extreme complexity. Consider breaking them down.`,
-        items: this.results.hotspots.slice(0, 5).map(h =>
-          `${h.file} (complexity: ${h.complexity})`
-        ),
+        items: this.results.hotspots
+          .slice(0, 5)
+          .map(h => `${h.file} (complexity: ${h.complexity})`),
       });
     }
 

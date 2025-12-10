@@ -9,7 +9,11 @@
  */
 
 const path = require('path');
-const { LargeProjectAnalyzer, THRESHOLDS, CHUNK_SIZE } = require('../../src/analyzers/large-project-analyzer');
+const {
+  LargeProjectAnalyzer,
+  THRESHOLDS,
+  CHUNK_SIZE,
+} = require('../../src/analyzers/large-project-analyzer');
 
 describe('LargeProjectAnalyzer', () => {
   const testWorkspace = path.join(__dirname, '..');

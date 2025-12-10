@@ -520,7 +520,7 @@ const { CodeGraphMCP } = require('musubi-sdd');
 
 const codegraph = new CodeGraphMCP({
   mcpEndpoint: 'http://localhost:3000',
-  repoPath: '/path/to/project'
+  repoPath: '/path/to/project',
 });
 
 // Generate call graph
@@ -541,13 +541,13 @@ const communities = await codegraph.detectCommunities();
 
 ### Features
 
-| Feature | Description |
-|---------|-------------|
-| **Call Graph** | Track callers and callees with configurable depth |
-| **Impact Analysis** | Identify affected files when code changes |
-| **Circular Dependencies** | Find cycles in module dependencies |
-| **Hotspots** | Detect highly-connected entities (refactoring candidates) |
-| **Community Detection** | Group related code modules |
+| Feature                   | Description                                               |
+| ------------------------- | --------------------------------------------------------- |
+| **Call Graph**            | Track callers and callees with configurable depth         |
+| **Impact Analysis**       | Identify affected files when code changes                 |
+| **Circular Dependencies** | Find cycles in module dependencies                        |
+| **Hotspots**              | Detect highly-connected entities (refactoring candidates) |
+| **Community Detection**   | Group related code modules                                |
 
 ---
 
@@ -564,9 +564,9 @@ const { HierarchicalReporter } = require('musubi-sdd');
 
 const reporter = new HierarchicalReporter();
 const report = await reporter.generateReport('/path/to/project', {
-  format: 'markdown',  // markdown, json, html
+  format: 'markdown', // markdown, json, html
   includeHotspots: true,
-  maxDepth: 5
+  maxDepth: 5,
 });
 
 console.log(report.content);
@@ -581,6 +581,7 @@ console.log(report.content);
 ### Hotspot Analysis
 
 The reporter identifies:
+
 - Files with highest complexity
 - Most frequently changed files
 - Largest files by line count
