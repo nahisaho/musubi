@@ -28,6 +28,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 - MUSUBI v5.0.0: Advanced Features、Steering Auto-Update、Quality Dashboard
 - MUSUBI v5.2.0-v5.3.0: マルチ言語対応、言語推薦エンジン
 - MUSUBI v5.4.0: GitHubリポジトリ参照、パターン分析、改善提案
+- MUSUBI v5.5.0-v5.6.0: エンタープライズスケール分析、Rustマイグレーション支援
 
 ---
 
@@ -2711,11 +2712,192 @@ steering/
 
 ---
 
+---
+
+# 第18章 エンタープライズスケール分析：v5.5.0 - v5.6.0（2025年12月）
+
+## 18.1 背景
+
+**GCC（GNU Compiler Collection）の分析経験から生まれた機能強化**
+
+MUSUBIをGCC（1,000万行以上、100,000ファイル以上）のような超大規模プロジェクトに適用した際の課題を解決するため、エンタープライズスケールの機能が追加されました。
+
+## 18.2 Large Project Analyzer
+
+**超大規模プロジェクト対応（10M+行）**
+
+```javascript
+const { LargeProjectAnalyzer } = require('musubi-sdd');
+
+const analyzer = new LargeProjectAnalyzer({
+  maxMemoryMB: 4096,
+  chunkSize: 100,
+  enableGC: true
+});
+
+const result = await analyzer.analyze('/path/to/gcc', {
+  onProgress: (progress) => console.log(`${progress.percentage}%`)
+});
+```
+
+### スケールベース戦略
+
+| スケール | ファイル数 | 戦略 |
+|---------|-----------|------|
+| Small | ≤100 | バッチ分析 |
+| Medium | ≤1,000 | 最適化バッチ |
+| Large | ≤10,000 | チャンク分析 |
+| Massive | >10,000 | ストリーミング分析 |
+
+### 巨大関数検出
+
+| 行数 | レベル |
+|------|--------|
+| 100+ | Warning |
+| 500+ | Critical |
+| 1000+ | Extreme |
+
+## 18.3 Complexity Analyzer
+
+**循環的・認知的複雑度分析**
+
+```javascript
+const { ComplexityAnalyzer } = require('musubi-sdd');
+
+const analyzer = new ComplexityAnalyzer();
+
+// 循環的複雑度（McCabe）
+const cyclomatic = analyzer.calculateCyclomaticComplexity(code, 'javascript');
+
+// 認知的複雑度（SonarSource方式）
+const cognitive = analyzer.calculateCognitiveComplexity(code, 'javascript');
+```
+
+### 複雑度しきい値
+
+| レベル | 循環的 | 認知的 |
+|--------|--------|--------|
+| Ideal | ≤10 | ≤15 |
+| Warning | 11-20 | 16-30 |
+| Critical | 21-50 | 31-60 |
+| Extreme | >50 | >60 |
+
+## 18.4 CodeGraph MCP Integration
+
+**深層コードグラフ分析**
+
+```javascript
+const { CodeGraphMCP } = require('musubi-sdd');
+
+const codegraph = new CodeGraphMCP({ mcpEndpoint: 'http://localhost:3000' });
+
+// コールグラフ生成
+const callGraph = await codegraph.generateCallGraph('src/main.c', { depth: 3 });
+
+// インパクト分析
+const impact = await codegraph.analyzeImpact('src/utils.c');
+
+// 循環依存検出
+const cycles = await codegraph.detectCircularDependencies('src/');
+
+// ホットスポット検出
+const hotspots = await codegraph.identifyHotspots(5);
+```
+
+### 機能一覧
+
+| 機能 | 説明 |
+|------|------|
+| Call Graph | 呼び出し元・呼び出し先の追跡 |
+| Impact Analysis | コード変更時の影響範囲分析 |
+| Circular Dependencies | 循環依存の検出 |
+| Hotspots | 高接続度エンティティの特定 |
+| Community Detection | 関連モジュールのグループ化 |
+
+## 18.5 Rust Migration Generator
+
+**C/C++からRustへの移行支援**
+
+```javascript
+const { RustMigrationGenerator } = require('musubi-sdd');
+
+const generator = new RustMigrationGenerator();
+const analysis = await generator.analyzeRustMigration('src/buffer.c');
+
+console.log(`Risk Score: ${analysis.riskScore}`);
+console.log(`Unsafe Patterns: ${analysis.unsafePatterns.length}`);
+```
+
+### 検出する安全でないパターン（27種類）
+
+| カテゴリ | パターン |
+|---------|----------|
+| メモリ管理 | malloc, calloc, realloc, free |
+| バッファオーバーフロー | strcpy, strcat, sprintf, gets |
+| ポインタ操作 | ポインタ算術、キャスト、ダブルポインタ |
+| 並行処理 | pthread、volatile誤用 |
+| フォーマット文字列 | 可変フォーマットのprintf |
+
+### セキュリティコンポーネント識別
+
+- スタック保護
+- サニタイザー
+- 暗号化
+- 認証
+
+## 18.6 Hierarchical Reporter
+
+**階層的レポート生成**
+
+```javascript
+const { HierarchicalReporter } = require('musubi-sdd');
+
+const reporter = new HierarchicalReporter();
+const report = await reporter.generateReport('/path/to/project', {
+  format: 'markdown',
+  includeHotspots: true,
+  maxDepth: 5
+});
+```
+
+### 出力フォーマット
+
+- Markdown
+- JSON
+- HTML
+
+### ホットスポット分析
+
+```markdown
+## Hotspots
+
+| File | Lines | Complexity | Risk |
+|------|-------|------------|------|
+| src/parser.c | 2,500 | 85 | Critical |
+| src/lexer.c | 1,800 | 62 | Warning |
+```
+
+## 18.7 バージョン履歴
+
+| バージョン | リリース日 | 主要機能 |
+|-----------|-----------|----------|
+| v5.5.0 | 2025-12-10 | Large Project Analyzer、Complexity Analyzer、CodeGraph MCP、Rust Migration Generator、Hierarchical Reporter |
+| v5.6.0 | 2025-12-10 | v5.5.0のlintエラー修正、npm公開 |
+
+## 18.8 テスト
+
+- 75件の新規テスト追加
+- 全3,645テストパス
+- ESLint/Prettier準拠
+
+---
+
 ## 関連リンク
 
 - [MUSUBI GitHub](https://github.com/nahisaho/musubi)
 - [MUSUHI GitHub](https://github.com/nahisaho/musuhi)（前身プロジェクト）
 - [Spec-Copilot GitHub](https://github.com/nahisaho/spec-copilot)（起源プロジェクト）
+- [MUSUBI v5.6.0 Enterprise Scale Guide](https://qiita.com/nahisaho/items/musubi-v5-enterprise-scale)
 - [MUSUBI v5.4.0 GitHub Reference Guide](https://qiita.com/nahisaho/items/musubi-v5-github-reference)
 - [MUSUBI v5.3.0 Multi-Language Guide](https://qiita.com/nahisaho/items/musubi-v5-multilang)
 - [MUSUBI v5.0.0 Advanced Features Guide](https://qiita.com/nahisaho/items/musubi-v5-advanced-features)
@@ -2731,4 +2913,4 @@ steering/
 
 ## タグ
 
-`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning` `#Ollama` `#Guardrails` `#Swarm` `#Orchestration` `#SkillSystem` `#Workflow` `#AgentLoop` `#CodebaseIntelligence` `#QualityDashboard` `#MultiLanguage` `#Rust` `#ODS-RAM` `#GitHubReference` `#PatternDetection`
+`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning` `#Ollama` `#Guardrails` `#Swarm` `#Orchestration` `#SkillSystem` `#Workflow` `#AgentLoop` `#CodebaseIntelligence` `#QualityDashboard` `#MultiLanguage` `#Rust` `#ODS-RAM` `#GitHubReference` `#PatternDetection` `#EnterpriseScale` `#RustMigration` `#ComplexityAnalysis` `#CodeGraph`
