@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.6.1] - 2025-12-10
+
+### Added
+
+- E2E tests for enterprise-scale modules (LargeProjectAnalyzer, ComplexityAnalyzer, RustMigrationGenerator, HierarchicalReporter)
+- Enterprise Scale Modules documentation to all platform templates (Cursor, Windsurf, Codex, GitHub Copilot, Qwen, Gemini)
+
+### Changed
+
+- Updated README.md and README.ja.md with v5.6.0 Enterprise Scale features
+- Updated USER-GUIDE.md to v5.6.0 with Enterprise Scale Analysis section
+- Updated GCC-ANALYSIS-IMPROVEMENTS.md with implementation completion status
+- Updated CodeGraph MCP index (12,093 entities, 59,222 relations, 140 communities)
+- Synced steering documents (project.yml, tech.md, structure.md)
+
+### Fixed
+
+- E2E test assertions for correct API return structures
+
 ## [5.6.0] - 2025-12-10
 
 ### Fixed
