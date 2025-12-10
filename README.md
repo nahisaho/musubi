@@ -71,7 +71,24 @@ musubi init --windsurf  # Windsurf IDE
 
 ---
 
-## 📊 What's New in v5.0.0
+## 📊 What's New in v5.3.0
+
+### Multi-Language Support 🌐
+- 🔄 **Technology Stack Selection** - Single, Multiple, Undecided, or Help me decide
+- 🤖 **Language Recommendation Engine** - AI-powered suggestions based on app type, performance needs, team expertise
+- 🌍 **10 Languages Supported** - JS/TS, Python, Rust, Go, Java, C#, C++, Swift, Ruby, PHP
+- 📄 **Dynamic tech.md** - Language-specific templates with frameworks and tools
+
+```bash
+# Initialize with language selection
+npx musubi-sdd init --copilot
+
+? Technology stack approach:
+  ❯ Single language        # Select one primary language
+    Multiple languages     # Polyglot projects
+    Undecided             # Decide later
+    Help me decide        # Get AI recommendations
+```
 
 ### Phase 5: Advanced Features 🚀
 - 🔄 **Steering Auto-Update** - Automatic project memory synchronization with 5 trigger types

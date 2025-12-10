@@ -5,6 +5,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.3.0] - 2025-12-10
+
+### Added
+
+**Multi-Language Support & Language Recommendation Engine** 🌐
+
+Complete implementation of multi-language project initialization with intelligent language recommendations.
+
+#### Technology Stack Approach Selection
+- **Four initialization modes**:
+  - `Single language` - Select one primary language
+  - `Multiple languages` - Select multiple languages for polyglot projects
+  - `Undecided` - Generate placeholder tech.md for later decisions
+  - `Help me decide` - AI-powered language recommendations
+
+#### Language Recommendation Engine
+- **Intelligent language selection** based on:
+  - Application type (10 types: web-frontend, web-backend, cli, desktop, mobile, data, ml, embedded, game, systems)
+  - Performance requirements (high, moderate, rapid development)
+  - Team expertise (boost languages team knows)
+- **Scoring system** with weighted factors
+- **Top 3 recommendations** with reasons
+
+#### 10 Language Support
+- JavaScript/TypeScript, Python, Rust, Go
+- Java/Kotlin, C#/.NET, C/C++
+- Swift, Ruby, PHP
+- Each with version, runtime, package manager, frameworks, testing info
+
+#### Dynamic tech.md Generation
+- **Language-specific templates** with appropriate frameworks and tools
+- **Undecided mode** generates decision criteria and TODO checklist
+- **project.yml** updated with `tech_stack` configuration
+
+### Tests
+- Added 16 new tests for language recommendation engine
+- All 3,425 tests passing
+
+---
+
+## [5.2.0] - 2025-12-10
+
+### Fixed
+
+**ESLint & Prettier Compliance** 🔧
+
+- Fixed 282 ESLint errors across bin/, src/, tests/
+- Fixed Prettier formatting for 242 files
+- All 3,409 tests passing
+
+---
+
 ## [5.0.0] - 2025-12-10
 
 ### Added

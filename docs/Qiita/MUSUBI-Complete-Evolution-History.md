@@ -26,6 +26,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 - MUSUBI v3.11.0: Skill System Architecture、Advanced Workflows
 - MUSUBI v4.0.0: Agent Loop、Codebase Intelligence、Agentic Reasoning
 - MUSUBI v5.0.0: Advanced Features、Steering Auto-Update、Quality Dashboard
+- MUSUBI v5.2.0-v5.3.0: マルチ言語対応、言語推薦エンジン
 
 ---
 
@@ -2333,7 +2334,10 @@ flowchart TB
     subgraph Phase14["🚀 Phase 14: MUSUBI Advanced Features（v5.0.0）"]
         P14["Steering Auto-Update、Quality Dashboard、3,378テスト"]
     end
-    Origin --> Evolution --> Phase1 --> Phase2 --> Phase3 --> Phase4 --> Phase5 --> Phase6 --> Phase7 --> Phase8 --> Phase9 --> Phase10 --> Phase11 --> Phase12 --> Phase13 --> Phase14
+    subgraph Phase15["🌐 Phase 15: MUSUBI マルチ言語対応（v5.3.0）"]
+        P15["言語推薦エンジン、10言語サポート、3,425テスト"]
+    end
+    Origin --> Evolution --> Phase1 --> Phase2 --> Phase3 --> Phase4 --> Phase5 --> Phase6 --> Phase7 --> Phase8 --> Phase9 --> Phase10 --> Phase11 --> Phase12 --> Phase13 --> Phase14 --> Phase15
 ```
 
 **Key Milestones:**
@@ -2359,8 +2363,156 @@ flowchart TB
 | Skill System | MUSUBI v3.11.0 | Skill Registry、Workflow Executor、2,574テスト |
 | Agent Loop | MUSUBI v4.0.0 | Codebase Intelligence、Agentic Reasoning |
 | Advanced Features | MUSUBI v5.0.0 | Steering Auto-Update、Quality Dashboard、3,378テスト |
+| マルチ言語対応 | MUSUBI v5.3.0 | 言語推薦エンジン、10言語サポート、3,425テスト |
 
-Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて、MUSUBIは単なる仕様管理ツールから、**包括的なAI支援開発プラットフォーム**へと成長しました。v5.0.0では、Phase 4のAgent Loop（Codebase Intelligence、Agentic Reasoning）とPhase 5のAdvanced Features（Steering Auto-Update、Quality Dashboard、Advanced Validation）を完成させました。3,378のテストと20のCLIコマンドで、堅牢で信頼性の高いSDD体験を提供します。
+Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて、MUSUBIは単なる仕様管理ツールから、**包括的なAI支援開発プラットフォーム**へと成長しました。v5.3.0では、マルチ言語対応と言語推薦エンジンを追加し、Rust、Python、Go、Java、C#など10言語のプロジェクトを適切に初期化できるようになりました。ODS-RAM（ウラノスデータスペース参照アーキテクチャモデル）を使ったRustプロジェクトでの実証を通じて、実際の複雑なプロジェクトでのMUSUBIの有効性を確認しました。3,425のテストと20のCLIコマンドで、堅牢で信頼性の高いSDD体験を提供します。
+
+---
+
+# 第16章 MUSUBI v5.2.0 - v5.3.0: マルチ言語対応（2025年12月10日）
+
+## 16.1 ODS-RAM実証からの知見
+
+MUSUBI v5.0.0のリリース後、**Ouranos Ecosystem Data Spaces（ウラノス）参照アーキテクチャモデル（ODS-RAM）** に準拠したRustプロジェクトを使ってMUSUBIを実証しました。この実証を通じて、以下の課題が明らかになりました：
+
+### 発見された課題
+
+1. **言語選択機能の不在**: JavaScript/Node.js以外のプロジェクトで`tech.md`を手動で書き直す必要があった
+2. **複数言語プロジェクトへの対応不足**: フロントエンド（TypeScript）+ バックエンド（Rust）のようなポリグロットプロジェクトに対応できなかった
+3. **言語未定状態のサポートなし**: 要件定義段階で技術スタックが決まっていないプロジェクトに対応できなかった
+
+## 16.2 v5.2.0: ESLint/Prettier完全準拠
+
+**リリース日:** 2025-12-10
+
+v5.2.0では、コードベース全体のESLintとPrettier準拠を完了しました：
+
+- 282件のESLintエラーを修正
+- 242ファイルのPrettierフォーマットを修正
+- 3,409テスト全パス
+
+## 16.3 v5.3.0: マルチ言語対応
+
+**リリース日:** 2025-12-10
+
+### 技術スタックアプローチ選択
+
+```bash
+$ npx musubi-sdd init --copilot
+
+? Technology stack approach:
+  ❯ Single language        # 1つの言語を選択
+    Multiple languages     # 複数言語を選択（ポリグロット）
+    Undecided             # 後で決定（プレースホルダー生成）
+    Help me decide        # 要件から言語を推薦
+```
+
+### 言語推薦エンジン
+
+「Help me decide」モードを選択すると、3つの質問に基づいて最適な言語を推薦します：
+
+```bash
+? What type of application(s) are you building?
+  ◯ Web Frontend (SPA, SSR)
+  ◉ Web Backend / API
+  ◉ CLI Tool
+  ◯ Desktop Application
+  ◯ Data Pipeline / ETL
+  ◯ AI/ML Application
+  ◉ Embedded / IoT
+
+? Performance requirements:
+  ❯ High performance / Low latency critical
+    Moderate (typical web app)
+    Rapid development prioritized
+
+? Team expertise (select all that apply):
+  ◉ Rust
+  ◯ Go
+  ◯ Python
+```
+
+推薦結果：
+
+```
+📊 Recommended languages based on your requirements:
+
+  🦀 Rust: Systems programming; High performance, zero-cost abstractions; Team has expertise
+  🐹 Go: Strong backend frameworks; Fast compilation, efficient runtime
+  🐍 Python: Rapid development, extensive libraries
+```
+
+### 10言語サポート
+
+| 言語 | バージョン | パッケージマネージャー | フレームワーク |
+|------|----------|---------------------|---------------|
+| JavaScript/TypeScript | ES2022+ / TS 5.0+ | npm, pnpm, yarn | React, Next.js, Express |
+| Python | 3.11+ | pip, poetry, uv | FastAPI, Django |
+| Rust | 1.75+ | Cargo | Axum, Actix-web, Tokio |
+| Go | 1.21+ | Go modules | Gin, Echo, Chi |
+| Java/Kotlin | Java 21 / Kotlin 1.9+ | Maven, Gradle | Spring Boot, Ktor |
+| C#/.NET | .NET 8+ | NuGet | ASP.NET Core |
+| C/C++ | C++20 | vcpkg, Conan | Qt, Boost |
+| Swift | 5.9+ | SPM | SwiftUI, Vapor |
+| Ruby | 3.2+ | Bundler | Rails, Sinatra |
+| PHP | 8.2+ | Composer | Laravel, Symfony |
+
+### 動的 tech.md 生成
+
+選択した言語に応じて、適切なフレームワーク、テストツール、開発環境が自動設定されます：
+
+```markdown
+# Technology Stack
+
+## Primary Technologies
+
+| Language | Version | Role | Notes |
+|----------|---------|------|-------|
+| Rust | 1.75+ stable | Primary | Native binary |
+| Python | 3.11+ | Secondary | CPython, PyPy |
+
+### Rust Ecosystem
+
+- **Package Manager**: Cargo
+- **Frameworks**: Axum, Actix-web, Tokio
+- **Testing**: cargo test, criterion
+
+### Python Ecosystem
+
+- **Package Manager**: pip, poetry, uv
+- **Frameworks**: FastAPI, Django, Flask
+- **Testing**: pytest, unittest
+```
+
+### 「Undecided」モード
+
+言語が未定の場合、決定基準とTODOリストを含むプレースホルダーが生成されます：
+
+```markdown
+# Technology Stack
+
+**Status**: Technology stack to be determined
+
+## Decision Criteria
+
+When selecting technologies, consider:
+1. **Application Type**: What type of application is being built?
+2. **Performance Requirements**: What are the performance constraints?
+3. **Team Expertise**: What technologies is the team familiar with?
+
+## Next Steps
+
+- [ ] Define functional requirements
+- [ ] Identify performance constraints
+- [ ] Evaluate team skills
+- [ ] Create proof-of-concept
+- [ ] Make final decision and update this document
+```
+
+### テスト
+
+- 16件の新規テスト追加（言語推薦エンジン）
+- 全3,425テストパス
 
 ---
 
@@ -2369,6 +2521,7 @@ Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて�
 - [MUSUBI GitHub](https://github.com/nahisaho/musubi)
 - [MUSUHI GitHub](https://github.com/nahisaho/musuhi)（前身プロジェクト）
 - [Spec-Copilot GitHub](https://github.com/nahisaho/spec-copilot)（起源プロジェクト）
+- [MUSUBI v5.3.0 Multi-Language Guide](https://qiita.com/nahisaho/items/musubi-v5-multilang)
 - [MUSUBI v5.0.0 Advanced Features Guide](https://qiita.com/nahisaho/items/musubi-v5-advanced-features)
 - [MUSUBI v4.0.0 Agent Loop Guide](https://qiita.com/nahisaho/items/musubi-v4-agent-loop)
 - [MUSUBI v3.11.0 Skill System Guide](https://qiita.com/nahisaho/items/musubi-v3-skill-system)
@@ -2382,4 +2535,4 @@ Spec-CopilotからMUSUHI、そしてMUSUBIへ。この進化の旅を通じて�
 
 ## タグ
 
-`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning` `#Ollama` `#Guardrails` `#Swarm` `#Orchestration` `#SkillSystem` `#Workflow` `#AgentLoop` `#CodebaseIntelligence` `#QualityDashboard`
+`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning` `#Ollama` `#Guardrails` `#Swarm` `#Orchestration` `#SkillSystem` `#Workflow` `#AgentLoop` `#CodebaseIntelligence` `#QualityDashboard` `#MultiLanguage` `#Rust` `#ODS-RAM`

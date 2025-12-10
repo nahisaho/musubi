@@ -4,3 +4,10 @@ description: A software project using MUSUBI SDD
 locale: ja
 version: "0.1.0"
 created: 2025-12-10
+
+# Technology Stack
+tech_stack:
+  approach: multiple
+  languages:
+    - javascript
+    - python
