@@ -9,7 +9,6 @@ const os = require('os');
 const {
   CriticSystem,
   CriticResult,
-  BaseCritic,
   RequirementsCritic,
   DesignCritic,
   ImplementationCritic,

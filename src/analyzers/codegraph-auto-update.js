@@ -369,7 +369,7 @@ class CodeGraphAutoUpdate extends EventEmitter {
    * Update dependency graph
    * @private
    */
-  async _updateDependencyGraph(context) {
+  async _updateDependencyGraph(_context) {
     const changes = [];
     let filesUpdated = 0;
     
@@ -407,7 +407,7 @@ class CodeGraphAutoUpdate extends EventEmitter {
    * Update MCP registry
    * @private
    */
-  async _updateMcpRegistry(context) {
+  async _updateMcpRegistry(_context) {
     const changes = [];
     let filesUpdated = 0;
     
@@ -455,7 +455,7 @@ class CodeGraphAutoUpdate extends EventEmitter {
    * Update context cache
    * @private
    */
-  async _updateContextCache(context) {
+  async _updateContextCache(_context) {
     const changes = [];
     let filesUpdated = 0;
     

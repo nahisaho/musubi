@@ -10,7 +10,6 @@ const {
   CompletenessChecker,
   DependencyValidator,
   ReferenceValidator,
-  AdvancedValidator,
   ValidationType,
   Severity,
   ArtifactType,

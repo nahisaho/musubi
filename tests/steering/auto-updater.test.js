@@ -7,7 +7,6 @@ const {
   SteeringUpdater,
   ProjectYmlSync,
   CustomSteeringRules,
-  SteeringAutoUpdater,
   SteeringFileType,
   UpdateTrigger,
   createSteeringAutoUpdater

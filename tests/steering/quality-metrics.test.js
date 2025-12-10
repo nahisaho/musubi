@@ -9,7 +9,6 @@ const {
   HealthIndicator,
   TrendAnalyzer,
   QualityScoreCalculator,
-  QualityMetricsDashboard,
   MetricCategory,
   HealthStatus,
   TrendDirection,

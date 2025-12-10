@@ -18,6 +18,10 @@ module.exports = {
     '**/tests/**/*.test.js',
     '**/__tests__/**/*.js'
   ],
+  testPathIgnorePatterns: [
+    '/node_modules/',
+    '/tests/e2e/ollama-e2e.test.js'  // Run with: node tests/e2e/ollama-e2e.test.js
+  ],
   verbose: true,
   // Prevent coverage worker issues with temp directories
   maxWorkers: 1

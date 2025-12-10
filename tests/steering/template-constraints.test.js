@@ -9,7 +9,6 @@ const {
   UncertaintyParser,
   TemplateSection,
   TemplateDefinition,
-  TemplateConstraintEngine,
   ConstraintType,
   UncertaintyMarker,
   Severity,
