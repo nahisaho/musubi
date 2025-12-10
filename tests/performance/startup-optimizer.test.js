@@ -274,9 +274,7 @@ describe('Startup Optimizer Module', () => {
           .register('mod1', async () => 'result1', { stage: InitStage.CORE })
           .register('mod2', async () => 'result2', { stage: InitStage.CORE });
 
-        const { results, errors, duration } = await optimizer.initialize(
-          InitStage.CORE
-        );
+        const { results, errors, duration } = await optimizer.initialize(InitStage.CORE);
 
         expect(results.mod1).toBe('result1');
         expect(results.mod2).toBe('result2');
@@ -580,23 +578,17 @@ describe('Startup Optimizer Module', () => {
   // ============================================================
   describe('Default Instances', () => {
     it('should export default startup optimizer', () => {
-      const {
-        defaultStartupOptimizer,
-      } = require('../../src/performance/startup-optimizer');
+      const { defaultStartupOptimizer } = require('../../src/performance/startup-optimizer');
       expect(defaultStartupOptimizer).toBeInstanceOf(StartupOptimizer);
     });
 
     it('should export default warmup cache', () => {
-      const {
-        defaultWarmupCache,
-      } = require('../../src/performance/startup-optimizer');
+      const { defaultWarmupCache } = require('../../src/performance/startup-optimizer');
       expect(defaultWarmupCache).toBeInstanceOf(WarmupCache);
     });
 
     it('should export default init profiler', () => {
-      const {
-        defaultInitProfiler,
-      } = require('../../src/performance/startup-optimizer');
+      const { defaultInitProfiler } = require('../../src/performance/startup-optimizer');
       expect(defaultInitProfiler).toBeInstanceOf(InitProfiler);
     });
   });
