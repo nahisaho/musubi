@@ -5,6 +5,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.6.3] - 2025-12-11
+
+### Changed
+
+- Fixed Prettier code style issues in 6 test files
+- Version bump for npm publish
+
+## [5.6.2] - 2025-12-11
+
+### Added
+
+- **P2 Coverage Improvements**: Enhanced test coverage for 3 critical modules
+  - `steering-auto-update.js`: 60.73% → 86.38% (+25.65%)
+  - `steering-validator.js`: 45.69% → 98.67% (+52.98%)
+  - `monitoring/index.js`: 40.83% → 100% (+59.17%)
+- **116 new tests** added (3,734 → 3,850 total tests)
+- **Phase 6 Planning Document**: Enterprise features roadmap
+  - Multi-tenant support (P0)
+  - Performance optimization (P0)
+  - Advanced AI capabilities (P1)
+  - Enterprise integrations (P1)
+  - VSCode extension enhancements (P2)
+
+### Changed
+
+- Overall test coverage improved to 76.62%
+- Added mock-fs based tests for filesystem-dependent validation
+
 ## [5.6.1] - 2025-12-10
 
 ### Added
