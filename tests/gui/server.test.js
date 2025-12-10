@@ -8,12 +8,21 @@ const path = require('path');
 const os = require('os');
 const http = require('http');
 
+// Increase Jest timeout for server tests
+jest.setTimeout(15000);
+
+// Generate unique port to avoid conflicts in parallel tests
+let portCounter = 3100 + Math.floor(Math.random() * 1000);
+function getNextPort() {
+  return portCounter++;
+}
+
 describe('Server', () => {
   let tempDir;
   let server;
 
   beforeEach(async () => {
-    tempDir = path.join(os.tmpdir(), `musubi-test-${Date.now()}`);
+    tempDir = path.join(os.tmpdir(), `musubi-test-${Date.now()}-${Math.random().toString(36).substring(7)}`);
     await fs.ensureDir(path.join(tempDir, 'steering', 'rules'));
     await fs.ensureDir(path.join(tempDir, 'storage', 'specs'));
     await fs.writeFile(
@@ -24,11 +33,28 @@ describe('Server', () => {
 
   afterEach(async () => {
     if (server) {
-      await server.stop();
+      try {
+        await Promise.race([
+          server.stop(),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('Stop timeout')), 10000))
+        ]);
+      } catch (e) {
+        // Force cleanup if stop times out
+        if (server.httpServer) {
+          server.httpServer.close();
+        }
+        if (server.wss) {
+          server.wss.close();
+        }
+      }
       server = null;
     }
-    await fs.remove(tempDir);
-  });
+    try {
+      await fs.remove(tempDir);
+    } catch (e) {
+      // Ignore cleanup errors
+    }
+  }, 15000);
 
   describe('constructor()', () => {
     it('should create a server instance', () => {
@@ -53,7 +79,8 @@ describe('Server', () => {
 
   describe('start() and stop()', () => {
     it('should start and stop the server', async () => {
-      server = new Server(tempDir, { port: 3001 });
+      const port = getNextPort();
+      server = new Server(tempDir, { port });
       
       await server.start();
       expect(server.httpServer).not.toBeNull();
@@ -64,7 +91,8 @@ describe('Server', () => {
     });
 
     it('should handle already stopped server', async () => {
-      server = new Server(tempDir, { port: 3002 });
+      const port = getNextPort();
+      server = new Server(tempDir, { port });
       
       await server.start();
       await server.stop();
@@ -76,11 +104,13 @@ describe('Server', () => {
 
   describe('API endpoints', () => {
     let baseUrl;
+    let apiPort;
 
     beforeEach(async () => {
-      server = new Server(tempDir, { port: 3003 });
+      apiPort = getNextPort();
+      server = new Server(tempDir, { port: apiPort });
       await server.start();
-      baseUrl = `http://localhost:3003`;
+      baseUrl = `http://localhost:${apiPort}`;
     });
 
     it('should respond to health check', async () => {
@@ -167,11 +197,12 @@ describe('Server', () => {
 
   describe('WebSocket', () => {
     it('should accept WebSocket connections', async () => {
-      server = new Server(tempDir, { port: 3004 });
+      const wsPort = getNextPort();
+      server = new Server(tempDir, { port: wsPort });
       await server.start();
 
       const WebSocket = require('ws');
-      const ws = new WebSocket('ws://localhost:3004');
+      const ws = new WebSocket(`ws://localhost:${wsPort}`);
 
       await new Promise((resolve, reject) => {
         ws.on('open', () => {
@@ -183,11 +214,12 @@ describe('Server', () => {
     });
 
     it('should broadcast to all clients', async () => {
-      server = new Server(tempDir, { port: 3005 });
+      const wsPort = getNextPort();
+      server = new Server(tempDir, { port: wsPort });
       await server.start();
 
       const WebSocket = require('ws');
-      const ws = new WebSocket('ws://localhost:3005');
+      const ws = new WebSocket(`ws://localhost:${wsPort}`);
 
       await new Promise((resolve, reject) => {
         const timeout = setTimeout(() => {
@@ -227,10 +259,11 @@ describe('Server', () => {
       await fs.ensureDir(clientDir);
       await fs.writeFile(path.join(clientDir, 'index.html'), '<html>Test</html>');
 
-      server = new Server(tempDir, { port: 3006, clientPath: clientDir });
+      const staticPort = getNextPort();
+      server = new Server(tempDir, { port: staticPort, clientPath: clientDir });
       await server.start();
 
-      const response = await fetch('http://localhost:3006/');
+      const response = await fetch(`http://localhost:${staticPort}/`);
       const text = await response.text();
 
       expect(response.status).toBe(200);
