@@ -29,13 +29,13 @@ MUSUBI（結び）は、6つの主要フレームワークのベスト機能を�
 
 ## ✨ なぜMUSUBI？
 
-| 課題 | MUSUBIのソリューション |
-|------|----------------------|
-| 🔀 AIツールの分断 | **7エージェント、1つの統一ワークフロー** |
-| 📝 曖昧な要件定義 | **5パターンのEARS形式** |
-| 🔍 トレーサビリティの喪失 | **100% 要件→設計→コード→テスト追跡** |
-| ⚠️ 品質の不一致 | **9つの憲法条項 + フェーズ-1ゲート** |
-| 🔄 既存プロジェクトの課題 | **差分仕様 + 変更管理** |
+| 課題                      | MUSUBIのソリューション                   |
+| ------------------------- | ---------------------------------------- |
+| 🔀 AIツールの分断         | **7エージェント、1つの統一ワークフロー** |
+| 📝 曖昧な要件定義         | **5パターンのEARS形式**                  |
+| 🔍 トレーサビリティの喪失 | **100% 要件→設計→コード→テスト追跡**     |
+| ⚠️ 品質の不一致           | **9つの憲法条項 + フェーズ-1ゲート**     |
+| 🔄 既存プロジェクトの課題 | **差分仕様 + 変更管理**                  |
 
 ## 🚀 クイックスタート
 
@@ -71,27 +71,52 @@ musubi init --windsurf  # Windsurf IDE
 
 ---
 
-## 📊 v5.5.0 の新機能
+## 📊 v5.6.0 の新機能
 
-- 🏢 **エンタープライズスケール分析** - 1,000万行+のプロジェクト（GCCレベル）に対応
-- 🦀 **Rustマイグレーション支援** - C/C++コードの安全性リスク検出とRust移行計画生成
-- 🔗 **CodeGraph MCP統合強化** - コールグラフ、影響分析、循環依存検出
-- 📊 **認知複雑度計測** - SonarSource方式の読みやすさ分析
-- 📈 **階層的レポート** - ドリルダウン可能なディレクトリ別分析
-- 🎯 **巨大関数検出** - 100行/500行/1000行超の関数を自動検出・分割提案
+### エンタープライズスケール分析 & Rustマイグレーション支援 🏢🦀
 
-```bash
-# 大規模プロジェクト分析（ストリーミングモード自動選択）
-musubi analyze --streaming
+GCCコードベース（1,000万行以上、10万ファイル以上）の分析に基づく大幅な改善。
 
-# Rustマイグレーション分析
-musubi analyze --rust-migration
+#### Large Project Analyzer
 
-# CodeGraph統合分析
-musubi analyze --codegraph --impact-analysis
+- **スケール認識分析**: プロジェクトサイズを自動検出し、適切な戦略を選択
+- **メモリ効率処理**: 10万ファイル以上でもチャンクベース処理とガベージコレクション
+- **多言語サポート**: JavaScript、TypeScript、C、C++、Python、Rust、Go、Java
+- **巨大関数検出**: 100行+（警告）、500行+（危険）、1000行+（極端）の関数をフラグ
+
+#### CodeGraph MCP統合
+
+- **深層コードグラフ分析**: CodeGraph MCPとの統合による関係性分析
+- **コールグラフ生成**: 設定可能な深度での呼び出し元・呼び出し先追跡
+- **影響分析**: コード変更時の影響ファイル特定
+- **ホットスポット識別**: 高接続性エンティティ（リファクタリング候補）の検出
+
+#### 拡張複雑度アナライザー
+
+- **循環的複雑度**: 標準的な決定ポイントカウント
+- **認知的複雑度**: SonarSource方式の読みやすさ測定
+- **重大度レベル**: 理想 → 警告 → 危険 → 極端の閾値
+
+#### Rustマイグレーションジェネレーター
+
+- **危険パターン検出**: C/C++メモリ安全でないパターンの特定
+- **マイグレーション優先度スコアリング**: Rust移行の自動優先順位付け
+- **セキュリティコンポーネント分析**: セキュリティ重要コードセクションのフラグ
+
+```javascript
+// エンタープライズスケールプロジェクトを分析（100,000ファイル以上）
+const { LargeProjectAnalyzer, ComplexityAnalyzer } = require('musubi-sdd');
+
+const analyzer = new LargeProjectAnalyzer('/path/to/gcc');
+const result = await analyzer.analyze();
+console.log(result.stats); // { totalFiles: 109073, ... }
+
+// コード複雑度を計算
+const complexity = new ComplexityAnalyzer();
+const score = complexity.calculateCyclomaticComplexity(code, 'javascript');
 ```
 
-### 以前のバージョン (v5.4.0)
+### 以前のバージョン (v5.5.0)
 
 - 🔗 **GitHub参照機能** - 成功したリポジトリからパターンとプラクティスを参照
 - 📦 **複数リポジトリ対応** - `-r` / `--reference` オプションで複数指定可能
@@ -163,15 +188,15 @@ musubi init -r owner/repo@develop
 
 MUSUBIは7つのAIコーディングエージェントに対応し、それぞれに最適化された設定を提供します。
 
-| エージェント | スキルAPI | 25エージェント | コマンド形式 | コマンドファイル形式 | インストールディレクトリ |
-|-------|-----------|-----------|----------------|---------------------|----------------------|
-| **Claude Code** | ✅ (25スキル) | ✅ | `/sdd-*` | Markdown | `.claude/skills/`, `.claude/commands/` |
-| **GitHub Copilot** | ❌ | ✅ (AGENTS.md) | `#sdd-*` | Markdown + AGENTS.md | `.github/prompts/`, `.github/AGENTS.md` |
-| **Cursor IDE** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.cursor/commands/`, `.cursor/AGENTS.md` |
-| **Gemini CLI** | ❌ | ✅ (GEMINI.md) | `/sdd-*` | TOML + GEMINI.md | `.gemini/commands/`, `GEMINI.md` |
-| **Codex CLI** | ❌ | ✅ (AGENTS.md) | `/prompts:sdd-*` | Markdown + AGENTS.md | `.codex/prompts/`, `.codex/AGENTS.md` |
-| **Qwen Code** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.qwen/commands/`, `.qwen/AGENTS.md` |
-| **Windsurf IDE** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.windsurf/workflows/`, `.windsurf/AGENTS.md` |
+| エージェント       | スキルAPI     | 25エージェント | コマンド形式     | コマンドファイル形式 | インストールディレクトリ                      |
+| ------------------ | ------------- | -------------- | ---------------- | -------------------- | --------------------------------------------- |
+| **Claude Code**    | ✅ (25スキル) | ✅             | `/sdd-*`         | Markdown             | `.claude/skills/`, `.claude/commands/`        |
+| **GitHub Copilot** | ❌            | ✅ (AGENTS.md) | `#sdd-*`         | Markdown + AGENTS.md | `.github/prompts/`, `.github/AGENTS.md`       |
+| **Cursor IDE**     | ❌            | ✅ (AGENTS.md) | `/sdd-*`         | Markdown + AGENTS.md | `.cursor/commands/`, `.cursor/AGENTS.md`      |
+| **Gemini CLI**     | ❌            | ✅ (GEMINI.md) | `/sdd-*`         | TOML + GEMINI.md     | `.gemini/commands/`, `GEMINI.md`              |
+| **Codex CLI**      | ❌            | ✅ (AGENTS.md) | `/prompts:sdd-*` | Markdown + AGENTS.md | `.codex/prompts/`, `.codex/AGENTS.md`         |
+| **Qwen Code**      | ❌            | ✅ (AGENTS.md) | `/sdd-*`         | Markdown + AGENTS.md | `.qwen/commands/`, `.qwen/AGENTS.md`          |
+| **Windsurf IDE**   | ❌            | ✅ (AGENTS.md) | `/sdd-*`         | Markdown + AGENTS.md | `.windsurf/workflows/`, `.windsurf/AGENTS.md` |
 
 **注意事項**：
 
@@ -715,6 +740,7 @@ THEN システムSHALLユーザーを認証する
 AND システムSHALLセッションを作成する。
 
 #### シナリオ: ログイン成功
+
 - WHEN ユーザーが正しいメールアドレスとパスワードを入力する
 - THEN システムSHALL認証情報を検証する
 - AND システムSHALLダッシュボードにリダイレクトする
@@ -756,17 +782,23 @@ AND システムSHALLセッションを作成する。
 
 ```markdown
 ## 追加された要件
+
 ### REQ-NEW-001: 二要素認証
+
 ...
 
 ## 変更された要件
+
 ### REQ-001: ユーザー認証
+
 **以前**: メール + パスワード
 **更新後**: メール + パスワード + OTP
 ...
 
 ## 削除された要件
+
 ### REQ-OLD-005: ログイン状態を記憶
+
 **理由**: セキュリティポリシーの変更
 ```
 
@@ -889,22 +921,22 @@ init_graphツールを使ってこのコードベースを分析してくださ�
 
 **利用可能なMCPツール（14ツール）**:
 
-| カテゴリ | ツール | 説明 |
-|----------|-------|-------------|
-| コードグラフ | `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies` | コードグラフの構築とクエリ |
-| 検索 | `local_search`, `global_search`, `query_codebase` | GraphRAG駆動セマンティック検索 |
-| 分析 | `analyze_module_structure`, `suggest_refactoring` | コード構造分析 |
-| ナビゲーション | `jump_to_definition`, `find_implementations` | コードナビゲーション |
+| カテゴリ       | ツール                                                                | 説明                           |
+| -------------- | --------------------------------------------------------------------- | ------------------------------ |
+| コードグラフ   | `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies` | コードグラフの構築とクエリ     |
+| 検索           | `local_search`, `global_search`, `query_codebase`                     | GraphRAG駆動セマンティック検索 |
+| 分析           | `analyze_module_structure`, `suggest_refactoring`                     | コード構造分析                 |
+| ナビゲーション | `jump_to_definition`, `find_implementations`                          | コードナビゲーション           |
 
 **エージェント × MCPツールマッピング**:
 
-| エージェント | 主要MCPツール | 用途 |
-|-------|-------------------|----------|
-| @change-impact-analyzer | `find_dependencies`, `find_callers` | 影響分析 |
-| @traceability-auditor | `query_codebase`, `find_callers` | トレーサビリティ検証 |
-| @system-architect | `analyze_module_structure`, `global_search` | アーキテクチャ分析 |
-| @code-reviewer | `suggest_refactoring`, `get_code_snippet` | コード品質レビュー |
-| @security-auditor | `find_callers`, `query_codebase` | セキュリティ脆弱性検出 |
+| エージェント            | 主要MCPツール                               | 用途                   |
+| ----------------------- | ------------------------------------------- | ---------------------- |
+| @change-impact-analyzer | `find_dependencies`, `find_callers`         | 影響分析               |
+| @traceability-auditor   | `query_codebase`, `find_callers`            | トレーサビリティ検証   |
+| @system-architect       | `analyze_module_structure`, `global_search` | アーキテクチャ分析     |
+| @code-reviewer          | `suggest_refactoring`, `get_code_snippet`   | コード品質レビュー     |
+| @security-auditor       | `find_callers`, `query_codebase`            | セキュリティ脆弱性検出 |
 
 その他のMCPサーバーとも統合：
 

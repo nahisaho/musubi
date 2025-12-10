@@ -29,13 +29,13 @@ MUSUBI (結び - "connection/binding") is a comprehensive **Specification Driven
 
 ## ✨ Why MUSUBI?
 
-| Challenge | MUSUBI Solution |
-|-----------|-----------------|
-| 🔀 Fragmented AI tools | **7 agents, 1 unified workflow** |
-| 📝 Ambiguous requirements | **EARS format with 5 patterns** |
-| 🔍 Lost traceability | **100% Req→Design→Code→Test mapping** |
-| ⚠️ Quality inconsistency | **9 Constitutional Articles + Phase -1 Gates** |
-| 🔄 Brownfield challenges | **Delta specs + Change management** |
+| Challenge                 | MUSUBI Solution                                |
+| ------------------------- | ---------------------------------------------- |
+| 🔀 Fragmented AI tools    | **7 agents, 1 unified workflow**               |
+| 📝 Ambiguous requirements | **EARS format with 5 patterns**                |
+| 🔍 Lost traceability      | **100% Req→Design→Code→Test mapping**          |
+| ⚠️ Quality inconsistency  | **9 Constitutional Articles + Phase -1 Gates** |
+| 🔄 Brownfield challenges  | **Delta specs + Change management**            |
 
 ## 🚀 Quick Start
 
@@ -71,9 +71,53 @@ musubi init --windsurf  # Windsurf IDE
 
 ---
 
-## 📊 What's New in v5.4.0
+## 📊 What's New in v5.6.0
 
-### GitHub Reference & Repository Analysis 📦
+### Enterprise-Scale Analysis & Rust Migration Support 🏢🦀
+
+Major improvements based on analysis of GCC codebase (10+ million lines, 100,000+ files).
+
+#### Large Project Analyzer
+
+- **Scale-aware analysis**: Automatically detects project size and selects appropriate strategy
+- **Memory-efficient processing**: Chunk-based processing with garbage collection for 100K+ files
+- **Multi-language support**: JavaScript, TypeScript, C, C++, Python, Rust, Go, Java
+- **Giant function detection**: Flags functions with 100+ (warning), 500+ (critical), 1000+ (extreme) lines
+
+#### CodeGraph MCP Integration
+
+- **Deep code graph analysis**: Integration with CodeGraph MCP for relationship analysis
+- **Call graph generation**: Track callers and callees with configurable depth
+- **Impact analysis**: Identify affected files when code changes
+- **Hotspot identification**: Detect highly-connected entities (refactoring candidates)
+
+#### Enhanced Complexity Analyzer
+
+- **Cyclomatic complexity**: Standard decision-point counting
+- **Cognitive complexity**: SonarSource-style readability measurement
+- **Severity levels**: Ideal → Warning → Critical → Extreme thresholds
+
+#### Rust Migration Generator
+
+- **Unsafe pattern detection**: Identify C/C++ memory-unsafe patterns
+- **Migration priority scoring**: Automatic prioritization for Rust migration
+- **Security component analysis**: Flag security-critical code sections
+
+```javascript
+// Analyze enterprise-scale projects (100,000+ files)
+const { LargeProjectAnalyzer, ComplexityAnalyzer } = require('musubi-sdd');
+
+const analyzer = new LargeProjectAnalyzer('/path/to/gcc');
+const result = await analyzer.analyze();
+console.log(result.stats); // { totalFiles: 109073, ... }
+
+// Calculate code complexity
+const complexity = new ComplexityAnalyzer();
+const score = complexity.calculateCyclomaticComplexity(code, 'javascript');
+```
+
+### v5.4.0: GitHub Reference & Repository Analysis 📦
+
 - 🔗 **`--reference` / `-r` Option** - Reference multiple GitHub repositories for pattern analysis
 - 📊 **Repository Analysis** - Fetch metadata, structure, and key files via GitHub API
 - 🏗️ **Pattern Detection** - Clean Architecture, Hexagonal, DDD, Monorepo patterns
@@ -92,12 +136,14 @@ musubi init --reference https://github.com/rust-lang/rust
 ```
 
 ### v5.3.0: Multi-Language Support 🌐
+
 - 🔄 **Technology Stack Selection** - Single, Multiple, Undecided, or Help me decide
 - 🤖 **Language Recommendation Engine** - AI-powered suggestions based on app type, performance needs, team expertise
 - 🌍 **10 Languages Supported** - JS/TS, Python, Rust, Go, Java, C#, C++, Swift, Ruby, PHP
 - 📄 **Dynamic tech.md** - Language-specific templates with frameworks and tools
 
 ### v5.0.0: Phase 5 Advanced Features 🚀
+
 - 🔄 **Steering Auto-Update** - Automatic project memory synchronization with 5 trigger types
 - ✅ **Steering Validator** - Comprehensive validation for steering documents
 - 📋 **Template Constraints** - Enforce structure requirements with ThinkingChecklist
@@ -106,6 +152,7 @@ musubi init --reference https://github.com/rust-lang/rust
 - 🎯 **Phase 5 Integration** - Unified access to all advanced features
 
 ### v4.0.0: Phase 4 Agent Loop & Agentic Features 🤖
+
 - 🧠 **Codebase Intelligence** - RepositoryMap, ASTExtractor, ContextOptimizer
 - 💭 **Agentic Reasoning** - ReasoningEngine, PlanningEngine, SelfCorrection
 - ⚡ **Code Generation** - CodeGenerator, CodeReviewer with multiple modes
@@ -189,15 +236,15 @@ const result = await validator.validateAll(projectPath);
 
 MUSUBI supports 7 AI coding agents, each with tailored configurations:
 
-| Agent | Skills API | 25 Agents | Command Format | Command File Format | Installation Directory |
-|-------|-----------|-----------|----------------|---------------------|----------------------|
-| **Claude Code** | ✅ (25 skills) | ✅ | `/sdd-*` | Markdown | `.claude/skills/`, `.claude/commands/` |
-| **GitHub Copilot** | ❌ | ✅ (AGENTS.md) | `#sdd-*` | Markdown + AGENTS.md | `.github/prompts/`, `.github/AGENTS.md` |
-| **Cursor IDE** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.cursor/commands/`, `.cursor/AGENTS.md` |
-| **Gemini CLI** | ❌ | ✅ (GEMINI.md) | `/sdd-*` | TOML + GEMINI.md | `.gemini/commands/`, `GEMINI.md` |
-| **Codex CLI** | ❌ | ✅ (AGENTS.md) | `/prompts:sdd-*` | Markdown + AGENTS.md | `.codex/prompts/`, `.codex/AGENTS.md` |
-| **Qwen Code** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.qwen/commands/`, `.qwen/AGENTS.md` |
-| **Windsurf IDE** | ❌ | ✅ (AGENTS.md) | `/sdd-*` | Markdown + AGENTS.md | `.windsurf/workflows/`, `.windsurf/AGENTS.md` |
+| Agent              | Skills API     | 25 Agents      | Command Format   | Command File Format  | Installation Directory                        |
+| ------------------ | -------------- | -------------- | ---------------- | -------------------- | --------------------------------------------- |
+| **Claude Code**    | ✅ (25 skills) | ✅             | `/sdd-*`         | Markdown             | `.claude/skills/`, `.claude/commands/`        |
+| **GitHub Copilot** | ❌             | ✅ (AGENTS.md) | `#sdd-*`         | Markdown + AGENTS.md | `.github/prompts/`, `.github/AGENTS.md`       |
+| **Cursor IDE**     | ❌             | ✅ (AGENTS.md) | `/sdd-*`         | Markdown + AGENTS.md | `.cursor/commands/`, `.cursor/AGENTS.md`      |
+| **Gemini CLI**     | ❌             | ✅ (GEMINI.md) | `/sdd-*`         | TOML + GEMINI.md     | `.gemini/commands/`, `GEMINI.md`              |
+| **Codex CLI**      | ❌             | ✅ (AGENTS.md) | `/prompts:sdd-*` | Markdown + AGENTS.md | `.codex/prompts/`, `.codex/AGENTS.md`         |
+| **Qwen Code**      | ❌             | ✅ (AGENTS.md) | `/sdd-*`         | Markdown + AGENTS.md | `.qwen/commands/`, `.qwen/AGENTS.md`          |
+| **Windsurf IDE**   | ❌             | ✅ (AGENTS.md) | `/sdd-*`         | Markdown + AGENTS.md | `.windsurf/workflows/`, `.windsurf/AGENTS.md` |
 
 **Notes**:
 
@@ -910,6 +957,7 @@ THEN the system SHALL authenticate the user
 AND the system SHALL create a session.
 
 #### Scenario: Successful login
+
 - WHEN user enters correct email and password
 - THEN system SHALL verify credentials
 - AND system SHALL redirect to dashboard
@@ -951,17 +999,23 @@ AND the system SHALL create a session.
 
 ```markdown
 ## ADDED Requirements
+
 ### REQ-NEW-001: Two-Factor Authentication
+
 ...
 
 ## MODIFIED Requirements
+
 ### REQ-001: User Authentication
+
 **Previous**: Email + password
 **Updated**: Email + password + OTP
 ...
 
 ## REMOVED Requirements
+
 ### REQ-OLD-005: Remember Me
+
 **Reason**: Security policy change
 ```
 
@@ -1084,22 +1138,22 @@ If successful, you'll see the code graph initialization output.
 
 **Available MCP Tools (14 tools)**:
 
-| Category | Tools | Description |
-|----------|-------|-------------|
-| Code Graph | `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies` | Build and query code graph |
-| Search | `local_search`, `global_search`, `query_codebase` | GraphRAG-powered semantic search |
-| Analysis | `analyze_module_structure`, `suggest_refactoring` | Code structure analysis |
-| Navigation | `jump_to_definition`, `find_implementations` | Code navigation |
+| Category   | Tools                                                                 | Description                      |
+| ---------- | --------------------------------------------------------------------- | -------------------------------- |
+| Code Graph | `init_graph`, `get_code_snippet`, `find_callers`, `find_dependencies` | Build and query code graph       |
+| Search     | `local_search`, `global_search`, `query_codebase`                     | GraphRAG-powered semantic search |
+| Analysis   | `analyze_module_structure`, `suggest_refactoring`                     | Code structure analysis          |
+| Navigation | `jump_to_definition`, `find_implementations`                          | Code navigation                  |
 
 **Agent × MCP Tool Mapping**:
 
-| Agent | Primary MCP Tools | Use Case |
-|-------|-------------------|----------|
-| @change-impact-analyzer | `find_dependencies`, `find_callers` | Impact analysis |
-| @traceability-auditor | `query_codebase`, `find_callers` | Traceability validation |
-| @system-architect | `analyze_module_structure`, `global_search` | Architecture analysis |
-| @code-reviewer | `suggest_refactoring`, `get_code_snippet` | Code quality review |
-| @security-auditor | `find_callers`, `query_codebase` | Security vulnerability detection |
+| Agent                   | Primary MCP Tools                           | Use Case                         |
+| ----------------------- | ------------------------------------------- | -------------------------------- |
+| @change-impact-analyzer | `find_dependencies`, `find_callers`         | Impact analysis                  |
+| @traceability-auditor   | `query_codebase`, `find_callers`            | Traceability validation          |
+| @system-architect       | `analyze_module_structure`, `global_search` | Architecture analysis            |
+| @code-reviewer          | `suggest_refactoring`, `get_code_snippet`   | Code quality review              |
+| @security-auditor       | `find_callers`, `query_codebase`            | Security vulnerability detection |
 
 Also integrates with other MCP servers:
 

@@ -1,6 +1,6 @@
 # MUSUBI User Guide
 
-**Version 3.12.0** | Complete Reference for Specification Driven Development
+**Version 5.6.0** | Complete Reference for Specification Driven Development
 
 ---
 
@@ -10,12 +10,13 @@
 2. [Getting Started](#getting-started)
 3. [Core Concepts](#core-concepts)
 4. [CLI Reference](#cli-reference)
-5. [Orchestration Patterns](#orchestration-patterns)
-6. [Multi-Platform Support](#multi-platform-support)
-7. [CI/CD Integration](#cicd-integration)
-8. [Best Practices](#best-practices)
-9. [Troubleshooting](#troubleshooting)
-10. [API Reference](#api-reference)
+5. [Enterprise Scale Analysis](#enterprise-scale-analysis)
+6. [Orchestration Patterns](#orchestration-patterns)
+7. [Multi-Platform Support](#multi-platform-support)
+8. [CI/CD Integration](#cicd-integration)
+9. [Best Practices](#best-practices)
+10. [Troubleshooting](#troubleshooting)
+11. [API Reference](#api-reference)
 
 ---
 
@@ -101,12 +102,12 @@ project/
 
 Every requirement follows the EARS (Easy Approach to Requirements Syntax) format:
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| **Ubiquitous** | The system shall... | The system shall encrypt passwords |
-| **Event-Driven** | When X, the system shall... | When login fails, the system shall log the attempt |
-| **State-Driven** | While X, the system shall... | While offline, the system shall queue requests |
-| **Optional** | Where X, the system shall... | Where enabled, the system shall show analytics |
+| Type             | Pattern                      | Example                                            |
+| ---------------- | ---------------------------- | -------------------------------------------------- |
+| **Ubiquitous**   | The system shall...          | The system shall encrypt passwords                 |
+| **Event-Driven** | When X, the system shall...  | When login fails, the system shall log the attempt |
+| **State-Driven** | While X, the system shall... | While offline, the system shall queue requests     |
+| **Optional**     | Where X, the system shall... | Where enabled, the system shall show analytics     |
 
 ### 2. Constitutional Governance
 
@@ -126,12 +127,12 @@ Every requirement follows the EARS (Easy Approach to Requirements Syntax) format
 
 Tasks are prioritized with P-labels:
 
-| Label | Priority | Execution |
-|-------|----------|-----------|
-| **P0** | Critical | Blocks everything |
-| **P1** | High | Execute soon |
-| **P2** | Medium | Normal priority |
-| **P3** | Low | Background/optional |
+| Label  | Priority | Execution           |
+| ------ | -------- | ------------------- |
+| **P0** | Critical | Blocks everything   |
+| **P1** | High     | Execute soon        |
+| **P2** | Medium   | Normal priority     |
+| **P3** | Low      | Background/optional |
 
 ### 4. Traceability Matrix
 
@@ -147,43 +148,43 @@ REQ-AUTH-001 ←→ src/auth/login.js ←→ tests/auth.test.js
 
 ### Core Commands
 
-| Command | Description |
-|---------|-------------|
-| `musubi init` | Initialize MUSUBI project |
-| `musubi requirements <feature>` | Generate EARS requirements |
-| `musubi design <feature>` | Generate C4 + ADR design |
-| `musubi tasks <feature>` | Break down into P-labeled tasks |
-| `musubi validate [type]` | Validate artifacts |
-| `musubi trace` | Generate traceability matrix |
-| `musubi gaps` | Identify coverage gaps |
+| Command                         | Description                     |
+| ------------------------------- | ------------------------------- |
+| `musubi init`                   | Initialize MUSUBI project       |
+| `musubi requirements <feature>` | Generate EARS requirements      |
+| `musubi design <feature>`       | Generate C4 + ADR design        |
+| `musubi tasks <feature>`        | Break down into P-labeled tasks |
+| `musubi validate [type]`        | Validate artifacts              |
+| `musubi trace`                  | Generate traceability matrix    |
+| `musubi gaps`                   | Identify coverage gaps          |
 
 ### Orchestration Commands
 
-| Command | Description |
-|---------|-------------|
+| Command                         | Description                 |
+| ------------------------------- | --------------------------- |
 | `musubi orchestrate sequential` | Execute skills sequentially |
-| `musubi orchestrate parallel` | Execute skills in parallel |
-| `musubi orchestrate swarm` | Multi-agent collaboration |
-| `musubi orchestrate handoff` | Delegate to specialist |
-| `musubi orchestrate triage` | Route to appropriate agent |
+| `musubi orchestrate parallel`   | Execute skills in parallel  |
+| `musubi orchestrate swarm`      | Multi-agent collaboration   |
+| `musubi orchestrate handoff`    | Delegate to specialist      |
+| `musubi orchestrate triage`     | Route to appropriate agent  |
 
 ### Validation Commands
 
-| Command | Description |
-|---------|-------------|
-| `musubi validate all` | Full validation |
-| `musubi validate ears` | EARS format check |
+| Command                        | Description               |
+| ------------------------------ | ------------------------- |
+| `musubi validate all`          | Full validation           |
+| `musubi validate ears`         | EARS format check         |
 | `musubi validate constitution` | Constitutional compliance |
-| `musubi validate delta` | Delta spec validation |
+| `musubi validate delta`        | Delta spec validation     |
 
 ### Change Management
 
-| Command | Description |
-|---------|-------------|
-| `musubi change create` | Create change request |
-| `musubi change analyze` | Impact analysis |
-| `musubi change apply` | Apply delta spec |
-| `musubi sync` | Sync specs with code |
+| Command                 | Description           |
+| ----------------------- | --------------------- |
+| `musubi change create`  | Create change request |
+| `musubi change analyze` | Impact analysis       |
+| `musubi change apply`   | Apply delta spec      |
+| `musubi sync`           | Sync specs with code  |
 
 ---
 
@@ -242,15 +243,15 @@ musubi orchestrate workflow \
 
 ### Supported Platforms
 
-| Platform | Config File | Command Syntax |
-|----------|-------------|----------------|
-| Claude Code | `CLAUDE.md` | `/command` |
-| GitHub Copilot | `AGENTS.md` | `#command` |
-| Cursor | `.cursor/rules` | Natural language |
-| Windsurf | `.windsurf/rules` | Natural language |
-| Gemini CLI | `AGENTS.md` | `#command` |
-| Codex CLI | `AGENTS.md` | `#command` |
-| Others | `AGENTS.md` | Universal |
+| Platform       | Config File       | Command Syntax   |
+| -------------- | ----------------- | ---------------- |
+| Claude Code    | `CLAUDE.md`       | `/command`       |
+| GitHub Copilot | `AGENTS.md`       | `#command`       |
+| Cursor         | `.cursor/rules`   | Natural language |
+| Windsurf       | `.windsurf/rules` | Natural language |
+| Gemini CLI     | `AGENTS.md`       | `#command`       |
+| Codex CLI      | `AGENTS.md`       | `#command`       |
+| Others         | `AGENTS.md`       | Universal        |
 
 ### Platform-Specific Setup
 
@@ -334,6 +335,7 @@ npx husky add .husky/pre-commit "npx musubi-validate ears"
 ### 3. Use P-Labels
 
 Prioritize tasks clearly:
+
 - P0: Critical path
 - P1: Important features
 - P2: Nice-to-have
@@ -417,7 +419,7 @@ registry.registerSkill({
   id: 'my-skill',
   name: 'My Custom Skill',
   category: 'custom',
-  handler: async (input) => ({ result: 'done' })
+  handler: async input => ({ result: 'done' }),
 });
 
 // Execute skill
@@ -435,13 +437,13 @@ const engine = new OrchestrationEngine();
 // Sequential execution
 await engine.executePattern('sequential', {
   skills: ['skill-a', 'skill-b'],
-  context: { feature: 'auth' }
+  context: { feature: 'auth' },
 });
 
 // Parallel execution
 await engine.executePattern('parallel', {
   skills: ['frontend', 'backend'],
-  strategy: 'all'
+  strategy: 'all',
 });
 ```
 
@@ -461,6 +463,98 @@ const compliance = constitution.check(artifacts);
 
 ---
 
+## Enterprise Scale Analysis (v5.5.0+)
+
+### Large Project Analyzer
+
+Analyze projects with 10,000+ files efficiently:
+
+```javascript
+const { LargeProjectAnalyzer } = require('musubi-sdd');
+
+const analyzer = new LargeProjectAnalyzer('/path/to/large-project', {
+  chunkSize: 1000, // Files per chunk
+  enableGC: true, // Enable garbage collection
+  maxMemoryMB: 2048, // Memory limit
+});
+
+const result = await analyzer.analyze();
+console.log(result.stats);
+// { totalFiles: 100000, totalLines: 5000000, ... }
+```
+
+### Complexity Analyzer
+
+Calculate cyclomatic and cognitive complexity:
+
+```javascript
+const { ComplexityAnalyzer } = require('musubi-sdd');
+
+const analyzer = new ComplexityAnalyzer();
+
+// Cyclomatic complexity
+const cyclomatic = analyzer.calculateCyclomaticComplexity(code, 'javascript');
+
+// Cognitive complexity (SonarSource method)
+const cognitive = analyzer.calculateCognitiveComplexity(code, 'javascript');
+
+// Full analysis with recommendations
+const analysis = analyzer.analyzeCode(code, 'javascript');
+// { cyclomatic, cognitive, severity, recommendations }
+```
+
+### Rust Migration Generator
+
+Analyze C/C++ code for Rust migration:
+
+```javascript
+const { RustMigrationGenerator } = require('musubi-sdd');
+
+const generator = new RustMigrationGenerator('/path/to/c-project');
+const analysis = await generator.analyze();
+
+console.log(analysis.summary);
+// { totalFiles, unsafePatterns, securityComponents, migrationPriorities }
+```
+
+### CodeGraph MCP Integration
+
+Deep code relationship analysis:
+
+```javascript
+const { CodeGraphMCP } = require('musubi-sdd');
+
+const mcp = new CodeGraphMCP('/path/to/project');
+await mcp.indexRepository();
+
+// Call graph
+const callGraph = await mcp.getCallGraph('main', { depth: 3 });
+
+// Impact analysis
+const affected = await mcp.getImpactAnalysis(['src/parser.c']);
+
+// Circular dependencies
+const cycles = await mcp.detectCircularDependencies();
+```
+
+### Hierarchical Reporter
+
+Generate drilldown reports for large projects:
+
+```javascript
+const { HierarchicalReporter } = require('musubi-sdd');
+
+const reporter = new HierarchicalReporter({
+  maxDepth: 4,
+  hotspotThreshold: 25,
+});
+
+const report = reporter.generateReport(analysis);
+// { summary, hierarchy, hotspots, recommendations }
+```
+
+---
+
 ## Related Documentation
 
 - [Quick Start (5 min)](./guides/quick-start-5min.md)
@@ -474,6 +568,6 @@ const compliance = constitution.check(artifacts);
 
 ---
 
-**MUSUBI v3.12.0** - Specification Driven Development for the AI Age
+**MUSUBI v5.6.0** - Specification Driven Development for the AI Age
 
 [GitHub](https://github.com/nahisaho/musubi) | [npm](https://www.npmjs.com/package/musubi-sdd) | [Documentation](https://nahisaho.github.io/musubi)
