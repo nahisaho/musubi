@@ -229,8 +229,8 @@ class ComplexityAnalyzer {
   /**
    * Find end of function
    */
-  findFunctionEnd(lines, startLine, language) {
-    if (language === 'python') {
+  findFunctionEnd(lines, startLine, _language) {
+    if (_language === 'python') {
       const startIndent = lines[startLine]?.match(/^\s*/)?.[0].length || 0;
       for (let i = startLine + 1; i < lines.length; i++) {
         const line = lines[i];
@@ -291,7 +291,7 @@ class ComplexityAnalyzer {
   /**
    * Calculate cognitive complexity (SonarSource method)
    */
-  calculateCognitiveComplexity(code, language) {
+  calculateCognitiveComplexity(code, _language) {
     let complexity = 0;
     let nestingLevel = 0;
 

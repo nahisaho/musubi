@@ -8,7 +8,6 @@
  * - Recommendation generation
  */
 
-const path = require('path');
 const { ComplexityAnalyzer, THRESHOLDS } = require('../../src/analyzers/complexity-analyzer');
 
 describe('ComplexityAnalyzer', () => {

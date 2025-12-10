@@ -84,7 +84,7 @@ describe('RustMigrationGenerator', () => {
 
   describe('Risk Scoring', () => {
     test('should calculate risk scores correctly', async () => {
-      const generator = new RustMigrationGenerator('/tmp/test');
+      const _generator = new RustMigrationGenerator('/tmp/test');
 
       // Mock file analysis
       const mockContent = `

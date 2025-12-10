@@ -16,7 +16,8 @@
 const fs = require('fs-extra');
 const path = require('path');
 const { glob } = require('glob');
-const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
+// Worker threads reserved for future parallel processing
+// const { Worker, isMainThread, parentPort, workerData } = require('worker_threads');
 const os = require('os');
 
 // ============================================================================
@@ -652,7 +653,7 @@ class LargeProjectAnalyzer {
   /**
    * Generate summary from results
    */
-  generateSummary(results) {
+  generateSummary(_results) {
     const files = this.results.files;
 
     this.results.summary = {
