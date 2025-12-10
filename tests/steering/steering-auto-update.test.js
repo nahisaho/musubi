@@ -304,3 +304,281 @@ describe('DEFAULT_RULES', () => {
     }
   });
 });
+
+describe('DEFAULT_RULES conditions and updates', () => {
+  describe('tech-deps-update rule', () => {
+    const rule = DEFAULT_RULES.find(r => r.id === 'tech-deps-update');
+
+    it('should trigger on packageJsonChanged', () => {
+      expect(rule.condition({ packageJsonChanged: true })).toBe(true);
+      expect(rule.condition({ packageJsonChanged: false })).toBe(false);
+    });
+
+    it('should handle new dependencies', async () => {
+      const result = await rule.update({}, { newDependencies: ['lodash', 'express'] });
+      expect(result.changes).toContain('Added dependencies: lodash, express');
+    });
+
+    it('should handle removed dependencies', async () => {
+      const result = await rule.update({}, { removedDependencies: ['moment'] });
+      expect(result.changes).toContain('Removed dependencies: moment');
+    });
+
+    it('should handle updated dependencies', async () => {
+      const result = await rule.update({}, { updatedDependencies: ['jest'] });
+      expect(result.changes).toContain('Updated dependencies: jest');
+    });
+
+    it('should handle empty context', async () => {
+      const result = await rule.update({}, {});
+      expect(result.changes).toEqual([]);
+    });
+  });
+
+  describe('structure-dirs-update rule', () => {
+    const rule = DEFAULT_RULES.find(r => r.id === 'structure-dirs-update');
+
+    it('should trigger on new directories', () => {
+      expect(rule.condition({ newDirectories: ['src/utils'] })).toBe(true);
+      expect(rule.condition({ newDirectories: [] })).toBe(false);
+      expect(rule.condition({})).toBe(false);
+    });
+
+    it('should generate changes for new directories', async () => {
+      const result = await rule.update({}, { newDirectories: ['src/utils', 'lib/helpers'] });
+      expect(result.section).toBe('directories');
+      expect(result.changes).toHaveLength(2);
+      expect(result.changes[0]).toContain('Added directory: src/utils');
+    });
+  });
+
+  describe('structure-files-update rule', () => {
+    const rule = DEFAULT_RULES.find(r => r.id === 'structure-files-update');
+
+    it('should trigger on significant file changes', () => {
+      expect(rule.condition({ significantFileChanges: true })).toBe(true);
+      expect(rule.condition({ significantFileChanges: false })).toBe(false);
+    });
+
+    it('should handle new entry points', async () => {
+      const result = await rule.update({}, { newEntryPoints: ['src/main.js'] });
+      expect(result.changes).toContain('New entry points: src/main.js');
+    });
+
+    it('should handle new modules', async () => {
+      const result = await rule.update({}, { newModules: ['utils', 'helpers'] });
+      expect(result.changes).toContain('New modules: utils, helpers');
+    });
+  });
+
+  describe('product-features-update rule', () => {
+    const rule = DEFAULT_RULES.find(r => r.id === 'product-features-update');
+
+    it('should trigger on feature completion', () => {
+      expect(rule.condition({ featureCompleted: true })).toBe(true);
+      expect(rule.condition({ featureCompleted: false })).toBe(false);
+    });
+
+    it('should generate changes for completed features', async () => {
+      const result = await rule.update({}, { 
+        featureName: 'User Auth',
+        featureDescription: 'JWT-based authentication'
+      });
+      expect(result.section).toBe('features');
+      expect(result.changes).toContain('Completed feature: User Auth');
+      expect(result.changes).toContain('Description: JWT-based authentication');
+    });
+
+    it('should handle feature without description', async () => {
+      const result = await rule.update({}, { featureName: 'Basic Feature' });
+      expect(result.changes).toHaveLength(1);
+    });
+  });
+
+  describe('rules-patterns-update rule', () => {
+    const rule = DEFAULT_RULES.find(r => r.id === 'rules-patterns-update');
+
+    it('should trigger on new patterns', () => {
+      expect(rule.condition({ newPatterns: ['singleton'] })).toBe(true);
+      expect(rule.condition({ newPatterns: [] })).toBe(false);
+      expect(rule.condition({})).toBe(false);
+    });
+
+    it('should generate changes for patterns', async () => {
+      const result = await rule.update({}, { newPatterns: ['factory', 'observer'] });
+      expect(result.section).toBe('patterns');
+      expect(result.changes).toContain('New pattern: factory');
+      expect(result.changes).toContain('New pattern: observer');
+    });
+  });
+});
+
+describe('SteeringAutoUpdate advanced scenarios', () => {
+  let autoUpdate;
+
+  beforeEach(() => {
+    autoUpdate = new SteeringAutoUpdate({ autoSave: false, backup: false });
+  });
+
+  describe('generateChangelog()', () => {
+    it('should generate changelog with date header', () => {
+      const changes = [
+        { changes: ['Added feature A', 'Fixed bug B'] },
+        { changes: ['Updated docs'] }
+      ];
+      
+      const changelog = autoUpdate.generateChangelog(changes);
+      expect(changelog).toContain('###');
+      expect(changelog).toContain('- Added feature A');
+      expect(changelog).toContain('- Fixed bug B');
+      expect(changelog).toContain('- Updated docs');
+    });
+  });
+
+  describe('extractDirectories()', () => {
+    it('should extract directories from content', () => {
+      const content = 'Project uses `src/` and `lib/` directories with `tests/` for testing.';
+      const dirs = autoUpdate.extractDirectories(content);
+      expect(dirs).toContain('src/');
+      expect(dirs).toContain('lib/');
+      expect(dirs).toContain('tests/');
+    });
+
+    it('should return empty array for no directories', () => {
+      const content = 'No directories here.';
+      const dirs = autoUpdate.extractDirectories(content);
+      expect(dirs).toEqual([]);
+    });
+  });
+
+  describe('validateConsistency() with content', () => {
+    it('should detect mismatches between structure and tech', () => {
+      autoUpdate.steering.set(STEERING_TYPE.STRUCTURE, {
+        content: 'Uses `src/` directory',
+      });
+      autoUpdate.steering.set(STEERING_TYPE.TECH, {
+        content: 'References `lib/` directory',
+      });
+
+      const result = autoUpdate.validateConsistency();
+      expect(result.issues.length).toBeGreaterThan(0);
+      expect(result.issues[0].type).toBe('mismatch');
+    });
+  });
+
+  describe('applyPendingChanges()', () => {
+    it('should return empty when no pending changes', async () => {
+      const result = await autoUpdate.applyPendingChanges();
+      expect(result.applied).toEqual([]);
+    });
+  });
+
+  describe('getHistory() with filters', () => {
+    beforeEach(() => {
+      autoUpdate.updates.set('u1', { id: 'u1', trigger: TRIGGER.MANUAL, file: 'a.md', success: true, timestamp: 1000 });
+      autoUpdate.updates.set('u2', { id: 'u2', trigger: TRIGGER.CODE_CHANGE, file: 'b.md', success: false, timestamp: 2000 });
+      autoUpdate.updates.set('u3', { id: 'u3', trigger: TRIGGER.MANUAL, file: 'a.md', success: true, timestamp: 3000 });
+    });
+
+    it('should filter by file', () => {
+      const history = autoUpdate.getHistory({ file: 'a.md' });
+      expect(history).toHaveLength(2);
+    });
+
+    it('should filter by success status', () => {
+      const successHistory = autoUpdate.getHistory({ success: true });
+      expect(successHistory).toHaveLength(2);
+      
+      const failHistory = autoUpdate.getHistory({ success: false });
+      expect(failHistory).toHaveLength(1);
+    });
+
+    it('should combine multiple filters', () => {
+      const history = autoUpdate.getHistory({ trigger: TRIGGER.MANUAL, file: 'a.md' });
+      expect(history).toHaveLength(2);
+    });
+  });
+
+  describe('processTrigger with rule failures', () => {
+    it('should record failed updates when update throws', async () => {
+      autoUpdate.addRule({
+        id: 'failing-rule',
+        trigger: TRIGGER.MANUAL,
+        target: STEERING_TYPE.STRUCTURE,
+        priority: 100,
+        condition: () => true,
+        update: async () => { throw new Error('Update failed'); },
+      });
+
+      autoUpdate.steering.set(STEERING_TYPE.STRUCTURE, {
+        path: 'steering/structure.md',
+        content: '# Structure',
+        parsed: new Map(),
+      });
+
+      const results = await autoUpdate.processTrigger(TRIGGER.MANUAL, {});
+      expect(results[0].success).toBe(false);
+      expect(results[0].error).toBe('Update failed');
+    });
+
+    it('should skip when target not found', async () => {
+      const events = [];
+      autoUpdate.on('rule:skipped', e => events.push(e));
+
+      autoUpdate.addRule({
+        id: 'orphan-rule',
+        trigger: TRIGGER.MANUAL,
+        target: STEERING_TYPE.CUSTOM,
+        condition: () => true,
+        update: async () => ({ changes: ['test'] }),
+      });
+
+      await autoUpdate.processTrigger(TRIGGER.MANUAL, {});
+      expect(events.find(e => e.reason === 'target not found')).toBeDefined();
+    });
+  });
+
+  describe('event emissions', () => {
+    it('should emit rule:added on addRule', () => {
+      const events = [];
+      autoUpdate.on('rule:added', e => events.push(e));
+
+      autoUpdate.addRule({
+        id: 'event-test',
+        trigger: TRIGGER.MANUAL,
+        target: STEERING_TYPE.TECH,
+        condition: () => true,
+        update: async () => ({ changes: [] }),
+      });
+
+      expect(events).toHaveLength(1);
+      expect(events[0].ruleId).toBe('event-test');
+    });
+
+    it('should emit rule:removed on removeRule', () => {
+      const events = [];
+      autoUpdate.on('rule:removed', e => events.push(e));
+
+      autoUpdate.addRule({
+        id: 'to-remove',
+        trigger: TRIGGER.MANUAL,
+        target: STEERING_TYPE.TECH,
+        condition: () => true,
+        update: async () => ({ changes: [] }),
+      });
+
+      autoUpdate.removeRule('to-remove');
+      expect(events).toHaveLength(1);
+      expect(events[0].ruleId).toBe('to-remove');
+    });
+  });
+
+  describe('generateId()', () => {
+    it('should generate unique IDs', () => {
+      const id1 = autoUpdate.generateId();
+      const id2 = autoUpdate.generateId();
+      expect(id1).not.toBe(id2);
+      expect(id1).toContain('trigger-');
+    });
+  });
+});

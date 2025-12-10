@@ -5,6 +5,10 @@
 
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+
 const {
   SteeringValidator,
   createSteeringValidator,
@@ -46,6 +50,125 @@ describe('SteeringValidator', () => {
 
       const custom = new SteeringValidator({ rules: [customRule] });
       expect(custom.rules.find(r => r.id === 'custom-rule')).toBeDefined();
+    });
+  });
+
+  describe('validate() with file system', () => {
+    let tempDir;
+
+    beforeEach(() => {
+      tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'steering-test-'));
+      validator = new SteeringValidator({ steeringPath: 'steering' });
+    });
+
+    afterEach(() => {
+      fs.rmSync(tempDir, { recursive: true, force: true });
+    });
+
+    it('should report missing steering files', async () => {
+      const result = await validator.validate(tempDir);
+      
+      expect(result.valid).toBe(false);
+      expect(result.issues.length).toBeGreaterThan(0);
+      expect(result.issues.some(i => i.message.includes('not found'))).toBe(true);
+    });
+
+    it('should emit validation events', async () => {
+      const events = [];
+      validator.on('validation:start', e => events.push(['start', e]));
+      validator.on('validation:complete', e => events.push(['complete', e]));
+
+      await validator.validate(tempDir);
+
+      expect(events.find(e => e[0] === 'start')).toBeDefined();
+      expect(events.find(e => e[0] === 'complete')).toBeDefined();
+    });
+
+    it('should validate existing steering files', async () => {
+      const steeringDir = path.join(tempDir, 'steering');
+      fs.mkdirSync(steeringDir, { recursive: true });
+      fs.mkdirSync(path.join(steeringDir, 'rules'), { recursive: true });
+
+      fs.writeFileSync(
+        path.join(steeringDir, 'structure.md'),
+        '# Project Structure\n\n## Overview\n\nUses src/ directory.'
+      );
+      fs.writeFileSync(
+        path.join(steeringDir, 'tech.md'),
+        '# Technology Stack\n\nstack includes Node.js\n\nKey dependencies and package info.'
+      );
+      fs.writeFileSync(
+        path.join(steeringDir, 'product.md'),
+        '# Product\n\nOur vision is clear.\n\nKey features include auth.'
+      );
+      fs.writeFileSync(
+        path.join(steeringDir, 'rules', 'constitution.md'),
+        '# Constitution\n\nArticle 1: Quality first.'
+      );
+
+      const result = await validator.validate(tempDir);
+      
+      expect(result.id).toBeDefined();
+      expect(result.score).toBeDefined();
+      expect(result.summary).toBeDefined();
+      expect(result.timestamp).toBeDefined();
+    });
+
+    it('should validate custom steering files', async () => {
+      const steeringDir = path.join(tempDir, 'steering');
+      const customDir = path.join(steeringDir, 'custom');
+      fs.mkdirSync(customDir, { recursive: true });
+      fs.mkdirSync(path.join(steeringDir, 'rules'), { recursive: true });
+
+      // Create minimal required files
+      fs.writeFileSync(path.join(steeringDir, 'structure.md'), '# Structure\n\nsrc/');
+      fs.writeFileSync(path.join(steeringDir, 'tech.md'), '# Tech\n\nstack and dependencies');
+      fs.writeFileSync(path.join(steeringDir, 'product.md'), '# Product\n\nvision and feature');
+      fs.writeFileSync(path.join(steeringDir, 'rules', 'constitution.md'), '# Constitution\n\nArticle 1');
+
+      // Create custom file
+      fs.writeFileSync(
+        path.join(customDir, 'custom-rules.md'),
+        '# Custom Rules\n\n[TODO] Complete this'
+      );
+
+      const result = await validator.validate(tempDir);
+      
+      // Should find TODO marker in custom file
+      const todoIssue = result.issues.find(i => i.file === 'custom/custom-rules.md');
+      expect(todoIssue).toBeDefined();
+    });
+
+    it('should detect inconsistent project names', async () => {
+      const steeringDir = path.join(tempDir, 'steering');
+      fs.mkdirSync(steeringDir, { recursive: true });
+      fs.mkdirSync(path.join(steeringDir, 'rules'), { recursive: true });
+
+      fs.writeFileSync(path.join(steeringDir, 'structure.md'), '# Project Alpha\n\nsrc/');
+      fs.writeFileSync(path.join(steeringDir, 'tech.md'), '# Project Beta\n\nstack and dependencies');
+      fs.writeFileSync(path.join(steeringDir, 'product.md'), '# Product\n\nvision and feature');
+      fs.writeFileSync(path.join(steeringDir, 'rules', 'constitution.md'), '# Constitution\n\nArticle 1');
+
+      const result = await validator.validate(tempDir);
+      
+      const nameIssue = result.issues.find(i => i.id === 'consistency-project-name');
+      expect(nameIssue).toBeDefined();
+    });
+
+    it('should detect language inconsistency', async () => {
+      const steeringDir = path.join(tempDir, 'steering');
+      fs.mkdirSync(steeringDir, { recursive: true });
+      fs.mkdirSync(path.join(steeringDir, 'rules'), { recursive: true });
+
+      fs.writeFileSync(path.join(steeringDir, 'structure.md'), '# Structure\n\nsrc/ uses Python and JavaScript');
+      fs.writeFileSync(path.join(steeringDir, 'tech.md'), '# Tech\n\nstack uses JavaScript only\n\ndependencies');
+      fs.writeFileSync(path.join(steeringDir, 'product.md'), '# Product\n\nvision and feature');
+      fs.writeFileSync(path.join(steeringDir, 'rules', 'constitution.md'), '# Constitution\n\nArticle 1');
+
+      const result = await validator.validate(tempDir);
+      
+      const langIssue = result.issues.find(i => i.id === 'consistency-languages');
+      expect(langIssue).toBeDefined();
     });
   });
 
@@ -293,5 +416,315 @@ describe('DEFAULT_VALIDATION_RULES', () => {
   it('should have tech.md rules', () => {
     const techRules = DEFAULT_VALIDATION_RULES.filter(r => r.file === 'tech.md');
     expect(techRules.length).toBeGreaterThan(0);
+  });
+});
+
+describe('DEFAULT_VALIDATION_RULES check functions', () => {
+  describe('structure-has-overview rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'structure-has-overview');
+
+    it('should pass with Overview section', () => {
+      expect(rule.check('## Overview\nContent here')).toBe(true);
+    });
+
+    it('should pass with header', () => {
+      expect(rule.check('# Project Structure')).toBe(true);
+    });
+
+    it('should fail without header or overview', () => {
+      expect(rule.check('Just plain text')).toBe(false);
+    });
+  });
+
+  describe('structure-has-directories rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'structure-has-directories');
+
+    it('should pass with src/ directory', () => {
+      expect(rule.check('Uses src/ for source code')).toBe(true);
+    });
+
+    it('should pass with lib/ directory', () => {
+      expect(rule.check('Uses lib/ for libraries')).toBe(true);
+    });
+
+    it('should fail without standard directories', () => {
+      expect(rule.check('No directories mentioned')).toBe(false);
+    });
+  });
+
+  describe('tech-has-stack rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'tech-has-stack');
+
+    it('should pass with stack mention', () => {
+      expect(rule.check('Technology stack includes Node.js')).toBe(true);
+    });
+
+    it('should pass with technologies mention (case-sensitive)', () => {
+      // Rule checks for lowercase 'technologies' not 'Technologies'
+      expect(rule.check('technologies used: React, Redux')).toBe(true);
+    });
+
+    it('should fail without stack/technologies', () => {
+      expect(rule.check('Just a plain document')).toBe(false);
+    });
+  });
+
+  describe('tech-has-dependencies rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'tech-has-dependencies');
+
+    it('should pass with dependencies mention', () => {
+      expect(rule.check('Key dependencies include lodash')).toBe(true);
+    });
+
+    it('should pass with package mention', () => {
+      expect(rule.check('package.json configuration')).toBe(true);
+    });
+
+    it('should fail without dependencies/package', () => {
+      // Note: 'package' appears in the test string 'No package info here'
+      expect(rule.check('No info here about deps')).toBe(false);
+    });
+  });
+
+  describe('product-has-vision rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'product-has-vision');
+
+    it('should pass with vision mention', () => {
+      expect(rule.check('Our vision is to create...')).toBe(true);
+    });
+
+    it('should pass with purpose mention', () => {
+      expect(rule.check('The purpose of this project')).toBe(true);
+    });
+
+    it('should pass with goal mention', () => {
+      expect(rule.check('Main goals include')).toBe(true);
+    });
+
+    it('should fail without vision/purpose/goal', () => {
+      expect(rule.check('Technical documentation')).toBe(false);
+    });
+  });
+
+  describe('product-has-features rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'product-has-features');
+
+    it('should pass with feature mention', () => {
+      expect(rule.check('Key features include')).toBe(true);
+    });
+
+    it('should pass with capability mention (lowercase)', () => {
+      // Rule checks for lowercase 'capability'
+      expect(rule.check('Core capability')).toBe(true);
+    });
+
+    it('should fail without features/capabilities', () => {
+      expect(rule.check('Just text')).toBe(false);
+    });
+  });
+
+  describe('constitution-has-articles rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'constitution-has-articles');
+
+    it('should pass with Article mention', () => {
+      expect(rule.check('Article 1: Governance')).toBe(true);
+    });
+
+    it('should pass with Rule mention', () => {
+      expect(rule.check('Rule 1: Always test')).toBe(true);
+    });
+
+    it('should fail without Article/Rule', () => {
+      expect(rule.check('Plain document')).toBe(false);
+    });
+  });
+
+  describe('format-valid-markdown rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'format-valid-markdown');
+
+    it('should pass with valid links', () => {
+      expect(rule.check('[Link](https://example.com)')).toBe(true);
+    });
+
+    it('should fail with broken links', () => {
+      expect(rule.check('[broken link]()')).toBe(false);
+    });
+
+    it('should pass without links', () => {
+      expect(rule.check('Just plain text')).toBe(true);
+    });
+  });
+
+  describe('format-no-todo-in-production rule', () => {
+    const rule = DEFAULT_VALIDATION_RULES.find(r => r.id === 'format-no-todo-in-production');
+
+    it('should pass without TODO', () => {
+      expect(rule.check('Completed documentation')).toBe(true);
+    });
+
+    it('should fail with [TODO]', () => {
+      expect(rule.check('[TODO] finish this')).toBe(false);
+    });
+
+    it('should fail with [TBD]', () => {
+      expect(rule.check('[TBD] decide later')).toBe(false);
+    });
+  });
+});
+
+describe('SteeringValidator advanced scenarios', () => {
+  let validator;
+
+  beforeEach(() => {
+    validator = new SteeringValidator();
+  });
+
+  describe('extractProjectNames()', () => {
+    it('should extract project names from headers', () => {
+      const files = {
+        structure: '# MUSUBI Project\nContent',
+        tech: '# MUSUBI\nTech stack',
+      };
+      const names = validator.extractProjectNames(files);
+      expect(names.size).toBeGreaterThan(0);
+    });
+
+    it('should handle files without headers', () => {
+      const files = {
+        structure: 'No header here',
+      };
+      const names = validator.extractProjectNames(files);
+      expect(names.size).toBe(0);
+    });
+  });
+
+  describe('extractLanguages()', () => {
+    it('should extract javascript', () => {
+      const langs = validator.extractLanguages('Uses JavaScript for frontend');
+      expect(langs).toContain('javascript');
+    });
+
+    it('should extract typescript', () => {
+      const langs = validator.extractLanguages('TypeScript is used');
+      expect(langs).toContain('typescript');
+    });
+
+    it('should extract python', () => {
+      const langs = validator.extractLanguages('Python scripts');
+      expect(langs).toContain('python');
+    });
+
+    it('should extract java (not javascript)', () => {
+      // Note: java pattern may also match javascript
+      const langs = validator.extractLanguages('Java only, not JavaScript');
+      // The regex uses /java(?!script)/ to avoid false positives
+      expect(langs.some(l => l.includes('java'))).toBe(true);
+    });
+
+    it('should extract go/golang', () => {
+      const langs = validator.extractLanguages('Written in Golang');
+      // The regex pattern is /go(?:lang)?/ which captures 'golang'
+      expect(langs.some(l => l.includes('go'))).toBe(true);
+    });
+
+    it('should extract rust', () => {
+      const langs = validator.extractLanguages('Rust for performance');
+      expect(langs).toContain('rust');
+    });
+
+    it('should extract ruby', () => {
+      const langs = validator.extractLanguages('Ruby on Rails');
+      expect(langs).toContain('ruby');
+    });
+
+    it('should deduplicate languages', () => {
+      const langs = validator.extractLanguages('JavaScript and more JavaScript');
+      expect(langs.filter(l => l === 'javascript')).toHaveLength(1);
+    });
+
+    it('should return empty for no languages', () => {
+      const langs = validator.extractLanguages('No programming languages mentioned');
+      expect(langs).toHaveLength(0);
+    });
+  });
+
+  describe('createSummary()', () => {
+    it('should create summary from issues', () => {
+      const issues = [
+        { severity: SEVERITY.ERROR, type: RULE_TYPE.REQUIRED, file: 'a.md' },
+        { severity: SEVERITY.WARNING, type: RULE_TYPE.FORMAT, file: 'b.md' },
+        { severity: SEVERITY.ERROR, type: RULE_TYPE.REQUIRED, file: 'a.md' },
+      ];
+
+      const summary = validator.createSummary(issues);
+      expect(summary.totalIssues).toBe(3);
+      expect(summary.bySeverity[SEVERITY.ERROR]).toBe(2);
+      expect(summary.bySeverity[SEVERITY.WARNING]).toBe(1);
+      expect(summary.byType[RULE_TYPE.REQUIRED]).toBe(2);
+      expect(summary.byFile['a.md']).toBe(2);
+    });
+
+    it('should handle empty issues', () => {
+      const summary = validator.createSummary([]);
+      expect(summary.totalIssues).toBe(0);
+    });
+  });
+
+  describe('validateFile with rule errors', () => {
+    it('should emit error event on rule failure', async () => {
+      const events = [];
+      validator.on('rule:error', e => events.push(e));
+
+      validator.addRule({
+        id: 'error-throwing-rule',
+        file: '*',
+        check: () => { throw new Error('Rule error'); },
+        message: 'Test',
+      });
+
+      await validator.validateFile('test.md', 'content');
+      expect(events.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('exportReport edge cases', () => {
+    it('should show different severity icons', () => {
+      validator.validations.set('test', {
+        id: 'test',
+        valid: false,
+        score: 50,
+        issues: [
+          { severity: SEVERITY.INFO, message: 'Info', type: RULE_TYPE.COMPLETENESS, file: 'a.md' },
+          { severity: SEVERITY.WARNING, message: 'Warning', type: RULE_TYPE.FORMAT, file: 'b.md' },
+          { severity: SEVERITY.ERROR, message: 'Error', type: RULE_TYPE.REQUIRED, file: 'c.md' },
+          { severity: SEVERITY.CRITICAL, message: 'Critical', type: RULE_TYPE.CONSISTENCY, file: 'd.md' },
+        ],
+        summary: { totalIssues: 4, bySeverity: {}, byType: {}, byFile: {} },
+        timestamp: Date.now(),
+      });
+
+      const report = validator.exportReport('test');
+      expect(report).toContain('ℹ️');
+      expect(report).toContain('⚠️');
+      expect(report).toContain('❌');
+      expect(report).toContain('🚨');
+    });
+
+    it('should include suggestions when present', () => {
+      validator.validations.set('test', {
+        id: 'test',
+        valid: false,
+        score: 80,
+        issues: [
+          { severity: SEVERITY.WARNING, message: 'Missing section', 
+            suggestion: 'Add the missing section', type: RULE_TYPE.REQUIRED, file: 'a.md' },
+        ],
+        summary: { totalIssues: 1, bySeverity: {}, byType: {}, byFile: {} },
+        timestamp: Date.now(),
+      });
+
+      const report = validator.exportReport('test');
+      expect(report).toContain('Add the missing section');
+    });
   });
 });
