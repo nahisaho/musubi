@@ -92,6 +92,152 @@ describe('ReplanningEngine', () => {
       expect(engine.generator).toBeInstanceOf(AlternativeGenerator);
       expect(engine.history).toBeInstanceOf(ReplanHistory);
     });
+
+    it('should handle LLM provider creation error gracefully', () => {
+      const engineWithBadProvider = new ReplanningEngine(null, {
+        config: {
+          llmProvider: { provider: 'invalid-provider' },
+        },
+      });
+      expect(engineWithBadProvider.llmProvider).toBeDefined();
+    });
+
+    it('should setup monitor events with integration config', () => {
+      const integrationEngine = new ReplanningEngine(null, {
+        llmProvider: mockLLM,
+        config: {
+          integration: {
+            emitEvents: true,
+            eventPrefix: 'test',
+          },
+        },
+      });
+      expect(integrationEngine.config.integration.emitEvents).toBe(true);
+    });
+  });
+
+  describe('Execute with Replanning', () => {
+    it('should execute plan with replanning disabled', async () => {
+      const mockEngine = {
+        execute: jest.fn().mockResolvedValue({ success: true }),
+      };
+      const disabledEngine = new ReplanningEngine(mockEngine, {
+        llmProvider: mockLLM,
+        config: { enabled: false },
+      });
+
+      const plan = { tasks: [{ skill: 'test' }] };
+      await disabledEngine.executeWithReplanning(plan);
+
+      expect(mockEngine.execute).toHaveBeenCalled();
+    });
+
+    it('should execute plan with replanning enabled', async () => {
+      const plan = {
+        tasks: [{ skill: 'task1', name: 'Task 1' }],
+      };
+
+      const result = await engine.executeWithReplanning(plan);
+
+      expect(result.planId).toBeDefined();
+      expect(result.status).toBe('success');
+      expect(result.completed.length).toBe(1);
+    });
+
+    it('should handle task failure during execution', async () => {
+      // Create engine that fails on first task
+      const failingEngine = new ReplanningEngine(null, {
+        llmProvider: mockLLM,
+        config: {
+          enabled: true,
+          triggers: { failureThreshold: 1 },
+          humanInLoop: { enabled: false },
+        },
+      });
+
+      // Override executeTask to fail
+      failingEngine.executeTask = jest.fn().mockRejectedValue(new Error('Task failed'));
+
+      const plan = {
+        tasks: [{ skill: 'failing-task', name: 'Failing Task' }],
+      };
+
+      const result = await failingEngine.executeWithReplanning(plan);
+
+      expect(result.failed.length).toBeGreaterThan(0);
+    });
+
+    it('should throw error when delegating without engine', async () => {
+      const noEngineInstance = new ReplanningEngine(null, {
+        llmProvider: mockLLM,
+        config: { enabled: false },
+      });
+
+      await expect(
+        noEngineInstance.executeWithReplanning({ tasks: [] })
+      ).rejects.toThrow('No orchestration engine available');
+    });
+
+    it('should track execution context during plan execution', async () => {
+      const plan = {
+        tasks: [{ skill: 'task1' }, { skill: 'task2' }],
+      };
+
+      await engine.executeWithReplanning(plan);
+
+      expect(engine.planVersion).toBeGreaterThanOrEqual(0);
+    });
+  });
+
+  describe('Manual Replan', () => {
+    it('should throw when replanning without active execution', async () => {
+      await expect(engine.replan('Test reason')).rejects.toThrow(
+        'Cannot replan when not executing'
+      );
+    });
+  });
+
+  describe('LLM Availability', () => {
+    it('should check LLM availability', async () => {
+      const available = await engine.isLLMAvailable();
+      expect(typeof available).toBe('boolean');
+    });
+  });
+
+  describe('Plan State', () => {
+    it('should return null when no active plan', () => {
+      expect(engine.getCurrentPlan()).toBeNull();
+    });
+
+    it('should return plan with context when active', async () => {
+      engine.currentPlan = { id: 'test-plan', tasks: [] };
+      engine.planVersion = 1;
+      engine.executionContext = { pending: [] };
+
+      const plan = engine.getCurrentPlan();
+
+      expect(plan.id).toBe('test-plan');
+      expect(plan.version).toBe(1);
+      expect(plan.context).toBeDefined();
+    });
+  });
+
+  describe('Plan History', () => {
+    it('should get plan history with snapshots', () => {
+      engine.currentPlan = { id: 'test-plan' };
+      engine.history.recordSnapshot('test-plan', { tasks: [] }, 'Test');
+
+      const history = engine.getPlanHistory();
+
+      expect(history.snapshots).toBeDefined();
+      expect(history.metrics).toBeDefined();
+    });
+
+    it('should get plan history without active plan', () => {
+      const history = engine.getPlanHistory();
+
+      expect(history.snapshots).toEqual([]);
+    });
   });
 
   describe('Plan Normalization', () => {

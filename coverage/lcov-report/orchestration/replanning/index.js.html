@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>0/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -145,7 +145,11 @@
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
 <a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,32 +157,36 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,9 +194,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -235,45 +243,49 @@
 &nbsp;
 'use strict';
 &nbsp;
-const { ReplanningEngine } = <span class="cstat-no" title="statement not covered" >require('./replanning-engine');</span>
-const { PlanMonitor } = <span class="cstat-no" title="statement not covered" >require('./plan-monitor');</span>
-const { PlanEvaluator } = <span class="cstat-no" title="statement not covered" >require('./plan-evaluator');</span>
-const { AlternativeGenerator, ContextAnalyzer, ConfidenceScorer } = <span class="cstat-no" title="statement not covered" >require('./alternative-generator');</span>
-const { ReplanHistory } = <span class="cstat-no" title="statement not covered" >require('./replan-history');</span>
+const { ReplanningEngine } = require('./replanning-engine');
+const { PlanMonitor } = require('./plan-monitor');
+const { PlanEvaluator } = require('./plan-evaluator');
+const {
+  AlternativeGenerator,
+  ContextAnalyzer,
+  ConfidenceScorer,
+} = require('./alternative-generator');
+const { ReplanHistory } = require('./replan-history');
 const {
   ReplanTrigger,
   ReplanDecision,
   defaultReplanningConfig,
   mergeConfig,
-  validateConfig
-} = <span class="cstat-no" title="statement not covered" >require('./config');</span>
+  validateConfig,
+} = require('./config');
 &nbsp;
 // v3.6.0+ Advanced Replanning Components
-const { 
-  ProactivePathOptimizer, 
-  PathAnalyzer, 
-  OptimizationStrategy 
-} = <span class="cstat-no" title="statement not covered" >require('./proactive-path-optimizer');</span>
-const { 
-  GoalProgressTracker, 
-  ProgressCalculator, 
-  MilestoneManager, 
-  DeviationDetector, 
-  ProjectionEngine 
-} = <span class="cstat-no" title="statement not covered" >require('./goal-progress-tracker');</span>
-const { 
-  AdaptiveGoalModifier, 
-  ImpactAnalyzer, 
-  ModificationStrategy, 
+const {
+  ProactivePathOptimizer,
+  PathAnalyzer,
+  OptimizationStrategy,
+} = require('./proactive-path-optimizer');
+const {
+  GoalProgressTracker,
+  ProgressCalculator,
+  MilestoneManager,
+  DeviationDetector,
+  ProjectionEngine,
+} = require('./goal-progress-tracker');
+const {
+  AdaptiveGoalModifier,
+  ImpactAnalyzer,
+  ModificationStrategy,
   ModificationHistoryManager,
   ModificationReason,
-  ModificationType 
-} = <span class="cstat-no" title="statement not covered" >require('./adaptive-goal-modifier');</span>
+  ModificationType,
+} = require('./adaptive-goal-modifier');
 &nbsp;
-<span class="cstat-no" title="statement not covered" >module.exports = {</span>
+module.exports = {
   // Core Engine
   ReplanningEngine,
-  
+&nbsp;
   // Components
   PlanMonitor,
   PlanEvaluator,
@@ -281,7 +293,7 @@ const {
   ContextAnalyzer,
   ConfidenceScorer,
   ReplanHistory,
-  
+&nbsp;
   // Configuration
   ReplanTrigger,
   ReplanDecision,
@@ -307,7 +319,7 @@ const {
   ModificationStrategy,
   ModificationHistoryManager,
   ModificationReason,
-  ModificationType
+  ModificationType,
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -316,7 +328,7 @@ const {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-12-08T23:40:43.175Z
+                at 2025-12-10T20:19:14.115Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

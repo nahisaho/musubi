@@ -37,4 +37,4 @@ npm run deploy
 
 ---
 
-*Customize this template with your actual workflows*
+_Customize this template with your actual workflows_

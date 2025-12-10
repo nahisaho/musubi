@@ -1,136 +1,8 @@
 # Architecture Decisions
 
-## [2025-12-10] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.1.0) differs from package.json (5.6.0)
-- New languages detected: javascript, typescript, python, ruby
-- New frameworks detected: Express, Jest, ESLint, Prettier
-- Update tech.md with new frameworks: Express, Jest, ESLint, Prettier
-- New directories detected: website, tests, templates, storage, steering, src, packages, orchestrator, docs, coverage
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-12-07] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (2.2.0) differs from package.json (3.0.0)
-- New frameworks detected: Express
-- Update tech.md with new frameworks: Express
-- New directories detected: tests, templates, storage, steering, packages, orchestrator, docs, coverage, bin
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-12-07] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (1.1.2) differs from package.json (2.2.0)
-- Languages no longer used: rust, go, java, ruby
-- New directories detected: tests, templates, storage, steering, orchestrator, docs, coverage, bin, References
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-23] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.9.6) differs from package.json (1.1.2)
-- New directories detected: tests, templates, storage, steering, orchestrator, docs, coverage, bin, References
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-23] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.8.8) differs from package.json (0.9.6)
-- New directories detected: tests, templates, storage, steering, orchestrator, docs, coverage, bin, References
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-23] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.7.0) differs from package.json (0.8.8)
-- New directories detected: tests, templates, storage, steering, orchestrator, docs, coverage, bin, References
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-22] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.6.1) differs from package.json (0.7.0)
-- New directories detected: tests, templates, storage, steering, orchestrator, docs, coverage, bin, References
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-22] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.5.1) differs from package.json (0.6.1)
-- New languages detected: javascript, typescript, python, rust, go, java, ruby
-- New directories detected: tests, templates, storage, steering, orchestrator, docs, coverage, bin, References
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-22] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.5.0) differs from package.json (0.5.1)
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
-## [2025-11-22] Steering Sync - Automatic Update
-
-**Decision**: Synchronized steering documents with codebase changes
-
-**Changes Detected**:
-- Version in project.yml (0.4.1) differs from package.json (0.5.0)
-- Languages no longer used: javascript
-- New frameworks detected: ESLint, Prettier
-- Update tech.md with new frameworks: ESLint, Prettier
-
-**Action**: Automatically updated steering documents via `musubi-sync`
-
----
-
 Architecture Decision Records (ADRs) for musubi-sdd.
 
-## [2025-11-22] Initial Project Analysis
+## [2025-12-10] Initial Project Analysis
 
 **Decision**: Onboarded to MUSUBI SDD
 
@@ -153,7 +25,8 @@ Architecture Decision Records (ADRs) for musubi-sdd.
 
 **Rationale**: Why this approach was chosen
 
-**Impact**: 
+**Impact**:
+
 - Positive: Benefits gained
 - Negative: Trade-offs accepted
 
