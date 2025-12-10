@@ -380,10 +380,13 @@ describe('DEFAULT_RULES conditions and updates', () => {
     });
 
     it('should generate changes for completed features', async () => {
-      const result = await rule.update({}, { 
-        featureName: 'User Auth',
-        featureDescription: 'JWT-based authentication'
-      });
+      const result = await rule.update(
+        {},
+        {
+          featureName: 'User Auth',
+          featureDescription: 'JWT-based authentication',
+        }
+      );
       expect(result.section).toBe('features');
       expect(result.changes).toContain('Completed feature: User Auth');
       expect(result.changes).toContain('Description: JWT-based authentication');
@@ -424,9 +427,9 @@ describe('SteeringAutoUpdate advanced scenarios', () => {
     it('should generate changelog with date header', () => {
       const changes = [
         { changes: ['Added feature A', 'Fixed bug B'] },
-        { changes: ['Updated docs'] }
+        { changes: ['Updated docs'] },
       ];
-      
+
       const changelog = autoUpdate.generateChangelog(changes);
       expect(changelog).toContain('###');
       expect(changelog).toContain('- Added feature A');
@@ -475,9 +478,27 @@ describe('SteeringAutoUpdate advanced scenarios', () => {
 
   describe('getHistory() with filters', () => {
     beforeEach(() => {
-      autoUpdate.updates.set('u1', { id: 'u1', trigger: TRIGGER.MANUAL, file: 'a.md', success: true, timestamp: 1000 });
-      autoUpdate.updates.set('u2', { id: 'u2', trigger: TRIGGER.CODE_CHANGE, file: 'b.md', success: false, timestamp: 2000 });
-      autoUpdate.updates.set('u3', { id: 'u3', trigger: TRIGGER.MANUAL, file: 'a.md', success: true, timestamp: 3000 });
+      autoUpdate.updates.set('u1', {
+        id: 'u1',
+        trigger: TRIGGER.MANUAL,
+        file: 'a.md',
+        success: true,
+        timestamp: 1000,
+      });
+      autoUpdate.updates.set('u2', {
+        id: 'u2',
+        trigger: TRIGGER.CODE_CHANGE,
+        file: 'b.md',
+        success: false,
+        timestamp: 2000,
+      });
+      autoUpdate.updates.set('u3', {
+        id: 'u3',
+        trigger: TRIGGER.MANUAL,
+        file: 'a.md',
+        success: true,
+        timestamp: 3000,
+      });
     });
 
     it('should filter by file', () => {
@@ -488,7 +509,7 @@ describe('SteeringAutoUpdate advanced scenarios', () => {
     it('should filter by success status', () => {
       const successHistory = autoUpdate.getHistory({ success: true });
       expect(successHistory).toHaveLength(2);
-      
+
       const failHistory = autoUpdate.getHistory({ success: false });
       expect(failHistory).toHaveLength(1);
     });
@@ -507,7 +528,9 @@ describe('SteeringAutoUpdate advanced scenarios', () => {
         target: STEERING_TYPE.STRUCTURE,
         priority: 100,
         condition: () => true,
-        update: async () => { throw new Error('Update failed'); },
+        update: async () => {
+          throw new Error('Update failed');
+        },
       });
 
       autoUpdate.steering.set(STEERING_TYPE.STRUCTURE, {

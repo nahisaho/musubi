@@ -173,9 +173,9 @@ describe('ReplanningEngine', () => {
         config: { enabled: false },
       });
 
-      await expect(
-        noEngineInstance.executeWithReplanning({ tasks: [] })
-      ).rejects.toThrow('No orchestration engine available');
+      await expect(noEngineInstance.executeWithReplanning({ tasks: [] })).rejects.toThrow(
+        'No orchestration engine available'
+      );
     });
 
     it('should track execution context during plan execution', async () => {

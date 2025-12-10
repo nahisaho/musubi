@@ -330,10 +330,7 @@ describe('MCPDiscovery', () => {
 
     it('should load direct array format', async () => {
       const configPath = path.join(tempDir, 'servers.json');
-      fs.writeFileSync(
-        configPath,
-        JSON.stringify([{ name: 'direct-server', command: 'cmd' }])
-      );
+      fs.writeFileSync(configPath, JSON.stringify([{ name: 'direct-server', command: 'cmd' }]));
 
       await discovery.loadConfigFile(configPath, 'direct');
 

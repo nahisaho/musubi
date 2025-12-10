@@ -67,7 +67,7 @@ describe('SteeringValidator', () => {
 
     it('should report missing steering files', async () => {
       const result = await validator.validate(tempDir);
-      
+
       expect(result.valid).toBe(false);
       expect(result.issues.length).toBeGreaterThan(0);
       expect(result.issues.some(i => i.message.includes('not found'))).toBe(true);
@@ -107,7 +107,7 @@ describe('SteeringValidator', () => {
       );
 
       const result = await validator.validate(tempDir);
-      
+
       expect(result.id).toBeDefined();
       expect(result.score).toBeDefined();
       expect(result.summary).toBeDefined();
@@ -124,7 +124,10 @@ describe('SteeringValidator', () => {
       fs.writeFileSync(path.join(steeringDir, 'structure.md'), '# Structure\n\nsrc/');
       fs.writeFileSync(path.join(steeringDir, 'tech.md'), '# Tech\n\nstack and dependencies');
       fs.writeFileSync(path.join(steeringDir, 'product.md'), '# Product\n\nvision and feature');
-      fs.writeFileSync(path.join(steeringDir, 'rules', 'constitution.md'), '# Constitution\n\nArticle 1');
+      fs.writeFileSync(
+        path.join(steeringDir, 'rules', 'constitution.md'),
+        '# Constitution\n\nArticle 1'
+      );
 
       // Create custom file
       fs.writeFileSync(
@@ -133,7 +136,7 @@ describe('SteeringValidator', () => {
       );
 
       const result = await validator.validate(tempDir);
-      
+
       // Should find TODO marker in custom file
       const todoIssue = result.issues.find(i => i.file === 'custom/custom-rules.md');
       expect(todoIssue).toBeDefined();
@@ -145,12 +148,18 @@ describe('SteeringValidator', () => {
       fs.mkdirSync(path.join(steeringDir, 'rules'), { recursive: true });
 
       fs.writeFileSync(path.join(steeringDir, 'structure.md'), '# Project Alpha\n\nsrc/');
-      fs.writeFileSync(path.join(steeringDir, 'tech.md'), '# Project Beta\n\nstack and dependencies');
+      fs.writeFileSync(
+        path.join(steeringDir, 'tech.md'),
+        '# Project Beta\n\nstack and dependencies'
+      );
       fs.writeFileSync(path.join(steeringDir, 'product.md'), '# Product\n\nvision and feature');
-      fs.writeFileSync(path.join(steeringDir, 'rules', 'constitution.md'), '# Constitution\n\nArticle 1');
+      fs.writeFileSync(
+        path.join(steeringDir, 'rules', 'constitution.md'),
+        '# Constitution\n\nArticle 1'
+      );
 
       const result = await validator.validate(tempDir);
-      
+
       const nameIssue = result.issues.find(i => i.id === 'consistency-project-name');
       expect(nameIssue).toBeDefined();
     });
@@ -160,13 +169,22 @@ describe('SteeringValidator', () => {
       fs.mkdirSync(steeringDir, { recursive: true });
       fs.mkdirSync(path.join(steeringDir, 'rules'), { recursive: true });
 
-      fs.writeFileSync(path.join(steeringDir, 'structure.md'), '# Structure\n\nsrc/ uses Python and JavaScript');
-      fs.writeFileSync(path.join(steeringDir, 'tech.md'), '# Tech\n\nstack uses JavaScript only\n\ndependencies');
+      fs.writeFileSync(
+        path.join(steeringDir, 'structure.md'),
+        '# Structure\n\nsrc/ uses Python and JavaScript'
+      );
+      fs.writeFileSync(
+        path.join(steeringDir, 'tech.md'),
+        '# Tech\n\nstack uses JavaScript only\n\ndependencies'
+      );
       fs.writeFileSync(path.join(steeringDir, 'product.md'), '# Product\n\nvision and feature');
-      fs.writeFileSync(path.join(steeringDir, 'rules', 'constitution.md'), '# Constitution\n\nArticle 1');
+      fs.writeFileSync(
+        path.join(steeringDir, 'rules', 'constitution.md'),
+        '# Constitution\n\nArticle 1'
+      );
 
       const result = await validator.validate(tempDir);
-      
+
       const langIssue = result.issues.find(i => i.id === 'consistency-languages');
       expect(langIssue).toBeDefined();
     });
@@ -678,7 +696,9 @@ describe('SteeringValidator advanced scenarios', () => {
       validator.addRule({
         id: 'error-throwing-rule',
         file: '*',
-        check: () => { throw new Error('Rule error'); },
+        check: () => {
+          throw new Error('Rule error');
+        },
         message: 'Test',
       });
 
@@ -697,7 +717,12 @@ describe('SteeringValidator advanced scenarios', () => {
           { severity: SEVERITY.INFO, message: 'Info', type: RULE_TYPE.COMPLETENESS, file: 'a.md' },
           { severity: SEVERITY.WARNING, message: 'Warning', type: RULE_TYPE.FORMAT, file: 'b.md' },
           { severity: SEVERITY.ERROR, message: 'Error', type: RULE_TYPE.REQUIRED, file: 'c.md' },
-          { severity: SEVERITY.CRITICAL, message: 'Critical', type: RULE_TYPE.CONSISTENCY, file: 'd.md' },
+          {
+            severity: SEVERITY.CRITICAL,
+            message: 'Critical',
+            type: RULE_TYPE.CONSISTENCY,
+            file: 'd.md',
+          },
         ],
         summary: { totalIssues: 4, bySeverity: {}, byType: {}, byFile: {} },
         timestamp: Date.now(),
@@ -716,8 +741,13 @@ describe('SteeringValidator advanced scenarios', () => {
         valid: false,
         score: 80,
         issues: [
-          { severity: SEVERITY.WARNING, message: 'Missing section', 
-            suggestion: 'Add the missing section', type: RULE_TYPE.REQUIRED, file: 'a.md' },
+          {
+            severity: SEVERITY.WARNING,
+            message: 'Missing section',
+            suggestion: 'Add the missing section',
+            type: RULE_TYPE.REQUIRED,
+            file: 'a.md',
+          },
         ],
         summary: { totalIssues: 1, bySeverity: {}, byType: {}, byFile: {} },
         timestamp: Date.now(),

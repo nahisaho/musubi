@@ -1,9 +1,9 @@
 /**
  * Parallel Execution Benchmark Tests
- * 
+ *
  * Tests to verify that parallel execution (Swarm pattern) achieves
  * at least 30% time reduction compared to sequential execution.
- * 
+ *
  * Phase 3 Acceptance Criteria verification
  */
 
@@ -20,7 +20,7 @@ const {
 describe('Parallel Execution Benchmark', () => {
   let engine;
   const TASK_DURATION = 50; // ms per task (simulated)
-  
+
   beforeEach(() => {
     engine = new OrchestrationEngine({
       enableHumanValidation: false,
@@ -33,14 +33,14 @@ describe('Parallel Execution Benchmark', () => {
     // Register mock skills for benchmarking
     for (let i = 1; i <= 10; i++) {
       const skillName = `benchmark-task-${i}`;
-      engine.registerSkill(skillName, async (input) => {
+      engine.registerSkill(skillName, async input => {
         await new Promise(resolve => setTimeout(resolve, TASK_DURATION));
-        return { 
-          success: true, 
+        return {
+          success: true,
           taskName: skillName,
           input,
           duration: TASK_DURATION,
-          timestamp: Date.now()
+          timestamp: Date.now(),
         };
       });
     }
@@ -59,7 +59,7 @@ describe('Parallel Execution Benchmark', () => {
       const tasks = skills.map((skill, i) => ({
         id: `task-${i + 1}`,
         skill,
-        input: { index: i + 1 }
+        input: { index: i + 1 },
       }));
 
       // Sequential execution
@@ -67,8 +67,8 @@ describe('Parallel Execution Benchmark', () => {
       const seqResult = await engine.execute(PatternType.SEQUENTIAL, {
         input: {
           skills,
-          initialInput: { source: 'sequential-benchmark' }
-        }
+          initialInput: { source: 'sequential-benchmark' },
+        },
       });
       const seqDuration = Date.now() - seqStart;
 
@@ -77,8 +77,8 @@ describe('Parallel Execution Benchmark', () => {
       const parResult = await engine.execute(PatternType.SWARM, {
         input: {
           tasks,
-          strategy: 'all'
-        }
+          strategy: 'all',
+        },
       });
       const parDuration = Date.now() - parStart;
 
@@ -101,7 +101,7 @@ describe('Parallel Execution Benchmark', () => {
       const tasks = skills.map((skill, i) => ({
         id: `task-${i + 1}`,
         skill,
-        input: { index: i + 1 }
+        input: { index: i + 1 },
       }));
 
       // Sequential execution
@@ -109,8 +109,8 @@ describe('Parallel Execution Benchmark', () => {
       await engine.execute(PatternType.SEQUENTIAL, {
         input: {
           skills,
-          initialInput: { source: 'sequential-benchmark' }
-        }
+          initialInput: { source: 'sequential-benchmark' },
+        },
       });
       const seqDuration = Date.now() - seqStart;
 
@@ -119,8 +119,8 @@ describe('Parallel Execution Benchmark', () => {
       await engine.execute(PatternType.SWARM, {
         input: {
           tasks,
-          strategy: 'all'
-        }
+          strategy: 'all',
+        },
       });
       const parDuration = Date.now() - parStart;
 
@@ -136,13 +136,13 @@ describe('Parallel Execution Benchmark', () => {
 
     it('should scale performance with varying task counts', async () => {
       const results = [];
-      
+
       for (const taskCount of [3, 5, 7]) {
         const skills = Array.from({ length: taskCount }, (_, i) => `benchmark-task-${i + 1}`);
         const tasks = skills.map((skill, i) => ({
           id: `task-${i + 1}`,
           skill,
-          input: { index: i + 1 }
+          input: { index: i + 1 },
         }));
 
         // Sequential
@@ -150,8 +150,8 @@ describe('Parallel Execution Benchmark', () => {
         await engine.execute(PatternType.SEQUENTIAL, {
           input: {
             skills,
-            initialInput: {}
-          }
+            initialInput: {},
+          },
         });
         const seqDuration = Date.now() - seqStart;
 
@@ -160,8 +160,8 @@ describe('Parallel Execution Benchmark', () => {
         await engine.execute(PatternType.SWARM, {
           input: {
             tasks,
-            strategy: 'all'
-          }
+            strategy: 'all',
+          },
         });
         const parDuration = Date.now() - parStart;
 
@@ -173,7 +173,9 @@ describe('Parallel Execution Benchmark', () => {
       console.log('   Tasks | Sequential | Parallel | Improvement');
       console.log('   ------|------------|----------|------------');
       for (const r of results) {
-        console.log(`   ${r.taskCount.toString().padStart(5)} | ${r.seqDuration.toString().padStart(10)}ms | ${r.parDuration.toString().padStart(8)}ms | ${r.improvement.toFixed(1).padStart(10)}%`);
+        console.log(
+          `   ${r.taskCount.toString().padStart(5)} | ${r.seqDuration.toString().padStart(10)}ms | ${r.parDuration.toString().padStart(8)}ms | ${r.improvement.toFixed(1).padStart(10)}%`
+        );
       }
 
       // All should achieve at least 30% improvement
@@ -186,15 +188,15 @@ describe('Parallel Execution Benchmark', () => {
   describe('P-Label Priority Execution', () => {
     it('should execute P0 tasks before P1 tasks', async () => {
       const executionOrder = [];
-      
+
       // Create skills that track execution order
-      engine.registerSkill('p0-tracker', async (input) => {
+      engine.registerSkill('p0-tracker', async input => {
         executionOrder.push({ name: input.name, priority: input.priority, time: Date.now() });
         await new Promise(resolve => setTimeout(resolve, 10));
         return { success: true };
       });
 
-      engine.registerSkill('p1-tracker', async (input) => {
+      engine.registerSkill('p1-tracker', async input => {
         executionOrder.push({ name: input.name, priority: input.priority, time: Date.now() });
         await new Promise(resolve => setTimeout(resolve, 10));
         return { success: true };
@@ -203,19 +205,39 @@ describe('Parallel Execution Benchmark', () => {
       await engine.execute(PatternType.SWARM, {
         input: {
           tasks: [
-            { id: 'p1-1', skill: 'p1-tracker', priority: PLabel.P1, input: { name: 'p1-1', priority: PLabel.P1 } },
-            { id: 'p0-1', skill: 'p0-tracker', priority: PLabel.P0, input: { name: 'p0-1', priority: PLabel.P0 } },
-            { id: 'p1-2', skill: 'p1-tracker', priority: PLabel.P1, input: { name: 'p1-2', priority: PLabel.P1 } },
-            { id: 'p0-2', skill: 'p0-tracker', priority: PLabel.P0, input: { name: 'p0-2', priority: PLabel.P0 } },
+            {
+              id: 'p1-1',
+              skill: 'p1-tracker',
+              priority: PLabel.P1,
+              input: { name: 'p1-1', priority: PLabel.P1 },
+            },
+            {
+              id: 'p0-1',
+              skill: 'p0-tracker',
+              priority: PLabel.P0,
+              input: { name: 'p0-1', priority: PLabel.P0 },
+            },
+            {
+              id: 'p1-2',
+              skill: 'p1-tracker',
+              priority: PLabel.P1,
+              input: { name: 'p1-2', priority: PLabel.P1 },
+            },
+            {
+              id: 'p0-2',
+              skill: 'p0-tracker',
+              priority: PLabel.P0,
+              input: { name: 'p0-2', priority: PLabel.P0 },
+            },
           ],
-          strategy: 'all'
-        }
+          strategy: 'all',
+        },
       });
 
       // P0 tasks should start before P1 tasks
       const p0Times = executionOrder.filter(e => e.priority === PLabel.P0).map(e => e.time);
       const p1Times = executionOrder.filter(e => e.priority === PLabel.P1).map(e => e.time);
-      
+
       if (p0Times.length > 0 && p1Times.length > 0) {
         const earliestP0 = Math.min(...p0Times);
         const earliestP1 = Math.min(...p1Times);
@@ -254,12 +276,12 @@ describe('Parallel Execution Benchmark', () => {
             { id: 'e', skill: 'task-e' },
           ],
           dependencies: {
-            'c': ['a'],
-            'd': ['b'],
-            'e': ['c', 'd']
+            c: ['a'],
+            d: ['b'],
+            e: ['c', 'd'],
           },
-          strategy: 'all'
-        }
+          strategy: 'all',
+        },
       });
       const totalDuration = Date.now() - start;
 
@@ -282,21 +304,21 @@ describe('Parallel Execution Benchmark', () => {
   describe('Performance Statistics', () => {
     it('should generate performance summary', async () => {
       const benchmarks = [];
-      
+
       // Run multiple iterations
       for (let iteration = 0; iteration < 3; iteration++) {
         const tasks = Array.from({ length: 5 }, (_, i) => ({
           id: `task-${i + 1}`,
           skill: `benchmark-task-${i + 1}`,
-          input: { iteration }
+          input: { iteration },
         }));
 
         const start = Date.now();
         await engine.execute(PatternType.SWARM, {
           input: {
             tasks,
-            strategy: 'all'
-          }
+            strategy: 'all',
+          },
         });
         benchmarks.push(Date.now() - start);
       }
@@ -309,7 +331,7 @@ describe('Parallel Execution Benchmark', () => {
       console.log(`   Average: ${avg.toFixed(1)}ms`);
       console.log(`   Min: ${min}ms`);
       console.log(`   Max: ${max}ms`);
-      console.log(`   Variance: ${(max - min)}ms`);
+      console.log(`   Variance: ${max - min}ms`);
 
       // Performance should be consistent
       expect(max - min).toBeLessThan(avg * 0.5); // Less than 50% variance
@@ -327,7 +349,7 @@ describe('Benchmark Summary', () => {
     console.log(' Pattern: Swarm (parallel execution)');
     console.log(' Comparison: Sequential vs Parallel execution');
     console.log('═══════════════════════════════════════════════════════');
-    
+
     expect(true).toBe(true);
   });
 });

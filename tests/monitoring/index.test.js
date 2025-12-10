@@ -428,7 +428,7 @@ describe('Monitoring Module', () => {
         name: 'api-health',
         endpoint: '/health',
       });
-      
+
       check.addCheck({
         name: 'database',
         type: 'dependency',
@@ -445,7 +445,7 @@ describe('Monitoring Module', () => {
         name: 'test-health',
         timeout: 1000,
       });
-      
+
       check.addCheck({
         name: 'fast-check',
         critical: true,
@@ -462,11 +462,13 @@ describe('Monitoring Module', () => {
         name: 'test-health',
         timeout: 1000,
       });
-      
+
       check.addCheck({
         name: 'failing-check',
         critical: true,
-        check: async () => { throw new Error('Connection failed'); },
+        check: async () => {
+          throw new Error('Connection failed');
+        },
       });
 
       const result = await check.execute();
@@ -480,7 +482,7 @@ describe('Monitoring Module', () => {
         name: 'test-health',
         timeout: 10,
       });
-      
+
       check.addCheck({
         name: 'slow-check',
         critical: true,
@@ -514,7 +516,7 @@ describe('Monitoring Module', () => {
         timeout: 10000,
       });
       check.addCheck({ name: 'db', check: async () => true });
-      
+
       const json = check.toJSON();
       expect(json.name).toBe('test-health');
       expect(json.endpoint).toBe('/health');
@@ -526,7 +528,7 @@ describe('Monitoring Module', () => {
   describe('MonitoringConfig Class', () => {
     test('should define and list SLOs', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
-      
+
       config.defineSLO({
         name: 'slo-1',
         sli: { name: 'sli-1' },
@@ -545,7 +547,7 @@ describe('Monitoring Module', () => {
     test('should get specific SLO', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
       config.defineSLO({ name: 'target-slo', sli: { name: 'sli' }, target: 0.99 });
-      
+
       const slo = config.getSLO('target-slo');
       expect(slo).toBeDefined();
       expect(slo.name).toBe('target-slo');
@@ -553,7 +555,7 @@ describe('Monitoring Module', () => {
 
     test('should define and list alerts', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
-      
+
       config.defineAlert({ name: 'alert-1', expr: 'up == 0' });
       config.defineAlert({ name: 'alert-2', expr: 'latency > 1' });
 
@@ -564,7 +566,7 @@ describe('Monitoring Module', () => {
     test('should get specific alert', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
       config.defineAlert({ name: 'target-alert', expr: 'up == 0' });
-      
+
       const alert = config.getAlert('target-alert');
       expect(alert).toBeDefined();
       expect(alert.name).toBe('target-alert');
@@ -572,16 +574,16 @@ describe('Monitoring Module', () => {
 
     test('should define health checks', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
-      
+
       config.defineHealthCheck({ name: 'health-1', endpoint: '/health' });
-      
+
       expect(config.healthChecks.size).toBe(1);
     });
 
     test('should get specific health check', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
       config.defineHealthCheck({ name: 'my-health', endpoint: '/health' });
-      
+
       const hc = config.getHealthCheck('my-health');
       expect(hc).toBeDefined();
       expect(hc.name).toBe('my-health');
@@ -589,7 +591,7 @@ describe('Monitoring Module', () => {
 
     test('should define metrics', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'test' });
-      
+
       config.defineMetric({
         name: 'request_count',
         type: monitoring.MetricType.COUNTER,
@@ -603,7 +605,7 @@ describe('Monitoring Module', () => {
 
     test('should generate Prometheus config', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'my-service' });
-      
+
       config.defineSLO({
         name: 'availability',
         sli: { name: 'sli', type: monitoring.SLOType.AVAILABILITY, metric: 'http' },
@@ -619,7 +621,7 @@ describe('Monitoring Module', () => {
 
     test('should generate Grafana dashboard', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'dashboard-test' });
-      
+
       config.defineSLO({
         name: 'test-slo',
         sli: { name: 'sli', type: monitoring.SLOType.AVAILABILITY },
@@ -638,7 +640,7 @@ describe('Monitoring Module', () => {
         serviceName: 'json-test',
         environment: 'staging',
       });
-      
+
       config.defineSLO({ name: 'slo', sli: { name: 'sli' }, target: 0.99 });
       config.defineAlert({ name: 'alert', expr: 'up == 0' });
       config.defineHealthCheck({ name: 'health' });
@@ -658,7 +660,7 @@ describe('Monitoring Module', () => {
     test('should emit events on definitions', () => {
       const config = new monitoring.MonitoringConfig({ serviceName: 'event-test' });
       const events = [];
-      
+
       config.on('sloAdded', slo => events.push(['slo', slo.name]));
       config.on('alertAdded', alert => events.push(['alert', alert.name]));
       config.on('healthCheckAdded', hc => events.push(['hc', hc.name]));
