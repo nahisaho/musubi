@@ -14,9 +14,7 @@ const initScript = require('fs').readFileSync(
 );
 
 // Extract the function using regex (since it's not exported)
-const functionMatch = initScript.match(
-  /function recommendLanguages\(requirements\) \{[\s\S]*?^}/m
-);
+const functionMatch = initScript.match(/function recommendLanguages\(requirements\) \{[\s\S]*?^}/m);
 let recommendLanguages;
 
 if (functionMatch) {
