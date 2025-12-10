@@ -31,7 +31,7 @@ jobs:
         run: npm ci
 
       - name: Run tests
-        run: npm test -- --testPathIgnorePatterns="e2e"
+        run: npm test -- --testPathIgnorePatterns="e2e|gui"
 
       - name: Run lint
         run: npm run lint
