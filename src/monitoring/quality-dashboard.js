@@ -140,7 +140,7 @@ class QualityDashboard extends EventEmitter {
     }));
 
     // Health metrics collector
-    this.registerCollector('health', async (context) => {
+    this.registerCollector('health', async (_context) => {
       const coverage = await this.getMetric('coverage');
       const constitutional = await this.getMetric('constitutional');
       const quality = await this.getMetric('quality');

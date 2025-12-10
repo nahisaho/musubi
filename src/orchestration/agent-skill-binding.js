@@ -405,7 +405,7 @@ class AgentSkillBinding extends EventEmitter {
   /**
    * Find best agent for a skill
    */
-  findBestAgentForSkill(skillId, options = {}) {
+  findBestAgentForSkill(skillId, _options = {}) {
     const skill = this.skillRegistry?.getSkill(skillId);
     if (!skill) {
       return null;

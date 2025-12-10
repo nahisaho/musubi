@@ -72,7 +72,7 @@ describe('CostTracker', () => {
     });
 
     test('should have input and output prices', () => {
-      Object.entries(DEFAULT_PRICING).forEach(([model, pricing]) => {
+      Object.entries(DEFAULT_PRICING).forEach(([_model, pricing]) => {
         expect(typeof pricing.input).toBe('number');
         expect(typeof pricing.output).toBe('number');
       });

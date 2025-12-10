@@ -286,7 +286,7 @@ class GUIServer {
       }
       try {
         const { spawn } = require('child_process');
-        const child = spawn('npx', ['musubi-requirements', 'create'], {
+        const _child = spawn('npx', ['musubi-requirements', 'create'], {
           cwd: this.projectPath,
           shell: true
         });
@@ -449,7 +449,7 @@ ${description}
    */
   setupFileWatcher() {
     this.fileWatcher = new FileWatcher(this.projectPath, {
-      ignored: /(^|[\/\\])\.|node_modules/,
+      ignored: /(^|[/\\])\.|node_modules/,
     });
 
     this.fileWatcher.on('change', async (filePath) => {

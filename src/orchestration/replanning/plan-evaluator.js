@@ -316,7 +316,7 @@ class PlanEvaluator {
    */
   generateRecommendations(data) {
     const recommendations = [];
-    const { progress, efficiency, health, failedTasks } = data;
+    const { progress: _progress, efficiency, health, failedTasks } = data;
 
     if (health.components?.reliability < 0.5) {
       recommendations.push('High failure rate detected. Consider reviewing failed task configurations.');

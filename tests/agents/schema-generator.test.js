@@ -4,8 +4,8 @@
  */
 
 const { SchemaGenerator, createSchemaGenerator } = require('../../src/agents/schema-generator');
-const path = require('path');
-const fs = require('fs');
+const _path = require('path');
+const _fs = require('fs');
 
 describe('SchemaGenerator', () => {
   let generator;
@@ -58,6 +58,7 @@ describe('SchemaGenerator', () => {
 
     test('should handle async functions', () => {
       async function fetchData(url, options) {
+        void url; void options;
         return {};
       }
 
@@ -69,6 +70,7 @@ describe('SchemaGenerator', () => {
 
     test('should handle functions with default values', () => {
       function search(query, limit = 10, offset = 0) {
+        void query; void limit; void offset;
         return [];
       }
 
@@ -88,7 +90,9 @@ describe('SchemaGenerator', () => {
         bool = true,
         arr = [],
         obj = {}
-      ) {}
+      ) {
+        void str; void num; void bool; void arr; void obj;
+      }
 
       const schema = generator.fromFunction(example);
 
@@ -304,7 +308,7 @@ describe('SchemaGenerator', () => {
     test('should add additionalProperties: false in strict mode', () => {
       const strictGenerator = new SchemaGenerator({ strict: true });
       
-      function example(a, b) {}
+      function example(_a, _b) {}
       const schema = strictGenerator.fromFunction(example);
 
       expect(schema.additionalProperties).toBe(false);

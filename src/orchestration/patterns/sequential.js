@@ -42,7 +42,7 @@ class SequentialPattern extends BasePattern {
       errorHandling: options.errorHandling || SequentialOptions.STOP_ON_ERROR,
       maxRetries: options.maxRetries || 3,
       retryDelay: options.retryDelay || 1000,
-      transformOutput: options.transformOutput || ((output, context) => output),
+      transformOutput: options.transformOutput || ((output, _context) => output),
       ...options
     };
   }

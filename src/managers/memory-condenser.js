@@ -145,7 +145,7 @@ class BaseCondenser {
    * @param {MemoryEvent[]} events 
    * @returns {Promise<CondensedView>}
    */
-  async condense(events) {
+  async condense(_events) {
     throw new Error('Must implement condense()');
   }
 

@@ -49,7 +49,7 @@ describe('SwarmPattern', () => {
       count: Object.keys(input.previousResults || {}).length
     }));
 
-    engine.registerSkill('slow', async (input) => {
+    engine.registerSkill('slow', async (_input) => {
       await new Promise(resolve => setTimeout(resolve, 50));
       return { result: 'slow task done' };
     });

@@ -13,10 +13,10 @@ const os = require('os');
 // Import replanning components
 const { 
   ReplanningEngine,
-  PlanMonitor,
+  _PlanMonitor,
   PlanEvaluator,
-  AlternativeGenerator,
-  ReplanHistory,
+  _AlternativeGenerator,
+  _ReplanHistory,
   ProactivePathOptimizer,
   GoalProgressTracker,
   AdaptiveGoalModifier,

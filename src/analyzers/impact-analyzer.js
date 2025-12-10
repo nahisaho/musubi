@@ -527,7 +527,7 @@ class ImpactAnalyzer {
   /**
    * Determine impact level for a file
    */
-  determineImpactLevel(file, delta) {
+  determineImpactLevel(file, _delta) {
     // Core modules get higher impact
     if (file.includes('src/') && !file.includes('test')) {
       return ImpactLevel.HIGH;

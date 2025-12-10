@@ -8,7 +8,7 @@
  */
 
 const fs = require('fs');
-const path = require('path');
+const _path = require('path');
 
 /**
  * @typedef {Object} SchemaGeneratorOptions
@@ -109,14 +109,14 @@ class SchemaGenerator {
     const params = [];
     let depth = 0;
     let current = '';
-    let inDefault = false;
+    let _inDefault = false;
     
     for (const char of paramString) {
       if (char === '{' || char === '[' || char === '(') depth++;
       if (char === '}' || char === ']' || char === ')') depth--;
       
       if (char === '=' && depth === 0) {
-        inDefault = true;
+        _inDefault = true;
       }
       
       if (char === ',' && depth === 0) {
@@ -124,7 +124,7 @@ class SchemaGenerator {
           params.push(this.parseParameter(current.trim()));
         }
         current = '';
-        inDefault = false;
+        _inDefault = false;
         continue;
       }
       
@@ -395,7 +395,7 @@ class SchemaGenerator {
    * @param {Object} [param]
    * @returns {Object}
    */
-  typeToSchema(typeStr, param = {}) {
+  typeToSchema(typeStr, _param = {}) {
     const type = typeStr.toLowerCase();
     
     // Handle array types

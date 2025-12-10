@@ -386,7 +386,7 @@ describe('ConstitutionalMapping', () => {
   });
 
   test('each mapping should have checks array', () => {
-    for (const [key, mapping] of Object.entries(ConstitutionalMapping)) {
+    for (const [_key, mapping] of Object.entries(ConstitutionalMapping)) {
       expect(mapping.checks).toBeDefined();
       expect(Array.isArray(mapping.checks)).toBe(true);
     }

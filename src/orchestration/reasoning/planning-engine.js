@@ -161,7 +161,7 @@ class PlanningEngine extends EventEmitter {
    * Decompose goal into tasks
    * @private
    */
-  async decomposeGoal(goal, context) {
+  async decomposeGoal(goal, _context) {
     const tasks = [];
     
     // Analyze goal for key components
@@ -412,7 +412,7 @@ class PlanningEngine extends EventEmitter {
   async executeParallel(plan, executor) {
     const completed = new Set();
     
-    while (true) {
+    for (;;) {
       // Find tasks that are ready to execute
       const ready = plan.tasks.filter(task => {
         if (task.status !== TASK_STATUS.READY && task.status !== TASK_STATUS.PENDING) {

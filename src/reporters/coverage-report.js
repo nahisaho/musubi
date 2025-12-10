@@ -129,7 +129,7 @@ class CoverageReporter {
    */
   formatMarkdown(data) {
     const lines = [];
-    const { coverage, gaps, matrix } = data;
+    const { coverage, gaps, matrix: _matrix } = data;
 
     lines.push('# Traceability Coverage Report');
     lines.push('');

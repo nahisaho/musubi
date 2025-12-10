@@ -344,10 +344,11 @@ class FeatureFlag {
       case FeatureFlagStatus.USER_LIST:
         return this.userList.includes(userId);
       
-      case FeatureFlagStatus.PERCENTAGE:
+      case FeatureFlagStatus.PERCENTAGE: {
         // Consistent hashing based on userId
         const hash = this._hashString(`${this.key}:${userId}`);
         return (hash % 100) < this.percentage;
+      }
       
       default:
         return false;

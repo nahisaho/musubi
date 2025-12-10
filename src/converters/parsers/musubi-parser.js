@@ -461,7 +461,7 @@ async function parseTasks(tasksPath) {
     
     // Extract user story reference
     const storyMatch = description.match(/\[US\d+\]/);
-    const userStory = storyMatch ? storyMatch[0].replace(/[\[\]]/g, '') : undefined;
+    const userStory = storyMatch ? storyMatch[0].replace(/[[\]]/g, '') : undefined;
     
     tasks.push({
       id: taskId,

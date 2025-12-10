@@ -10,7 +10,7 @@
  * - OpenCode, Amp, Kilo Code, RooCode (AGENTS.md convention)
  */
 
-const path = require('path');
+const _path = require('path');
 const { EventEmitter } = require('events');
 
 /**
@@ -530,7 +530,7 @@ class MemorySynchronizer {
   getSyncPlan() {
     const plan = [];
 
-    for (const [sourceId, source] of this.sources) {
+    for (const [sourceId, _source] of this.sources) {
       for (const [targetId, adapter] of this.targets) {
         if (sourceId === targetId) continue;
         if (!adapter.supportsMemory) continue;

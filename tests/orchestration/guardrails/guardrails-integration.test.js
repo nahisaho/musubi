@@ -9,7 +9,7 @@ const {
   GuardrailChain,
   InputGuardrail,
   OutputGuardrail,
-  SafetyCheckGuardrail,
+  _SafetyCheckGuardrail,
   createInputGuardrail,
   createOutputGuardrail,
   createSafetyCheckGuardrail,

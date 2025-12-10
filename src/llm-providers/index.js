@@ -164,7 +164,7 @@ class MockLLMProvider extends LLMProvider {
     this.isInitialized = true;
   }
 
-  async complete(prompt, options = {}) {
+  async complete(prompt, _options = {}) {
     const response = this.responses[this.responseIndex] || {
       content: JSON.stringify({
         analysis: 'Mock analysis',
@@ -192,7 +192,7 @@ class MockLLMProvider extends LLMProvider {
     };
   }
 
-  async embed(text) {
+  async embed(_text) {
     // Return a fixed-dimension embedding
     return new Array(1536).fill(0).map(() => Math.random());
   }

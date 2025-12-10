@@ -396,7 +396,7 @@ describe('CodeGraphAutoUpdate', () => {
         targets: [TARGET.REPOSITORY_MAP]
       });
       
-      const initialFileCount = autoUpdate.fileHashes.size;
+      const _initialFileCount = autoUpdate.fileHashes.size;
       
       // Force refresh
       const results = await autoUpdate.forceRefresh();

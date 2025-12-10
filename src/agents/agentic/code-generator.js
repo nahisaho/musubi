@@ -472,7 +472,7 @@ class CodeGenerator extends EventEmitter {
    * Generate test code
    * @private
    */
-  generateTest(request, language) {
+  generateTest(request, _language) {
     const template = this.templates.javascript.test;
     const testSubject = this.extractName(request.description, 'Subject');
     const fileName = request.filePath ? path.basename(request.filePath) : 'test.test.js';
@@ -490,7 +490,7 @@ class CodeGenerator extends EventEmitter {
    * Generate module code
    * @private
    */
-  generateModule(request, language) {
+  generateModule(request, _language) {
     const template = this.templates.javascript.module;
     const fileName = request.filePath ? path.basename(request.filePath) : 'module.js';
     
@@ -506,7 +506,7 @@ class CodeGenerator extends EventEmitter {
    * Generate class properties
    * @private
    */
-  generateProperties(request, language) {
+  generateProperties(request, _language) {
     const constraints = request.constraints || {};
     const props = constraints.properties || [];
     
@@ -521,7 +521,7 @@ class CodeGenerator extends EventEmitter {
    * Generate class methods
    * @private
    */
-  generateMethods(request, language) {
+  generateMethods(request, _language) {
     const constraints = request.constraints || {};
     const methods = constraints.methods || [];
     
@@ -546,7 +546,7 @@ class CodeGenerator extends EventEmitter {
    * Generate test cases
    * @private
    */
-  generateTestCases(subject) {
+  generateTestCases(_subject) {
     return `describe('constructor', () => {
     it('should create instance', () => {
       expect(instance).toBeDefined();
@@ -635,8 +635,8 @@ class CodeGenerator extends EventEmitter {
    * Format code
    * @private
    */
-  format(code, language) {
-    const indent = this.useTabs ? '\t' : ' '.repeat(this.indentSize);
+  format(code, _language) {
+    const _indent = this.useTabs ? '\t' : ' '.repeat(this.indentSize);
     
     // Normalize line endings
     code = code.replace(/\r\n/g, '\n');

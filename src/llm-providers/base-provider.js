@@ -48,7 +48,7 @@ class LLMProvider {
    * @returns {Promise<LLMCompletionResult>} Completion result
    * @abstract
    */
-  async complete(prompt, options = {}) {
+  async complete(prompt, _options = {}) {
     throw new Error('LLMProvider.complete() must be implemented by subclass');
   }
 
@@ -90,7 +90,7 @@ Output only the JSON, no explanation.`;
    * @returns {Promise<number[]>} Embedding vector
    * @abstract
    */
-  async embed(text) {
+  async embed(_text) {
     throw new Error('LLMProvider.embed() must be implemented by subclass');
   }
 

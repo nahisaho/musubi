@@ -377,7 +377,7 @@ describe('Incident Manager', () => {
     });
 
     test('should list open incidents', () => {
-      const inc1 = manager.createIncident({ title: 'Open' });
+      const _inc1 = manager.createIncident({ title: 'Open' });
       const inc2 = manager.createIncident({ title: 'Resolved' });
       inc2.acknowledge('alice');
       inc2.setResolution('Fixed');
@@ -500,7 +500,7 @@ describe('Incident Manager', () => {
 
     test('should get statistics', () => {
       const inc1 = manager.createIncident({ title: 'Inc1', severity: IncidentSeverity.SEV1 });
-      const inc2 = manager.createIncident({ title: 'Inc2', severity: IncidentSeverity.SEV2 });
+      const _inc2 = manager.createIncident({ title: 'Inc2', severity: IncidentSeverity.SEV2 });
       inc1.acknowledge('alice');
       inc1.setResolution('Fixed');
 

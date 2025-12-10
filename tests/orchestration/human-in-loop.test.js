@@ -50,7 +50,7 @@ describe('HumanInLoopPattern', () => {
       status: 'success'
     }));
 
-    engine.registerSkill('analyze', async (input) => ({
+    engine.registerSkill('analyze', async (_input) => ({
       analyzed: true,
       metrics: { quality: 0.9, coverage: 0.85 }
     }));

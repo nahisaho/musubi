@@ -124,7 +124,7 @@ class AdvancedValidation extends EventEmitter {
    * @param {Object} options
    * @returns {Object}
    */
-  validateCrossArtifact(options = {}) {
+  validateCrossArtifact(_options = {}) {
     const issues = [];
     const validated = [];
 
@@ -231,7 +231,7 @@ class AdvancedValidation extends EventEmitter {
    * @param {Object} options
    * @returns {Object}
    */
-  detectGaps(options = {}) {
+  detectGaps(_options = {}) {
     const gaps = [];
 
     // Requirements without design

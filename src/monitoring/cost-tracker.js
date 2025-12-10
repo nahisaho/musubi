@@ -437,7 +437,7 @@ class CostTracker extends EventEmitter {
    * @private
    */
   _isCurrentPeriod(date) {
-    const now = new Date();
+    const _now = new Date();
     const periodStart = this._getPeriodStart();
     return date >= periodStart;
   }
@@ -452,9 +452,10 @@ class CostTracker extends EventEmitter {
     switch (this.budgetPeriod) {
       case 'daily':
         return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      case 'weekly':
+      case 'weekly': {
         const day = now.getDay();
         return new Date(now.getFullYear(), now.getMonth(), now.getDate() - day);
+      }
       case 'monthly':
       default:
         return new Date(now.getFullYear(), now.getMonth(), 1);

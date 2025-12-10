@@ -85,7 +85,7 @@ class CopilotLMProvider extends LLMProvider {
    * @returns {Promise<LLMCompletionResult>}
    * @private
    */
-  async completeWithVSCodeAPI(messages, options) {
+  async completeWithVSCodeAPI(messages, _options) {
     const vscode = this.vscode;
     
     // Select the appropriate model
@@ -193,7 +193,7 @@ class CopilotLMProvider extends LLMProvider {
    * @param {string} text - Text to embed
    * @returns {Promise<number[]>}
    */
-  async embed(text) {
+  async embed(_text) {
     throw new Error('Embedding not supported by GitHub Copilot LM API');
   }
 

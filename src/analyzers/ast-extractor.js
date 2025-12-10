@@ -109,7 +109,7 @@ const PATTERNS = {
     // Docstrings
     docstring: /"""([\s\S]*?)"""|'''([\s\S]*?)'''/g,
     // Type hints
-    typeHint: /:\s*([a-zA-Z_][a-zA-Z0-9_\[\],\s]*)/g
+    typeHint: /:\s*([a-zA-Z_][a-zA-Z0-9_[\],\s]*)/g
   }
 };
 
@@ -405,7 +405,7 @@ class ASTExtractor extends EventEmitter {
    * Extract TypeScript-specific patterns
    * @private
    */
-  extractTypeScript(content, lines, symbols, structure) {
+  extractTypeScript(content, lines, symbols, _structure) {
     const patterns = PATTERNS.typescript;
     let match;
     

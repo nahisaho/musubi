@@ -9,7 +9,7 @@
 
 const { Command } = require('commander');
 const chalk = require('chalk');
-const path = require('path');
+const _path = require('path');
 const { CheckpointManager, CheckpointState } = require('../src/managers/checkpoint-manager');
 
 const program = new Command();

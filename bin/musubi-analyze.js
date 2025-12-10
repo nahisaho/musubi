@@ -709,13 +709,13 @@ async function analyzeStuckPatterns() {
     }
 
     // Pattern 2: Same file edited repeatedly
-    let recentChanges = [];
+    let _recentChanges = [];
     try {
       const gitDiff = execSync(
         'git diff --stat HEAD~5 HEAD 2>/dev/null',
         { encoding: 'utf8' }
       ).trim();
-      recentChanges = gitDiff.split('\n').filter(Boolean);
+      _recentChanges = gitDiff.split('\n').filter(Boolean);
     } catch {
       // No recent changes or not enough history
     }

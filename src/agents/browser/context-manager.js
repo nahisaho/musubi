@@ -164,7 +164,7 @@ class ContextManager {
       this.contexts.delete(name);
       
       // Remove associated pages
-      for (const [key, page] of this.pages.entries()) {
+      for (const [key, _page] of this.pages.entries()) {
         if (key.startsWith(`${name}:`)) {
           this.pages.delete(key);
         }

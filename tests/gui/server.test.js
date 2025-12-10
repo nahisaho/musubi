@@ -6,7 +6,7 @@ const Server = require('../../src/gui/server');
 const fs = require('fs-extra');
 const path = require('path');
 const os = require('os');
-const http = require('http');
+const _http = require('http');
 
 // Increase Jest timeout for server tests
 jest.setTimeout(15000);

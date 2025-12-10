@@ -7,7 +7,7 @@
 'use strict';
 
 const fs = require('fs-extra');
-const path = require('path');
+const _path = require('path');
 const yaml = require('js-yaml');
 const { createEmptyProjectIR, createEmptyFeatureIR } = require('../ir/types');
 
@@ -68,7 +68,7 @@ async function parseOpenAPISpec(specPath) {
  * @param {Array} tags - OpenAPI tags array
  * @returns {Object} Grouped paths
  */
-function groupPathsByTag(paths, tags = []) {
+function groupPathsByTag(paths, _tags = []) {
   const groups = {};
   
   for (const [pathUrl, pathItem] of Object.entries(paths || {})) {

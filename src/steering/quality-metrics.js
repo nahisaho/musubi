@@ -9,7 +9,7 @@
  */
 
 const EventEmitter = require('events');
-const path = require('path');
+const _path = require('path');
 
 // Metric Categories
 const MetricCategory = {

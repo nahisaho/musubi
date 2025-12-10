@@ -131,7 +131,7 @@ class BaseCritic {
    * @param {Object} context - 評価コンテキスト
    * @returns {CriticResult}
    */
-  evaluate(context = {}) {
+  evaluate(_context = {}) {
     throw new Error('Must implement evaluate()');
   }
 
@@ -344,7 +344,7 @@ class DesignCritic extends BaseCritic {
   /**
    * C4モデル準拠チェック
    */
-  checkC4Format(context) {
+  checkC4Format(_context) {
     const designDir = path.join(this.projectRoot, 'docs/design');
     if (!fs.existsSync(designDir)) return 0;
 
@@ -366,7 +366,7 @@ class DesignCritic extends BaseCritic {
   /**
    * ADR存在チェック
    */
-  checkAdrPresence(context) {
+  checkAdrPresence(_context) {
     const adrDir = path.join(this.projectRoot, 'docs/design/adr');
     if (!fs.existsSync(adrDir)) return 0;
 
@@ -381,7 +381,7 @@ class DesignCritic extends BaseCritic {
   /**
    * 要件カバレッジチェック
    */
-  checkRequirementCoverage(context) {
+  checkRequirementCoverage(_context) {
     const designDir = path.join(this.projectRoot, 'docs/design');
     if (!fs.existsSync(designDir)) return 0;
 
@@ -446,7 +446,7 @@ class ImplementationCritic extends BaseCritic {
   /**
    * テストカバレッジチェック
    */
-  checkTestCoverage(context) {
+  checkTestCoverage(_context) {
     // coverage/lcov-report/index.html があればパース
     const coveragePath = path.join(this.projectRoot, 'coverage/coverage-summary.json');
     if (fs.existsSync(coveragePath)) {
@@ -476,7 +476,7 @@ class ImplementationCritic extends BaseCritic {
   /**
    * コード品質チェック
    */
-  checkCodeQuality(context) {
+  checkCodeQuality(_context) {
     let score = 0;
 
     // ESLint設定の存在
@@ -511,7 +511,7 @@ class ImplementationCritic extends BaseCritic {
   /**
    * ドキュメントチェック
    */
-  checkDocumentation(context) {
+  checkDocumentation(_context) {
     let score = 0;
 
     // README.md

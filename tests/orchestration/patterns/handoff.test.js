@@ -14,7 +14,7 @@ const {
   handoff
 } = require('../../../src/orchestration/patterns/handoff');
 
-const { ExecutionContext, PatternType } = require('../../../src/orchestration/orchestration-engine');
+const { ExecutionContext, _PatternType } = require('../../../src/orchestration/orchestration-engine');
 const { BasePattern } = require('../../../src/orchestration/pattern-registry');
 
 // Mock engine

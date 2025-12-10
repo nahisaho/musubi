@@ -287,7 +287,7 @@ describe('OutputGuardrail', () => {
       
       guardrail.addQualityCheck({
         name: 'clarity',
-        check: (content) => ({
+        check: (_content) => ({
           passed: true,
           score: 0.8,
           message: 'Good clarity'
@@ -309,7 +309,7 @@ describe('OutputGuardrail', () => {
       
       guardrail.addQualityCheck({
         name: 'clarity',
-        check: (content) => ({
+        check: (_content) => ({
           passed: true,
           score: 0.3,
           message: 'Low clarity'

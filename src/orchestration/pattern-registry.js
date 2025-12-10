@@ -66,7 +66,7 @@ class BasePattern {
    * @param {OrchestrationEngine} engine - Orchestration engine
    * @returns {Promise<any>} Execution result
    */
-  async execute(context, engine) {
+  async execute(_context, _engine) {
     throw new Error('Pattern must implement execute method');
   }
 
@@ -76,7 +76,7 @@ class BasePattern {
    * @param {OrchestrationEngine} engine - Orchestration engine
    * @returns {object} Validation result
    */
-  validate(context, engine) {
+  validate(_context, _engine) {
     return { valid: true, errors: [] };
   }
 
@@ -280,7 +280,7 @@ class PatternRegistry {
       byComplexity: {}
     };
 
-    for (const [name, meta] of this.metadata) {
+    for (const [_name, meta] of this.metadata) {
       summary.patterns.push(meta.toJSON());
       
       // Count by type

@@ -6,14 +6,14 @@
 
 const {
   Logger,
-  ConsoleOutput,
+  _ConsoleOutput,
   FileOutput,
   MetricsCollector,
   Span,
   Tracer,
   MemoryExporter,
   CorrelationContext,
-  ObservabilityProvider,
+  _ObservabilityProvider,
   LogLevel,
   TraceStatus,
   SpanKind,
@@ -336,7 +336,7 @@ describe('Observability Module', () => {
 
     test('should get trace by ID', () => {
       const span1 = tracer.startSpan('span1');
-      const span2 = tracer.startChildSpan(span1, 'span2');
+      const _span2 = tracer.startChildSpan(span1, 'span2');
       tracer.startSpan('unrelated');
 
       const trace = tracer.getTrace(span1.traceId);
@@ -457,7 +457,7 @@ describe('Observability Module', () => {
     });
 
     test('should trace asynchronous operation', async () => {
-      const result = await observability.trace('async-op', async (span) => {
+      const result = await observability.trace('async-op', async (_span) => {
         await new Promise(resolve => setTimeout(resolve, 10));
         return 'async-result';
       });

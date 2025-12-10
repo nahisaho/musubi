@@ -9,11 +9,11 @@
  */
 
 const { BasePattern } = require('../pattern-registry');
-const { ExecutionContext, ExecutionStatus } = require('../orchestration-engine');
+const { ExecutionContext, _ExecutionStatus } = require('../orchestration-engine');
 const { 
   HandoffPattern, 
   HandoffPatternType, 
-  HandoffConfig, 
+  HandoffConfig: _HandoffConfig, 
   EscalationData,
   handoff 
 } = require('./handoff');
@@ -265,7 +265,7 @@ class TriagePattern extends BasePattern {
    * @param {OrchestrationEngine} engine - Orchestration engine
    * @returns {object} Validation result
    */
-  validate(context, engine) {
+  validate(context, _engine) {
     const errors = [];
     const input = context.input;
 
@@ -478,7 +478,7 @@ class TriagePattern extends BasePattern {
     }
 
     // Calculate confidence based on keyword matches
-    const totalKeywords = Object.values(this.options.keywordMappings).flat().length;
+    const _totalKeywords = Object.values(this.options.keywordMappings).flat().length;
     const confidence = Math.min(bestScore / 3, 1); // Max confidence after 3 matches
 
     return new TriageResult({
@@ -492,7 +492,7 @@ class TriagePattern extends BasePattern {
   /**
    * Classify by intent detection (simple pattern-based)
    */
-  _classifyByIntent(inputText, context) {
+  _classifyByIntent(inputText, _context) {
     const intents = [];
     const lowerText = inputText.toLowerCase();
 
@@ -546,7 +546,7 @@ class TriagePattern extends BasePattern {
     let bestMatch = null;
     let bestScore = -1;
 
-    for (const [agentName, capability] of this.agentRegistry) {
+    for (const [_agentName, capability] of this.agentRegistry) {
       if (capability.matchesKeywords(inputText)) {
         const score = capability.calculateScore(inputText, null);
         if (score > bestScore) {
@@ -666,7 +666,7 @@ Respond with JSON: {"category": "<category>", "confidence": <0-1>, "reasoning": 
    * @param {OrchestrationEngine} engine - Orchestration engine
    * @returns {Promise<Agent|null>} Selected agent or null
    */
-  async selectAgent(classification, inputText, context, engine) {
+  async selectAgent(classification, inputText, _context, _engine) {
     // If classification already has selected agent, return it
     if (classification.selectedAgent) {
       return classification.selectedAgent;
@@ -675,7 +675,7 @@ Respond with JSON: {"category": "<category>", "confidence": <0-1>, "reasoning": 
     const candidates = [];
 
     // Find agents that can handle this category
-    for (const [agentName, capability] of this.agentRegistry) {
+    for (const [_agentName, capability] of this.agentRegistry) {
       if (capability.canHandle(classification.category)) {
         const score = capability.calculateScore(inputText, classification.category);
         candidates.push({ agent: capability.agent, capability, score });

@@ -87,7 +87,7 @@ const SECURITY_PATTERNS = {
   ],
   dangerousCommands: [
     {
-      pattern: /rm\s+(-rf?|--recursive)\s+[\/~]/g,
+      pattern: /rm\s+(-rf?|--recursive)\s+[/~]/g,
       name: 'Recursive Delete (root/home)',
       level: RiskLevel.CRITICAL,
     },

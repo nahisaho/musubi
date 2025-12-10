@@ -98,7 +98,7 @@ class AnthropicLMProvider extends LLMProvider {
    * @param {string} text - Text to embed
    * @returns {Promise<number[]>}
    */
-  async embed(text) {
+  async embed(_text) {
     throw new Error('Embedding not supported by Anthropic Claude API. Use OpenAI or a dedicated embedding service.');
   }
 

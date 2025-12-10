@@ -4,7 +4,7 @@
 
 const {
   OrchestrationEngine,
-  ExecutionContext,
+  _ExecutionContext,
   PatternType,
   ExecutionStatus,
   WorkflowOrchestrator,
@@ -37,33 +37,33 @@ describe('WorkflowOrchestrator', () => {
       analyzed: true
     }));
 
-    engine.registerSkill('software-architect', async (input) => ({
+    engine.registerSkill('software-architect', async (_input) => ({
       design: 'C4 Model Design',
       components: ['frontend', 'backend', 'database']
     }));
 
-    engine.registerSkill('task-planner', async (input) => ({
+    engine.registerSkill('task-planner', async (_input) => ({
       tasks: ['Task 1', 'Task 2', 'Task 3'],
       estimated: '5 days'
     }));
 
-    engine.registerSkill('code-generator', async (input) => ({
+    engine.registerSkill('code-generator', async (_input) => ({
       code: '// Generated code',
       files: ['index.js', 'utils.js']
     }));
 
-    engine.registerSkill('test-engineer', async (input) => ({
+    engine.registerSkill('test-engineer', async (_input) => ({
       tests: ['test1.js', 'test2.js'],
       coverage: '85%'
     }));
 
-    engine.registerSkill('code-reviewer', async (input) => ({
+    engine.registerSkill('code-reviewer', async (_input) => ({
       review: 'Code looks good',
       issues: [],
       approved: true
     }));
 
-    engine.registerSkill('documentation-writer', async (input) => ({
+    engine.registerSkill('documentation-writer', async (_input) => ({
       docs: 'Documentation generated',
       summary: 'Consolidated review summary'
     }));
@@ -321,7 +321,7 @@ describe('WorkflowOrchestrator', () => {
 
       const result = await orchestrator.execute('gate-wf', { featureName: 'Login' }, {
         humanGate: {
-          request: async (question, context) => {
+          request: async (question, _context) => {
             expect(question).toContain('Login');
             return { approved: true, feedback: 'Looks good' };
           }

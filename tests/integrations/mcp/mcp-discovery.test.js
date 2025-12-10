@@ -4,7 +4,7 @@
 
 'use strict';
 
-const path = require('path');
+const _path = require('path');
 const { MCPDiscovery, createMCPDiscovery } = require('../../../src/integrations/mcp');
 
 describe('MCPDiscovery', () => {

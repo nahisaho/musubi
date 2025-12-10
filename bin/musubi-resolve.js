@@ -18,7 +18,7 @@
 
 const { Command } = require('commander');
 const chalk = require('chalk');
-const path = require('path');
+const _path = require('path');
 
 // Import resolvers
 let IssueResolver, GitHubClient;

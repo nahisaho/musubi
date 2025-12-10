@@ -305,7 +305,7 @@ class MCPToolRegistry extends EventEmitter {
    * @param {number} duration
    * @param {boolean} success
    */
-  recordInvocation(toolName, duration, success) {
+  recordInvocation(toolName, duration, _success) {
     const count = this.invocationCounts.get(toolName) || 0;
     this.invocationCounts.set(toolName, count + 1);
     

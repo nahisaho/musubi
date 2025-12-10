@@ -21,7 +21,7 @@
 const { Command } = require('commander');
 const chalk = require('chalk');
 const ChangeManager = require('../src/managers/change.js');
-const { DeltaSpecManager, DeltaType } = require('../src/managers/delta-spec.js');
+const { DeltaSpecManager } = require('../src/managers/delta-spec.js');
 const { DeltaFormatValidator } = require('../src/validators/delta-format.js');
 const { ImpactAnalyzer } = require('../src/analyzers/impact-analyzer.js');
 
@@ -493,12 +493,12 @@ program
   .command('approve <change-id>')
   .description('Approve a change proposal')
   .option('--changes <dir>', 'Changes directory', 'storage/changes')
-  .action(async (changeId, options) => {
+  .action(async (changeId, _options) => {
     try {
       const workspaceRoot = process.cwd();
       const deltaManager = new DeltaSpecManager(workspaceRoot);
 
-      const delta = deltaManager.updateStatus(changeId, 'approved');
+      deltaManager.updateStatus(changeId, 'approved');
       
       console.log(chalk.green(`✓ Change ${changeId} approved`));
       console.log(chalk.dim(`Status updated to: approved`));
@@ -524,7 +524,7 @@ program
       const workspaceRoot = process.cwd();
       const deltaManager = new DeltaSpecManager(workspaceRoot);
 
-      const delta = deltaManager.updateStatus(changeId, 'rejected');
+      deltaManager.updateStatus(changeId, 'rejected');
       
       console.log(chalk.red(`✗ Change ${changeId} rejected`));
       if (options.reason) {
@@ -668,7 +668,7 @@ program
   .description('Show before/after diff for a change')
   .option('--changes <dir>', 'Changes directory', 'storage/changes')
   .option('--context <lines>', 'Lines of context to show', '3')
-  .action(async (changeId, options) => {
+  .action(async (changeId, _options) => {
     try {
       const workspaceRoot = process.cwd();
       const deltaManager = new DeltaSpecManager(workspaceRoot);
@@ -786,7 +786,7 @@ program
   .command('status')
   .description('Show status summary of all changes')
   .option('--changes <dir>', 'Changes directory', 'storage/changes')
-  .action(async (options) => {
+  .action(async (_options) => {
     try {
       const workspaceRoot = process.cwd();
       const deltaManager = new DeltaSpecManager(workspaceRoot);

@@ -16,8 +16,8 @@
  */
 
 const { EventEmitter } = require('events');
-const { RepositoryMap, createRepositoryMap } = require('./repository-map');
-const { ASTExtractor, createASTExtractor } = require('./ast-extractor');
+const {  createRepositoryMap } = require('./repository-map');
+const {  createASTExtractor } = require('./ast-extractor');
 
 /**
  * @typedef {Object} ContextRequest
@@ -586,7 +586,7 @@ class ContextOptimizer extends EventEmitter {
           const chars = remaining * CHARS_PER_TOKEN;
           context += `\n## ${filePath} (truncated)\n\n\`\`\`\n`;
           context += content.slice(0, chars);
-          context += '\n...(truncated)\n\`\`\`\n';
+          context += '\n...(truncated)\n```\n';
           break;
         }
         

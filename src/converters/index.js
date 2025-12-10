@@ -206,7 +206,7 @@ async function testRoundtrip(projectPath, options = {}) {
  * @returns {Promise<{featuresCreated: number, requirementsCreated: number, warnings: string[], outputPath: string}>}
  */
 async function convertFromOpenAPI(specPath, options = {}) {
-  const { output = '.', dryRun = false, force = false, verbose = false, featureName } = options;
+  const { output = '.', dryRun = false, force = false, verbose = false, featureName: _featureName } = options;
   
   if (verbose) console.log(`Converting OpenAPI spec from: ${specPath}`);
   

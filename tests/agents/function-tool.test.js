@@ -107,6 +107,8 @@ describe('functionTool', () => {
   describe('parameter inference', () => {
     test('should infer parameters from function signature', () => {
       function process(input, options, callback) {
+        // Parameters are used for inference only
+        void input; void options; void callback;
         return 'processed';
       }
 
@@ -134,8 +136,8 @@ describe('functionTools', () => {
   test('should apply per-function options', () => {
     const tools = functionTools(
       {
-        search: (query) => [],
-        fetch: (url) => ''
+        search: (_query) => [],
+        fetch: (_url) => ''
       },
       {
         search: { description: 'Search for items' },

@@ -359,7 +359,7 @@ describe('Constants', () => {
   });
   
   it('should have valid weight values', () => {
-    for (const [task, weights] of Object.entries(TASK_WEIGHTS)) {
+    for (const [_task, weights] of Object.entries(TASK_WEIGHTS)) {
       expect(weights.entryPoints || weights.errorLocation || weights.changedFiles || weights.targetFile).toBeDefined();
       expect(weights.tests).toBeDefined();
     }

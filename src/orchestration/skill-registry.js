@@ -602,7 +602,7 @@ class SkillRegistry extends EventEmitter {
   }
 
   _performHealthCheck() {
-    for (const [skillId, entry] of this.skills) {
+    for (const [skillId, _entry] of this.skills) {
       const stats = this.executionStats.get(skillId);
       if (!stats || stats.totalExecutions === 0) {
         continue;

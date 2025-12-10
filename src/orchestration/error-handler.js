@@ -567,7 +567,7 @@ class GracefulDegradation {
   /**
    * Execute with graceful degradation
    */
-  async execute(serviceName, primaryFn, options = {}) {
+  async execute(serviceName, primaryFn, _options = {}) {
     try {
       const result = await primaryFn();
       

@@ -312,7 +312,7 @@ class CodeReviewer extends EventEmitter {
    * Apply a single rule
    * @private
    */
-  applyRule(rule, code, language) {
+  applyRule(rule, code, _language) {
     const issues = [];
     
     // Handle condition-based rules
@@ -326,7 +326,7 @@ class CodeReviewer extends EventEmitter {
     // Handle pattern-based rules
     if (!rule.pattern) return issues;
     
-    const lines = code.split('\n');
+    const _lines = code.split('\n');
     let match;
     
     // Reset regex
@@ -485,7 +485,7 @@ class CodeReviewer extends EventEmitter {
    * Get recommendation based on score
    * @private
    */
-  getRecommendation(score, issues) {
+  getRecommendation(score, _issues) {
     if (score >= 90) return 'Excellent! Code quality is high.';
     if (score >= 80) return 'Good. Minor improvements recommended.';
     if (score >= 70) return 'Acceptable. Several issues should be addressed.';

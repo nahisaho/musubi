@@ -46,7 +46,7 @@ describe('GroupChatPattern', () => {
       confidence: 0.7
     }));
 
-    engine.registerSkill('moderator', async (input) => ({
+    engine.registerSkill('moderator', async (_input) => ({
       role: 'moderator',
       summary: 'Moderated discussion',
       consensus: true

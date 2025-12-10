@@ -341,7 +341,7 @@ class UncertaintyParser {
   highlight(content) {
     let highlighted = content;
 
-    for (const [marker, config] of this.markers) {
+    for (const [_marker, config] of this.markers) {
       const regex = new RegExp(config.pattern.source, 'g');
       highlighted = highlighted.replace(regex, `**[${config.name.toUpperCase()}: $1]**`);
     }
@@ -569,7 +569,7 @@ class TemplateConstraintEngine extends EventEmitter {
     };
 
     // Parse sections (## headers)
-    const sectionPattern = /^##\s+(.+)$/gm;
+    const _sectionPattern = /^##\s+(.+)$/gm;
     let currentSection = null;
     let currentContent = [];
     const lines = content.split('\n');

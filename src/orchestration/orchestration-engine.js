@@ -396,7 +396,7 @@ class OrchestrationEngine extends EventEmitter {
    * Cancel all active executions
    */
   cancelAll() {
-    for (const [id, context] of this.activeContexts) {
+    for (const [_id, context] of this.activeContexts) {
       context.cancel();
       this.emit('executionCancelled', context);
     }

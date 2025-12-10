@@ -94,9 +94,10 @@ class TestGenerator {
       case 'wait':
         return `await page.waitForTimeout(${action.delay});`;
 
-      case 'screenshot':
+      case 'screenshot': {
         const name = action.name || 'screenshot';
         return `await page.screenshot({ path: 'screenshots/${name}.png'${action.fullPage ? ', fullPage: true' : ''} });`;
+      }
 
       case 'assert':
         if (action.expectedText) {
@@ -173,9 +174,10 @@ class TestGenerator {
       case 'wait':
         return `await new Promise(r => setTimeout(r, ${action.delay}));`;
 
-      case 'screenshot':
+      case 'screenshot': {
         const name = action.name || 'screenshot';
         return `await page.screenshot({ path: 'screenshots/${name}.png'${action.fullPage ? ', fullPage: true' : ''} });`;
+      }
 
       case 'assert':
         return `await page.waitForSelector('${this.escapeSelector(action.selector)}');`;
@@ -191,7 +193,7 @@ class TestGenerator {
    * @param {Object} options
    * @returns {string}
    */
-  generateFromSpec(specification, options = {}) {
+  generateFromSpec(specification, _options = {}) {
     const lines = [
       `import { test, expect } from '@playwright/test';`,
       ``,

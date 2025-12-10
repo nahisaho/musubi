@@ -121,7 +121,7 @@ class SLO {
    */
   toBurnRateAlert() {
     const shortWindow = '5m';
-    const longWindow = '1h';
+    const _longWindow = '1h';
     
     return {
       name: `${this.name}_high_burn_rate`,
@@ -263,7 +263,7 @@ class HealthCheck {
    * Generate Express.js health endpoint handler
    */
   toExpressHandler() {
-    const check = this;
+    const _check = this;
     return `
 app.get('${this.endpoint}', async (req, res) => {
   const health = await healthCheck.execute();

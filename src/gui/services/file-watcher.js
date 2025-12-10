@@ -21,7 +21,7 @@ class FileWatcher extends EventEmitter {
     
     this.projectPath = projectPath;
     this.options = {
-      ignored: options.ignored || /(^|[\/\\])\.|node_modules/,
+      ignored: options.ignored || /(^|[/\\])\.|node_modules/,
       persistent: true,
       ignoreInitial: true,
       awaitWriteFinish: {

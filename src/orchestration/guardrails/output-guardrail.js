@@ -11,7 +11,7 @@
 'use strict';
 
 const { BaseGuardrail } = require('./base-guardrail');
-const { RuleBuilder, rules, globalRuleRegistry, SecurityPatterns } = require('./guardrail-rules');
+const { RuleBuilder: _RuleBuilder, rules, globalRuleRegistry, SecurityPatterns } = require('./guardrail-rules');
 
 /**
  * Output guardrail configuration

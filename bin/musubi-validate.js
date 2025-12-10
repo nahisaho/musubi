@@ -22,8 +22,7 @@ const {
   createInputGuardrail,
   createOutputGuardrail,
   createSafetyCheckGuardrail,
-  GuardrailChain,
-  SafetyLevel
+  GuardrailChain
 } = require('../src/orchestration/guardrails');
 
 const program = new Command();
@@ -562,7 +561,7 @@ function displayChainResults(result, options) {
 
   // Show individual guardrail results
   console.log(chalk.bold('Individual Results:'));
-  result.results.forEach((r, index) => {
+  result.results.forEach((r, _index) => {
     const icon = r.passed ? chalk.green('✓') : chalk.red('✗');
     console.log(`  ${icon} ${r.guardrailName} (${r.executionTimeMs}ms)`);
   });

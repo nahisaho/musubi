@@ -120,6 +120,7 @@ describe('SelfCorrection', () => {
       
       // Retry strategy should eventually succeed
       expect(result.success).toBe(true);
+      expect(attempts).toBeGreaterThanOrEqual(1);
     });
     
     it('should handle fallback strategy', async () => {

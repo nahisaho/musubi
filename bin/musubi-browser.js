@@ -443,7 +443,7 @@ async function saveTest(agent, outputPath) {
   }
 
   try {
-    const code = await agent.generateTest({
+    const _code = await agent.generateTest({
       name: 'Interactive Session Test',
       output: outputPath,
     });

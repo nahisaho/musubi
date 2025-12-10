@@ -308,7 +308,7 @@ class TemplateConstraints extends EventEmitter {
       },
       checklist: (c) => {
         // Checklist format
-        return /^\s*[-*\[\]]\s+/m.test(c);
+        return /^\s*[-*[\]]\s+/m.test(c);
       }
     };
 
@@ -321,7 +321,7 @@ class TemplateConstraints extends EventEmitter {
    */
   calculateScore(template, errors, warnings) {
     let score = 100;
-    const totalSections = template.sections.length;
+    const _totalSections = template.sections.length;
     const requiredSections = template.sections.filter(s => s.required).length;
 
     // Deduct for errors

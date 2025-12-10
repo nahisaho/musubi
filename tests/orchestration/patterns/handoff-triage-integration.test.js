@@ -8,9 +8,9 @@ const {
   createOrchestrationEngine,
   PatternType,
   ExecutionStatus,
-  HandoffPattern,
+  _HandoffPattern,
   HandoffFilters,
-  HandoffConfig,
+  _HandoffConfig,
   TriagePattern,
   TriageCategory,
   TriageStrategy,
@@ -36,7 +36,7 @@ describe('Handoff and Triage Integration', () => {
             keywords: ['invoice', 'payment', 'refund', 'charge'],
             priority: 2
           }),
-          execute: async (input) => ({
+          execute: async (_input) => ({
             agent: 'billing-agent',
             processed: true,
             action: 'refund_processed'
@@ -50,7 +50,7 @@ describe('Handoff and Triage Integration', () => {
             keywords: ['help', 'issue', 'problem'],
             priority: 1
           }),
-          execute: async (input) => ({
+          execute: async (_input) => ({
             agent: 'support-agent',
             processed: true,
             action: 'support_ticket_created'
@@ -132,7 +132,7 @@ describe('Handoff and Triage Integration', () => {
 
   describe('Multi-step handoff chain', () => {
     it('should track handoff chain through multiple agents', async () => {
-      const frontlineAgent = {
+      const _frontlineAgent = {
         name: 'frontline',
         execute: async () => ({ action: 'initial_response' })
       };
@@ -260,7 +260,7 @@ describe('Handoff and Triage Integration', () => {
     });
 
     it('should handle handoff with fallback targets', async () => {
-      const primaryAgent = {
+      const _primaryAgent = {
         name: 'primary',
         // Simulate unavailable agent
         available: false,

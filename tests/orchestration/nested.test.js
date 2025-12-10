@@ -184,7 +184,7 @@ describe('NestedPattern', () => {
   describe('Hierarchical Execution', () => {
     beforeEach(() => {
       // Register skills for hierarchical execution
-      engine.registerSkill('parent', async (input, context) => {
+      engine.registerSkill('parent', async (input, _context) => {
         return {
           parentResult: true,
           data: input
@@ -259,7 +259,7 @@ describe('NestedPattern', () => {
         throw new Error('Skill failed');
       });
 
-      engine.registerSkill('partialFail', async (input) => ({
+      engine.registerSkill('partialFail', async (_input) => ({
         result: true
       }));
     });
@@ -281,7 +281,7 @@ describe('NestedPattern', () => {
       const continuePattern = createNestedPattern({ continueOnError: true });
       engine.registerPattern(PatternType.NESTED, continuePattern);
 
-      const context = await engine.execute(PatternType.NESTED, {
+      const _context = await engine.execute(PatternType.NESTED, {
         
         input: {
           rootSkill: 'partialFail',

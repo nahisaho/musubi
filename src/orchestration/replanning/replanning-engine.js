@@ -8,7 +8,7 @@
 'use strict';
 
 const EventEmitter = require('events');
-const { ReplanTrigger, ReplanDecision, mergeConfig, defaultReplanningConfig } = require('./config');
+const { _ReplanTrigger, ReplanDecision, mergeConfig, _defaultReplanningConfig } = require('./config');
 const { PlanMonitor } = require('./plan-monitor');
 const { PlanEvaluator } = require('./plan-evaluator');
 const { AlternativeGenerator } = require('./alternative-generator');
@@ -389,11 +389,11 @@ class ReplanningEngine extends EventEmitter {
    * @param {Object} trigger - Original trigger
    * @private
    */
-  async applyDecision(decision, trigger) {
+  async applyDecision(decision, _trigger) {
     const planId = this.currentPlan.id;
     
     switch (decision.type) {
-      case ReplanDecision.RETRY:
+      case ReplanDecision.RETRY: {
         // Add task back to pending
         const retryTask = {
           ...decision.alternative.task,
@@ -402,6 +402,7 @@ class ReplanningEngine extends EventEmitter {
         this.executionContext.pending.unshift(retryTask);
         this.executionContext.retries++;
         break;
+      }
         
       case ReplanDecision.REPLACE:
         // Add alternative task to pending

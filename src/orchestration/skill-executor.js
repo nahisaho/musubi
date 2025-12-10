@@ -644,7 +644,7 @@ class SkillExecutor extends EventEmitter {
     };
   }
 
-  _mergeInputFromResults(results, skillId) {
+  _mergeInputFromResults(results, _skillId) {
     // Simple merge - could be extended with explicit mappings
     const merged = {};
     for (const result of results.values()) {

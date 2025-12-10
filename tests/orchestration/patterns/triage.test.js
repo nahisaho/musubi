@@ -15,7 +15,7 @@ const {
 
 const {
   HandoffPatternType,
-  EscalationData
+  _EscalationData
 } = require('../../../src/orchestration/patterns/handoff');
 
 const { ExecutionContext } = require('../../../src/orchestration/orchestration-engine');

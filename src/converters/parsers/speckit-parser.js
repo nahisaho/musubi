@@ -688,8 +688,8 @@ async function parseTasks(tasksPath) {
   let currentPhase = 1;
   
   // Track current phase from headings
-  const lines = content.split('\n');
-  let lineIndex = 0;
+  const _lines = content.split('\n');
+  let _lineIndex = 0;
   
   while ((match = taskRegex.exec(content)) !== null) {
     // Find current phase by looking at preceding headings
@@ -706,7 +706,7 @@ async function parseTasks(tasksPath) {
     const completed = match[1].toLowerCase() === 'x';
     const taskId = match[2];
     const isParallel = !!match[3];
-    const userStory = match[4] ? match[4].replace(/[\[\]]/g, '') : undefined;
+    const userStory = match[4] ? match[4].replace(/[[\]]/g, '') : undefined;
     const description = match[5].trim();
     
     // Extract file path if present

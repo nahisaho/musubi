@@ -397,7 +397,7 @@ class MCPToSkillAdapter extends EventEmitter {
   /**
    * Stdio transport (placeholder)
    */
-  async _sendStdioRequest(connection, request) {
+  async _sendStdioRequest(_connection, _request) {
     // Placeholder for stdio transport implementation
     // In real implementation, this would:
     // 1. Spawn child process
@@ -412,7 +412,7 @@ class MCPToSkillAdapter extends EventEmitter {
   /**
    * HTTP transport (placeholder)
    */
-  async _sendHttpRequest(connection, request) {
+  async _sendHttpRequest(_connection, _request) {
     // Placeholder for HTTP transport implementation
     return {
       content: [{ type: 'text', text: 'HTTP transport result' }],
@@ -423,7 +423,7 @@ class MCPToSkillAdapter extends EventEmitter {
   /**
    * SSE transport (placeholder)
    */
-  async _sendSseRequest(connection, request) {
+  async _sendSseRequest(_connection, _request) {
     // Placeholder for SSE transport implementation
     return {
       content: [{ type: 'text', text: 'SSE transport result' }],
@@ -434,7 +434,7 @@ class MCPToSkillAdapter extends EventEmitter {
   /**
    * WebSocket transport (placeholder)
    */
-  async _sendWebSocketRequest(connection, request) {
+  async _sendWebSocketRequest(_connection, _request) {
     // Placeholder for WebSocket transport implementation
     return {
       content: [{ type: 'text', text: 'WebSocket transport result' }],
@@ -481,7 +481,7 @@ class MCPToSkillAdapter extends EventEmitter {
   getServerSkills(serverId) {
     const skills = [];
     
-    for (const [skillId, adapter] of this.adapters) {
+    for (const [_skillId, adapter] of this.adapters) {
       if (adapter.serverId === serverId) {
         skills.push(adapter);
       }
@@ -592,7 +592,7 @@ class SkillToMCPAdapter extends EventEmitter {
   handleListTools() {
     const tools = [];
     
-    for (const [skillId, tool] of this.exportedTools) {
+    for (const [_skillId, tool] of this.exportedTools) {
       tools.push(tool);
     }
 
@@ -731,13 +731,14 @@ class SkillToMCPAdapter extends EventEmitter {
             result: this.handleListTools()
           };
 
-        case 'tools/call':
+        case 'tools/call': {
           const result = await this.handleCallTool(params);
           return {
             jsonrpc: '2.0',
             id,
             result
           };
+        }
 
         default:
           return {

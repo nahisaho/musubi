@@ -42,7 +42,7 @@ const createMockRegistry = () => ({
 
 // Mock SkillExecutor
 const createMockExecutor = () => ({
-  async execute(skillId, input) {
+  async execute(_skillId, _input) {
     return { success: true, output: { result: 'executed' } };
   }
 });

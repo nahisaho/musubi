@@ -669,7 +669,7 @@ const SDDWorkflowTemplates = {
       {
         name: 'checkpoint',
         type: StepType.CHECKPOINT,
-        name: 'pre-deployment'
+        checkpoint: 'pre-deployment'
       },
       {
         name: 'deploy-approval',

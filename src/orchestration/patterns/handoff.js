@@ -9,7 +9,7 @@
  */
 
 const { BasePattern } = require('../pattern-registry');
-const { PatternType, ExecutionContext, ExecutionStatus } = require('../orchestration-engine');
+const { PatternType, ExecutionContext, _ExecutionStatus } = require('../orchestration-engine');
 
 /**
  * Extended PatternType with HANDOFF
@@ -360,7 +360,7 @@ class HandoffPattern extends BasePattern {
    * @returns {Promise<HandoffConfig|Agent>} Selected agent
    */
   async selectTargetAgent(context, targetAgents, engine) {
-    const { message, history, sharedContext } = context.input;
+    const { _message, _history, _sharedContext } = context.input;
 
     switch (this.options.strategy) {
       case HandoffStrategy.FIRST_MATCH:
@@ -400,7 +400,7 @@ class HandoffPattern extends BasePattern {
   /**
    * Select best matching agent based on scoring
    */
-  async _selectBestMatch(targetAgents, context, engine) {
+  async _selectBestMatch(targetAgents, context, _engine) {
     let bestScore = -1;
     let bestTarget = null;
 

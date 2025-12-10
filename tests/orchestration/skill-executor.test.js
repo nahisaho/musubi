@@ -32,7 +32,7 @@ const createMockRegistry = () => ({
   addSkill(skill) {
     this.skills.set(skill.id, skill);
   },
-  recordExecution(skillId, success, duration) {
+  recordExecution(_skillId, _success, _duration) {
     // Mock implementation
   }
 });

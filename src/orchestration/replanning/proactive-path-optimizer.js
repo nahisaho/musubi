@@ -448,7 +448,7 @@ Return optimization suggestions with estimated improvement percentages.`;
    * @param {Object} context - Execution context
    * @returns {Promise<{valid: boolean, reason?: string}>} Validation result
    */
-  async validateOptimization(optimization, context) {
+  async validateOptimization(optimization, _context) {
     // Check dependency constraints
     if (optimization.newPath) {
       const valid = this.validateDependencies(optimization.newPath);
@@ -573,7 +573,7 @@ Return optimization suggestions with estimated improvement percentages.`;
    * @param {Object} context - Execution context
    * @returns {number} Risk score (0-1)
    */
-  calculateRiskScore(pending, context) {
+  calculateRiskScore(pending, _context) {
     if (pending.length === 0) return 0;
     
     let riskSum = 0;
@@ -700,7 +700,7 @@ class ParallelizationAnalyzer {
    * @param {Object} context - Context
    * @returns {OptimizationOpportunity[]} Opportunities
    */
-  analyze(tasks, context) {
+  analyze(tasks, _context) {
     const opportunities = [];
     const groups = this.findParallelGroups(tasks);
     
@@ -788,7 +788,7 @@ class MergingAnalyzer {
    * @param {Object} context - Context
    * @returns {OptimizationOpportunity[]} Opportunities
    */
-  analyze(tasks, context) {
+  analyze(tasks, _context) {
     const opportunities = [];
     const groups = this.findMergeableGroups(tasks);
     
@@ -849,7 +849,7 @@ class ReorderingAnalyzer {
    * @param {Object} context - Context
    * @returns {OptimizationOpportunity[]} Opportunities
    */
-  analyze(tasks, context) {
+  analyze(tasks, _context) {
     const opportunities = [];
     
     // Check for dependency-based improvements

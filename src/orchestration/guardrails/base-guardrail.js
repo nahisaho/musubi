@@ -89,7 +89,7 @@ class BaseGuardrail {
    * @param {Object} [context] - Execution context
    * @returns {Promise<GuardrailResult>}
    */
-  async check(input, context = {}) {
+  async check(input, _context = {}) {
     throw new Error('Subclasses must implement check() method');
   }
 

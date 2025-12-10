@@ -366,7 +366,7 @@ class NLParser {
     }
 
     // Check for CSS selector in the text (match only the selector part)
-    const selectorMatch = text.match(/([#\.][a-zA-Z][\w\-]*|\[[^\]]+\])/);
+    const selectorMatch = text.match(/([#.][a-zA-Z][\w-]*|\[[^\]]+\])/);
     if (selectorMatch) {
       return selectorMatch[0];
     }

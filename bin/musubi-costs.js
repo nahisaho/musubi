@@ -116,7 +116,7 @@ async function showReport(tracker, args) {
 
 async function handleBudget(tracker, subCommand, args) {
   switch (subCommand) {
-    case 'set':
+    case 'set': {
       const amount = parseFloat(args[0]);
       if (isNaN(amount) || amount < 0) {
         console.error(chalk.red('Invalid budget amount. Please provide a positive number.'));
@@ -133,8 +133,9 @@ async function handleBudget(tracker, subCommand, args) {
 
       console.log(chalk.green(`✓ Budget set to $${amount.toFixed(2)} per ${period}`));
       break;
+    }
 
-    case 'status':
+    case 'status': {
       const summary = tracker.getPeriodSummary();
       console.log(chalk.blue.bold('\n💰 Budget Status\n'));
 
@@ -152,12 +153,14 @@ async function handleBudget(tracker, subCommand, args) {
       }
       console.log('');
       break;
+    }
 
-    case 'clear':
+    case 'clear': {
       const budgetPath = path.join(STORAGE_DIR, 'budget.json');
       await fs.remove(budgetPath);
       console.log(chalk.green('✓ Budget cleared'));
       break;
+    }
 
     default:
       console.log('Usage:');

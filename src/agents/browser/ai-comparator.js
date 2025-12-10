@@ -4,7 +4,7 @@
  */
 
 const fs = require('fs-extra');
-const path = require('path');
+const _path = require('path');
 
 /**
  * @typedef {Object} ComparisonResult
@@ -221,7 +221,7 @@ class AIComparator {
    * @param {Object} options
    * @returns {string}
    */
-  generateReport(result, options = {}) {
+  generateReport(result, _options = {}) {
     const lines = [
       '# Screenshot Comparison Report',
       '',

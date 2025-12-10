@@ -352,7 +352,7 @@ class SelfCorrection extends EventEmitter {
    * Handle retry strategy
    * @private
    */
-  async handleRetry(record, operation, options) {
+  async handleRetry(record, operation, _options) {
     const attemptNumber = record.attempts.length;
     
     // Calculate delay
@@ -460,7 +460,7 @@ class SelfCorrection extends EventEmitter {
    * Handle skip strategy
    * @private
    */
-  async handleSkip(record, operation, options) {
+  async handleSkip(record, _operation, _options) {
     this.emit('correction:skipped', { record });
     
     return { skipped: true, reason: record.message };

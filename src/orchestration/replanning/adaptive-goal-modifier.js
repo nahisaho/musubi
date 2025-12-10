@@ -393,7 +393,7 @@ class ModificationStrategy {
    * 候補戦略を生成
    * @private
    */
-  _generateCandidateStrategies(goal, trigger, context) {
+  _generateCandidateStrategies(goal, trigger, _context) {
     const strategies = [];
 
     switch (trigger.reason) {
@@ -459,7 +459,7 @@ class ModificationStrategy {
    * 戦略を評価
    * @private
    */
-  _evaluateStrategy(strategy, goal, context) {
+  _evaluateStrategy(strategy, goal, _context) {
     let score = 0.5; // ベーススコア
 
     // 目標優先度との整合性
@@ -488,7 +488,7 @@ class ModificationStrategy {
   }
 
   // 戦略生成メソッド群
-  _createScopeReductionStrategy(goal, trigger) {
+  _createScopeReductionStrategy(goal, _trigger) {
     return {
       type: ModificationType.SCOPE_REDUCTION,
       description: 'Reduce scope to meet constraints',
@@ -527,7 +527,7 @@ class ModificationStrategy {
     };
   }
 
-  _createCriteriaRelaxationStrategy(goal, trigger) {
+  _createCriteriaRelaxationStrategy(_goal, _trigger) {
     return {
       type: ModificationType.SUCCESS_CRITERIA_RELAXATION,
       description: 'Relax success criteria to achievable levels',
@@ -540,7 +540,7 @@ class ModificationStrategy {
     };
   }
 
-  _createGoalDecompositionStrategy(goal, trigger) {
+  _createGoalDecompositionStrategy(goal, _trigger) {
     return {
       type: ModificationType.GOAL_DECOMPOSITION,
       description: 'Decompose goal into smaller, manageable sub-goals',

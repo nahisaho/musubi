@@ -9,7 +9,7 @@
 const {
   InputGuardrail,
   createInputGuardrail,
-  BaseGuardrail,
+  _BaseGuardrail,
   GuardrailTripwireException,
   rules,
   globalRuleRegistry
@@ -389,7 +389,7 @@ describe('InputGuardrail', () => {
       
       try {
         await guardrail.run('');
-        fail('Should have thrown');
+        throw new Error('Should have thrown');
       } catch (error) {
         expect(error).toBeInstanceOf(GuardrailTripwireException);
         expect(error.result).toBeDefined();

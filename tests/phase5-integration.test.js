@@ -10,18 +10,18 @@ const {
   SteeringAutoUpdate,
   SteeringValidator,
   TRIGGER,
-  STEERING_TYPE,
+  _STEERING_TYPE,
   SEVERITY,
-  RULE_TYPE,
+  _RULE_TYPE,
   // Sprint 5.2
   TemplateConstraints,
   ThinkingChecklist,
   CONSTRAINT_TYPE,
-  UNCERTAINTY,
+  _UNCERTAINTY,
   MARKER_TYPE,
   // Sprint 5.3
   QualityDashboard,
-  METRIC_CATEGORY,
+  _METRIC_CATEGORY,
   HEALTH_STATUS,
   CONSTITUTIONAL_ARTICLES,
   // Sprint 5.4
@@ -49,7 +49,7 @@ describe('Phase5Integration', () => {
     });
 
     test('should emit ready event', () => {
-      const handler = jest.fn();
+      const _handler = jest.fn();
       const integration = new Phase5Integration();
       // Event already fired during construction, verify status
       expect(integration.status).toBe(INTEGRATION_STATUS.READY);

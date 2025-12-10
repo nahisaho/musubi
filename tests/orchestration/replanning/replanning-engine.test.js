@@ -12,7 +12,7 @@ const {
   ReplanHistory,
   ReplanTrigger,
   ReplanDecision,
-  mergeReplanningConfig
+  _mergeReplanningConfig
 } = require('../../../src/orchestration/replanning');
 
 const { MockLLMProvider } = require('../../../src/llm-providers');

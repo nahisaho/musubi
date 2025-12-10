@@ -384,7 +384,7 @@ class ReasoningEngine extends EventEmitter {
    * Solve a sub-problem
    * @private
    */
-  async solveSubProblem(subProblem, context) {
+  async solveSubProblem(subProblem, _context) {
     // Simplified solution generation
     return `Resolved: ${subProblem.substring(0, 50)}...`;
   }
@@ -480,7 +480,7 @@ class ReasoningEngine extends EventEmitter {
    * Develop a reasoning branch
    * @private
    */
-  async developBranch(thought, problem, context) {
+  async developBranch(thought, _problem, _context) {
     const steps = [];
     
     steps.push({ content: `Developing: ${thought}`, type: 'develop' });
@@ -510,7 +510,7 @@ class ReasoningEngine extends EventEmitter {
    * Generate initial solution
    * @private
    */
-  async generateInitialSolution(problem, context) {
+  async generateInitialSolution(problem, _context) {
     return `Initial approach to: ${problem.substring(0, 50)}`;
   }
   
@@ -518,7 +518,7 @@ class ReasoningEngine extends EventEmitter {
    * Refine existing solution
    * @private
    */
-  async refineSolution(solution, problem, context) {
+  async refineSolution(solution, _problem, _context) {
     return `Refined: ${solution}`;
   }
   
@@ -584,7 +584,7 @@ class ReasoningEngine extends EventEmitter {
    * Find analogies for problem
    * @private
    */
-  findAnalogies(problem, context) {
+  findAnalogies(_problem, _context) {
     // Placeholder for analogy retrieval
     // In real implementation, would search knowledge base
     return [];
@@ -594,7 +594,7 @@ class ReasoningEngine extends EventEmitter {
    * Apply analogy to derive solution
    * @private
    */
-  applyAnalogy(analogy, problem, context) {
+  applyAnalogy(analogy, _problem, _context) {
     return `Applied ${analogy.description} to derive solution`;
   }
   

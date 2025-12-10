@@ -8,7 +8,7 @@
  * - Supports domain-specific custom rules
  */
 
-const fs = require('fs');
+const _fs = require('fs');
 const path = require('path');
 const { EventEmitter } = require('events');
 
@@ -289,7 +289,7 @@ class ProjectYmlSync {
     // Simple YAML-like parsing
     const lines = content.split('\n');
     let currentKey = null;
-    let inList = false;
+    let _inList = false;
 
     for (const line of lines) {
       const trimmed = line.trim();
@@ -303,9 +303,9 @@ class ProjectYmlSync {
         
         if (value && !value.startsWith('-')) {
           data[currentKey] = value;
-          inList = false;
+          _inList = false;
         } else {
-          inList = true;
+          _inList = true;
           if (!Array.isArray(data[currentKey])) {
             data[currentKey] = [];
           }

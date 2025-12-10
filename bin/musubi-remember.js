@@ -21,11 +21,11 @@ const chalk = require('chalk');
 const fs = require('fs-extra');
 const path = require('path');
 
-// Import memory management modules
-let AgentMemoryManager, MemoryCondenser;
+// Import memory management modules (for future use)
+let _AgentMemoryManager, _MemoryCondenser;
 try {
-  AgentMemoryManager = require('../src/managers/agent-memory-manager');
-  MemoryCondenser = require('../src/managers/memory-condenser');
+  _AgentMemoryManager = require('../src/managers/agent-memory-manager');
+  _MemoryCondenser = require('../src/managers/memory-condenser');
 } catch {
   // Modules may not exist yet
 }
@@ -143,7 +143,7 @@ program
         return;
       }
       
-      entries.forEach((entry, i) => {
+      entries.forEach((entry, _i) => {
         const typeColors = {
           decision: chalk.blue,
           insight: chalk.green,

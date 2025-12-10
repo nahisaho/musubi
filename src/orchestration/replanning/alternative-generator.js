@@ -35,7 +35,7 @@ class AlternativeGenerator {
    * @param {Object} [options={}] - Generation options
    * @returns {Promise<Alternative[]>} Ranked alternatives
    */
-  async generateAlternatives(failedTask, context, options = {}) {
+  async generateAlternatives(failedTask, context, _options = {}) {
     // Analyze context to understand the situation
     const analysis = await this.analyzeContext(failedTask, context);
 
@@ -86,7 +86,7 @@ class AlternativeGenerator {
    * @param {Object} context - Execution context
    * @returns {string} Goal description
    */
-  extractGoal(task, context) {
+  extractGoal(task, _context) {
     // Try to get goal from task metadata
     if (task.goal) return task.goal;
     if (task.description) return task.description;
@@ -189,7 +189,7 @@ Provide your confidence (0.0-1.0) for each alternative based on likelihood of su
    * @returns {Alternative[]} Processed alternatives
    * @private
    */
-  processLLMResponse(response, failedTask, context) {
+  processLLMResponse(response, failedTask, _context) {
     if (!response || !response.alternatives) {
       return [];
     }

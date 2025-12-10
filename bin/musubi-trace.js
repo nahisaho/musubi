@@ -723,7 +723,7 @@ program
   .option('--no-gaps', 'Exclude gaps analysis')
   .action(async options => {
     try {
-      const { CoverageReporter, ReportFormat } = require('../src/reporters/coverage-report.js');
+      const { CoverageReporter } = require('../src/reporters/coverage-report.js');
 
       console.log(chalk.bold('\n📊 Generating Coverage Report\n'));
 
@@ -762,7 +762,7 @@ program
   .option('-o, --output <path>', 'Output report path')
   .action(async options => {
     try {
-      const { TraceabilityValidator, Severity } = require('../src/validators/traceability-validator.js');
+      const { TraceabilityValidator } = require('../src/validators/traceability-validator.js');
 
       const validator = new TraceabilityValidator(process.cwd(), {
         thresholds: {

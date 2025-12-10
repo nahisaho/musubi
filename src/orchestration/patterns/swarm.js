@@ -8,7 +8,7 @@
  */
 
 const { BasePattern } = require('../pattern-registry');
-const { PatternType, ExecutionContext, ExecutionStatus, Priority } = require('../orchestration-engine');
+const { PatternType, ExecutionContext, ExecutionStatus: _ExecutionStatus, Priority } = require('../orchestration-engine');
 
 /**
  * P-label priority levels for parallel execution

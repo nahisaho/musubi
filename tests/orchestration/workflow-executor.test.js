@@ -309,7 +309,7 @@ describe('WorkflowExecutor', () => {
     test('should resolve string variables in condition', async () => {
       let resolved = false;
 
-      executor.registerStepHandler('check', async (step, context) => {
+      executor.registerStepHandler('check', async (_step, _context) => {
         resolved = true;
       });
 
@@ -348,7 +348,7 @@ describe('WorkflowExecutor', () => {
     test('should evaluate $eq operator', async () => {
       let conditionResult = null;
 
-      executor.registerStepHandler('check', async (step, context) => {
+      executor.registerStepHandler('check', async (_step, _context) => {
         conditionResult = true;
       });
 
@@ -578,7 +578,7 @@ describe('WorkflowExecutor', () => {
     test('should register and use custom handler', async () => {
       let customExecuted = false;
 
-      executor.registerStepHandler('custom-type', async (step, context) => {
+      executor.registerStepHandler('custom-type', async (_step, _context) => {
         customExecuted = true;
         return { custom: 'result' };
       });
@@ -587,7 +587,7 @@ describe('WorkflowExecutor', () => {
         { id: 'custom1', type: 'custom-type', customData: 'value' }
       ]);
 
-      const result = await executor.execute(workflow);
+      const _result = await executor.execute(workflow);
       
       expect(customExecuted).toBe(true);
     });

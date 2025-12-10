@@ -412,7 +412,7 @@ function detectEARSPattern(statement) {
  * @param {EARSPattern} pattern - EARS pattern
  * @returns {{trigger?: string, condition?: string, action: string}}
  */
-function parseEARSStatement(statement, pattern) {
+function parseEARSStatement(statement, _pattern) {
   const result = { action: '' };
   
   // Extract SHALL clause

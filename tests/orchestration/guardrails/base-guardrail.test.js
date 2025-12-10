@@ -9,10 +9,10 @@
 const {
   BaseGuardrail,
   GuardrailChain,
-  GuardrailTripwireException,
-  RuleBuilder,
+  _GuardrailTripwireException,
+  _RuleBuilder,
   RuleRegistry,
-  RuleType,
+  _RuleType,
   SecurityPatterns,
   rules,
   CommonRuleSets,
@@ -147,13 +147,13 @@ describe('GuardrailChain', () => {
 
   beforeEach(() => {
     PassGuardrail = class extends BaseGuardrail {
-      async check(input) {
+      async check(_input) {
         return this.createResult(true, [], 'Passed');
       }
     };
     
     FailGuardrail = class extends BaseGuardrail {
-      async check(input) {
+      async check(_input) {
         return this.createResult(
           false,
           [this.createViolation('FAIL', 'Validation failed')],

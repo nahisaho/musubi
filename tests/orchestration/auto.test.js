@@ -13,7 +13,7 @@ const {
 const {
   OrchestrationEngine,
   ExecutionContext,
-  ExecutionStatus,
+  _ExecutionStatus,
   PatternType
 } = require('../../src/orchestration/orchestration-engine');
 

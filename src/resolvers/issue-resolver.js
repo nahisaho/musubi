@@ -380,7 +380,7 @@ class IssueResolver {
     body += `Resolves #${issue.number}\n\n`;
 
     body += `## Requirements Addressed\n\n`;
-    result.requirements.forEach((req, i) => {
+    result.requirements.forEach((req, _i) => {
       body += `- [ ] ${req}\n`;
     });
 

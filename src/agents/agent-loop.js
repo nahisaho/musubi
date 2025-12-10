@@ -348,7 +348,7 @@ class AgentLoop extends EventEmitter {
         this.emit('tool:result', { name: toolName, output, id: callId, status: 'success' });
         
       } catch (error) {
-        const errorResult = {
+        const _errorResult = {
           callId,
           tool: toolName,
           error: error.message,
@@ -388,7 +388,7 @@ class AgentLoop extends EventEmitter {
    * @param {Object} context
    * @returns {Promise<boolean>}
    */
-  async defaultCompletionCheck(output, messages, context) {
+  async defaultCompletionCheck(_output, _messages, _context) {
     // By default, if we reach here (no tool calls), we're done
     return true;
   }
@@ -511,7 +511,7 @@ function createMockLLMProvider(responses) {
   let callIndex = 0;
   
   return {
-    async chat(options) {
+    async chat(_options) {
       if (callIndex >= responses.length) {
         return { content: 'Done', toolCalls: [] };
       }

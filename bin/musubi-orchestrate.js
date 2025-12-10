@@ -25,12 +25,8 @@ const {
   createOrchestrationEngine,
   PatternType,
   ExecutionStatus,
-  Priority,
-  HandoffPattern,
   HandoffFilters,
   HandoffConfig,
-  handoff,
-  TriagePattern,
   TriageCategory,
   TriageStrategy,
   AgentCapability
@@ -39,7 +35,6 @@ const {
 const {
   ReplanningEngine,
   GoalProgressTracker,
-  Goal,
   AdaptiveGoalModifier,
   ProactivePathOptimizer,
   ModificationReason

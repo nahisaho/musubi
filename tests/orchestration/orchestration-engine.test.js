@@ -165,7 +165,7 @@ describe('OrchestrationEngine', () => {
 
     it('should execute pattern and return completed context', async () => {
       const pattern = {
-        execute: async (context, eng) => ({ success: true })
+        execute: async (_context, _eng) => ({ success: true })
       };
       engine.registerPattern('success', pattern);
       
@@ -395,7 +395,7 @@ describe('OrchestrationEngine', () => {
       };
       engine.registerPattern('long', pattern);
       
-      const executePromise = engine.execute('long');
+      const _executePromise = engine.execute('long');
       
       // Wait for execution to start
       await new Promise(resolve => setTimeout(resolve, 10));
@@ -527,7 +527,7 @@ describe('ExecutionContext', () => {
       
       // Wait a bit
       const startTime = Date.now();
-      while (Date.now() - startTime < 10) {}
+      while (Date.now() - startTime < 10) { /* busy wait */ }
       
       context.complete({});
       

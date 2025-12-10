@@ -610,7 +610,7 @@ class GoalProgressTracker extends EventEmitter {
    * @param {number} currentRate - Current progress rate
    * @returns {number} Confidence (0-1)
    */
-  calculatePredictionConfidence(goalId, currentRate) {
+  calculatePredictionConfidence(goalId, _currentRate) {
     const snapshots = this.progressHistory.get(goalId) || [];
     
     if (snapshots.length < 5) return 0.5; // Low confidence with little data
