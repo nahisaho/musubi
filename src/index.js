@@ -85,6 +85,9 @@ const { ReleaseManager } = require('./monitoring/release-manager');
 const { SteeringValidator } = require('./steering/steering-validator');
 const { SteeringAutoUpdate } = require('./steering/steering-auto-update');
 
+// Performance (Phase 6)
+const performance = require('./performance');
+
 module.exports = {
   // Analyzers
   LargeProjectAnalyzer,
@@ -148,4 +151,7 @@ module.exports = {
   // Steering
   SteeringValidator,
   SteeringAutoUpdate,
+
+  // Performance (Phase 6)
+  performance,
 };
