@@ -37,6 +37,18 @@ const {
   defaultOptimizer,
 } = require('./memory-optimizer');
 
+const {
+  InitStage,
+  InitState,
+  InitModule,
+  StartupOptimizer,
+  WarmupCache,
+  InitProfiler,
+  defaultStartupOptimizer,
+  defaultWarmupCache,
+  defaultInitProfiler,
+} = require('./startup-optimizer');
+
 /**
  * BatchProcessor for bulk operations
  */
@@ -483,4 +495,15 @@ module.exports = {
   StreamingBuffer,
   MemoryOptimizer,
   defaultOptimizer,
+
+  // Startup Optimization (Phase 6 P2)
+  InitStage,
+  InitState,
+  InitModule,
+  StartupOptimizer,
+  WarmupCache,
+  InitProfiler,
+  defaultStartupOptimizer,
+  defaultWarmupCache,
+  defaultInitProfiler,
 };
