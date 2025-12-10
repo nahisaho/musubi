@@ -4,7 +4,7 @@
 
 GitHub Copilot は優秀な「個人プレイヤー」ですが、**MUSUBI** と **CodeGraph MCP Server** を組み合わせることで、**専門家チームとして協調するSwarm coding** が実現します。
 
-**3,850のテスト、129のテストスイート、12,093のコードエンティティ、59,222のリレーション**を持つMUSUBI v5.6.3は、エンタープライズグレードの開発基盤として設計されています。
+**3,958のテスト、132のテストスイート、12,093のコードエンティティ、59,222のリレーション**を持つMUSUBI v5.7.0は、エンタープライズグレードの開発基盤として設計されています。
 
 ### GitHub Copilot単体の限界
 
@@ -98,18 +98,40 @@ MUSUBIのSDDワークフローは8つのステージで構成されています�
 
 ## なぜMUSUBIなのか？── 圧倒的なスケール
 
-### v5.6.3の実績データ
+### v5.7.0の実績データ
 
 | メトリクス | 数値 | 意味 |
 |-----------|------|------|
-| **テスト数** | 3,850 | 業界最高水準のテストカバレッジ |
-| **テストスイート** | 128 | 包括的な品質保証 |
+| **テスト数** | 3,958 | 業界最高水準のテストカバレッジ |
+| **テストスイート** | 132 | 包括的な品質保証 |
 | **コードエンティティ** | 12,093 | 関数、クラス、変数等の解析対象 |
 | **コードリレーション** | 59,222 | 依存関係・呼び出し関係の把握 |
 | **コミュニティ（モジュール）** | 140 | 自動検出されたモジュール境界 |
 | **対応プラットフォーム** | 13+ | Claude, Copilot, Cursor, Windsurf, Gemini, Codex... |
 | **専門スキル** | 25 | 仕様からデプロイまで網羅 |
 | **オーケストレーションパターン** | 9 | Swarm, Handoff, Triage, Human-in-Loop... |
+
+### v5.7.0 新機能：Performance Optimization
+
+v5.7.0 では、エンタープライズ向けのパフォーマンス最適化モジュールを追加しました。
+
+| 機能 | 説明 | 効果 |
+|------|------|------|
+| **LazyLoader** | オンデマンドモジュール読み込み | 起動時間短縮、メモリ効率化 |
+| **CacheManager** | LRUキャッシュ + TTL管理 | API応答時間 30%+ 改善 |
+| **BatchProcessor** | バルク処理の並列実行 | 大量データ処理の効率化 |
+| **ConnectionPool** | 接続プーリング | リソース管理の最適化 |
+| **PerformanceMonitor** | パーセンタイル計算付きメトリクス | ボトルネック特定 |
+
+```javascript
+// LazyLoader 使用例
+const { defaultLoader } = require('musubi-sdd/src/performance');
+const analyzer = await defaultLoader.load('complexity-analyzer');
+
+// CacheManager 使用例  
+const { defaultCacheManager } = require('musubi-sdd/src/performance');
+await defaultCacheManager.set('api-response', 'key', data, { ttl: 300000 });
+```
 
 ### 実証検証プロジェクト
 
@@ -930,7 +952,7 @@ Steeringを更新
 
 **1人のAIから、チームで働くAIへ。**
 
-**MUSUBI v5.6.3** で Swarm Coding を体験してください。
+**MUSUBI v5.7.0** で Swarm Coding を体験してください。
 
 ---
 
