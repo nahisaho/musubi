@@ -88,6 +88,12 @@ const { SteeringAutoUpdate } = require('./steering/steering-auto-update');
 // Performance (Phase 6)
 const performance = require('./performance');
 
+// Enterprise (Phase 6)
+const enterprise = require('./enterprise');
+
+// AI (Phase 6)
+const ai = require('./ai');
+
 module.exports = {
   // Analyzers
   LargeProjectAnalyzer,
@@ -154,4 +160,10 @@ module.exports = {
 
   // Performance (Phase 6)
   performance,
+
+  // Enterprise (Phase 6)
+  enterprise,
+
+  // AI (Phase 6)
+  ai,
 };
