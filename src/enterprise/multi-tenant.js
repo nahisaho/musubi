@@ -843,12 +843,7 @@ class TenantManager {
     const quota = quotaMap[metric];
     if (!quota) return true;
 
-    return this.usageTracker.isWithinQuota(
-      tenant.id,
-      metric,
-      quota.limit,
-      quota.period
-    );
+    return this.usageTracker.isWithinQuota(tenant.id, metric, quota.limit, quota.period);
   }
 
   /**

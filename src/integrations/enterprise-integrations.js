@@ -196,16 +196,16 @@ class JIRAIntegration extends BaseIntegration {
     let results = Array.from(this.issues.values());
 
     if (query.status) {
-      results = results.filter((i) => i.status === query.status);
+      results = results.filter(i => i.status === query.status);
     }
     if (query.type) {
-      results = results.filter((i) => i.type === query.type);
+      results = results.filter(i => i.type === query.type);
     }
     if (query.assignee) {
-      results = results.filter((i) => i.assignee === query.assignee);
+      results = results.filter(i => i.assignee === query.assignee);
     }
     if (query.label) {
-      results = results.filter((i) => i.labels.includes(query.label));
+      results = results.filter(i => i.labels.includes(query.label));
     }
 
     return results;
@@ -316,10 +316,10 @@ class AzureDevOpsIntegration extends BaseIntegration {
     let results = Array.from(this.workItems.values());
 
     if (wiql.state) {
-      results = results.filter((w) => w.state === wiql.state);
+      results = results.filter(w => w.state === wiql.state);
     }
     if (wiql.type) {
-      results = results.filter((w) => w.type === wiql.type);
+      results = results.filter(w => w.type === wiql.type);
     }
 
     return results;
@@ -841,14 +841,14 @@ class IntegrationManager {
    * Get all integrations of a type
    */
   getByType(type) {
-    return Array.from(this.integrations.values()).filter((i) => i.type === type);
+    return Array.from(this.integrations.values()).filter(i => i.type === type);
   }
 
   /**
    * List all integrations
    */
   list() {
-    return Array.from(this.integrations.values()).map((i) => i.getStatus());
+    return Array.from(this.integrations.values()).map(i => i.getStatus());
   }
 
   /**
@@ -882,14 +882,11 @@ class IntegrationManager {
     const all = this.list();
     return {
       total: all.length,
-      connected: all.filter((i) => i.status === IntegrationStatus.CONNECTED).length,
-      disconnected: all.filter((i) => i.status === IntegrationStatus.DISCONNECTED).length,
-      error: all.filter((i) => i.status === IntegrationStatus.ERROR).length,
+      connected: all.filter(i => i.status === IntegrationStatus.CONNECTED).length,
+      disconnected: all.filter(i => i.status === IntegrationStatus.DISCONNECTED).length,
+      error: all.filter(i => i.status === IntegrationStatus.ERROR).length,
       byType: Object.fromEntries(
-        Object.values(IntegrationType).map((t) => [
-          t,
-          all.filter((i) => i.type === t).length,
-        ])
+        Object.values(IntegrationType).map(t => [t, all.filter(i => i.type === t).length])
       ),
     };
   }

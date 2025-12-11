@@ -152,7 +152,7 @@ describe('Advanced AI Module', () => {
     it('should find by capability', () => {
       const experts = registry.findByCapability(ModelCapability.EXPERT);
       expect(experts.length).toBeGreaterThan(0);
-      expect(experts.every((m) => m.capability === ModelCapability.EXPERT)).toBe(true);
+      expect(experts.every(m => m.capability === ModelCapability.EXPERT)).toBe(true);
     });
 
     it('should find by task', () => {
@@ -191,10 +191,7 @@ describe('Advanced AI Module', () => {
     });
 
     it('should respect custom rules', () => {
-      router.addRule(
-        (task) => task.taskType === TaskType.DEBUGGING,
-        'claude-3-5-sonnet'
-      );
+      router.addRule(task => task.taskType === TaskType.DEBUGGING, 'claude-3-5-sonnet');
 
       const model = router.route({ taskType: TaskType.DEBUGGING });
       expect(model.id).toBe('claude-3-5-sonnet');
@@ -225,10 +222,7 @@ describe('Advanced AI Module', () => {
     });
 
     it('should route many tasks', () => {
-      const tasks = [
-        { taskType: TaskType.CHAT },
-        { taskType: TaskType.CODE_GENERATION },
-      ];
+      const tasks = [{ taskType: TaskType.CHAT }, { taskType: TaskType.CODE_GENERATION }];
 
       const routed = router.routeMany(tasks);
 
@@ -298,7 +292,7 @@ describe('Advanced AI Module', () => {
       const chunks = manager.chunkSemantic(text, 10);
 
       expect(chunks.length).toBeGreaterThan(1);
-      chunks.forEach((chunk) => {
+      chunks.forEach(chunk => {
         expect(chunk.text.length).toBeGreaterThan(0);
       });
     });
@@ -435,7 +429,12 @@ describe('Advanced AI Module', () => {
     it('should augment prompt with context', async () => {
       // Use more distinctive content for better matching
       const docs = [
-        { id: 'doc1', content: 'helper helper helper function', path: 'helper.js', language: 'javascript' },
+        {
+          id: 'doc1',
+          content: 'helper helper helper function',
+          path: 'helper.js',
+          language: 'javascript',
+        },
       ];
 
       // Use a new pipeline with lower threshold

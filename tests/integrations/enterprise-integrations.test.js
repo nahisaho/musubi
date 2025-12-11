@@ -544,17 +544,13 @@ describe('Enterprise Integrations Module', () => {
     });
 
     it('should connect all', async () => {
-      manager.register(
-        new SlackIntegration({ id: 'slack', webhookUrl: 'test' })
-      );
-      manager.register(
-        new TeamsIntegration({ id: 'teams', webhookUrl: 'test' })
-      );
+      manager.register(new SlackIntegration({ id: 'slack', webhookUrl: 'test' }));
+      manager.register(new TeamsIntegration({ id: 'teams', webhookUrl: 'test' }));
 
       const results = await manager.connectAll();
 
       expect(results.length).toBe(2);
-      expect(results.every((r) => r.success)).toBe(true);
+      expect(results.every(r => r.success)).toBe(true);
     });
 
     it('should disconnect all', async () => {
@@ -564,7 +560,7 @@ describe('Enterprise Integrations Module', () => {
 
       const results = await manager.disconnectAll();
 
-      expect(results.every((r) => r.success)).toBe(true);
+      expect(results.every(r => r.success)).toBe(true);
       expect(slack.status).toBe(IntegrationStatus.DISCONNECTED);
     });
 

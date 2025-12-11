@@ -146,7 +146,7 @@ describe('Multi-Tenant Module', () => {
       const originalUpdated = tenant.updatedAt;
 
       // Wait a tick to ensure time difference
-      await new Promise((r) => setTimeout(r, 5));
+      await new Promise(r => setTimeout(r, 5));
       tenant.updateQuotas({ maxTokensPerDay: 500000 });
 
       expect(tenant.quotas.maxTokensPerDay).toBe(500000);

@@ -218,14 +218,14 @@ class ModelRegistry {
    * Find models by capability
    */
   findByCapability(capability) {
-    return this.list().filter((m) => m.capability === capability);
+    return this.list().filter(m => m.capability === capability);
   }
 
   /**
    * Find models supporting a task
    */
   findByTask(taskType) {
-    return this.list().filter((m) => m.supportsTask(taskType));
+    return this.list().filter(m => m.supportsTask(taskType));
   }
 }
 
@@ -289,9 +289,7 @@ class ModelRouter {
     }
 
     // Filter by context window
-    const filtered = tokens
-      ? candidates.filter((m) => m.contextWindow >= tokens)
-      : candidates;
+    const filtered = tokens ? candidates.filter(m => m.contextWindow >= tokens) : candidates;
 
     if (filtered.length === 0) {
       // Return largest context window if none fit
@@ -334,7 +332,7 @@ class ModelRouter {
    * Route multiple tasks
    */
   routeMany(tasks) {
-    return tasks.map((task) => ({
+    return tasks.map(task => ({
       task,
       model: this.route(task),
     }));
@@ -406,7 +404,7 @@ class ContextWindowManager {
     }
 
     // Update total count
-    chunks.forEach((c) => (c.total = chunks.length));
+    chunks.forEach(c => (c.total = chunks.length));
 
     return chunks;
   }
@@ -467,7 +465,7 @@ class ContextWindowManager {
       index++;
     }
 
-    chunks.forEach((c) => (c.total = chunks.length));
+    chunks.forEach(c => (c.total = chunks.length));
     return chunks;
   }
 
@@ -479,9 +477,9 @@ class ContextWindowManager {
 
     const queryWords = new Set(query.toLowerCase().split(/\s+/));
 
-    const scored = chunks.map((chunk) => {
+    const scored = chunks.map(chunk => {
       const words = chunk.text.toLowerCase().split(/\s+/);
-      const matches = words.filter((w) => queryWords.has(w)).length;
+      const matches = words.filter(w => queryWords.has(w)).length;
       return { ...chunk, relevance: matches / words.length };
     });
 
@@ -669,9 +667,7 @@ class RAGPipeline {
    * Retrieve relevant context for a query
    */
   async retrieve(query, embeddingFn) {
-    const queryEmbedding = embeddingFn
-      ? await embeddingFn(query)
-      : this._mockEmbedding(query);
+    const queryEmbedding = embeddingFn ? await embeddingFn(query) : this._mockEmbedding(query);
 
     return this.vectorStore.search(queryEmbedding, this.topK, this.threshold);
   }
@@ -687,7 +683,7 @@ class RAGPipeline {
     }
 
     const contextParts = retrieved.map(
-      (r) =>
+      r =>
         `### ${r.metadata?.path || r.id}\n\`\`\`${r.metadata?.language || ''}\n${r.document}\n\`\`\``
     );
 
@@ -826,7 +822,7 @@ class AISessionManager {
    * List all sessions
    */
   list() {
-    return Array.from(this.sessions.values()).map((s) => ({
+    return Array.from(this.sessions.values()).map(s => ({
       id: s.id,
       messageCount: s.history.length,
       totalTokens: s.totalTokens,
