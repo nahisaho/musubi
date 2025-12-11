@@ -966,7 +966,7 @@ class CodeGraphIntegration {
   /**
    * Suggest refactoring for an entity
    */
-  async suggestRefactoring(entityId, type = 'general') {
+  async suggestRefactoring(entityId, _type = 'general') {
     this.ensureOpen();
 
     const entity = this._resolveEntityId(entityId);

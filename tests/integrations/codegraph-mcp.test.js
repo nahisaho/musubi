@@ -7,8 +7,6 @@
  * @see https://github.com/nahisaho/CodeGraphMCPServer
  */
 
-const path = require('path');
-
 // Use manual mock from __mocks__ directory
 jest.mock('better-sqlite3');
 

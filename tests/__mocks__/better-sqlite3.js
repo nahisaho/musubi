@@ -46,7 +46,7 @@ class MockDatabase {
   }
 }
 
-module.exports = function (filename, options) {
+module.exports = function (_filename, _options) {
   return new MockDatabase();
 };
 
