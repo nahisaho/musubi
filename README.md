@@ -71,6 +71,61 @@ musubi init --windsurf  # Windsurf IDE
 
 ---
 
+## 📊 What's New in v5.8.0
+
+### CodeGraph MCP v0.8.0 Integration 🔗
+
+Major update to CodeGraph MCP integration with expanded language support and new features.
+
+#### 16 Language Support (NEW: Kotlin, Swift, Scala, Lua)
+
+- **Python, TypeScript, JavaScript** - Full AST analysis
+- **Rust, Go, Java, PHP, C#** - Enterprise language support
+- **C, C++, HCL (Terraform)** - System and infrastructure code
+- **Ruby** - Dynamic language support
+- **Kotlin** (NEW) - `.kt`, `.kts` files with classes, interfaces, functions
+- **Swift** (NEW) - `.swift` files with classes, structs, protocols
+- **Scala** (NEW) - `.scala`, `.sc` files with traits, objects
+- **Lua** (NEW) - `.lua` files with functions, table assignments
+
+#### File Watching & Auto Re-indexing
+
+- **`codegraph-mcp watch`** - Real-time file monitoring
+- **Debounce configuration** - Configurable delay (default: 1.0s)
+- **Community detection** - Optional `--community` flag after re-index
+
+#### Enhanced MCP Tools (14 Tools)
+
+| Category | Tools |
+|----------|-------|
+| **Graph Query** | `query_codebase`, `find_dependencies`, `find_callers`, `find_callees`, `find_implementations`, `analyze_module_structure` |
+| **Code Retrieval** | `get_code_snippet`, `read_file_content`, `get_file_structure` |
+| **GraphRAG** | `global_search`, `local_search` |
+| **Management** | `suggest_refactoring`, `reindex_repository`, `execute_shell_command` |
+
+#### Security & Performance (v0.7.3)
+
+- **Security fixes**: Path traversal and command injection protection
+- **Connection pooling**: Improved database performance
+- **Caching**: Faster repeated queries
+
+```javascript
+// Use CodeGraph MCP integration
+const { CodeGraphIntegration } = require('musubi-sdd');
+
+const cg = new CodeGraphIntegration('/path/to/repo');
+await cg.indexRepository();
+
+// File watching (v0.7.0+)
+await cg.startWatch({ debounce: 2.0, community: true });
+
+// Query codebase
+const results = await cg.queryCodebase('authentication');
+const callers = await cg.findCallers('UserService::login');
+```
+
+---
+
 ## 📊 What's New in v5.6.0
 
 ### Enterprise-Scale Analysis & Rust Migration Support 🏢🦀

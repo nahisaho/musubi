@@ -5,6 +5,54 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.8.0] - 2025-12-11
+
+### Added
+
+**CodeGraph MCP v0.8.0 Integration** 🔗
+
+Major update to CodeGraph MCP integration with expanded language support:
+
+- **16 Language Support**
+  - NEW: Kotlin (`.kt`, `.kts`) - classes, interfaces, objects, functions, properties
+  - NEW: Swift (`.swift`) - classes, structs, protocols, functions, extensions
+  - NEW: Scala (`.scala`, `.sc`) - classes, traits, objects, functions
+  - NEW: Lua (`.lua`) - functions, local functions, table assignments
+  - Existing: Python, TypeScript, JavaScript, Rust, Go, Java, PHP, C#, C, C++, HCL, Ruby
+
+- **File Watching & Auto Re-indexing (v0.7.0)**
+  - `startWatch()` - Start file monitoring with configurable debounce
+  - `stopWatch()` - Stop file watching
+  - `isWatching()` - Check watch status
+  - `--community` flag for community detection after re-index
+
+- **Enhanced MCP Tools Integration**
+  - `queryCodebase()` - Natural language codebase search
+  - `findDependencies()` - Entity dependency analysis with depth control
+  - `findCallers()` / `findCallees()` - Call graph traversal
+  - `findImplementations()` - Interface implementation discovery
+  - `analyzeModuleStructure()` - Module structure analysis
+  - `getCodeSnippet()` - Source code retrieval with context
+  - `suggestRefactoring()` - Refactoring recommendations
+  - `globalSearch()` / `localSearch()` - GraphRAG-powered search
+
+- **Entity ID Partial Matching**
+  - Exact match, name match, qualified_name suffix match
+  - `file::name` pattern support (e.g., `auth.py::login`)
+
+- **Security Improvements (v0.7.3)**
+  - Path traversal protection
+  - Command injection prevention
+  - Connection pooling
+  - Caching for performance
+
+### Changed
+
+- Updated `src/integrations/codegraph-mcp.js` to v5.8.0
+- Added 68 new tests for CodeGraph MCP integration
+- Added `tests/__mocks__/better-sqlite3.js` for test isolation
+- Total tests: 4,290 → 4,358 (68 new tests)
+
 ## [5.7.2] - 2025-12-11
 
 ### Added
