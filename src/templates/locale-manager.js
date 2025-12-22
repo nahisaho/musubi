@@ -12,7 +12,7 @@ const path = require('path');
 /**
  * Supported locales
  */
-const SUPPORTED_LOCALES = ['en', 'ja', 'zh', 'ko', 'es', 'de', 'fr'];
+const SUPPORTED_LOCALES = ['en', 'ja', 'zh', 'ko', 'id', 'es', 'de', 'fr'];
 
 /**
  * Template category to directory mapping
@@ -34,6 +34,7 @@ const LOCALE_NAMES = {
   ja: '日本語',
   zh: '中文',
   ko: '한국어',
+  id: 'Bahasa Indonesia',
   es: 'Español',
   de: 'Deutsch',
   fr: 'Français',

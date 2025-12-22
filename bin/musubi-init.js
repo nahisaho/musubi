@@ -1002,6 +1002,7 @@ async function main(agent, agentKey, options = {}) {
         { name: '日本語 (Japanese)', value: 'ja' },
         { name: '中文 (Chinese)', value: 'zh' },
         { name: '한국어 (Korean)', value: 'ko' },
+        { name: 'Bahasa Indonesia (Indonesian)', value: 'id' },
         { name: 'Español (Spanish)', value: 'es' },
         { name: 'Deutsch (German)', value: 'de' },
         { name: 'Français (French)', value: 'fr' },
