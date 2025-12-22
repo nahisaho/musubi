@@ -200,6 +200,9 @@ describe('Server', () => {
 
   describe('WebSocket', () => {
     it('should accept WebSocket connections', async () => {
+      // Ensure directories exist for this test
+      await fs.ensureDir(path.join(tempDir, 'storage', 'specs'));
+
       const wsPort = getNextPort();
       server = new Server(tempDir, { port: wsPort });
       await server.start();
@@ -217,6 +220,9 @@ describe('Server', () => {
     });
 
     it('should broadcast to all clients', async () => {
+      // Ensure directories exist for this test
+      await fs.ensureDir(path.join(tempDir, 'storage', 'specs'));
+
       const wsPort = getNextPort();
       server = new Server(tempDir, { port: wsPort });
       await server.start();
