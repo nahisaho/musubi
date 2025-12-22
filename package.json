@@ -1,6 +1,6 @@
 {
   "name": "musubi-sdd",
-  "version": "5.9.2",
+  "version": "5.9.3",
   "description": "Ultimate Specification Driven Development Tool with 27 Agents for 7 AI Coding Platforms + MCP Integration (Claude Code, GitHub Copilot, Cursor, Gemini CLI, Windsurf, Codex, Qwen Code)",
   "main": "src/index.js",
   "bin": {
