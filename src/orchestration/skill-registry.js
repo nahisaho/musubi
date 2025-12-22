@@ -107,9 +107,9 @@ const SkillCategory = {
   VALIDATION: 'validation',
   INTEGRATION: 'integration',
   MONITORING: 'monitoring',
-  RELEASE: 'release',           // Added for release management
+  RELEASE: 'release', // Added for release management
   CONFIGURATION: 'configuration', // Added for project configuration
-  WORKFLOW: 'workflow',         // Added for workflow management
+  WORKFLOW: 'workflow', // Added for workflow management
   GENERAL: 'general',
 };
 

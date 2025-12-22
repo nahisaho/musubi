@@ -195,7 +195,7 @@ class PackageManager {
     if (this._packages) return this._packages;
 
     const config = await this.loadConfig();
-    
+
     if (config.packages && config.packages.length > 0) {
       this._packages = config.packages;
     } else {
@@ -283,9 +283,7 @@ class PackageManager {
       // Add edges for internal dependencies
       const deps = [
         ...(pkg.dependencies || []),
-        ...(config.dependency_graph?.ignore_dev_dependencies 
-          ? [] 
-          : (pkg.devDependencies || [])),
+        ...(config.dependency_graph?.ignore_dev_dependencies ? [] : pkg.devDependencies || []),
       ];
 
       for (const dep of deps) {

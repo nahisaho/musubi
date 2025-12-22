@@ -165,10 +165,8 @@ class ConstitutionalValidator {
       for (const lib of subDirs) {
         // Check multiple possible test directory names
         const testDirs = ['tests', 'test', '__tests__'];
-        const hasTestDir = testDirs.some(dir => 
-          fs.existsSync(path.join(libPath, lib, dir))
-        );
-        
+        const hasTestDir = testDirs.some(dir => fs.existsSync(path.join(libPath, lib, dir)));
+
         // Check for test files in the library root or test subdirectories
         const testFile = glob.sync(path.join(libPath, lib, '**/*.test.{js,ts}'));
         const specFile = glob.sync(path.join(libPath, lib, '**/*.spec.{js,ts}'));
@@ -427,13 +425,7 @@ class ConstitutionalValidator {
           `Create steering/${file}`
         );
       } else {
-        this._recordFinding(
-          articleId,
-          articleName,
-          true,
-          `Found steering/${file}`,
-          null
-        );
+        this._recordFinding(articleId, articleName, true, `Found steering/${file}`, null);
       }
     }
   }
@@ -565,7 +557,8 @@ class ConstitutionalValidator {
 
     for (const file of testFiles) {
       const content = fs.readFileSync(file, 'utf-8');
-      const mockMatches = content.match(/\b(jest\.mock|sinon\.stub|vi\.mock|mock\()\s*\(['"]([^'"]+)['"]\)/g) || [];
+      const mockMatches =
+        content.match(/\b(jest\.mock|sinon\.stub|vi\.mock|mock\()\s*\(['"]([^'"]+)['"]\)/g) || [];
 
       for (const match of mockMatches) {
         const isAllowed = allowedMockPatterns.some(pattern =>
@@ -667,7 +660,9 @@ class ConstitutionalValidator {
     console.log(
       `Passes: ${report.summary.passes} | Warnings: ${report.summary.warnings} | Violations: ${report.summary.violations}`
     );
-    console.log(`Critical: ${criticalViolations.length} | Advisory: ${nonBlockingViolations.length}`);
+    console.log(
+      `Critical: ${criticalViolations.length} | Advisory: ${nonBlockingViolations.length}`
+    );
 
     if (criticalViolations.length > 0) {
       console.log('\n🚫 CRITICAL VIOLATIONS (blocking):');

@@ -58,10 +58,14 @@ async function showStatus() {
 
   console.log(chalk.bold('\n📊 Workflow Status\n'));
   console.log(chalk.white(`Feature: ${chalk.cyan(state.feature)}`));
-  console.log(chalk.white(`Mode: ${chalk.magenta(state.mode || 'default')} (${getModeDescription(state.mode || 'medium')})`));
+  console.log(
+    chalk.white(
+      `Mode: ${chalk.magenta(state.mode || 'default')} (${getModeDescription(state.mode || 'medium')})`
+    )
+  );
   console.log(chalk.white(`Current Stage: ${formatStage(state.currentStage)}`));
   console.log(chalk.white(`Started: ${new Date(state.startedAt).toLocaleString()}`));
-  
+
   // Show mode config
   if (state.config) {
     console.log(chalk.bold('\n⚙️  Mode Configuration:'));
@@ -83,7 +87,7 @@ async function showStatus() {
   } else {
     stagesToShow = Object.keys(WORKFLOW_STAGES);
   }
-  
+
   const currentIndex = stagesToShow.indexOf(state.currentStage);
 
   stagesToShow.forEach((stage, index) => {
@@ -200,19 +204,22 @@ program
   .command('init <feature>')
   .description('Initialize a new workflow for a feature')
   .option('-s, --stage <stage>', 'Starting stage (auto-detected based on mode)')
-  .option('-m, --mode <mode>', 'Workflow mode: small, medium, or large (auto-detected from feature name)')
+  .option(
+    '-m, --mode <mode>',
+    'Workflow mode: small, medium, or large (auto-detected from feature name)'
+  )
   .action(async (feature, options) => {
     try {
       const initOptions = {};
       if (options.stage) initOptions.startStage = options.stage;
       if (options.mode) initOptions.mode = options.mode;
-      
+
       const state = await engine.initWorkflow(feature, initOptions);
       console.log(chalk.green(`\n✅ Workflow initialized for "${feature}"`));
       console.log(chalk.cyan(`   Mode:     ${state.mode} (${getModeDescription(state.mode)})`));
       console.log(chalk.cyan(`   Starting: ${formatStage(state.currentStage)}`));
       console.log(chalk.gray(`   Coverage: ${state.config.coverageThreshold}%`));
-      
+
       // Show stages for this mode
       const modeManager = engine.getModeManager();
       const stages = await modeManager.getStages(state.mode);
@@ -235,9 +242,9 @@ program
   .action(async () => {
     const modeManager = engine.getModeManager();
     const modes = await modeManager.compareModes();
-    
+
     console.log(chalk.bold('\n📊 Available Workflow Modes\n'));
-    
+
     modes.forEach(mode => {
       console.log(chalk.bold.cyan(`  ${mode.name.toUpperCase()}`));
       console.log(chalk.white(`    ${mode.description}`));

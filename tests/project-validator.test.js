@@ -30,10 +30,7 @@ describe('ProjectValidator', () => {
         project_name: 'test-project',
         version: '1.0.0',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const loaded = await validator.loadConfig();
       expect(loaded.project_name).toBe('test-project');
@@ -52,10 +49,7 @@ describe('ProjectValidator', () => {
         version: '1.0.0',
         package_type: 'application',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const result = await validator.validateConfig();
       expect(result.valid).toBe(true);
@@ -67,10 +61,7 @@ describe('ProjectValidator', () => {
         project_name: 'test-project',
         version: '1.0.0',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const result = await validator.validateConfig();
       expect(result.needsMigration).toBe(true);
@@ -83,10 +74,7 @@ describe('ProjectValidator', () => {
         version: 'invalid-version', // Not semver
         package_type: 'invalid-type', // Not in enum
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const result = await validator.validateConfig();
       expect(result.valid).toBe(false);
@@ -98,10 +86,7 @@ describe('ProjectValidator', () => {
         schema_version: '2.0',
         project_name: 'test-project',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const result = await validator.validateConfig();
       expect(result.warnings.length).toBeGreaterThan(0);
@@ -115,10 +100,7 @@ describe('ProjectValidator', () => {
         schema_version: '2.0',
         project_name: 'test-project',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const effective = await validator.getEffectiveConfig();
       expect(effective.package_type).toBe('application');
@@ -135,10 +117,7 @@ describe('ProjectValidator', () => {
           mode: 'large',
         },
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const effective = await validator.getEffectiveConfig();
       expect(effective.package_type).toBe('library');
@@ -157,10 +136,7 @@ describe('ProjectValidator', () => {
           },
         },
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const result = await validator.migrateToV2();
       expect(result.migrated).toBe(true);
@@ -174,10 +150,7 @@ describe('ProjectValidator', () => {
         schema_version: '2.0',
         project_name: 'new-project',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const result = await validator.migrateToV2();
       expect(result.migrated).toBe(false);
@@ -189,10 +162,7 @@ describe('ProjectValidator', () => {
       const originalConfig = {
         project_name: 'original',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(originalConfig)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(originalConfig));
 
       const newConfig = {
         schema_version: '2.0',
@@ -221,10 +191,7 @@ describe('ProjectValidator', () => {
         project_name: 'test',
         workflow: { mode: 'large' },
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const mode = await validator.getWorkflowMode();
       expect(mode).toBe('large');
@@ -235,10 +202,7 @@ describe('ProjectValidator', () => {
         schema_version: '2.0',
         project_name: 'test',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const mode = await validator.getWorkflowMode();
       expect(mode).toBe('medium');
@@ -252,10 +216,7 @@ describe('ProjectValidator', () => {
         project_name: 'test',
         package_type: 'cli',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const type = await validator.getPackageType();
       expect(type).toBe('cli');
@@ -274,10 +235,7 @@ describe('ProjectValidator', () => {
           },
         },
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
 
       const overrides = await validator.getConstitutionOverrides();
       expect(overrides.coverage_threshold).toBe(95);

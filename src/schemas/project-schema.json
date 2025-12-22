@@ -39,7 +39,20 @@
       "description": "Programming languages used",
       "items": {
         "type": "string",
-        "enum": ["javascript", "typescript", "python", "rust", "go", "java", "ruby", "markdown", "yaml", "json", "cobol", "shell"]
+        "enum": [
+          "javascript",
+          "typescript",
+          "python",
+          "rust",
+          "go",
+          "java",
+          "ruby",
+          "markdown",
+          "yaml",
+          "json",
+          "cobol",
+          "shell"
+        ]
       }
     },
     "frameworks": {
@@ -73,7 +86,10 @@
         "naming_conventions": {
           "type": "object",
           "properties": {
-            "files": { "type": "string", "enum": ["kebab-case", "camelCase", "PascalCase", "snake_case"] },
+            "files": {
+              "type": "string",
+              "enum": ["kebab-case", "camelCase", "PascalCase", "snake_case"]
+            },
             "classes": { "type": "string", "enum": ["PascalCase", "camelCase"] },
             "functions": { "type": "string", "enum": ["camelCase", "snake_case"] },
             "constants": { "type": "string", "enum": ["UPPER_SNAKE_CASE", "camelCase"] }
@@ -183,7 +199,10 @@
                 "format": { "type": "string", "enum": ["keep-a-changelog", "conventional"] },
                 "include_types": {
                   "type": "array",
-                  "items": { "type": "string", "enum": ["feat", "fix", "docs", "style", "refactor", "test", "chore"] }
+                  "items": {
+                    "type": "string",
+                    "enum": ["feat", "fix", "docs", "style", "refactor", "test", "chore"]
+                  }
                 }
               }
             },
@@ -208,10 +227,7 @@
           "properties": {
             "coverage_threshold": { "type": "integer", "minimum": 50, "maximum": 100 },
             "mock_allowed": {
-              "oneOf": [
-                { "type": "boolean" },
-                { "type": "array", "items": { "type": "string" } }
-              ]
+              "oneOf": [{ "type": "boolean" }, { "type": "array", "items": { "type": "string" } }]
             },
             "ears_required": { "type": "boolean" },
             "adr_required": { "type": "boolean" }

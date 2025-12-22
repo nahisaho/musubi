@@ -13,8 +13,8 @@ const yaml = require('js-yaml');
  * Enforcement levels
  */
 const EnforcementLevel = {
-  BLOCK: 'block',     // Violations block progress
-  WARN: 'warn',       // Violations show warnings
+  BLOCK: 'block', // Violations block progress
+  WARN: 'warn', // Violations show warnings
   CONFIGURE: 'configurable', // Can be overridden per project
 };
 

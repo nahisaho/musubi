@@ -270,10 +270,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     const existingContent = await this.readChangelog();
 
     // Find insertion point (after header, before first version)
-    const headerEndMatch = existingContent.match(
-      /# Changelog[\s\S]*?(?=\n## \[|$)/
-    );
-    
+    const headerEndMatch = existingContent.match(/# Changelog[\s\S]*?(?=\n## \[|$)/);
+
     let newContent;
     if (headerEndMatch) {
       const headerEnd = headerEndMatch[0].length;

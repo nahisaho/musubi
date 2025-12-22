@@ -66,7 +66,12 @@ const workflowModeSkill = {
   inputs: [
     { name: 'action', type: 'string', description: 'get|detect|compare', required: true },
     { name: 'mode', type: 'string', description: 'small|medium|large', required: false },
-    { name: 'featureName', type: 'string', description: 'Feature name for auto-detection', required: false },
+    {
+      name: 'featureName',
+      type: 'string',
+      description: 'Feature name for auto-detection',
+      required: false,
+    },
     { name: 'projectPath', type: 'string', description: 'Project root path', required: false },
   ],
   outputs: [
@@ -113,7 +118,12 @@ const packageManagerSkill = {
   tags: ['package', 'monorepo', 'dependency', 'coverage', 'graph'],
   inputs: [
     { name: 'action', type: 'string', description: 'list|graph|validate|coverage', required: true },
-    { name: 'packageName', type: 'string', description: 'Package name for coverage lookup', required: false },
+    {
+      name: 'packageName',
+      type: 'string',
+      description: 'Package name for coverage lookup',
+      required: false,
+    },
     { name: 'projectPath', type: 'string', description: 'Project root path', required: false },
   ],
   outputs: [
@@ -163,8 +173,18 @@ const constitutionLevelSkill = {
   tags: ['constitution', 'governance', 'critical', 'advisory', 'flexible', 'articles'],
   inputs: [
     { name: 'action', type: 'string', description: 'summary|level|validate', required: true },
-    { name: 'articleId', type: 'string', description: 'Article ID (e.g., CONST-001)', required: false },
-    { name: 'validation', type: 'object', description: 'Validation results object', required: false },
+    {
+      name: 'articleId',
+      type: 'string',
+      description: 'Article ID (e.g., CONST-001)',
+      required: false,
+    },
+    {
+      name: 'validation',
+      type: 'object',
+      description: 'Validation results object',
+      required: false,
+    },
     { name: 'projectPath', type: 'string', description: 'Project root path', required: false },
   ],
   outputs: [
@@ -240,7 +260,12 @@ const projectConfigSkill = {
         if (!input.dryRun && result.migrated) {
           await validator.saveConfig(result.config);
         }
-        return { success: true, migrated: result.migrated, config: result.config, dryRun: input.dryRun };
+        return {
+          success: true,
+          migrated: result.migrated,
+          config: result.config,
+          dryRun: input.dryRun,
+        };
       }
       case 'show': {
         const report = await validator.generateReport();

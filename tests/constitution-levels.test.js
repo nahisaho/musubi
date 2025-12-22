@@ -107,10 +107,7 @@ describe('ConstitutionLevelManager', () => {
           },
         },
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(projectConfig)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(projectConfig));
 
       manager._projectConfig = null; // Reset cache
       const threshold = await manager.getCoverageThreshold();

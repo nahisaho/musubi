@@ -213,15 +213,15 @@ describe('WorkflowModeManager', () => {
   describe('compareModes', () => {
     it('should return comparison of all modes', async () => {
       const comparison = await manager.compareModes();
-      
+
       expect(comparison).toHaveLength(3);
       expect(comparison.map(m => m.name)).toEqual(['small', 'medium', 'large']);
-      
+
       // Check small mode
       const small = comparison.find(m => m.name === 'small');
       expect(small.stageCount).toBe(3);
       expect(small.coverageThreshold).toBe(60);
-      
+
       // Check large mode
       const large = comparison.find(m => m.name === 'large');
       expect(large.stageCount).toBe(7);
@@ -276,7 +276,7 @@ describe('MODE_TRANSITIONS', () => {
     // Small mode chain
     expect(MODE_TRANSITIONS.small.requirements).toContain('implement');
     expect(MODE_TRANSITIONS.small.implement).toContain('validate');
-    
+
     // Medium mode chain
     expect(MODE_TRANSITIONS.medium.requirements).toContain('design');
     expect(MODE_TRANSITIONS.medium.design).toContain('tasks');

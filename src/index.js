@@ -61,7 +61,11 @@ const { ConstitutionalValidator } = require('./validators/constitutional-validat
 const { Constitution } = require('./validators/constitution');
 const { DeltaFormatValidator } = require('./validators/delta-format');
 const { TraceabilityValidator } = require('./validators/traceability-validator');
-const { ConstitutionLevelManager, EnforcementLevel, ArticleId } = require('./validators/constitution-level-manager');
+const {
+  ConstitutionLevelManager,
+  EnforcementLevel,
+  ArticleId,
+} = require('./validators/constitution-level-manager');
 const { ProjectValidator, DEFAULT_PROJECT_CONFIG } = require('./validators/project-validator');
 
 // Orchestration
@@ -78,7 +82,11 @@ const { DeltaSpecManager } = require('./managers/delta-spec');
 const { MemoryCondenser } = require('./managers/memory-condenser');
 const { SkillLoader } = require('./managers/skill-loader');
 const { WorkflowModeManager, DEFAULT_MODES } = require('./managers/workflow-mode-manager');
-const { PackageManager, PackageType, DEFAULT_COVERAGE_TARGETS } = require('./managers/package-manager');
+const {
+  PackageManager,
+  PackageType,
+  DEFAULT_COVERAGE_TARGETS,
+} = require('./managers/package-manager');
 
 // Monitoring
 const { CostTracker } = require('./monitoring/cost-tracker');

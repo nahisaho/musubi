@@ -131,13 +131,13 @@ class WorkflowEngine {
     // Normalize stage name (handle aliases)
     const normalizedTarget = STAGE_ALIASES[targetStage] || targetStage;
     const currentStage = state.currentStage;
-    
+
     // Get valid transitions based on mode
     let validTransitions;
     if (state.mode) {
       validTransitions = await this.modeManager.getValidTransitions(state.mode, currentStage);
     }
-    
+
     // Fall back to full transitions if mode-specific not available
     if (!validTransitions || validTransitions.length === 0) {
       validTransitions = WORKFLOW_STAGES[currentStage]?.next || [];
@@ -400,7 +400,7 @@ class WorkflowEngine {
   async getValidTransitions() {
     const state = await this.getState();
     if (!state) return [];
-    
+
     // Use mode-specific transitions if available
     if (state.mode) {
       const modeTransitions = await this.modeManager.getValidTransitions(
@@ -411,7 +411,7 @@ class WorkflowEngine {
         return modeTransitions;
       }
     }
-    
+
     return WORKFLOW_STAGES[state.currentStage]?.next || [];
   }
 

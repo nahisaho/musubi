@@ -15,10 +15,7 @@ const chalk = require('chalk');
 
 const program = new Command();
 
-program
-  .name('musubi-config')
-  .description('MUSUBI Project Configuration Manager')
-  .version('1.0.0');
+program.name('musubi-config').description('MUSUBI Project Configuration Manager').version('1.0.0');
 
 program
   .command('validate')
@@ -57,7 +54,8 @@ program
         console.log(chalk.green('\n✅ Configuration is valid'));
       }
 
-      const exitCode = result.errors.length > 0 || (options.strict && result.warnings.length > 0) ? 1 : 0;
+      const exitCode =
+        result.errors.length > 0 || (options.strict && result.warnings.length > 0) ? 1 : 0;
       process.exit(exitCode);
     } catch (error) {
       console.error(chalk.red(`Error: ${error.message}`));

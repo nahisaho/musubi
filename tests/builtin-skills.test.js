@@ -146,14 +146,9 @@ describe('Built-in Skills', () => {
     it('should list packages', async () => {
       const config = {
         schema_version: '1.0',
-        packages: [
-          { name: 'core', path: 'packages/core', type: 'library' },
-        ],
+        packages: [{ name: 'core', path: 'packages/core', type: 'library' }],
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/packages.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/packages.yml'), yaml.dump(config));
 
       const result = await packageManagerSkill.execute({
         action: 'list',
@@ -236,10 +231,7 @@ describe('Built-in Skills', () => {
         project_name: 'test-project',
         version: '1.0.0',
       };
-      await fs.writeFile(
-        path.join(testDir, 'steering/project.yml'),
-        yaml.dump(config)
-      );
+      await fs.writeFile(path.join(testDir, 'steering/project.yml'), yaml.dump(config));
     });
 
     afterEach(async () => {

@@ -69,10 +69,10 @@ packages:
     type: library
 `;
       await fs.writeFile(path.join(testRoot, 'steering/packages.yml'), configContent);
-      
+
       // Reset cached config
       manager._config = null;
-      
+
       const config = await manager.loadConfig();
       expect(config.packages).toHaveLength(1);
       expect(config.packages[0].name).toBe('test-package');
@@ -99,7 +99,7 @@ packages:
       await fs.writeFile(path.join(testRoot, 'steering/packages.yml'), configContent);
       manager._config = null;
       manager._packages = null;
-      
+
       const packages = await manager.getPackages();
       expect(packages).toHaveLength(2);
     });
@@ -179,15 +179,11 @@ packages:
 
     it('should build edges for internal dependencies', async () => {
       const graph = await manager.buildDependencyGraph();
-      
-      const cliToCoreEdge = graph.edges.find(
-        e => e.from === '@test/cli' && e.to === '@test/core'
-      );
+
+      const cliToCoreEdge = graph.edges.find(e => e.from === '@test/cli' && e.to === '@test/core');
       expect(cliToCoreEdge).toBeDefined();
-      
-      const webToCoreEdge = graph.edges.find(
-        e => e.from === '@test/web' && e.to === '@test/core'
-      );
+
+      const webToCoreEdge = graph.edges.find(e => e.from === '@test/web' && e.to === '@test/core');
       expect(webToCoreEdge).toBeDefined();
     });
   });
@@ -214,7 +210,7 @@ packages:
 
     it('should generate valid mermaid syntax', async () => {
       const mermaid = await manager.generateMermaidGraph();
-      
+
       expect(mermaid).toContain('graph TD');
       expect(mermaid).toContain('core');
       expect(mermaid).toContain('cli');
