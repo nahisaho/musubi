@@ -57,35 +57,37 @@ describe('WorkflowEngine', () => {
     });
 
     it('should track stage attempts on re-entry', async () => {
-      await engine.initWorkflow('test-feature');
+      await engine.initWorkflow('test-feature', { mode: 'large' });
+      await engine.transitionTo('requirements');
       await engine.transitionTo('design');
       await engine.transitionTo('tasks');
-      await engine.transitionTo('implementation');
-      await engine.transitionTo('review');
-      // Go back to implementation (feedback loop)
-      await engine.transitionTo('implementation');
+      await engine.transitionTo('implement');
+      await engine.transitionTo('validate');
+      // Go back to implement (feedback loop)
+      await engine.transitionTo('implement');
 
       const state = await engine.getState();
-      expect(state.stages.implementation.attempts).toBe(2);
+      expect(state.stages.implement.attempts).toBe(2);
     });
   });
 
   describe('recordFeedbackLoop', () => {
     it('should record feedback loop in history', async () => {
-      await engine.initWorkflow('test-feature');
+      await engine.initWorkflow('test-feature', { mode: 'large' });
+      await engine.transitionTo('requirements');
       await engine.transitionTo('design');
       await engine.transitionTo('tasks');
-      await engine.transitionTo('implementation');
-      await engine.transitionTo('review');
+      await engine.transitionTo('implement');
+      await engine.transitionTo('validate');
 
-      await engine.recordFeedbackLoop('review', 'implementation', 'Code needs refactoring');
+      await engine.recordFeedbackLoop('validate', 'implement', 'Code needs refactoring');
 
       const state = await engine.getState();
       const feedbackEvent = state.history.find(h => h.action === 'feedback-loop');
 
       expect(feedbackEvent).toBeDefined();
-      expect(feedbackEvent.from).toBe('review');
-      expect(feedbackEvent.to).toBe('implementation');
+      expect(feedbackEvent.from).toBe('validate');
+      expect(feedbackEvent.to).toBe('implement');
       expect(feedbackEvent.reason).toBe('Code needs refactoring');
     });
   });
@@ -147,12 +149,12 @@ describe('WORKFLOW_STAGES', () => {
   it('should define valid transitions for all stages', () => {
     expect(WORKFLOW_STAGES.requirements.next).toContain('design');
     expect(WORKFLOW_STAGES.design.next).toContain('tasks');
-    expect(WORKFLOW_STAGES.tasks.next).toContain('implementation');
-    expect(WORKFLOW_STAGES.implementation.next).toContain('review');
+    expect(WORKFLOW_STAGES.tasks.next).toContain('implement');
+    expect(WORKFLOW_STAGES.implement.next).toContain('validate');
     expect(WORKFLOW_STAGES.review.next).toContain('testing');
-    expect(WORKFLOW_STAGES.review.next).toContain('implementation'); // Feedback loop
+    expect(WORKFLOW_STAGES.validate.next).toContain('implement'); // Feedback loop
     expect(WORKFLOW_STAGES.testing.next).toContain('deployment');
-    expect(WORKFLOW_STAGES.testing.next).toContain('implementation'); // Feedback loop
+    expect(WORKFLOW_STAGES.testing.next).toContain('implement'); // Feedback loop
   });
 
   it('should mark optional stages', () => {

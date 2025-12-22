@@ -176,6 +176,17 @@ const {
   MCPAdapterManager,
 } = require('./mcp-tool-adapters');
 
+// Built-in Skills (Phase 1-4 Features)
+const {
+  releaseSkill,
+  workflowModeSkill,
+  packageManagerSkill,
+  constitutionLevelSkill,
+  projectConfigSkill,
+  registerBuiltInSkills,
+  getBuiltInSkills,
+} = require('./builtin-skills');
+
 // Phase 4: Agent Loop & Agentic Features
 const phase4 = require('../phase4-integration');
 const {
@@ -438,6 +449,15 @@ module.exports = {
   MCPToSkillAdapter,
   SkillToMCPAdapter,
   MCPAdapterManager,
+
+  // Built-in Skills (Phase 1-4 Features)
+  releaseSkill,
+  workflowModeSkill,
+  packageManagerSkill,
+  constitutionLevelSkill,
+  projectConfigSkill,
+  registerBuiltInSkills,
+  getBuiltInSkills,
 
   // Phase 4: Agent Loop & Agentic Features
   phase4,

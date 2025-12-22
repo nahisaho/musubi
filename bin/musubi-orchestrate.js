@@ -30,6 +30,7 @@ const {
   TriageCategory,
   TriageStrategy,
   AgentCapability,
+  getBuiltInSkills,
 } = require('../src/orchestration');
 
 const {
@@ -143,6 +144,21 @@ async function loadSkills(projectPath) {
         },
       });
     }
+  }
+
+  // Add built-in Phase 1-4 skills
+  const builtInSkills = getBuiltInSkills();
+  for (const skill of builtInSkills) {
+    skills.set(skill.id, {
+      name: skill.name,
+      description: skill.description,
+      keywords: skill.tags || [],
+      categories: [skill.category],
+      execute: skill.execute,
+      version: skill.version,
+      inputs: skill.inputs,
+      outputs: skill.outputs,
+    });
   }
 
   return skills;

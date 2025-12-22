@@ -1,0 +1,50 @@
+# MUSUBI Packages Configuration
+#
+# Defines package structure for monorepo projects
+# See: docs/plans/musubi-improvement-plan-v0.8.md
+
+schema_version: "1.0"
+
+# Package manager configuration
+package_manager: npm  # npm | yarn | pnpm
+workspace_config: null  # Path to workspace config file (e.g., pnpm-workspace.yaml)
+
+# Package definitions
+packages:
+  - name: musubi-sdd
+    path: .
+    type: monorepo-root
+    publishable: true
+    coverage_target: 70
+    entry_points:
+      main: src/index.js
+    dependencies: []
+
+# Package types
+# - library: Reusable library module
+# - cli: Command-line interface
+# - application: Web/desktop application
+# - extension: IDE extension
+# - monorepo-root: Root package of monorepo
+
+# Dependency graph settings
+dependency_graph:
+  enabled: true
+  output: docs/architecture/dependency-graph.md
+  ignore_dev_dependencies: true
+  ignore_optional: true
+
+# Publishing settings
+publishing:
+  registry: https://registry.npmjs.org
+  access: public
+  strategy: independent  # independent | synchronized
+
+# Coverage targets by package type
+coverage_targets:
+  library: 90
+  cli: 70
+  application: 60
+  extension: 60
+  infrastructure: 50
+  monorepo-root: 70

@@ -41,6 +41,7 @@ const {
 const { DesignGenerator } = require('./generators/design');
 const { RequirementsGenerator } = require('./generators/requirements');
 const { TaskGenerator } = require('./generators/tasks');
+const { ChangelogGenerator } = require('./generators/changelog-generator');
 
 // Integrations (some have optional dependencies)
 const codegraphModule = tryRequire('./integrations/codegraph-mcp');
@@ -60,6 +61,8 @@ const { ConstitutionalValidator } = require('./validators/constitutional-validat
 const { Constitution } = require('./validators/constitution');
 const { DeltaFormatValidator } = require('./validators/delta-format');
 const { TraceabilityValidator } = require('./validators/traceability-validator');
+const { ConstitutionLevelManager, EnforcementLevel, ArticleId } = require('./validators/constitution-level-manager');
+const { ProjectValidator, DEFAULT_PROJECT_CONFIG } = require('./validators/project-validator');
 
 // Orchestration
 const { OrchestrationEngine } = require('./orchestration/orchestration-engine');
@@ -74,6 +77,8 @@ const { CheckpointManager } = require('./managers/checkpoint-manager');
 const { DeltaSpecManager } = require('./managers/delta-spec');
 const { MemoryCondenser } = require('./managers/memory-condenser');
 const { SkillLoader } = require('./managers/skill-loader');
+const { WorkflowModeManager, DEFAULT_MODES } = require('./managers/workflow-mode-manager');
+const { PackageManager, PackageType, DEFAULT_COVERAGE_TARGETS } = require('./managers/package-manager');
 
 // Monitoring
 const { CostTracker } = require('./monitoring/cost-tracker');
@@ -116,6 +121,7 @@ module.exports = {
   DesignGenerator,
   RequirementsGenerator,
   TaskGenerator,
+  ChangelogGenerator,
 
   // Integrations
   CodeGraphMCP,
@@ -133,6 +139,11 @@ module.exports = {
   Constitution,
   DeltaFormatValidator,
   TraceabilityValidator,
+  ConstitutionLevelManager,
+  EnforcementLevel,
+  ArticleId,
+  ProjectValidator,
+  DEFAULT_PROJECT_CONFIG,
 
   // Orchestration
   OrchestrationEngine,
@@ -147,6 +158,11 @@ module.exports = {
   DeltaSpecManager,
   MemoryCondenser,
   SkillLoader,
+  WorkflowModeManager,
+  DEFAULT_MODES,
+  PackageManager,
+  PackageType,
+  DEFAULT_COVERAGE_TARGETS,
 
   // Monitoring
   CostTracker,

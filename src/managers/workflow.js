@@ -2,27 +2,39 @@
  * Workflow Engine for MUSUBI SDD
  *
  * Manages workflow state, stage transitions, and metrics collection.
+ * Supports workflow modes (small/medium/large) for flexible development.
  */
 
 const fs = require('fs-extra');
 const path = require('path');
 const yaml = require('js-yaml');
+const { WorkflowModeManager } = require('./workflow-mode-manager');
 
 /**
- * Workflow stages with their valid transitions
+ * Workflow stages with their valid transitions (full mode - large)
  */
 const WORKFLOW_STAGES = {
   spike: { next: ['requirements'], optional: true },
   research: { next: ['requirements'], optional: true },
-  requirements: { next: ['design'] },
+  steering: { next: ['requirements'], optional: true },
+  requirements: { next: ['design', 'implement'] }, // Can skip design in small mode
   design: { next: ['tasks'] },
-  tasks: { next: ['implementation'] },
-  implementation: { next: ['review'] },
-  review: { next: ['testing', 'implementation'] }, // Can go back to implementation
-  testing: { next: ['deployment', 'implementation', 'requirements'] }, // Feedback loops
+  tasks: { next: ['implement'] },
+  implement: { next: ['validate', 'review'] },
+  validate: { next: ['review', 'implement'] },
+  review: { next: ['testing', 'implement'] }, // Can go back to implement
+  testing: { next: ['deployment', 'implement', 'requirements'] }, // Feedback loops
   deployment: { next: ['monitoring'] },
   monitoring: { next: ['retrospective'] },
   retrospective: { next: ['requirements'] }, // New iteration
+};
+
+/**
+ * Stage alias mapping (implementation -> implement for backwards compatibility)
+ */
+const STAGE_ALIASES = {
+  implementation: 'implement',
+  validation: 'validate',
 };
 
 /**
@@ -40,18 +52,32 @@ class WorkflowEngine {
     this.projectRoot = projectRoot;
     this.stateFile = path.join(projectRoot, WORKFLOW_STATE_FILE);
     this.metricsFile = path.join(projectRoot, METRICS_FILE);
+    this.modeManager = new WorkflowModeManager(projectRoot);
   }
 
   /**
    * Initialize workflow for a new feature/iteration
+   * @param {string} featureName - Name of the feature
+   * @param {object} options - Options including mode (small/medium/large)
    */
   async initWorkflow(featureName, options = {}) {
+    // Auto-detect or use provided mode
+    const mode = options.mode || (await this.modeManager.detectMode(featureName));
+    const startStage = options.startStage || (await this.modeManager.getFirstStage(mode));
+
     const state = {
       feature: featureName,
-      currentStage: options.startStage || 'requirements',
+      mode: mode,
+      currentStage: startStage,
       startedAt: new Date().toISOString(),
       stages: {},
       history: [],
+      config: {
+        coverageThreshold: await this.modeManager.getCoverageThreshold(mode),
+        earsRequired: await this.modeManager.isEarsRequired(mode),
+        adrRequired: await this.modeManager.isAdrRequired(mode),
+        skippedArtifacts: await this.modeManager.getSkippedArtifacts(mode),
+      },
     };
 
     // Record initial stage
@@ -65,6 +91,7 @@ class WorkflowEngine {
       action: 'workflow-started',
       stage: state.currentStage,
       feature: featureName,
+      mode: mode,
     });
 
     await this.saveState(state);
@@ -101,13 +128,25 @@ class WorkflowEngine {
       throw new Error('No active workflow. Run initWorkflow first.');
     }
 
+    // Normalize stage name (handle aliases)
+    const normalizedTarget = STAGE_ALIASES[targetStage] || targetStage;
     const currentStage = state.currentStage;
-    const validTransitions = WORKFLOW_STAGES[currentStage]?.next || [];
+    
+    // Get valid transitions based on mode
+    let validTransitions;
+    if (state.mode) {
+      validTransitions = await this.modeManager.getValidTransitions(state.mode, currentStage);
+    }
+    
+    // Fall back to full transitions if mode-specific not available
+    if (!validTransitions || validTransitions.length === 0) {
+      validTransitions = WORKFLOW_STAGES[currentStage]?.next || [];
+    }
 
-    if (!validTransitions.includes(targetStage)) {
+    if (!validTransitions.includes(normalizedTarget)) {
       throw new Error(
-        `Invalid transition: ${currentStage} → ${targetStage}. ` +
-          `Valid transitions: ${validTransitions.join(', ')}`
+        `Invalid transition: ${currentStage} → ${normalizedTarget}. ` +
+          `Valid transitions for ${state.mode || 'default'} mode: ${validTransitions.join(', ')}`
       );
     }
 
@@ -361,8 +400,67 @@ class WorkflowEngine {
   async getValidTransitions() {
     const state = await this.getState();
     if (!state) return [];
+    
+    // Use mode-specific transitions if available
+    if (state.mode) {
+      const modeTransitions = await this.modeManager.getValidTransitions(
+        state.mode,
+        state.currentStage
+      );
+      if (modeTransitions && modeTransitions.length > 0) {
+        return modeTransitions;
+      }
+    }
+    
     return WORKFLOW_STAGES[state.currentStage]?.next || [];
+  }
+
+  /**
+   * Get current workflow mode
+   * @returns {Promise<string|null>} Current mode or null
+   */
+  async getCurrentMode() {
+    const state = await this.getState();
+    return state?.mode || null;
+  }
+
+  /**
+   * Get mode configuration for current workflow
+   * @returns {Promise<object|null>} Mode config or null
+   */
+  async getModeConfig() {
+    const state = await this.getState();
+    if (!state) return null;
+    return state.config || null;
+  }
+
+  /**
+   * Check if an artifact should be skipped in current mode
+   * @param {string} artifact - Artifact name (e.g., 'design.md')
+   * @returns {Promise<boolean>} True if should be skipped
+   */
+  async shouldSkipArtifact(artifact) {
+    const config = await this.getModeConfig();
+    if (!config || !config.skippedArtifacts) return false;
+    return config.skippedArtifacts.includes(artifact);
+  }
+
+  /**
+   * Get coverage threshold for current workflow
+   * @returns {Promise<number>} Coverage threshold percentage
+   */
+  async getCoverageThreshold() {
+    const config = await this.getModeConfig();
+    return config?.coverageThreshold || 80;
+  }
+
+  /**
+   * Get workflow mode manager instance
+   * @returns {WorkflowModeManager} Mode manager
+   */
+  getModeManager() {
+    return this.modeManager;
   }
 }
 
-module.exports = { WorkflowEngine, WORKFLOW_STAGES };
+module.exports = { WorkflowEngine, WORKFLOW_STAGES, STAGE_ALIASES };

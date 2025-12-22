@@ -1,0 +1,151 @@
+# Constitution Levels Configuration
+#
+# Defines enforcement levels for Constitutional Articles
+# See: docs/plans/musubi-improvement-plan-v0.8.md
+
+schema_version: "1.0"
+
+# Constitution enforcement levels
+levels:
+  critical:
+    description: "違反時はブロック（必須）"
+    enforcement: block
+    articles:
+      - id: CONST-001
+        name: "Article I - Library-First Principle"
+        description: "すべての機能はまずライブラリとして実装"
+        required: true
+        
+      - id: CONST-003
+        name: "Article III - Test-First Imperative"
+        description: "テストファースト開発（Red-Green-Blue）"
+        required: true
+        
+      - id: CONST-005
+        name: "Article V - Traceability Mandate"
+        description: "要件↔設計↔コード↔テスト間の100%トレーサビリティ"
+        required: true
+
+  advisory:
+    description: "違反時は警告のみ"
+    enforcement: warn
+    articles:
+      - id: CONST-002
+        name: "Article II - CLI Interface Mandate"
+        description: "CLIインターフェース提供"
+        reason: "内部ライブラリにはCLI不要な場合がある"
+        
+      - id: CONST-004
+        name: "Article IV - EARS Requirements Format"
+        description: "EARS形式の要件定義"
+        reason: "小規模修正にはシンプルな形式で十分"
+        
+      - id: CONST-006
+        name: "Article VI - Constitution Enforcement"
+        description: "憲法エンフォーサーによる検証"
+        reason: "CIで自動実行される"
+        
+      - id: CONST-009
+        name: "Article IX - Real Service Testing"
+        description: "実サービスを使用したテスト"
+        reason: "LLM/外部API呼び出しのモックは許容"
+        exception_cases:
+          - llm_providers
+          - external_payment_apis
+          - third_party_services
+
+  flexible:
+    description: "プロジェクト設定で上書き可能"
+    enforcement: configurable
+    articles:
+      - id: CONST-007
+        name: "Article VII - Documentation Requirements"
+        description: "ドキュメント要件"
+        
+      - id: CONST-008
+        name: "Article VIII - Code Quality Standards"
+        description: "コード品質基準"
+
+# Configurable settings
+configurable:
+  coverage_threshold:
+    description: "テストカバレッジ閾値"
+    default: 80
+    min: 50
+    max: 100
+    per_package: true  # パッケージ別設定可能
+    
+  mock_allowed:
+    description: "モック使用許可"
+    default: false
+    exceptions:
+      - llm_providers
+      - external_apis
+      - payment_services
+      - analytics_services
+      
+  ears_required:
+    description: "EARS形式必須"
+    default: true
+    per_mode: true  # ワークフローモード別設定可能
+    mode_defaults:
+      small: false
+      medium: true
+      large: true
+      
+  adr_required:
+    description: "ADR（アーキテクチャ決定記録）必須"
+    default: false
+    per_mode: true
+    mode_defaults:
+      small: false
+      medium: false
+      large: true
+
+# Validation rules
+validation:
+  # Skip validation for specific paths
+  skip_paths:
+    - "**/*.test.js"
+    - "**/*.spec.js"
+    - "**/fixtures/**"
+    - "**/mocks/**"
+    - "**/testdata/**"
+    
+  # Custom rules per package type
+  package_rules:
+    library:
+      coverage_threshold: 90
+      mock_allowed: false
+      ears_required: true
+      
+    cli:
+      coverage_threshold: 70
+      mock_allowed: true
+      ears_required: true
+      
+    application:
+      coverage_threshold: 60
+      mock_allowed: true
+      ears_required: false
+      
+    extension:
+      coverage_threshold: 60
+      mock_allowed: true
+      ears_required: false
+      
+    infrastructure:
+      coverage_threshold: 50
+      mock_allowed: true
+      ears_required: false
+
+# Override mechanism
+# Projects can override in steering/project.yml:
+#
+# constitution:
+#   level: advisory  # strict | advisory | relaxed
+#   overrides:
+#     coverage_threshold: 70
+#     mock_allowed:
+#       - "@openai/api"
+#       - "@anthropic/sdk"

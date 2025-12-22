@@ -1,0 +1,235 @@
+# Workflow Modes Configuration
+# 
+# Defines lightweight workflow modes based on feature size
+# See: docs/plans/musubi-improvement-plan-v0.8.md
+
+schema_version: "1.0"
+
+# Workflow mode definitions
+modes:
+  small:
+    description: "1-2時間の作業（バグ修正、小機能追加）"
+    estimated_duration: "1-2h"
+    stages:
+      - requirements   # 簡易要件定義
+      - implement      # 実装（テスト含む）
+      - validate       # 検証
+    skip_artifacts:
+      - design.md
+      - tasks.md
+    requirements:
+      coverage_threshold: 60
+      ears_format: optional
+      traceability: relaxed
+    use_cases:
+      - "バグ修正"
+      - "ドキュメント更新"
+      - "設定変更"
+      - "小規模リファクタリング"
+      - "依存関係の更新"
+
+  medium:
+    description: "1-2日の作業（中規模機能）"
+    estimated_duration: "1-2d"
+    stages:
+      - requirements
+      - design
+      - tasks
+      - implement
+      - validate
+    skip_artifacts: []
+    requirements:
+      coverage_threshold: 70
+      ears_format: required
+      traceability: standard
+    use_cases:
+      - "新規API追加"
+      - "既存機能の拡張"
+      - "パフォーマンス改善"
+      - "テストスイート追加"
+      - "統合機能"
+
+  large:
+    description: "1週間以上（大規模機能、新モジュール）"
+    estimated_duration: "1w+"
+    stages:
+      - steering       # プロジェクト記憶更新
+      - requirements   # 詳細要件定義
+      - design         # アーキテクチャ設計
+      - tasks          # タスク分解
+      - implement      # 実装
+      - validate       # 検証
+      - review         # レビュー
+    skip_artifacts: []
+    requirements:
+      coverage_threshold: 80
+      ears_format: required
+      traceability: strict
+      adr_required: true
+    use_cases:
+      - "新規モジュール作成"
+      - "アーキテクチャ変更"
+      - "破壊的変更"
+      - "新規プラットフォーム対応"
+      - "セキュリティ機能"
+
+# Default mode selection rules
+auto_detection:
+  enabled: true
+  rules:
+    - pattern: "fix:|bugfix:|hotfix:"
+      mode: small
+    - pattern: "docs:|chore:|style:"
+      mode: small
+    - pattern: "feat:|feature:"
+      mode: medium
+    - pattern: "refactor:|perf:"
+      mode: medium
+    - pattern: "breaking:|major:|arch:"
+      mode: large
+
+# Stage definitions (full list)
+stages:
+  spike:
+    description: "技術調査・PoC"
+    optional: true
+    outputs:
+      - spike-{topic}.md
+    agents:
+      - software-developer
+      - system-architect
+    
+  steering:
+    description: "プロジェクト記憶の更新"
+    optional: true
+    outputs:
+      - steering/structure.md
+      - steering/tech.md
+    agents:
+      - steering-agent
+    
+  requirements:
+    description: "要件定義（EARS形式）"
+    optional: false
+    outputs:
+      - requirements.md
+    agents:
+      - requirements-analyst
+    templates:
+      - steering/templates/requirements.md
+      
+  design:
+    description: "技術設計（C4モデル）"
+    optional: false
+    outputs:
+      - design.md
+      - adr-*.md
+    agents:
+      - system-architect
+    templates:
+      - steering/templates/design.md
+      
+  tasks:
+    description: "タスク分解"
+    optional: false
+    outputs:
+      - tasks.md
+    agents:
+      - task-decomposer
+    templates:
+      - steering/templates/tasks.md
+      
+  implement:
+    description: "実装（TDD）"
+    optional: false
+    outputs:
+      - source files
+      - test files
+    agents:
+      - software-developer
+      - code-generator
+    sub_stages:
+      - implement-test   # テストのみ（Red Phase）
+      - implement-code   # コードのみ（Green Phase）
+      - implement-refactor  # リファクタ（Blue Phase）
+      
+  validate:
+    description: "検証・品質チェック"
+    optional: false
+    outputs:
+      - validation-report.md
+    agents:
+      - constitution-enforcer
+      - traceability-auditor
+    checks:
+      - coverage
+      - linting
+      - type-check
+      - traceability
+      
+  review:
+    description: "コードレビュー"
+    optional: true
+    outputs:
+      - review-comments.md
+    agents:
+      - code-reviewer
+      
+  testing:
+    description: "統合・E2Eテスト"
+    optional: true
+    outputs:
+      - test-report.md
+    agents:
+      - test-runner
+      
+  deployment:
+    description: "デプロイ"
+    optional: true
+    outputs:
+      - deployment-log.md
+    agents:
+      - release-manager
+      
+  monitoring:
+    description: "監視・メトリクス確認"
+    optional: true
+    outputs:
+      - monitoring-report.md
+    agents:
+      - monitoring-agent
+      
+  retrospective:
+    description: "振り返り"
+    optional: true
+    outputs:
+      - retrospective.md
+    agents:
+      - retrospective-facilitator
+
+# Transitions between stages
+transitions:
+  spike:
+    next: [requirements]
+  steering:
+    next: [requirements]
+  requirements:
+    next: [design, implement]  # small mode can skip design
+  design:
+    next: [tasks]
+  tasks:
+    next: [implement]
+  implement:
+    next: [validate, review]
+  validate:
+    next: [review, implement]  # can loop back
+  review:
+    next: [testing, implement]
+  testing:
+    next: [deployment, implement, requirements]  # feedback loops
+  deployment:
+    next: [monitoring]
+  monitoring:
+    next: [retrospective]
+  retrospective:
+    next: [requirements]  # new iteration

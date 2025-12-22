@@ -6,7 +6,7 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 
 **MUSUBI（Specification Driven Development）** は、AIエージェントを活用した仕様駆動開発フレームワークです。しかし、MUSUBIは突然生まれたわけではありません。**Spec-Copilot** → **MUSUHI** → **MUSUBI** という3つのプロジェクトを経て、現在の形に進化してきました。
 
-本記事では、2025年11月の最初のプロジェクトから現在のv3.11.0までの完全な変遷を振り返り、各段階で何が追加され、どのような開発体験が可能になったかを詳説します。
+本記事では、2025年11月の最初のプロジェクトから現在のv5.9.0までの完全な変遷を振り返り、各段階で何が追加され、どのような開発体験が可能になったかを詳説します。
 
 **対象読者:**
 - MUSUBIを使用中/検討中の開発者
@@ -29,6 +29,8 @@ title: MUSUBIの軌跡：Spec-CopilotからMUSUHI、そしてMUSUBIへの完全�
 - MUSUBI v5.2.0-v5.3.0: マルチ言語対応、言語推薦エンジン
 - MUSUBI v5.4.0: GitHubリポジトリ参照、パターン分析、改善提案
 - MUSUBI v5.5.0-v5.6.0: エンタープライズスケール分析、Rustマイグレーション支援
+- MUSUBI v5.7.0-v5.8.0: Performance Optimization、CodeGraph MCP v0.8.0統合
+- MUSUBI v5.9.0: Phase 1-4エンタープライズ機能（ワークフローモード、モノレポ対応、憲法レベル管理）
 
 ---
 
@@ -1016,7 +1018,7 @@ v3.7.0では8つの重要な機能を追加し、多言語サポート、ロー�
 | **Browser** | musubi-browser完成 | 包括的なブラウザ自動化テスト |
 | **CI/CD** | GitHub Actions | musubi-action再利用可能ワークフロー |
 | **変換** | OpenAPI/Swagger変換 | REST APIからMUSUBI変換 |
-| **国際化** | 多言語テンプレート | 7言語対応テンプレートシステム |
+| **国際化** | 多言語テンプレート | 8言語対応テンプレートシステム |
 | **LLM** | Ollama Provider | ローカルLLM統合 |
 | **モニタリング** | Cost Tracker | LLM API使用コスト追跡 |
 | **状態管理** | Checkpoint Manager | 開発状態スナップショット |
@@ -1163,7 +1165,7 @@ specs/
 
 ## 11.6 多言語テンプレート (LocaleManager)
 
-7言語に対応したテンプレートローカライゼーションシステムを追加しました。
+8言語に対応したテンプレートローカライゼーションシステムを追加しました。
 
 ### 対応言語
 
@@ -1176,6 +1178,7 @@ specs/
 | `de` | Deutsch | 100% |
 | `fr` | Français | 100% |
 | `es` | Español | 100% |
+| `id` | Bahasa Indonesia | 100% |
 
 ### 使用方法
 
@@ -1382,7 +1385,7 @@ musubi-checkpoint archive --older-than 7d
 - ✅ **リアルタイムGUI更新**: WebSocketでリプランニング状態をライブ表示
 - ✅ **CI/CD統合**: GitHub Actionsで自動仕様検証
 - ✅ **REST API移行**: OpenAPI/Swaggerから自動変換
-- ✅ **7言語対応**: 日本語、英語、中国語など7言語でドキュメント生成
+- ✅ **8言語対応**: 日本語、英語、中国語、インドネシア語など8言語でドキュメント生成
 - ✅ **ローカルLLM**: Ollamaでプライベート/オフラインAI開発
 - ✅ **コスト可視化**: LLM API使用料金のリアルタイム追跡
 - ✅ **状態管理**: チェックポイントで安全な開発作業
@@ -2166,7 +2169,7 @@ const cicdWorkflow = WorkflowExamples.getCICDPipelineWorkflow();
 | musubi-browser完成（40テスト） | ✅ |
 | GitHub Actions（musubi-action） | ✅ |
 | OpenAPI/Swagger変換（29テスト） | ✅ |
-| 多言語テンプレート（7言語対応、31テスト） | ✅ |
+| 多言語テンプレート（8言語対応、31テスト） | ✅ |
 | Ollama Provider（ローカルLLM、38テスト） | ✅ |
 | Cost Tracker（LLMコスト追跡、39テスト） | ✅ |
 | Checkpoint Manager（状態スナップショット、44テスト） | ✅ |
@@ -2726,19 +2729,7 @@ MUSUBIをGCC（1,000万行以上、100,000ファイル以上）のような超�
 
 **超大規模プロジェクト対応（10M+行）**
 
-```javascript
-const { LargeProjectAnalyzer } = require('musubi-sdd');
-
-const analyzer = new LargeProjectAnalyzer({
-  maxMemoryMB: 4096,
-  chunkSize: 100,
-  enableGC: true
-});
-
-const result = await analyzer.analyze('/path/to/gcc', {
-  onProgress: (progress) => console.log(`${progress.percentage}%`)
-});
-```
+`LargeProjectAnalyzer`クラスは、GCCのような超大規模プロジェクト（1,000万行以上）の分析に対応します。`maxMemoryMB`（メモリ上限）、`chunkSize`（チャンクサイズ）、`enableGC`（ガベージコレクション有効化）などのオプションを指定して初期化し、`analyze()`メソッドでプロジェクトパスを渡して分析を実行します。`onProgress`コールバックで進捗状況をリアルタイムで取得できます。
 
 ### スケールベース戦略
 
@@ -2761,17 +2752,7 @@ const result = await analyzer.analyze('/path/to/gcc', {
 
 **循環的・認知的複雑度分析**
 
-```javascript
-const { ComplexityAnalyzer } = require('musubi-sdd');
-
-const analyzer = new ComplexityAnalyzer();
-
-// 循環的複雑度（McCabe）
-const cyclomatic = analyzer.calculateCyclomaticComplexity(code, 'javascript');
-
-// 認知的複雑度（SonarSource方式）
-const cognitive = analyzer.calculateCognitiveComplexity(code, 'javascript');
-```
+`ComplexityAnalyzer`クラスは、コードの複雑度を多角的に分析します。`calculateCyclomaticComplexity()`メソッドでMcCabeの循環的複雑度を、`calculateCognitiveComplexity()`メソッドでSonarSource方式の認知的複雑度を計算できます。両メソッドともコードと言語（`'javascript'`、`'typescript'`など）を引数として受け取ります。
 
 ### 複雑度しきい値
 
@@ -2786,23 +2767,12 @@ const cognitive = analyzer.calculateCognitiveComplexity(code, 'javascript');
 
 **深層コードグラフ分析**
 
-```javascript
-const { CodeGraphMCP } = require('musubi-sdd');
+`CodeGraphMCP`クラスは、MCPサーバーと連携してコードグラフ分析を行います。`mcpEndpoint`でサーバーのURLを指定して初期化します。主要なメソッドは以下の通りです：
 
-const codegraph = new CodeGraphMCP({ mcpEndpoint: 'http://localhost:3000' });
-
-// コールグラフ生成
-const callGraph = await codegraph.generateCallGraph('src/main.c', { depth: 3 });
-
-// インパクト分析
-const impact = await codegraph.analyzeImpact('src/utils.c');
-
-// 循環依存検出
-const cycles = await codegraph.detectCircularDependencies('src/');
-
-// ホットスポット検出
-const hotspots = await codegraph.identifyHotspots(5);
-```
+- **`generateCallGraph()`**: 指定ファイルのコールグラフを生成（`depth`で探索深度を指定）
+- **`analyzeImpact()`**: 指定ファイルの変更が他に与える影響を分析
+- **`detectCircularDependencies()`**: 指定ディレクトリ内の循環依存を検出
+- **`identifyHotspots()`**: 高接続度のエンティティ（ホットスポット）を特定（引数で件数を指定）
 
 ### 機能一覧
 
@@ -2818,15 +2788,11 @@ const hotspots = await codegraph.identifyHotspots(5);
 
 **C/C++からRustへの移行支援**
 
-```javascript
-const { RustMigrationGenerator } = require('musubi-sdd');
+`RustMigrationGenerator`クラスは、C/C++コードをRustに移行する際のリスク分析を行います。`analyzeRustMigration()`メソッドにファイルパスを渡すと、以下の情報を含む分析結果を返します：
 
-const generator = new RustMigrationGenerator();
-const analysis = await generator.analyzeRustMigration('src/buffer.c');
-
-console.log(`Risk Score: ${analysis.riskScore}`);
-console.log(`Unsafe Patterns: ${analysis.unsafePatterns.length}`);
-```
+- **`riskScore`**: 移行リスクスコア（0-100）
+- **`unsafePatterns`**: 検出された安全でないパターンの配列
+- **`securityComponents`**: セキュリティ関連コンポーネントの識別
 
 ### 検出する安全でないパターン（27種類）
 
@@ -2849,16 +2815,11 @@ console.log(`Unsafe Patterns: ${analysis.unsafePatterns.length}`);
 
 **階層的レポート生成**
 
-```javascript
-const { HierarchicalReporter } = require('musubi-sdd');
+`HierarchicalReporter`クラスは、プロジェクトの階層的な分析レポートを生成します。`generateReport()`メソッドにプロジェクトパスとオプションを渡して使用します：
 
-const reporter = new HierarchicalReporter();
-const report = await reporter.generateReport('/path/to/project', {
-  format: 'markdown',
-  includeHotspots: true,
-  maxDepth: 5
-});
-```
+- **`format`**: 出力形式（`'markdown'`、`'json'`、`'html'`）
+- **`includeHotspots`**: ホットスポット分析を含めるか
+- **`maxDepth`**: ディレクトリ探索の最大深度
 
 ### 出力フォーマット
 
@@ -2868,14 +2829,7 @@ const report = await reporter.generateReport('/path/to/project', {
 
 ### ホットスポット分析
 
-```markdown
-## Hotspots
-
-| File | Lines | Complexity | Risk |
-|------|-------|------------|------|
-| src/parser.c | 2,500 | 85 | Critical |
-| src/lexer.c | 1,800 | 62 | Warning |
-```
+生成されるレポートには、ファイルごとの行数、複雑度、リスクレベル（Critical/Warning/Ideal）を示すホットスポット表が含まれます。
 
 ## 18.7 バージョン履歴
 
@@ -2892,11 +2846,138 @@ const report = await reporter.generateReport('/path/to/project', {
 
 ---
 
+# 第19章 Phase 1-4 エンタープライズ機能：v5.9.0（2025年12月）
+
+## 19.1 背景
+
+**エンタープライズ開発における柔軟性と管理性の両立**
+
+大規模プロジェクトでは、固定的なワークフローでは対応しきれない多様なニーズがあります。v5.9.0では、4つのPhaseに分けてエンタープライズ機能を実装しました。
+
+## 19.2 Phase 1: ワークフロー柔軟性
+
+**プロジェクト規模に応じた3つのモード**
+
+新しいCLIコマンド`musubi-release`でリリース自動化を実行できます。`--dry-run`オプションでCHANGELOGの確認のみ行うことも可能です。`musubi-workflow mode --detect`でコミットメッセージからワークフローモードを自動検出します。
+
+### 3つのワークフローモード
+
+| モード | 対象 | ステージ | EARS必須 | カバレッジ |
+|--------|------|----------|----------|-----------|
+| **small** | バグ修正、typo | requirements → implement → validate | No | 60% |
+| **medium** | 新機能、改善 | requirements → design → tasks → implement → validate | Yes | 80% |
+| **large** | 設計変更、新API | steering → requirements → design → tasks → implement → validate → review → testing | Yes | 90% |
+
+### WorkflowModeManager
+
+`WorkflowModeManager`クラスは、プロジェクトパスを指定して初期化します。主要なメソッドは以下の通りです：
+
+- **`detectMode(featureName)`**: フィーチャー名/コミットメッセージからモード（`'small'`/`'medium'`/`'large'`）を自動検出
+- **`getMode(modeName)`**: 指定モードの設定を取得（`stages`配列、`requirements.ears`必須フラグ、`coverage.threshold`カバレッジ閾値など）
+
+## 19.3 Phase 2: モノレポ対応
+
+**複数パッケージの依存関係管理**
+
+`steering/packages.yml`ファイルでモノレポのパッケージ構造を定義します。各パッケージには`name`（名前）、`path`（パス）、`dependencies`（依存パッケージ）を指定します。
+
+### PackageManager
+
+`PackageManager`クラスは、モノレポのパッケージ管理を行います。プロジェクトパスを指定して初期化し、以下のメソッドを使用します：
+
+- **`listPackages()`**: 全パッケージの一覧を取得
+- **`generateDependencyGraph('mermaid')`**: 依存関係グラフをMermaid形式で生成
+- **`validate()`**: パッケージ設定の検証（循環依存チェックなど）
+
+## 19.4 Phase 3: 憲法レベル管理
+
+**条項の重要度に応じた柔軟な適用**
+
+`steering/rules/constitution-levels.yml`ファイルで、9つの憲法条項を3つのレベルに分類します：
+
+| レベル | 強制 | 説明 |
+|--------|------|------|
+| **critical** | blocking | 必須。違反時はビルド失敗 |
+| **advisory** | warning | 推奨。違反時は警告 |
+| **flexible** | suggestion | 柔軟。違反時は提案のみ |
+
+### ConstitutionLevelManager
+
+`ConstitutionLevelManager`クラスは、憲法レベルの管理と検証を行います：
+
+- **`getSummary()`**: 各レベルの条項一覧を取得（`critical`、`advisory`、`flexible`配列）
+- **`getArticleLevel(articleId)`**: 指定条項のレベルと`isBlocking`フラグを取得
+- **`validateWithLevels(results)`**: 検証結果を渡し、レベルに応じた判定を実行（`passed`フラグ、`blockingFailures`配列を返却）
+
+## 19.5 Phase 4: プロジェクト設定
+
+**スキーマ検証と自動マイグレーション**
+
+新しいCLIコマンド`musubi-config`で設定管理を行います：
+
+| サブコマンド | 説明 |
+|-------------|------|
+| `validate` | project.ymlのスキーマ検証 |
+| `migrate` | v1.0からv2.0への自動マイグレーション |
+| `show` | 有効な設定（デフォルトとマージ済み）を表示 |
+| `init` | 新規プロジェクト用の設定ファイル作成 |
+
+### ProjectValidator
+
+`ProjectValidator`クラスは、project.ymlのスキーマ検証とマイグレーションを行います：
+
+- **`validate()`**: JSON Schemaによる検証（`valid`フラグと`errors`配列を返却）
+- **`needsMigration()`**: v1.0からv2.0へのマイグレーションが必要かチェック
+- **`migrate({ dryRun })`**: マイグレーション実行（`dryRun: true`でプレビュー）
+- **`getEffectiveConfig()`**: デフォルト値とマージした有効な設定を取得
+
+## 19.6 Orchestrator統合
+
+**5つの組み込みスキル**
+
+v5.9.0では、新機能をOrchestratorから利用できる5つの組み込みスキルが追加されました。各スキルは`execute()`メソッドで実行し、`action`パラメータで操作を指定します：
+
+| スキル | 主なアクション | 説明 |
+|--------|---------------|------|
+| `releaseSkill` | `generate`, `bump` | CHANGELOG生成、バージョン管理 |
+| `workflowModeSkill` | `detect`, `get`, `compare` | モード検出（`detectedMode`を返却） |
+| `packageManagerSkill` | `list`, `graph`, `validate` | 依存グラフ生成（`mermaid`形式） |
+| `constitutionLevelSkill` | `summary`, `validate`, `check` | レベルサマリー取得 |
+| `projectConfigSkill` | `validate`, `migrate`, `show` | 設定検証（`validation.valid`を返却） |
+
+### スキルカテゴリ
+
+| カテゴリ | スキル | 用途 |
+|---------|--------|------|
+| **release** | release-manager | CHANGELOG生成、バージョン管理 |
+| **workflow** | workflow-mode-manager | モード検出、設定取得、比較 |
+| **configuration** | package-manager, project-config-manager | パッケージ管理、設定管理 |
+| **validation** | constitution-level-manager | レベル対応検証 |
+
+## 19.7 新規CLIコマンド
+
+### musubi-release
+
+リリース自動化コマンドです。基本実行でCHANGELOGを自動生成します。`--version`でバージョン指定、`--dry-run`でプレビュー、`--format json`でJSON出力が可能です。
+
+### musubi-config
+
+プロジェクト設定管理コマンドです。`validate`でスキーマ検証、`migrate`でv2.0へのマイグレーション（`--dry-run`でプレビュー）、`show`で有効設定表示、`init`で新規設定作成を行います。
+
+## 19.8 テスト
+
+- 50件の新規テスト追加
+- 全4,408テストパス
+- ESLint/Prettier準拠
+
+---
+
 ## 関連リンク
 
 - [MUSUBI GitHub](https://github.com/nahisaho/musubi)
 - [MUSUHI GitHub](https://github.com/nahisaho/musuhi)（前身プロジェクト）
 - [Spec-Copilot GitHub](https://github.com/nahisaho/spec-copilot)（起源プロジェクト）
+- [MUSUBI v5.9.0 Enterprise Features Guide](https://qiita.com/nahisaho/items/musubi-v5-enterprise-features)
 - [MUSUBI v5.6.0 Enterprise Scale Guide](https://qiita.com/nahisaho/items/musubi-v5-enterprise-scale)
 - [MUSUBI v5.4.0 GitHub Reference Guide](https://qiita.com/nahisaho/items/musubi-v5-github-reference)
 - [MUSUBI v5.3.0 Multi-Language Guide](https://qiita.com/nahisaho/items/musubi-v5-multilang)
@@ -2913,4 +2994,4 @@ const report = await reporter.generateReport('/path/to/project', {
 
 ## タグ
 
-`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning` `#Ollama` `#Guardrails` `#Swarm` `#Orchestration` `#SkillSystem` `#Workflow` `#AgentLoop` `#CodebaseIntelligence` `#QualityDashboard` `#MultiLanguage` `#Rust` `#ODS-RAM` `#GitHubReference` `#PatternDetection` `#EnterpriseScale` `#RustMigration` `#ComplexityAnalysis` `#CodeGraph`
+`#MUSUBI` `#MUSUHI` `#Spec-Copilot` `#SDD` `#仕様駆動開発` `#AIエージェント` `#ClaudeCode` `#GitHubCopilot` `#MCP` `#Replanning` `#Ollama` `#Guardrails` `#Swarm` `#Orchestration` `#SkillSystem` `#Workflow` `#AgentLoop` `#CodebaseIntelligence` `#QualityDashboard` `#MultiLanguage` `#Rust` `#ODS-RAM` `#GitHubReference` `#PatternDetection` `#EnterpriseScale` `#RustMigration` `#ComplexityAnalysis` `#CodeGraph` `#WorkflowModes` `#Monorepo` `#ConstitutionLevels`

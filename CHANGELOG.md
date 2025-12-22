@@ -5,6 +5,127 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [5.9.1] - 2025-12-22
+
+### Added
+
+- **Indonesian Language Support (Bahasa Indonesia)** - Added `id` locale to multi-language templates
+- Expanded from 7 languages to 8 languages support (en, ja, zh, ko, de, fr, es, id)
+- Updated documentation to reflect 8-language internationalization
+
+## [5.9.0] - 2025-12-12
+
+### Added
+
+**Phase 1-4 Enterprise Features** 🏢
+
+Major update with enterprise-ready features for large-scale projects and monorepo support.
+
+#### Phase 1: Workflow Flexibility
+
+- **3 Workflow Modes**: `small`, `medium`, `large` with configurable stages
+- **`steering/rules/workflow-modes.yml`** - Centralized workflow configuration
+- **WorkflowModeManager** - Mode detection and stage management
+- **`musubi-release`** - New CLI for release automation with CHANGELOG generation
+- **Auto-detection** - Feature name pattern matching for mode selection
+
+```bash
+# Auto-generate CHANGELOG from commits
+musubi-release
+
+# Dry run with custom version
+musubi-release --dry-run --version 2.0.0
+```
+
+#### Phase 2: Monorepo Support
+
+- **`steering/packages.yml`** - Package registry with dependency graphs
+- **PackageManager** - Package discovery and dependency analysis
+- **Mermaid diagram generation** - Visual dependency graphs
+- **Coverage tracking** - Per-package test coverage reporting
+
+```javascript
+const { PackageManager } = require('musubi-sdd');
+const pm = new PackageManager('/path/to/monorepo');
+const graph = pm.generateDependencyGraph('mermaid');
+```
+
+#### Phase 3: Constitution Level Management
+
+- **3 Enforcement Levels**: `critical`, `advisory`, `flexible`
+- **`steering/rules/constitution-levels.yml`** - Level configuration
+- **ConstitutionLevelManager** - Level-aware validation
+- **Blocking vs Warning separation** - Critical violations block, others warn
+- **Project-specific overrides** - Custom level settings per project
+
+| Level | Articles | Enforcement |
+|-------|----------|-------------|
+| Critical | CONST-001, 002, 003, 005, 009 | Blocks workflow |
+| Advisory | CONST-004, 006, 007 | Warnings only |
+| Flexible | CONST-008 | Suggestions |
+
+#### Phase 4: Project Configuration
+
+- **`musubi-config`** - New CLI for configuration management
+- **ProjectValidator** - Schema validation with AJV
+- **v1.0 → v2.0 Migration** - Automatic config migration
+- **Effective configuration** - Defaults merged with project settings
+
+```bash
+# Validate project.yml
+musubi-config validate
+
+# Migrate to v2.0 schema
+musubi-config migrate
+
+# Show effective configuration
+musubi-config show
+```
+
+#### Orchestrator Integration
+
+- **5 Built-in Skills** - Programmable access to Phase 1-4 features
+- **3 New Skill Categories**: `release`, `workflow`, `configuration`
+- **BuiltInSkills module** - Pre-registered skills with execute functions
+
+| Skill ID | Category | Actions |
+|----------|----------|----------|
+| `release-manager` | release | Generate CHANGELOG |
+| `workflow-mode-manager` | workflow | get, detect, compare |
+| `package-manager` | configuration | list, graph, validate, coverage |
+| `constitution-level-manager` | validation | summary, level, validate |
+| `project-config-manager` | configuration | validate, migrate, show |
+
+```javascript
+const { workflowModeSkill } = require('musubi-sdd/src/orchestration');
+
+// Execute skill programmatically
+const result = await workflowModeSkill.execute({
+  action: 'detect',
+  featureName: 'fix: small bug'
+});
+console.log(result.detectedMode); // 'small'
+```
+
+### Changed
+
+- Updated `src/managers/workflow.js` to use `WorkflowModeManager`
+- Stage names standardized: `implementation` → `implement`, `validation` → `validate`
+- Enhanced `ConstitutionalValidator` with level-aware validation
+- Extended `SkillRegistry` with new skill categories
+- Updated `src/index.js` with comprehensive exports
+
+### Fixed
+
+- Workflow transition tests updated for new stage names
+- Fixed mode detection for `medium` mode patterns
+
+### Tests
+
+- Added 96 tests for Phase 1-4 features
+- Added 20 tests for built-in skills
+- Total tests: 4,358 → 4,408 (50+ new tests)
+
 ## [5.8.2] - 2025-12-11
 
 ### Fixed

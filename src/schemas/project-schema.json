@@ -1,0 +1,296 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://musubi.dev/schemas/project.schema.json",
+  "title": "MUSUBI Project Configuration",
+  "description": "Schema for steering/project.yml - MUSUBI SDD project configuration",
+  "type": "object",
+  "required": ["project_name", "schema_version"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version for migration support",
+      "enum": ["1.0", "2.0"],
+      "default": "2.0"
+    },
+    "project_name": {
+      "type": "string",
+      "description": "Project name identifier",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "description": "Project description",
+      "maxLength": 500
+    },
+    "version": {
+      "type": "string",
+      "description": "Project version (semver)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+(-[a-zA-Z0-9.]+)?(\\+[a-zA-Z0-9.]+)?$"
+    },
+    "package_type": {
+      "type": "string",
+      "description": "Type of package/project",
+      "enum": ["library", "cli", "application", "extension", "infrastructure", "monorepo"],
+      "default": "application"
+    },
+    "languages": {
+      "type": "array",
+      "description": "Programming languages used",
+      "items": {
+        "type": "string",
+        "enum": ["javascript", "typescript", "python", "rust", "go", "java", "ruby", "markdown", "yaml", "json", "cobol", "shell"]
+      }
+    },
+    "frameworks": {
+      "type": "array",
+      "description": "Frameworks and major dependencies",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "purpose": {
+            "type": "string",
+            "enum": ["testing", "build", "runtime", "dev", "linting", "documentation"]
+          }
+        }
+      }
+    },
+    "conventions": {
+      "type": "object",
+      "description": "Project conventions and patterns",
+      "properties": {
+        "architecture_pattern": {
+          "type": "string",
+          "enum": ["layered", "hexagonal", "clean", "microservices", "monolith", "unknown"]
+        },
+        "directory_structure": {
+          "type": "object",
+          "additionalProperties": { "type": "string" }
+        },
+        "naming_conventions": {
+          "type": "object",
+          "properties": {
+            "files": { "type": "string", "enum": ["kebab-case", "camelCase", "PascalCase", "snake_case"] },
+            "classes": { "type": "string", "enum": ["PascalCase", "camelCase"] },
+            "functions": { "type": "string", "enum": ["camelCase", "snake_case"] },
+            "constants": { "type": "string", "enum": ["UPPER_SNAKE_CASE", "camelCase"] }
+          }
+        }
+      }
+    },
+    "steering": {
+      "type": "object",
+      "description": "Steering memory configuration",
+      "properties": {
+        "auto_update": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "frequency": { "type": "string", "enum": ["on-demand", "daily", "weekly"] }
+          }
+        },
+        "excluded_paths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "memories": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "path": { "type": "string" },
+            "max_file_size_kb": { "type": "integer", "minimum": 100, "maximum": 10000 },
+            "retention_days": { "type": "integer", "minimum": 1, "maximum": 3650 }
+          }
+        }
+      }
+    },
+    "agents": {
+      "type": "object",
+      "description": "AI agent configuration",
+      "properties": {
+        "default_language": {
+          "type": "string",
+          "enum": ["en", "ja", "zh", "ko", "es", "fr", "de"],
+          "default": "en"
+        },
+        "bilingual_output": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "languages": {
+              "type": "array",
+              "items": { "type": "string" },
+              "minItems": 1,
+              "maxItems": 2
+            }
+          }
+        },
+        "output": {
+          "type": "object",
+          "properties": {
+            "gradual_generation": { "type": "boolean" },
+            "progress_indicators": { "type": "boolean" },
+            "large_file_splitting": { "type": "boolean" },
+            "split_threshold_lines": { "type": "integer", "minimum": 100, "maximum": 1000 }
+          }
+        }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "description": "Development workflow configuration",
+      "properties": {
+        "mode": {
+          "type": "string",
+          "description": "Default workflow mode",
+          "enum": ["small", "medium", "large"],
+          "default": "medium"
+        },
+        "auto_detect_mode": {
+          "type": "boolean",
+          "description": "Automatically detect mode based on feature complexity",
+          "default": true
+        },
+        "testing": {
+          "type": "object",
+          "properties": {
+            "required": { "type": "boolean" },
+            "coverage_threshold": { "type": "integer", "minimum": 0, "maximum": 100 }
+          }
+        },
+        "quality_gates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "command": { "type": "string" },
+              "required": { "type": "boolean" }
+            }
+          }
+        },
+        "release": {
+          "type": "object",
+          "description": "Release automation configuration",
+          "properties": {
+            "changelog": {
+              "type": "object",
+              "properties": {
+                "format": { "type": "string", "enum": ["keep-a-changelog", "conventional"] },
+                "include_types": {
+                  "type": "array",
+                  "items": { "type": "string", "enum": ["feat", "fix", "docs", "style", "refactor", "test", "chore"] }
+                }
+              }
+            },
+            "git_tag": { "type": "boolean" },
+            "npm_publish": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "constitution": {
+      "type": "object",
+      "description": "Constitutional governance overrides",
+      "properties": {
+        "level_config": {
+          "type": "string",
+          "description": "Path to constitution-levels.yml",
+          "default": "steering/rules/constitution-levels.yml"
+        },
+        "overrides": {
+          "type": "object",
+          "description": "Per-project overrides for configurable settings",
+          "properties": {
+            "coverage_threshold": { "type": "integer", "minimum": 50, "maximum": 100 },
+            "mock_allowed": {
+              "oneOf": [
+                { "type": "boolean" },
+                { "type": "array", "items": { "type": "string" } }
+              ]
+            },
+            "ears_required": { "type": "boolean" },
+            "adr_required": { "type": "boolean" }
+          }
+        },
+        "article_overrides": {
+          "type": "object",
+          "description": "Per-article level overrides",
+          "additionalProperties": {
+            "type": "string",
+            "enum": ["critical", "advisory", "flexible", "disabled"]
+          }
+        }
+      }
+    },
+    "packages": {
+      "type": "object",
+      "description": "Monorepo package configuration (v2.0)",
+      "properties": {
+        "config_path": {
+          "type": "string",
+          "description": "Path to packages.yml",
+          "default": "steering/packages.yml"
+        },
+        "shared_dependencies": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "coverage_aggregation": {
+          "type": "boolean",
+          "description": "Aggregate coverage across packages"
+        }
+      }
+    },
+    "integrations": {
+      "type": "object",
+      "description": "External integrations configuration",
+      "properties": {
+        "github": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "actions": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "jira": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "project_key": { "type": "string" }
+          }
+        },
+        "slack": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean" },
+            "webhook_url": { "type": "string" }
+          }
+        }
+      }
+    },
+    "custom_rules": {
+      "type": "array",
+      "description": "Custom project rules",
+      "items": { "type": "string" }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Auto-generated metadata",
+      "properties": {
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "created_by": { "type": "string" },
+        "musubi_version": { "type": "string" }
+      }
+    }
+  },
+  "additionalProperties": false
+}
