@@ -163,10 +163,17 @@ class ConstitutionalValidator {
         .filter(f => fs.statSync(path.join(libPath, f)).isDirectory());
 
       for (const lib of subDirs) {
-        const testPath = path.join(libPath, lib, 'tests');
-        const testFile = glob.sync(path.join(libPath, lib, '*.test.{js,ts}'));
+        // Check multiple possible test directory names
+        const testDirs = ['tests', 'test', '__tests__'];
+        const hasTestDir = testDirs.some(dir => 
+          fs.existsSync(path.join(libPath, lib, dir))
+        );
+        
+        // Check for test files in the library root or test subdirectories
+        const testFile = glob.sync(path.join(libPath, lib, '**/*.test.{js,ts}'));
+        const specFile = glob.sync(path.join(libPath, lib, '**/*.spec.{js,ts}'));
 
-        if (!fs.existsSync(testPath) && testFile.length === 0) {
+        if (!hasTestDir && testFile.length === 0 && specFile.length === 0) {
           this._recordFinding(
             articleId,
             articleName,
