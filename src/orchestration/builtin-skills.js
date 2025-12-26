@@ -14,6 +14,12 @@ const { WorkflowModeManager } = require('../managers/workflow-mode-manager');
 const { PackageManager } = require('../managers/package-manager');
 const { ConstitutionLevelManager } = require('../validators/constitution-level-manager');
 const { ProjectValidator } = require('../validators/project-validator');
+const {
+  RequirementsReviewer,
+  ReviewMethod,
+  ReviewPerspective,
+} = require('../validators/requirements-reviewer');
+const { DesignReviewer, ReviewFocus, IssueSeverity } = require('../validators/design-reviewer');
 const { SkillCategory } = require('./skill-registry');
 
 /**
@@ -278,6 +284,414 @@ const projectConfigSkill = {
 };
 
 /**
+ * Requirements Reviewer Skill - Review requirements using Fagan Inspection and PBR
+ */
+const requirementsReviewerSkill = {
+  id: 'requirements-reviewer',
+  name: 'Requirements Reviewer',
+  description:
+    'Review requirements documents using Fagan Inspection and Perspective-Based Reading (PBR) techniques',
+  version: '1.0.0',
+  category: SkillCategory.VALIDATION,
+  tags: [
+    'requirements',
+    'review',
+    'fagan',
+    'inspection',
+    'pbr',
+    'perspective',
+    'validation',
+    'quality',
+    'defect',
+    'SRS',
+  ],
+  inputs: [
+    { name: 'action', type: 'string', description: 'review|fagan|pbr|metrics', required: true },
+    {
+      name: 'documentPath',
+      type: 'string',
+      description: 'Path to the requirements document',
+      required: true,
+    },
+    {
+      name: 'method',
+      type: 'string',
+      description: 'Review method: fagan, pbr, combined',
+      required: false,
+    },
+    {
+      name: 'perspectives',
+      type: 'array',
+      description: 'Perspectives for PBR: user, developer, tester, architect, security',
+      required: false,
+    },
+    { name: 'outputFormat', type: 'string', description: 'json, markdown', required: false },
+    { name: 'projectPath', type: 'string', description: 'Project root path', required: false },
+  ],
+  outputs: [
+    { name: 'defects', type: 'array', description: 'List of found defects' },
+    { name: 'metrics', type: 'object', description: 'Review metrics' },
+    { name: 'qualityGate', type: 'object', description: 'Quality gate result' },
+    { name: 'report', type: 'string', description: 'Markdown report' },
+  ],
+  timeout: 60000,
+  priority: 'P1',
+
+  async execute(input = {}) {
+    const projectPath = input.projectPath || process.cwd();
+    const reviewer = new RequirementsReviewer(projectPath);
+
+    switch (input.action) {
+      case 'review': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for review action' };
+        }
+
+        const method = input.method || ReviewMethod.COMBINED;
+        const perspectives = input.perspectives || Object.values(ReviewPerspective);
+
+        const result = await reviewer.review(input.documentPath, {
+          method,
+          perspectives,
+        });
+
+        const response = {
+          success: true,
+          defects: result.defects.map(d => d.toJSON()),
+          metrics: result.metrics,
+          qualityGate: result.qualityGate,
+        };
+
+        if (input.outputFormat === 'markdown') {
+          response.report = result.toMarkdown();
+        }
+
+        return response;
+      }
+
+      case 'fagan': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for fagan action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const result = await reviewer.reviewFagan(content);
+
+        return {
+          success: true,
+          defects: result.defects.map(d => d.toJSON()),
+          metrics: result.metrics,
+          qualityGate: result.qualityGate,
+          report: input.outputFormat === 'markdown' ? result.toMarkdown() : undefined,
+        };
+      }
+
+      case 'pbr': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for pbr action' };
+        }
+
+        const perspectives = input.perspectives || Object.values(ReviewPerspective);
+        const content = await reviewer.loadDocument(input.documentPath);
+        const result = await reviewer.reviewPBR(content, { perspectives });
+
+        return {
+          success: true,
+          defects: result.defects.map(d => d.toJSON()),
+          metrics: result.metrics,
+          qualityGate: result.qualityGate,
+          report: input.outputFormat === 'markdown' ? result.toMarkdown() : undefined,
+        };
+      }
+
+      case 'metrics': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for metrics action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const requirements = reviewer.extractRequirements(content);
+
+        return {
+          success: true,
+          metrics: {
+            totalRequirements: requirements.length,
+            earsCompliance: reviewer.checkEarsCompliance(requirements),
+            testabilityScore: reviewer.checkTestability(requirements),
+          },
+        };
+      }
+
+      case 'correct': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for correct action' };
+        }
+        if (!input.corrections || !Array.isArray(input.corrections)) {
+          return { success: false, error: 'corrections array is required for correct action' };
+        }
+
+        const result = await reviewer.applyCorrections(input.documentPath, input.corrections, {
+          createBackup: input.createBackup !== false,
+          updateJapanese: input.updateJapanese !== false,
+          reviewOptions: {
+            method: input.method || ReviewMethod.COMBINED,
+          },
+        });
+
+        const response = {
+          success: true,
+          changesApplied: result.changesApplied,
+          rejectedFindings: result.rejectedFindings,
+          updatedQualityGate: result.updatedQualityGate,
+          filesModified: result.filesModified,
+        };
+
+        if (input.outputFormat === 'markdown') {
+          response.report = reviewer.generateCorrectionReport(result);
+        }
+
+        return response;
+      }
+
+      default:
+        return { success: false, error: 'Invalid action. Use: review, fagan, pbr, metrics, correct' };
+    }
+  },
+};
+
+/**
+ * Design Reviewer Skill - Review design documents using ATAM, SOLID, and other techniques
+ */
+const designReviewerSkill = {
+  id: 'design-reviewer',
+  name: 'Design Reviewer',
+  description:
+    'Review design documents using ATAM, SOLID principles, design patterns, coupling/cohesion analysis, error handling, and security review',
+  version: '1.0.0',
+  category: SkillCategory.VALIDATION,
+  tags: [
+    'design',
+    'review',
+    'atam',
+    'solid',
+    'patterns',
+    'coupling',
+    'cohesion',
+    'security',
+    'architecture',
+    'quality',
+    'c4',
+    'adr',
+  ],
+  inputs: [
+    {
+      name: 'action',
+      type: 'string',
+      description: 'review|solid|patterns|coupling|security|c4|adr',
+      required: true,
+    },
+    {
+      name: 'documentPath',
+      type: 'string',
+      description: 'Path to the design document',
+      required: true,
+    },
+    {
+      name: 'focus',
+      type: 'array',
+      description: 'Review focus areas: solid, patterns, coupling-cohesion, error-handling, security, all',
+      required: false,
+    },
+    { name: 'outputFormat', type: 'string', description: 'json, markdown', required: false },
+    { name: 'projectPath', type: 'string', description: 'Project root path', required: false },
+    {
+      name: 'qualityGateOptions',
+      type: 'object',
+      description: 'Quality gate thresholds',
+      required: false,
+    },
+  ],
+  outputs: [
+    { name: 'issues', type: 'array', description: 'List of design issues' },
+    { name: 'metrics', type: 'object', description: 'Review metrics' },
+    { name: 'qualityGate', type: 'object', description: 'Quality gate result' },
+    { name: 'report', type: 'string', description: 'Markdown report' },
+  ],
+  timeout: 60000,
+  priority: 'P1',
+
+  async execute(input = {}) {
+    const projectPath = input.projectPath || process.cwd();
+    const reviewer = new DesignReviewer(projectPath);
+
+    switch (input.action) {
+      case 'review': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for review action' };
+        }
+
+        const focus = input.focus || [ReviewFocus.ALL];
+
+        const result = await reviewer.review(input.documentPath, {
+          focus,
+          qualityGateOptions: input.qualityGateOptions,
+        });
+
+        const response = {
+          success: true,
+          issues: result.issues.map(i => i.toJSON()),
+          metrics: result.metrics,
+          qualityGate: result.qualityGate,
+        };
+
+        if (input.outputFormat === 'markdown') {
+          response.report = result.toMarkdown();
+        }
+
+        return response;
+      }
+
+      case 'solid': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for solid action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const issues = reviewer.reviewSOLID(content);
+
+        return {
+          success: true,
+          issues: issues.map(i => i.toJSON()),
+          count: issues.length,
+          severity: {
+            critical: issues.filter(i => i.severity === IssueSeverity.CRITICAL).length,
+            major: issues.filter(i => i.severity === IssueSeverity.MAJOR).length,
+            minor: issues.filter(i => i.severity === IssueSeverity.MINOR).length,
+          },
+        };
+      }
+
+      case 'patterns': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for patterns action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const issues = reviewer.reviewPatterns(content);
+
+        return {
+          success: true,
+          issues: issues.map(i => i.toJSON()),
+          count: issues.length,
+        };
+      }
+
+      case 'coupling': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for coupling action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const issues = reviewer.reviewCouplingCohesion(content);
+
+        return {
+          success: true,
+          issues: issues.map(i => i.toJSON()),
+          count: issues.length,
+        };
+      }
+
+      case 'security': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for security action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const issues = reviewer.reviewSecurity(content);
+
+        return {
+          success: true,
+          issues: issues.map(i => i.toJSON()),
+          count: issues.length,
+          critical: issues.filter(i => i.severity === IssueSeverity.CRITICAL).length,
+        };
+      }
+
+      case 'c4': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for c4 action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const issues = reviewer.reviewC4Model(content);
+
+        return {
+          success: true,
+          issues: issues.map(i => i.toJSON()),
+          count: issues.length,
+        };
+      }
+
+      case 'adr': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for adr action' };
+        }
+
+        const content = await reviewer.loadDocument(input.documentPath);
+        const issues = reviewer.reviewADR(content);
+
+        return {
+          success: true,
+          issues: issues.map(i => i.toJSON()),
+          count: issues.length,
+        };
+      }
+
+      case 'correct': {
+        if (!input.documentPath) {
+          return { success: false, error: 'documentPath is required for correct action' };
+        }
+        if (!input.corrections || !Array.isArray(input.corrections)) {
+          return { success: false, error: 'corrections array is required for correct action' };
+        }
+
+        const result = await reviewer.applyCorrections(input.documentPath, input.corrections, {
+          createBackup: input.createBackup !== false,
+          updateJapanese: input.updateJapanese !== false,
+          generateADRs: input.generateADRs !== false,
+          adrPath: input.adrPath,
+          reviewOptions: {
+            focus: input.focus || [ReviewFocus.ALL],
+          },
+        });
+
+        const response = {
+          success: true,
+          changesApplied: result.changesApplied,
+          rejectedFindings: result.rejectedFindings,
+          adrsCreated: result.adrsCreated,
+          updatedQualityGate: result.updatedQualityGate,
+          updatedSolidCompliance: result.updatedSolidCompliance,
+          filesModified: result.filesModified,
+        };
+
+        if (input.outputFormat === 'markdown') {
+          response.report = reviewer.generateCorrectionReport(result);
+        }
+
+        return response;
+      }
+
+      default:
+        return {
+          success: false,
+          error: 'Invalid action. Use: review, solid, patterns, coupling, security, c4, adr, correct',
+        };
+    }
+  },
+};
+
+/**
  * Register all built-in skills to a registry
  * @param {SkillRegistry} registry - The skill registry
  */
@@ -288,6 +702,8 @@ function registerBuiltInSkills(registry) {
     packageManagerSkill,
     constitutionLevelSkill,
     projectConfigSkill,
+    requirementsReviewerSkill,
+    designReviewerSkill,
   ];
 
   for (const skill of skills) {
@@ -311,6 +727,8 @@ function getBuiltInSkills() {
     packageManagerSkill,
     constitutionLevelSkill,
     projectConfigSkill,
+    requirementsReviewerSkill,
+    designReviewerSkill,
   ];
 }
 
@@ -321,6 +739,8 @@ module.exports = {
   packageManagerSkill,
   constitutionLevelSkill,
   projectConfigSkill,
+  requirementsReviewerSkill,
+  designReviewerSkill,
 
   // Utility functions
   registerBuiltInSkills,

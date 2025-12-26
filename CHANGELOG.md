@@ -5,6 +5,51 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [6.2.0] - 2025-12-27
+
+### Added
+
+- **Requirements Reviewer Skill** (`requirements-reviewer`):
+  - Systematic requirements review using Fagan Inspection (6-phase formal review)
+  - Perspective-Based Reading (PBR) with 5 perspectives: User, Developer, Tester, Architect, Security
+  - Defect classification: Missing, Incorrect, Ambiguous, Conflicting, Redundant, Untestable
+  - Quality gate with configurable thresholds
+  - EARS format compliance checking
+  - Interactive review & correction workflow
+
+- **Design Reviewer Skill** (`design-reviewer`):
+  - ATAM (Architecture Tradeoff Analysis Method) for quality attribute evaluation
+  - SOLID principles compliance checking (SRP, OCP, LSP, ISP, DIP)
+  - Design patterns detection and anti-pattern identification
+  - Coupling/Cohesion analysis
+  - Error handling strategy review
+  - Security design review (authentication, authorization, encryption, input validation)
+  - C4 Model diagram completeness check
+  - ADR (Architecture Decision Record) structure validation
+  - Interactive review & correction workflow with ADR auto-generation
+
+- **Interactive Review & Correction Workflow** for both reviewers:
+  - User-driven correction process with accept/modify/reject actions
+  - Automatic backup creation before corrections
+  - Japanese version synchronization
+  - Correction reports with quality gate updates
+  - Design reviewer supports `reject-with-adr` for documenting intentional decisions
+
+### Enhanced
+
+- Built-in skills expanded from 6 to 7 (now includes design-reviewer)
+- `builtin-skills.js` updated with `correct` action for both reviewers
+- Documentation updated in `builtin-skills-usage.md`
+
+### Technical
+
+- New files:
+  - `src/validators/requirements-reviewer.js` - Requirements review engine
+  - `src/validators/design-reviewer.js` - Design review engine
+  - `src/templates/agents/claude-code/skills/requirements-reviewer/SKILL.md`
+  - `src/templates/agents/claude-code/skills/design-reviewer/SKILL.md`
+- Test coverage: 35 tests passing for builtin-skills
+
 ## [6.1.2] - 2025-12-25
 
 ### Fixed

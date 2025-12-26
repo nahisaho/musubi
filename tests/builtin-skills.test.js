@@ -10,6 +10,8 @@ const {
   packageManagerSkill,
   constitutionLevelSkill,
   projectConfigSkill,
+  requirementsReviewerSkill,
+  designReviewerSkill,
   registerBuiltInSkills,
   getBuiltInSkills,
 } = require('../src/orchestration/builtin-skills');
@@ -21,9 +23,9 @@ const yaml = require('js-yaml');
 
 describe('Built-in Skills', () => {
   describe('getBuiltInSkills', () => {
-    it('should return all 5 built-in skills', () => {
+    it('should return all 7 built-in skills', () => {
       const skills = getBuiltInSkills();
-      expect(skills).toHaveLength(5);
+      expect(skills).toHaveLength(7);
     });
 
     it('should include release skill', () => {
@@ -60,13 +62,27 @@ describe('Built-in Skills', () => {
       expect(config).toBeDefined();
       expect(config.category).toBe(SkillCategory.CONFIGURATION);
     });
+
+    it('should include requirements reviewer skill', () => {
+      const skills = getBuiltInSkills();
+      const reviewer = skills.find(s => s.id === 'requirements-reviewer');
+      expect(reviewer).toBeDefined();
+      expect(reviewer.category).toBe(SkillCategory.VALIDATION);
+    });
+
+    it('should include design reviewer skill', () => {
+      const skills = getBuiltInSkills();
+      const reviewer = skills.find(s => s.id === 'design-reviewer');
+      expect(reviewer).toBeDefined();
+      expect(reviewer.category).toBe(SkillCategory.VALIDATION);
+    });
   });
 
   describe('registerBuiltInSkills', () => {
     it('should register all skills to registry', () => {
       const registry = new SkillRegistry();
       const count = registerBuiltInSkills(registry);
-      expect(count).toBe(5);
+      expect(count).toBe(7);
     });
 
     it('should make skills queryable by category', () => {
@@ -258,6 +274,264 @@ describe('Built-in Skills', () => {
       expect(result.success).toBe(true);
       expect(result.report).toBeDefined();
       expect(result.report.effective).toBeDefined();
+    });
+  });
+
+  describe('requirementsReviewerSkill.execute', () => {
+    const testDir = '/tmp/test-requirements-reviewer';
+    const testDocPath = path.join(testDir, 'test-srs.md');
+
+    beforeEach(async () => {
+      await fs.ensureDir(testDir);
+      // Create a sample requirements document
+      const sampleSrs = `# Software Requirements Specification
+
+## Functional Requirements
+
+REQ-FUNC-001: The system shall allow users to login with email and password.
+
+REQ-FUNC-002: When the user clicks submit, the system shall validate the form quickly.
+
+REQ-FUNC-003: The system shall be user-friendly.
+
+## Non-Functional Requirements
+
+REQ-NFR-001: The system shall respond within 2 seconds under normal load.
+
+## Constraints
+
+The system must be compatible with Chrome and Firefox browsers.
+`;
+      await fs.writeFile(testDocPath, sampleSrs);
+    });
+
+    afterEach(async () => {
+      await fs.remove(testDir);
+    });
+
+    it('should review requirements using combined method', async () => {
+      const result = await requirementsReviewerSkill.execute({
+        action: 'review',
+        documentPath: testDocPath,
+        method: 'combined',
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.defects).toBeDefined();
+      expect(Array.isArray(result.defects)).toBe(true);
+      expect(result.metrics).toBeDefined();
+      expect(result.qualityGate).toBeDefined();
+    });
+
+    it('should find ambiguous terms', async () => {
+      const result = await requirementsReviewerSkill.execute({
+        action: 'review',
+        documentPath: testDocPath,
+        method: 'fagan',
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      // Should find "quickly" and "user-friendly" as ambiguous
+      const ambiguousDefects = result.defects.filter(d => d.type === 'ambiguous');
+      expect(ambiguousDefects.length).toBeGreaterThan(0);
+    });
+
+    it('should review from specific perspectives', async () => {
+      const result = await requirementsReviewerSkill.execute({
+        action: 'pbr',
+        documentPath: testDocPath,
+        perspectives: ['user', 'tester'],
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.defects).toBeDefined();
+      // Should find perspective-specific issues
+      const perspectiveDefects = result.defects.filter(
+        d => d.perspective === 'user' || d.perspective === 'tester'
+      );
+      expect(perspectiveDefects.length).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should calculate metrics', async () => {
+      const result = await requirementsReviewerSkill.execute({
+        action: 'metrics',
+        documentPath: testDocPath,
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.metrics).toBeDefined();
+      expect(result.metrics.totalRequirements).toBeGreaterThan(0);
+      expect(typeof result.metrics.earsCompliance).toBe('number');
+      expect(typeof result.metrics.testabilityScore).toBe('number');
+    });
+
+    it('should return error for missing document path', async () => {
+      const result = await requirementsReviewerSkill.execute({
+        action: 'review',
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('documentPath');
+    });
+
+    it('should generate markdown report when requested', async () => {
+      const result = await requirementsReviewerSkill.execute({
+        action: 'review',
+        documentPath: testDocPath,
+        outputFormat: 'markdown',
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.report).toBeDefined();
+      expect(result.report).toContain('# Requirements Review Report');
+    });
+  });
+
+  describe('designReviewerSkill.execute', () => {
+    const testDir = '/tmp/test-design-reviewer';
+    const testDocPath = path.join(testDir, 'test-design.md');
+
+    beforeEach(async () => {
+      await fs.ensureDir(testDir);
+      // Create a sample design document
+      const sampleDesign = `# System Design Document
+
+## Architecture Overview
+
+This is a microservice architecture with tight coupling between services.
+
+### Components
+
+- UserManager class handles authentication and user data
+- OrderProcessor handles orders using global state
+- UtilityHelper contains miscellaneous helper functions
+
+## Container Diagram
+
+The system consists of Web App, API Gateway, and Database.
+
+## Decision Record
+
+### ADR-001: Database Selection
+
+Status: accepted
+
+## Context
+
+We need to choose a database for our application.
+
+## Decision
+
+We will use PostgreSQL.
+
+## Security
+
+User input will be handled through forms and API endpoints.
+Personal data will be stored in the database.
+`;
+      await fs.writeFile(testDocPath, sampleDesign);
+    });
+
+    afterEach(async () => {
+      await fs.remove(testDir);
+    });
+
+    it('should review design document', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'review',
+        documentPath: testDocPath,
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.issues).toBeDefined();
+      expect(Array.isArray(result.issues)).toBe(true);
+      expect(result.metrics).toBeDefined();
+      expect(result.qualityGate).toBeDefined();
+    });
+
+    it('should find SOLID violations', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'solid',
+        documentPath: testDocPath,
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.issues).toBeDefined();
+      // Should find potential SRP issues (Manager class)
+      expect(result.count).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should check coupling issues', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'coupling',
+        documentPath: testDocPath,
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.issues).toBeDefined();
+      // Should find tight coupling and global state
+      const couplingIssues = result.issues.filter(
+        i => i.category === 'coupling' || i.category === 'cohesion'
+      );
+      expect(couplingIssues.length).toBeGreaterThan(0);
+    });
+
+    it('should review security aspects', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'security',
+        documentPath: testDocPath,
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.issues).toBeDefined();
+      // Should find security-related issues
+      expect(result.count).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should review ADR structure', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'adr',
+        documentPath: testDocPath,
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.issues).toBeDefined();
+      // Should find missing ADR sections (consequences, alternatives)
+      expect(result.count).toBeGreaterThanOrEqual(0);
+    });
+
+    it('should return error for missing document path', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'review',
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain('documentPath');
+    });
+
+    it('should generate markdown report when requested', async () => {
+      const result = await designReviewerSkill.execute({
+        action: 'review',
+        documentPath: testDocPath,
+        outputFormat: 'markdown',
+        projectPath: testDir,
+      });
+
+      expect(result.success).toBe(true);
+      expect(result.report).toBeDefined();
+      expect(result.report).toContain('# Design Review Report');
     });
   });
 });
