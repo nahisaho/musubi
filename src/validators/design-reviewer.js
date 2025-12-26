@@ -1023,7 +1023,7 @@ class DesignReviewer {
       const { issueId, action, newDesign, reason } = correction;
 
       switch (action) {
-        case 'accept':
+        case 'accept': {
           // 推奨を適用
           const issue = this._findIssueInContent(content, issueId);
           if (issue && issue.evidence && issue.recommendation) {
@@ -1037,8 +1037,9 @@ class DesignReviewer {
             });
           }
           break;
+        }
 
-        case 'modify':
+        case 'modify': {
           // カスタム修正を適用
           const modifyIssue = this._findIssueInContent(content, issueId);
           if (modifyIssue && modifyIssue.evidence && newDesign) {
@@ -1052,6 +1053,7 @@ class DesignReviewer {
             });
           }
           break;
+        }
 
         case 'reject':
           rejectedFindings.push({

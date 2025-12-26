@@ -833,7 +833,7 @@ class RequirementsReviewer {
       const { defectId, action, newText, reason } = correction;
 
       switch (action) {
-        case 'accept':
+        case 'accept': {
           // 推奨を適用
           const defect = this._findDefectInContent(content, defectId);
           if (defect && defect.evidence && defect.recommendation) {
@@ -846,8 +846,9 @@ class RequirementsReviewer {
             });
           }
           break;
+        }
 
-        case 'modify':
+        case 'modify': {
           // カスタム修正を適用
           const modifyDefect = this._findDefectInContent(content, defectId);
           if (modifyDefect && modifyDefect.evidence && newText) {
@@ -860,6 +861,7 @@ class RequirementsReviewer {
             });
           }
           break;
+        }
 
         case 'reject':
           rejectedFindings.push({
