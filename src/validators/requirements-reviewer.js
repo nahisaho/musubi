@@ -631,8 +631,7 @@ class RequirementsReviewer {
                 title: `Missing Boundary Values: ${req.id}`,
                 description: 'Requirement mentions ranges but boundary values are not specified.',
                 evidence: req.fullText,
-                recommendation:
-                  'Specify exact minimum and maximum values for boundary testing.',
+                recommendation: 'Specify exact minimum and maximum values for boundary testing.',
               })
             );
           }
@@ -668,8 +667,7 @@ class RequirementsReviewer {
             type: DefectType.MISSING,
             title: 'Missing Scalability Requirements',
             description: 'No requirements found for system scalability.',
-            recommendation:
-              'Define expected load, concurrent users, and scaling requirements.',
+            recommendation: 'Define expected load, concurrent users, and scaling requirements.',
           })
         );
       }
@@ -684,7 +682,8 @@ class RequirementsReviewer {
             type: DefectType.MISSING,
             title: 'Missing Availability Requirements',
             description: 'No availability/SLA requirements defined.',
-            recommendation: 'Specify target availability (e.g., 99.9% uptime) and recovery time objectives.',
+            recommendation:
+              'Specify target availability (e.g., 99.9% uptime) and recovery time objectives.',
           })
         );
       }
@@ -924,7 +923,8 @@ class RequirementsReviewer {
    * 修正レポートを生成
    */
   generateCorrectionReport(correctionResult) {
-    const { changesApplied, rejectedFindings, updatedQualityGate, filesModified } = correctionResult;
+    const { changesApplied, rejectedFindings, updatedQualityGate, filesModified } =
+      correctionResult;
 
     let report = `## 📝 Correction Report\n\n`;
     report += `**Correction Date**: ${new Date().toISOString().split('T')[0]}\n\n`;

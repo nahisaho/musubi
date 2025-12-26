@@ -454,7 +454,10 @@ const requirementsReviewerSkill = {
       }
 
       default:
-        return { success: false, error: 'Invalid action. Use: review, fagan, pbr, metrics, correct' };
+        return {
+          success: false,
+          error: 'Invalid action. Use: review, fagan, pbr, metrics, correct',
+        };
     }
   },
 };
@@ -499,7 +502,8 @@ const designReviewerSkill = {
     {
       name: 'focus',
       type: 'array',
-      description: 'Review focus areas: solid, patterns, coupling-cohesion, error-handling, security, all',
+      description:
+        'Review focus areas: solid, patterns, coupling-cohesion, error-handling, security, all',
       required: false,
     },
     { name: 'outputFormat', type: 'string', description: 'json, markdown', required: false },
@@ -685,7 +689,8 @@ const designReviewerSkill = {
       default:
         return {
           success: false,
-          error: 'Invalid action. Use: review, solid, patterns, coupling, security, c4, adr, correct',
+          error:
+            'Invalid action. Use: review, solid, patterns, coupling, security, c4, adr, correct',
         };
     }
   },

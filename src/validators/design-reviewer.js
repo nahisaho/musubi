@@ -463,9 +463,7 @@ class DesignReviewer {
     }
 
     // DIP (Dependency Inversion Principle) チェック
-    if (
-      /directly\s+depend|concrete\s+class|tight\s+coupling|直接依存/gi.test(content)
-    ) {
+    if (/directly\s+depend|concrete\s+class|tight\s+coupling|直接依存/gi.test(content)) {
       issues.push(
         new DesignIssue({
           id: `DES-SOLID-${String(issueCounter++).padStart(3, '0')}`,
@@ -545,8 +543,7 @@ class DesignReviewer {
           severity: IssueSeverity.SUGGESTION,
           title: 'Consider Observer Pattern',
           description: 'Event handling mentioned. Observer pattern might be beneficial.',
-          recommendation:
-            'Consider Observer/Pub-Sub pattern for decoupled event notification.',
+          recommendation: 'Consider Observer/Pub-Sub pattern for decoupled event notification.',
         })
       );
     }
@@ -570,8 +567,7 @@ class DesignReviewer {
           severity: IssueSeverity.MAJOR,
           title: 'High Coupling Detected',
           description: 'Design mentions tight coupling between components',
-          recommendation:
-            'Reduce coupling through interfaces, events, or dependency injection.',
+          recommendation: 'Reduce coupling through interfaces, events, or dependency injection.',
         })
       );
     }
@@ -657,8 +653,7 @@ class DesignReviewer {
           severity: IssueSeverity.MINOR,
           title: 'Missing Retry Strategy',
           description: 'External service integration without retry strategy',
-          recommendation:
-            'Add retry with exponential backoff for external service calls.',
+          recommendation: 'Add retry with exponential backoff for external service calls.',
         })
       );
     }
@@ -675,8 +670,7 @@ class DesignReviewer {
           severity: IssueSeverity.MINOR,
           title: 'Consider Circuit Breaker',
           description: 'Distributed system without circuit breaker pattern',
-          recommendation:
-            'Implement circuit breaker pattern to prevent cascade failures.',
+          recommendation: 'Implement circuit breaker pattern to prevent cascade failures.',
         })
       );
     }
@@ -690,8 +684,7 @@ class DesignReviewer {
           severity: IssueSeverity.SUGGESTION,
           title: 'Consider Graceful Degradation',
           description: 'No graceful degradation strategy documented',
-          recommendation:
-            'Define fallback behaviors for when components fail.',
+          recommendation: 'Define fallback behaviors for when components fail.',
         })
       );
     }
@@ -844,8 +837,7 @@ class DesignReviewer {
           severity: IssueSeverity.MINOR,
           title: 'Missing Component Diagram',
           description: 'C4 Component diagram not found',
-          recommendation:
-            'Add Component diagram for key containers showing internal structure.',
+          recommendation: 'Add Component diagram for key containers showing internal structure.',
         })
       );
     }
@@ -875,8 +867,7 @@ class DesignReviewer {
           severity: IssueSeverity.MINOR,
           title: 'Missing ADR Status',
           description: 'ADR status not specified',
-          recommendation:
-            'Add status: proposed/accepted/deprecated/superseded.',
+          recommendation: 'Add status: proposed/accepted/deprecated/superseded.',
         })
       );
     }
@@ -889,8 +880,7 @@ class DesignReviewer {
           severity: IssueSeverity.MAJOR,
           title: 'Missing ADR Context',
           description: 'ADR context/background not documented',
-          recommendation:
-            'Add Context section explaining the problem/situation.',
+          recommendation: 'Add Context section explaining the problem/situation.',
         })
       );
     }
@@ -903,8 +893,7 @@ class DesignReviewer {
           severity: IssueSeverity.CRITICAL,
           title: 'Missing ADR Decision',
           description: 'ADR decision not clearly stated',
-          recommendation:
-            'Add Decision section clearly stating what was decided.',
+          recommendation: 'Add Decision section clearly stating what was decided.',
         })
       );
     }
@@ -917,8 +906,7 @@ class DesignReviewer {
           severity: IssueSeverity.MAJOR,
           title: 'Missing ADR Consequences',
           description: 'ADR consequences not documented',
-          recommendation:
-            'Add Consequences section with both positive and negative impacts.',
+          recommendation: 'Add Consequences section with both positive and negative impacts.',
         })
       );
     }
@@ -931,8 +919,7 @@ class DesignReviewer {
           severity: IssueSeverity.MINOR,
           title: 'Missing ADR Alternatives',
           description: 'ADR alternatives considered not documented',
-          recommendation:
-            'Add Alternatives section showing other options that were considered.',
+          recommendation: 'Add Alternatives section showing other options that were considered.',
         })
       );
     }
