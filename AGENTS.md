@@ -16,6 +16,13 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 - `#sdd-implement <feature>` - Execute implementation
 - `#sdd-validate <feature>` - Validate constitutional compliance
 
+### Review Prompts (v6.2.0)
+
+- `#sdd-review-requirements <feature>` - Review requirements document (EARS format, stakeholder coverage, acceptance criteria)
+- `#sdd-review-design <feature>` - Review design document (C4 model, ADR, Constitutional Articles)
+- `#sdd-review-implementation <feature>` - Review implementation (test coverage, code quality, traceability)
+- `#sdd-review-all <feature>` - Full review cycle (requirements → design → implementation)
+
 ### Project Memory
 
 - `steering/structure.md` - Architecture patterns
@@ -32,5 +39,5 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 ---
 
 **Agent**: GitHub Copilot
-**Initialized**: 2025-12-24
-**MUSUBI Version**: 0.1.0
+**Initialized**: 2025-12-26
+**MUSUBI Version**: 6.2.0

@@ -5,9 +5,105 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [6.2.0] - 2025-12-27
+## [6.2.0] - 2025-12-31
 
 ### Added
+
+#### Review Gate Engine (Phase 1 - Sprint 9)
+
+- **Review Gate Library** (`lib/musubi-review-gate`):
+  - TypeScript library for managing review workflows
+  - GATE_TYPE enum: requirements, design, implementation, release
+  - GATE_STATUS: pending, approved, rejected, waived
+  - REVIEW_DECISION: approve, reject, request_changes, waive
+  - Approval rules with minimum approvers and required roles
+  - Auto-expiration support for pending reviews
+
+- **Review Gate Store**:
+  - In-memory storage with save/load persistence
+  - Filter and query capabilities
+  - Automatic ID generation
+
+#### Dashboard & Traceability (Phase 2 - Sprint 10)
+
+- **Workflow Dashboard** (`src/dashboard/workflow-dashboard.js`):
+  - Real-time workflow state tracking
+  - Feature lifecycle management (requirements → design → tasks → implement → validate)
+  - Progress calculation and visualization
+  - Blocker management with priority levels
+  - Timeline event tracking
+
+- **Traceability Engine** (`src/traceability/traceability-engine.js`):
+  - Requirement ID pattern extraction (REQ-XXX-NNN format)
+  - Bidirectional link management (forward/backward)
+  - Coverage matrix generation
+  - Orphan detection for unlinked items
+  - Source type support: requirement, design, task, code, test
+
+- **CLI Review Command** (`src/cli/review-commands.js`):
+  - `musubi review create` - Create review gates
+  - `musubi review submit` - Submit reviews
+  - `musubi review status` - Check gate status
+  - `musubi review list` - List gates with filters
+
+#### Constitutional Compliance (Phase 3 - Sprint 11)
+
+- **Constitutional Checker** (`src/constitutional/checker.js`):
+  - Article I-IX compliance validation
+  - Severity levels: CRITICAL, HIGH, MEDIUM, LOW
+  - File-level and project-level checking
+  - Block decision logic for Phase -1 Gate trigger
+  - Configurable thresholds (maxFileLines, maxFunctionLines, maxDependencies)
+
+- **Phase -1 Gate** (`src/constitutional/phase-minus-one.js`):
+  - Automatic trigger for Article VII/VIII violations
+  - Multi-reviewer workflow (required + optional reviewers)
+  - Waiver support with justification
+  - Notification generation for reviewers
+
+- **Steering Sync** (`src/constitutional/steering-sync.js`):
+  - Auto-sync steering files on version updates
+  - Consistency checking between files
+  - Backup before updates
+  - Version tracking in project.yml, product.md, tech.md, structure.md
+
+- **CI Reporter** (`src/constitutional/ci-reporter.js`):
+  - OUTPUT_FORMAT: TEXT, JSON, GITHUB, JUNIT
+  - GitHub Actions annotations support
+  - Exit codes: SUCCESS (0), WARNINGS (0), FAILURES (1), ERROR (2)
+
+- **GitHub Actions Workflow** (`.github/workflows/constitutional-check.yml`):
+  - PR and push triggered constitutional checks
+  - Automatic Phase -1 Gate issue creation on violations
+
+#### Enterprise Features (Phase 4 - Sprint 12)
+
+- **Experiment Report Generator** (`src/enterprise/experiment-report.js`):
+  - Generate reports from Jest test results
+  - REPORT_FORMAT: MARKDOWN, HTML, JSON
+  - Performance metrics extraction
+  - Observations and conclusions support
+
+- **Tech Article Generator** (`src/enterprise/tech-article.js`):
+  - Multi-platform support: Qiita, Zenn, Medium, Dev.to
+  - Front matter generation per platform
+  - Code examples with syntax highlighting
+  - Table of contents generation
+  - Word count and reading time estimation
+
+- **Error Recovery Handler** (`src/enterprise/error-recovery.js`):
+  - ERROR_CATEGORY: test-failure, validation-error, build-error, etc.
+  - RECOVERY_ACTION: fix-code, update-test, install-deps, rollback
+  - Root cause analysis with pattern matching
+  - Remediation step generation
+
+- **Rollback Manager** (`src/enterprise/rollback-manager.js`):
+  - ROLLBACK_LEVEL: file, commit, stage, sprint
+  - Checkpoint creation with file backup
+  - Confirmation workflow support
+  - Git integration (optional)
+
+### Enhanced
 
 - **Requirements Reviewer Skill** (`requirements-reviewer`):
   - Systematic requirements review using Fagan Inspection (6-phase formal review)

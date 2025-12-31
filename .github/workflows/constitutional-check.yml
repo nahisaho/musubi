@@ -1,0 +1,134 @@
+# MUSUBI Constitutional Compliance Check
+# 
+# This workflow runs Constitutional compliance checks on pull requests
+# to enforce MUSUBI's governance rules.
+#
+# Requirement: IMP-6.2-005-03
+
+name: Constitutional Compliance
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main, develop]
+
+jobs:
+  constitutional-check:
+    name: Constitutional Check
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v45
+        with:
+          files: |
+            src/**/*.js
+            src/**/*.ts
+            lib/**/*.js
+            lib/**/*.ts
+      
+      - name: Run Constitutional Check
+        if: steps.changed-files.outputs.any_changed == 'true'
+        id: constitutional
+        run: |
+          node -e "
+            const { CIReporter, OUTPUT_FORMAT } = require('./src/constitutional');
+            const reporter = new CIReporter({ format: 'github' });
+            const files = '${{ steps.changed-files.outputs.all_changed_files }}'.split(' ').filter(f => f);
+            if (files.length === 0) {
+              console.log('No files to check');
+              process.exit(0);
+            }
+            reporter.runAndReport(files, { format: OUTPUT_FORMAT.GITHUB })
+              .then(result => {
+                console.log(result.report);
+                process.exit(result.exitCode);
+              })
+              .catch(err => {
+                console.error('Error:', err);
+                process.exit(2);
+              });
+          "
+      
+      - name: No Files Changed
+        if: steps.changed-files.outputs.any_changed != 'true'
+        run: echo "No source files changed, skipping constitutional check"
+      
+      - name: Upload Report
+        if: always() && steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: constitutional-report
+          path: storage/constitutional/
+          if-no-files-found: ignore
+
+  phase-minus-one-gate:
+    name: Phase -1 Gate Check
+    needs: constitutional-check
+    if: failure()
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Create Phase -1 Gate Issue
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = `Phase -1 Gate Review Required: PR #${context.payload.pull_request?.number || 'N/A'}`;
+            const body = `
+            ## Phase -1 Gate Review Required
+            
+            Constitutional violations were detected in this PR that require System Architect review.
+            
+            **PR:** #${context.payload.pull_request?.number || 'N/A'}
+            **Branch:** ${context.ref}
+            **Author:** @${context.actor}
+            
+            ### Required Actions
+            1. Review the Constitutional violations in the workflow logs
+            2. Either approve the changes with justification, or request changes
+            
+            ### Reviewers
+            Please assign a System Architect to review this gate.
+            
+            ---
+            *This issue was automatically created by MUSUBI Constitutional Compliance Check*
+            `;
+            
+            // Only create issue on actual PRs
+            if (context.payload.pull_request) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title,
+                body,
+                labels: ['phase-minus-one', 'constitutional-review', 'needs-review']
+              });
+            }
