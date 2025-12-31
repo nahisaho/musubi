@@ -99,6 +99,39 @@ musubi validate "ユーザー認証機能"
 ⚠️ Article 7: Test Coverage - WARNING (75% < 80%)
 ```
 
+### 4.5 レビューゲート（v6.2.0 新機能）
+
+各ステージでの品質レビュー：
+
+```bash
+# 要件レビュー
+musubi review requirements "ユーザー認証機能"
+
+# 設計レビュー
+musubi review design "ユーザー認証機能"
+
+# 実装レビュー
+musubi review implementation "ユーザー認証機能"
+
+# 全ゲートレビュー
+musubi review all "ユーザー認証機能"
+```
+
+### 4.6 ワークフローダッシュボード（v6.2.0 新機能）
+
+進捗状況の可視化：
+
+```bash
+# ダッシュボード表示
+musubi dashboard show "ユーザー認証機能"
+
+# 新規ワークフロー開始
+musubi dashboard start "ユーザー認証機能"
+
+# ブロッカー追加
+musubi dashboard blocker "ユーザー認証機能" --add "API設計のレビュー待ち"
+```
+
 ## ステップ 5: フルオーケストレーション
 
 すべてのステップを一度に実行：

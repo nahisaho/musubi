@@ -17,7 +17,7 @@
 
 ---
 
-> 🤖 **7つのAIエージェント** × 📋 **27の専門スキル** × ⚖️ **憲法ガバナンス**
+> 🤖 **7つのAIエージェント** × 📋 **31の専門スキル** × ⚖️ **憲法ガバナンス**
 
 MUSUBI（結び）は、6つの主要フレームワークのベスト機能を統合した包括的な**仕様駆動開発（SDD）**フレームワークです。複数のAIコーディングエージェントに対応した本番環境対応ツールです。
 
@@ -68,6 +68,65 @@ musubi init --windsurf  # Windsurf IDE
 ```
 
 </details>
+
+---
+
+## 📊 v6.2.0 の新機能
+
+### Review Gate Engine 🛡️
+
+各開発ステージでの体系的なレビューのための新しい品質ゲート。
+
+#### レビューゲート
+
+| ゲート | 説明 | プロンプト |
+|------|------|------------|
+| **Requirements Gate** | EARS形式、優先度、受入基準の検証 | `#sdd-review-requirements` |
+| **Design Gate** | C4モデル、ADR、コンポーネント設計の検証 | `#sdd-review-design` |
+| **Implementation Gate** | コード品質、テストカバレッジ、命名規則 | `#sdd-review-implementation` |
+| **Full Review** | 全ゲートを順番に実行 | `#sdd-review-all` |
+
+```bash
+# AIエージェントでレビュープロンプトを使用
+#sdd-review-requirements user-auth
+#sdd-review-design user-auth
+#sdd-review-implementation user-auth
+```
+
+#### ワークフローダッシュボード
+
+- **進捗可視化**: 5ステージのリアルタイム進捗表示
+- **ブロッカー管理**: ブロッカーの追加・解決・追跡
+- **遷移記録**: ステージ間遷移の記録と分析
+- **スプリント計画**: ベロシティ追跡付きタスク優先度付け
+
+```bash
+musubi dashboard show <feature>     # ワークフロー状態表示
+musubi dashboard start <feature>    # 新規ワークフロー開始
+musubi dashboard blocker <feature>  # ブロッカー管理
+```
+
+#### トレーサビリティシステム
+
+- **自動抽出**: コード・テスト・コミットからID自動抽出
+- **ギャップ検出**: 設計・実装・テストの欠落検出
+- **マトリックスストレージ**: 履歴付きYAMLベース追跡マトリックス
+
+```bash
+musubi-trace extract <dir>   # トレーサビリティID抽出
+musubi-trace gaps <feature>  # ギャップ検出
+musubi-trace matrix          # マトリックスレポート生成
+```
+
+#### エンタープライズ機能
+
+| 機能 | 説明 |
+|------|------|
+| **エラーリカバリー** | 修復手順付き自動エラー分析 |
+| **ロールバックマネージャー** | ファイル/コミット/ステージ/スプリント単位のロールバック |
+| **CIレポーター** | GitHub Actions統合 |
+| **Phase -1 ゲート** | 全ステージ前の憲法準拠チェック |
+| **Steering同期** | バージョン変更時のステアリングファイル自動更新 |
 
 ---
 

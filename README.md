@@ -17,7 +17,7 @@
 
 ---
 
-> 🤖 **7 AI Coding Agents** × 📋 **27 Specialized Skills** × ⚖️ **Constitutional Governance**
+> 🤖 **7 AI Coding Agents** × 📋 **31 Specialized Skills** × ⚖️ **Constitutional Governance**
 
 MUSUBI (結び - "connection/binding") is a comprehensive **Specification Driven Development (SDD)** framework that synthesizes the best features from 6 leading frameworks into a production-ready tool for multiple AI coding agents.
 
@@ -68,6 +68,65 @@ musubi init --windsurf  # Windsurf IDE
 ```
 
 </details>
+
+---
+
+## 📊 What's New in v6.2.0
+
+### Review Gate Engine 🛡️
+
+New quality gates for systematic review at each development stage.
+
+#### Review Gates
+
+| Gate | Description | Prompt |
+|------|-------------|--------|
+| **Requirements Gate** | EARS format, priority, acceptance criteria validation | `#sdd-review-requirements` |
+| **Design Gate** | C4 model, ADR, component design validation | `#sdd-review-design` |
+| **Implementation Gate** | Code quality, test coverage, naming conventions | `#sdd-review-implementation` |
+| **Full Review** | All gates in sequence | `#sdd-review-all` |
+
+```bash
+# Use review prompts in your AI agent
+#sdd-review-requirements user-auth
+#sdd-review-design user-auth
+#sdd-review-implementation user-auth
+```
+
+#### Workflow Dashboard
+
+- **Progress Visualization**: Real-time progress across 5 stages
+- **Blocker Management**: Add, resolve, and track blockers
+- **Transition Recording**: Record and analyze stage transitions
+- **Sprint Planning**: Task prioritization with velocity tracking
+
+```bash
+musubi dashboard show <feature>     # Show workflow status
+musubi dashboard start <feature>    # Start new workflow
+musubi dashboard blocker <feature>  # Manage blockers
+```
+
+#### Traceability System
+
+- **Auto-Extraction**: Automatic ID extraction from code, tests, commits
+- **Gap Detection**: Detect missing design, implementation, or tests
+- **Matrix Storage**: YAML-based traceability matrix with history
+
+```bash
+musubi-trace extract <dir>   # Extract traceability IDs
+musubi-trace gaps <feature>  # Detect gaps
+musubi-trace matrix          # Generate matrix report
+```
+
+#### Enterprise Features
+
+| Feature | Description |
+|---------|-------------|
+| **Error Recovery** | Auto error analysis with remediation steps |
+| **Rollback Manager** | File/commit/stage/sprint level rollback |
+| **CI Reporter** | GitHub Actions integration |
+| **Phase -1 Gate** | Constitutional compliance before all stages |
+| **Steering Sync** | Auto-update steering files on version change |
 
 ---
 
