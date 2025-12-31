@@ -1,0 +1,42 @@
+{
+  "featureId": "IMP-6.2",
+  "title": "IMP-6.2",
+  "description": "",
+  "createdAt": "2025-12-31T11:40:16.761Z",
+  "updatedAt": "2025-12-31T11:40:24.614Z",
+  "currentStage": "requirements",
+  "stages": {
+    "steering": {
+      "status": "completed",
+      "startedAt": "2025-12-31T11:40:16.761Z",
+      "completedAt": "2025-12-31T11:40:24.613Z",
+      "artifacts": []
+    },
+    "requirements": {
+      "status": "in-progress",
+      "startedAt": "2025-12-31T11:40:24.614Z",
+      "completedAt": null,
+      "artifacts": []
+    },
+    "design": {
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "artifacts": []
+    },
+    "implementation": {
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "artifacts": []
+    },
+    "validation": {
+      "status": "not-started",
+      "startedAt": null,
+      "completedAt": null,
+      "artifacts": []
+    }
+  },
+  "blockers": [],
+  "metadata": {}
+}
