@@ -37,7 +37,7 @@ class SprintReporter {
    */
   async generateReport(sprint) {
     const report = {
-      id: `RPT-${sprint.id}-${Date.now()}`,
+      id: `RPT-${sprint.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       sprintId: sprint.id,
       sprintName: sprint.name,
       featureId: sprint.featureId,

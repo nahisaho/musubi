@@ -51,7 +51,7 @@ class PhaseMinusOneGate {
    * @returns {Promise<Object>} Gate record
    */
   async trigger(options) {
-    const gateId = `GATE-${Date.now()}`;
+    const gateId = `GATE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
     const gate = {
       id: gateId,
