@@ -169,7 +169,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/nahisaho/musubi' },
+      { icon: 'github', link: 'https://github.com/nahisaho/MUSUBI' },
       { icon: 'npm', link: 'https://www.npmjs.com/package/musubi-sdd' }
     ],
 
@@ -183,7 +183,7 @@ export default defineConfig({
     },
 
     editLink: {
-      pattern: 'https://github.com/nahisaho/musubi/edit/main/docs/:path',
+      pattern: 'https://github.com/nahisaho/MUSUBI/edit/main/docs/:path',
       text: 'Edit this page on GitHub'
     }
   }

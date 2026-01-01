@@ -222,8 +222,8 @@ const analysis = await generator.analyze();
 
 ## Learn More
 
-- [MUSUBI Documentation](https://github.com/nahisaho/musubi)
-- [CLI Reference](https://github.com/nahisaho/musubi#cli-commands) - Detailed CLI options
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
+- [CLI Reference](https://github.com/nahisaho/MUSUBI#cli-commands) - Detailed CLI options
 - [Constitutional Governance](steering/rules/constitution.md)
 - [8-Stage SDD Workflow](steering/rules/workflow.md)
 

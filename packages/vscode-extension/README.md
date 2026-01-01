@@ -100,9 +100,9 @@ code --install-extension musubi-sdd-0.1.0.vsix
 
 ## Links
 
-- [MUSUBI Documentation](https://github.com/nahisaho/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
 - [npm Package](https://www.npmjs.com/package/musubi-sdd)
-- [Report Issues](https://github.com/nahisaho/musubi/issues)
+- [Report Issues](https://github.com/nahisaho/MUSUBI/issues)
 
 ## License
 

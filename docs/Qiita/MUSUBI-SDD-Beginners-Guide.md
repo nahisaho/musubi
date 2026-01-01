@@ -1579,7 +1579,7 @@ Orchestratorが自動的に：
 ## リソース
 
 - **MUSUBI npm**: https://www.npmjs.com/package/musubi-sdd
-- **GitHub Repository**: https://github.com/nahisaho/musubi
+- **GitHub Repository**: https://github.com/nahisaho/MUSUBI
 - **Current Version**: v2.1.1（2025年6月現在）
 
 ---

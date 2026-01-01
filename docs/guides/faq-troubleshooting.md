@@ -551,8 +551,8 @@ npx musubi-convert import --format gherkin --dir features/
 ### リソース
 
 - **Documentation**: https://nahisaho.github.io/musubi
-- **GitHub Issues**: https://github.com/nahisaho/musubi/issues
-- **Discussions**: https://github.com/nahisaho/musubi/discussions
+- **GitHub Issues**: https://github.com/nahisaho/MUSUBI/issues
+- **Discussions**: https://github.com/nahisaho/MUSUBI/discussions
 
 ### デバッグモード
 
@@ -571,7 +571,7 @@ DEBUG=musubi:validator npx musubi-validate ears
 npx musubi-sdd diagnose > musubi-diagnostic.txt
 
 # GitHub Issueを作成
-# https://github.com/nahisaho/musubi/issues/new
+# https://github.com/nahisaho/MUSUBI/issues/new
 # diagnostic.txtを添付
 ```
 
@@ -579,4 +579,4 @@ npx musubi-sdd diagnose > musubi-diagnostic.txt
 
 **MUSUBI v3.12.0** - Specification Driven Development
 
-[ドキュメント](../USER-GUIDE.md) | [GitHub](https://github.com/nahisaho/musubi) | [npm](https://www.npmjs.com/package/musubi-sdd)
+[ドキュメント](../USER-GUIDE.md) | [GitHub](https://github.com/nahisaho/MUSUBI) | [npm](https://www.npmjs.com/package/musubi-sdd)

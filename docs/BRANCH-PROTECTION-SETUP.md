@@ -11,7 +11,7 @@ This guide explains how to configure Branch Protection Rules for the `main` bran
 
 ### 1. Navigate to Branch Protection Settings
 
-1. Go to GitHub repository: https://github.com/nahisaho/musubi
+1. Go to GitHub repository: https://github.com/nahisaho/MUSUBI
 2. Click **Settings** (top right)
 3. In left sidebar, click **Branches**
 4. Click **Add branch protection rule**

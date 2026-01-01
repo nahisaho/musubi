@@ -258,8 +258,8 @@ The AI will:
 ## Resources
 
 - 📦 **npm**: [musubi-sdd](https://www.npmjs.com/package/musubi-sdd)
-- 🐙 **GitHub**: [nahisaho/musubi](https://github.com/nahisaho/musubi)
-- 📚 **Documentation**: [README](https://github.com/nahisaho/musubi#readme)
+- 🐙 **GitHub**: [nahisaho/musubi](https://github.com/nahisaho/MUSUBI)
+- 📚 **Documentation**: [README](https://github.com/nahisaho/MUSUBI#readme)
 - 🆕 **CodeGraph MCP**: [nahisaho/codegraph-mcp-server](https://github.com/nahisaho/codegraph-mcp-server)
 
 ## Conclusion
@@ -283,7 +283,7 @@ npx musubi-sdd init --copilot
 
 **MUSUBI** - むすび - Connecting specifications, design, and code.
 
-⭐ Star us on [GitHub](https://github.com/nahisaho/musubi) if this helps!
+⭐ Star us on [GitHub](https://github.com/nahisaho/MUSUBI) if this helps!
 
 ---
 

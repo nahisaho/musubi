@@ -112,7 +112,7 @@ We love pull requests! Here's how to contribute code:
 
 2. **Add upstream remote**:
    ```bash
-   git remote add upstream https://github.com/your-org/musubi.git
+   git remote add upstream https://github.com/nahisaho/MUSUBI.git
    ```
 
 3. **Install dependencies**:
@@ -509,8 +509,8 @@ When you change functionality:
 ## Questions?
 
 - **Documentation**: Check [README.md](README.md) and [docs/](docs/)
-- **Issues**: Search [existing issues](https://github.com/your-org/musubi/issues)
-- **Discussions**: Use [GitHub Discussions](https://github.com/your-org/musubi/discussions)
+- **Issues**: Search [existing issues](https://github.com/nahisaho/MUSUBI/issues)
+- **Discussions**: Use [GitHub Discussions](https://github.com/nahisaho/MUSUBI/discussions)
 
 ---
 

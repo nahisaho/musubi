@@ -289,7 +289,7 @@ npx musubi-sdd <command>
 
 ## Learn More
 
-- [MUSUBI Documentation](https://github.com/your-org/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
 - [Constitutional Governance](steering/rules/constitution.md)
 - [8-Stage SDD Workflow](steering/rules/workflow.md)
 - [EARS Format Guide](steering/rules/ears-format.md)

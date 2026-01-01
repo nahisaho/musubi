@@ -684,9 +684,9 @@ npx musubi-sdd onboard
 
 ## 📚 関連リソース
 
-- **GitHub**: [nahisaho/musubi](https://github.com/nahisaho/musubi)
+- **GitHub**: [nahisaho/musubi](https://github.com/nahisaho/MUSUBI)
 - **npm**: [musubi-sdd](https://www.npmjs.com/package/musubi-sdd)
-- **ドキュメント**: [docs/USER-GUIDE.ja.md](https://github.com/nahisaho/musubi/blob/main/docs/USER-GUIDE.ja.md)
+- **ドキュメント**: [docs/USER-GUIDE.ja.md](https://github.com/nahisaho/MUSUBI/blob/main/docs/USER-GUIDE.ja.md)
 
 ---
 

@@ -365,7 +365,7 @@ version: "0.7.0"
 repository:
   type: monorepo
   manager: pnpm
-  url: https://github.com/nahisaho/musubi
+  url: https://github.com/nahisaho/MUSUBI
 
 # パッケージ構成（packages.ymlへの参照）
 packages: ./packages.yml

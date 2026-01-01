@@ -15,7 +15,7 @@
 ```
 Resource Name: MUSUBI (musubi-sdd)
 
-Resource URL: https://github.com/nahisaho/musubi
+Resource URL: https://github.com/nahisaho/MUSUBI
 
 Category: Workflows & Knowledge Guides > General
 
@@ -56,7 +56,7 @@ Author: nahisaho
 ```markdown
 ### Frameworks
 
-- [MUSUBI](https://github.com/nahisaho/musubi) - A comprehensive SDD framework 
+- [MUSUBI](https://github.com/nahisaho/MUSUBI) - A comprehensive SDD framework 
   compatible with multiple AI coding agents. Provides constitutional governance, 
   multi-agent orchestration, and structured project memory. Features include 
   EARS requirements format, C4+ADR design generation, and full traceability 
@@ -79,7 +79,7 @@ Author: nahisaho
 ### Submission Content
 
 ```markdown
-- [MUSUBI](https://github.com/nahisaho/musubi) - Specification-Driven Development 
+- [MUSUBI](https://github.com/nahisaho/MUSUBI) - Specification-Driven Development 
   framework for GitHub Copilot that provides constitutional governance, 
   multi-agent orchestration, and 25+ reusable skills. Includes bilingual 
   documentation and VS Code integration.
@@ -97,7 +97,7 @@ Author: nahisaho
 ### Submission Content
 
 ```markdown
-- [MUSUBI](https://github.com/nahisaho/musubi) - SDD framework featuring 
+- [MUSUBI](https://github.com/nahisaho/MUSUBI) - SDD framework featuring 
   constitutional governance (9 Articles), bounded context management through 
   steering files, and aggregate-style project memory. Supports EARS requirements 
   format and C4 model architecture diagrams.

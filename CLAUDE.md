@@ -29,7 +29,7 @@ Check `.claude/skills/` directory for all installed skills.
 
 ### Learn More
 
-- [MUSUBI Documentation](https://github.com/your-org/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
 - [Constitutional Governance](steering/rules/constitution.md)
 - [8-Stage SDD Workflow](steering/rules/workflow.md)
 

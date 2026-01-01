@@ -545,8 +545,8 @@ musubi <command> --verbose 2>&1 | tee musubi-error.log
 
 | 方法 | リンク |
 |------|--------|
-| **GitHub Issues** | https://github.com/nahisaho/musubi/issues |
-| **Discussions** | https://github.com/nahisaho/musubi/discussions |
+| **GitHub Issues** | https://github.com/nahisaho/MUSUBI/issues |
+| **Discussions** | https://github.com/nahisaho/MUSUBI/discussions |
 | **Documentation** | https://nahisaho.github.io/musubi/ |
 
 ### 🔍 デバッグモード

@@ -1389,7 +1389,7 @@ async function main(agent, agentKey, options = {}) {
 
   const cmdExample = agent.commands.requirements.replace(' <feature>', ' authentication');
   console.log(chalk.gray(`  4. Try commands: ${cmdExample}\n`));
-  console.log(chalk.cyan('Learn more: https://github.com/your-org/musubi\n'));
+  console.log(chalk.cyan('Learn more: https://github.com/nahisaho/MUSUBI\n'));
 }
 
 async function copySkill(skillName, agent) {
@@ -2376,7 +2376,7 @@ ${skillsSection}
 
 ### Learn More
 
-- [MUSUBI Documentation](https://github.com/your-org/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
 - [Constitutional Governance](steering/rules/constitution.md)
 - [8-Stage SDD Workflow](steering/rules/workflow.md)
 

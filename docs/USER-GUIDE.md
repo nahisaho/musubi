@@ -573,4 +573,4 @@ const report = reporter.generateReport(analysis);
 
 **MUSUBI v6.0.0** - Specification Driven Development for the AI Age
 
-[GitHub](https://github.com/nahisaho/musubi) | [npm](https://www.npmjs.com/package/musubi-sdd) | [Documentation](https://nahisaho.github.io/musubi)
+[GitHub](https://github.com/nahisaho/MUSUBI) | [npm](https://www.npmjs.com/package/musubi-sdd) | [Documentation](https://nahisaho.github.io/musubi)

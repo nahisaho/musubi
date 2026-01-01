@@ -38,7 +38,7 @@ This document defines the technical design for the MUSUBI VS Code Extension, pro
   "icon": "resources/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nahisaho/musubi-vscode"
+    "url": "https://github.com/nahisaho/MUSUBI-vscode"
   },
   "engines": {
     "vscode": "^1.85.0"

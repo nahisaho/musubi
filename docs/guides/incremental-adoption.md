@@ -688,7 +688,7 @@ steering/
 ## Getting Help
 
 - **Documentation**: https://musubi.dev/docs
-- **GitHub Issues**: https://github.com/nahisaho/musubi/issues
+- **GitHub Issues**: https://github.com/nahisaho/MUSUBI/issues
 - **Discord Community**: https://discord.gg/musubi
 - **Stack Overflow**: Tag `musubi-sdd`
 

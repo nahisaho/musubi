@@ -616,7 +616,7 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 
 ### Learn More
 
-- [MUSUBI Documentation](https://github.com/nahisaho/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
 
 ---
 

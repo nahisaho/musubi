@@ -426,5 +426,5 @@ MUSUBI v5.8.0 は、エンタープライズ環境でのSDD導入を本格的に
 - [MUSUBI v3.0 エージェントとスキル](https://qiita.com/nahisaho/items/musubi-v3-agents)
 - [MUSUBI 進化の歴史](https://qiita.com/nahisaho/items/musubi-evolution)
 
-**リポジトリ**: https://github.com/nahisaho/musubi  
+**リポジトリ**: https://github.com/nahisaho/MUSUBI  
 **npm**: https://www.npmjs.com/package/musubi-sdd

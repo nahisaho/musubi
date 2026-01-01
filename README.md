@@ -4,7 +4,7 @@
 
 **Ultimate Specification Driven Development Tool**
 
-[![CI](https://github.com/nahisaho/musubi/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/musubi/actions/workflows/ci.yml)
+[![CI](https://github.com/nahisaho/MUSUBI/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/MUSUBI/actions/workflows/ci.yml)
 [![npm version](https://badge.fury.io/js/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
 [![npm downloads](https://img.shields.io/npm/dm/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
@@ -1414,7 +1414,7 @@ steering/rules/constitution.md
 
 ```bash
 # Clone repository
-git clone https://github.com/nahisaho/musubi.git
+git clone https://github.com/nahisaho/MUSUBI.git
 cd musubi
 
 # Install dependencies
@@ -1476,7 +1476,7 @@ MUSUBI synthesizes features from:
 
 **🎋 MUSUBI** - むすび - Bringing specifications, design, and code together.
 
-[![GitHub stars](https://img.shields.io/github/stars/nahisaho/musubi?style=social)](https://github.com/nahisaho/musubi)
+[![GitHub stars](https://img.shields.io/github/stars/nahisaho/musubi?style=social)](https://github.com/nahisaho/MUSUBI)
 
 Made with ❤️ for the AI Coding Community
 

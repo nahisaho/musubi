@@ -461,7 +461,7 @@ for f in *.md; do [ "$f" != "AGENTS.md" ] && mv "$f" "${f%.md}.prompt.md"; done
 
 # 📚 関連リソース
 
-- **GitHub リポジトリ**: [nahisaho/musubi](https://github.com/nahisaho/musubi)
+- **GitHub リポジトリ**: [nahisaho/musubi](https://github.com/nahisaho/MUSUBI)
 - **npm パッケージ**: [musubi-sdd](https://www.npmjs.com/package/musubi-sdd)
 - **VS Code Copilot ドキュメント**: [Reusable prompt files](https://code.visualstudio.com/docs/copilot/copilot-customization#_reusable-prompt-files)
 

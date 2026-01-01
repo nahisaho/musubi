@@ -509,7 +509,7 @@ MUSUBI Change Management Workflow
 8. Verify: musubi-gaps, musubi-trace
 9. Archive: musubi-change archive
 
-Learn more: https://github.com/nahisaho/musubi
+Learn more: https://github.com/nahisaho/MUSUBI
 ```
 
 **Closing**:
@@ -661,9 +661,9 @@ Timeline:
 
 Resources:
 📦 Install: npm install -g musubi-sdd
-📖 Documentation: https://github.com/nahisaho/musubi
-📝 Brownfield Tutorial: https://github.com/nahisaho/musubi/blob/main/docs/guides/brownfield-tutorial.md
-📊 Traceability Guide: https://github.com/nahisaho/musubi/blob/main/docs/guides/traceability-matrix-guide.md
+📖 Documentation: https://github.com/nahisaho/MUSUBI
+📝 Brownfield Tutorial: https://github.com/nahisaho/MUSUBI/blob/main/docs/guides/brownfield-tutorial.md
+📊 Traceability Guide: https://github.com/nahisaho/MUSUBI/blob/main/docs/guides/traceability-matrix-guide.md
 
 #MUSUBI #SDD #ChangeManagement #SoftwareDevelopment
 ```

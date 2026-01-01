@@ -2974,7 +2974,7 @@ v5.9.0では、新機能をOrchestratorから利用できる5つの組み込み�
 
 ## 関連リンク
 
-- [MUSUBI GitHub](https://github.com/nahisaho/musubi)
+- [MUSUBI GitHub](https://github.com/nahisaho/MUSUBI)
 - [MUSUHI GitHub](https://github.com/nahisaho/musuhi)（前身プロジェクト）
 - [Spec-Copilot GitHub](https://github.com/nahisaho/spec-copilot)（起源プロジェクト）
 - [MUSUBI v5.9.0 Enterprise Features Guide](https://qiita.com/nahisaho/items/musubi-v5-enterprise-features)

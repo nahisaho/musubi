@@ -723,7 +723,7 @@ GitHub Actions CI/CDバッジと開発ワークフローをREADME.mdに追加す
    ```markdown
    # MUSUBI - Ultimate Specification Driven Development
 
-   [![CI](https://github.com/nahisaho/musubi/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/musubi/actions/workflows/ci.yml)
+   [![CI](https://github.com/nahisaho/MUSUBI/actions/workflows/ci.yml/badge.svg)](https://github.com/nahisaho/MUSUBI/actions/workflows/ci.yml)
    [![npm version](https://badge.fury.io/js/musubi-sdd.svg)](https://www.npmjs.com/package/musubi-sdd)
    [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
    ```

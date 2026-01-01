@@ -749,7 +749,7 @@ GitHub Issueに特定のラベル（`sdd-fix`）が付与された場合、シ�
 
 ### 9.2 参照文書
 
-- MUSUBI GitHubリポジトリ: https://github.com/nahisaho/musubi
+- MUSUBI GitHubリポジトリ: https://github.com/nahisaho/MUSUBI
 - MUSUBI npmパッケージ: https://www.npmjs.com/package/musubi-sdd
 - AIコーディングツール総合調査レポート 2025
 - GitHub Spec Kit: https://github.com/github/spec-kit

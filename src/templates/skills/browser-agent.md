@@ -166,4 +166,4 @@ await agent.close();
 ## 関連
 
 - [Playwright Documentation](https://playwright.dev/)
-- [MUSUBI SDD](https://github.com/nahisaho/musubi)
+- [MUSUBI SDD](https://github.com/nahisaho/MUSUBI)

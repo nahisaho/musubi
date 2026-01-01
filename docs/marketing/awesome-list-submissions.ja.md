@@ -28,7 +28,7 @@
 ```
 リソース名: MUSUBI (musubi-sdd)
 
-URL: https://github.com/nahisaho/musubi
+URL: https://github.com/nahisaho/MUSUBI
 
 カテゴリ: Workflows & Knowledge Guides > General
 
@@ -70,7 +70,7 @@ bilingual (English/Japanese) documentation and VS Code/GitHub Copilot integratio
 ```markdown
 ### Frameworks
 
-- [MUSUBI](https://github.com/nahisaho/musubi) - A comprehensive SDD framework 
+- [MUSUBI](https://github.com/nahisaho/MUSUBI) - A comprehensive SDD framework 
   compatible with multiple AI coding agents. Provides constitutional governance, 
   multi-agent orchestration, and structured project memory.
 ```

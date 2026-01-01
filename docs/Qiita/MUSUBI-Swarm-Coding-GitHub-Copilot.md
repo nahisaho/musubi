@@ -987,7 +987,7 @@ npx -p musubi-gui start --port 3000
 
 ## リンク
 
-- **GitHub**: https://github.com/nahisaho/musubi
+- **GitHub**: https://github.com/nahisaho/MUSUBI
 - **npm**: https://www.npmjs.com/package/musubi-sdd
 - **CodeGraph MCP Server**: https://github.com/alohays/codegraph-mcp
 - **Documentation**: https://nahisaho.github.io/musubi

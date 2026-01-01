@@ -573,4 +573,4 @@ const compliance = constitution.check(artifacts);
 
 **MUSUBI v6.0.0** - AI時代の仕様駆動開発
 
-[GitHub](https://github.com/nahisaho/musubi) | [npm](https://www.npmjs.com/package/musubi-sdd) | [ドキュメント](https://nahisaho.github.io/musubi)
+[GitHub](https://github.com/nahisaho/MUSUBI) | [npm](https://www.npmjs.com/package/musubi-sdd) | [ドキュメント](https://nahisaho.github.io/musubi)

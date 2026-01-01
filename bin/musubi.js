@@ -437,7 +437,7 @@ program
     console.log('');
 
     console.log(chalk.white('Documentation:'));
-    console.log(chalk.gray('   https://github.com/your-org/musubi\n'));
+    console.log(chalk.gray('   https://github.com/nahisaho/MUSUBI\n'));
 
     console.log(chalk.white('27 Claude Code Skills:'));
     console.log(chalk.gray('   Orchestration: orchestrator, steering, constitution-enforcer'));

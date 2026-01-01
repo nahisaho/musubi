@@ -458,7 +458,7 @@ musubi init --claude-code
 
 ### GitHub
 
-- [MUSUBI](https://github.com/nahisaho/musubi)
+- [MUSUBI](https://github.com/nahisaho/MUSUBI)
 - [CodeGraph MCP Server](https://github.com/nahisaho/CodeGraphMCPServer)
 - [MCP (Model Context Protocol)](https://modelcontextprotocol.io/)
 

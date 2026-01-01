@@ -25,7 +25,7 @@ This project uses **MUSUBI** (Ultimate Specification Driven Development).
 
 ### Learn More
 
-- [MUSUBI Documentation](https://github.com/your-org/musubi)
+- [MUSUBI Documentation](https://github.com/nahisaho/MUSUBI)
 - [Constitutional Governance](steering/rules/constitution.md)
 - [8-Stage SDD Workflow](steering/rules/workflow.md)
 

@@ -286,6 +286,6 @@ musubi orchestrate "機能X" --chunk-size 4000
 
 ## 📞 サポート
 
-- GitHub Issues: https://github.com/nahisaho/musubi/issues
+- GitHub Issues: https://github.com/nahisaho/MUSUBI/issues
 - ドキュメント: https://musubi.dev/docs
 - Discord: https://discord.gg/musubi

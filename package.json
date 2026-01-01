@@ -53,7 +53,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nahisaho/musubi.git"
+    "url": "git+https://github.com/nahisaho/MUSUBI.git"
   },
   "engines": {
     "node": ">=18.0.0"

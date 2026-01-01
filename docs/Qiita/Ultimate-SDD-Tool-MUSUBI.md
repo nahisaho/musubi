@@ -611,8 +611,8 @@ npx musubi-sdd init --cursor     # Cursor (AGENTS.md)
 ## リソース
 
 - 📦 **npm**: [musubi-sdd](https://www.npmjs.com/package/musubi-sdd) (v2.1.1)
-- 📚 **GitHub**: [nahisaho/musubi](https://github.com/nahisaho/musubi)
-- 🎯 **ブループリント**: [Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md](https://github.com/nahisaho/musubi/blob/main/Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md)
+- 📚 **GitHub**: [nahisaho/musubi](https://github.com/nahisaho/MUSUBI)
+- 🎯 **ブループリント**: [Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md](https://github.com/nahisaho/MUSUBI/blob/main/Ultimate-SDD-Tool-Blueprint-v3-25-Skills.md)
 - 📊 **フレームワーク比較**: 本記事の比較表参照
 
 ---

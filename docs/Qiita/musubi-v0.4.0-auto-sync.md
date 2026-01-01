@@ -652,9 +652,9 @@ v0.4.0 でロードマップ Phase 1-4 が完了しました。今後の可能�
 
 ## 参考リンク
 
-- [MUSUBI GitHub リポジトリ](https://github.com/nahisaho/musubi)
+- [MUSUBI GitHub リポジトリ](https://github.com/nahisaho/MUSUBI)
 - [npm パッケージ](https://www.npmjs.com/package/musubi-sdd)
-- [Phase 1-4 ロードマップ分析](https://github.com/nahisaho/musubi/blob/main/docs/analysis/SERENA-STEERING-COMPARISON.md)
+- [Phase 1-4 ロードマップ分析](https://github.com/nahisaho/MUSUBI/blob/main/docs/analysis/SERENA-STEERING-COMPARISON.md)
 
 ---
 

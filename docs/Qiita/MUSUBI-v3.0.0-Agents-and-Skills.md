@@ -1134,7 +1134,7 @@ MUSUBI v3.0.0は、27の専門AIエージェント（Skill）を統合した強�
 
 # 第15章 参考リンク
 
-- [MUSUBI GitHub Repository](https://github.com/your-org/musubi)
+- [MUSUBI GitHub Repository](https://github.com/nahisaho/MUSUBI)
 - [Claude Code Documentation](https://docs.anthropic.com/claude-code)
 - [EARS Requirements Syntax](https://en.wikipedia.org/wiki/EARS_(Requirements_Engineering))
 

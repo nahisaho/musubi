@@ -90,5 +90,5 @@ echo ""
 sleep 2
 
 echo "🎋 MUSUBI - Ultimate Specification Driven Development"
-echo "   https://github.com/nahisaho/musubi"
+echo "   https://github.com/nahisaho/MUSUBI"
 echo ""
