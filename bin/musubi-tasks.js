@@ -42,11 +42,11 @@ program
 program
   .command('init <feature>')
   .description('Initialize task breakdown document from design')
-  .option('-o, --output <path>', 'Output directory', 'docs/tasks')
+  .option('-o, --output <path>', 'Output directory', 'storage/tasks')
   .option('-a, --author <name>', 'Author name')
   .option('--project <name>', 'Project name')
-  .option('-d, --design <path>', 'Design document path')
-  .option('-r, --requirements <path>', 'Requirements document path')
+  .option('-d, --design <path>', 'Design document directory', 'storage/design')
+  .option('-r, --requirements <path>', 'Requirements document directory', 'storage/specs')
   .option('--dry-run', 'Show what would be created without writing files')
   .option('--verbose', 'Show detailed output')
   .option('--json', 'Output result as JSON')
@@ -61,8 +61,8 @@ program
         console.log(chalk.dim(`  Output: ${options.output}`));
         console.log(chalk.dim(`  Author: ${options.author || 'Not specified'}`));
         console.log(chalk.dim(`  Project: ${options.project || 'Not specified'}`));
-        console.log(chalk.dim(`  Design: ${options.design || 'Not specified'}`));
-        console.log(chalk.dim(`  Requirements: ${options.requirements || 'Not specified'}`));
+        console.log(chalk.dim(`  Design: ${options.design}`));
+        console.log(chalk.dim(`  Requirements: ${options.requirements}`));
         console.log(chalk.dim(`  Dry run: ${options.dryRun || false}`));
         console.log();
       }

@@ -19,7 +19,7 @@ class TasksGenerator {
    * Initialize task breakdown document
    */
   async init(feature, options = {}) {
-    const outputDir = path.join(this.workspaceRoot, options.output || 'docs/tasks');
+    const outputDir = path.join(this.workspaceRoot, options.output || 'storage/tasks');
     await fs.ensureDir(outputDir);
 
     const fileName = this.slugify(feature) + '.md';
@@ -45,7 +45,7 @@ class TasksGenerator {
    * Find all task breakdown files
    */
   async findTaskFiles() {
-    const patterns = ['docs/tasks/**/*.md', 'tasks/**/*.md'];
+    const patterns = ['storage/tasks/**/*.md', 'tasks/**/*.md'];
 
     const files = [];
     for (const pattern of patterns) {
