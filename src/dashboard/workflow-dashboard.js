@@ -1,8 +1,8 @@
 /**
  * WorkflowDashboard Implementation
- * 
+ *
  * Manages workflow state and progress visualization.
- * 
+ *
  * Requirement: IMP-6.2-003-01
  * Design: Section 4.1
  */
@@ -13,13 +13,7 @@ const path = require('path');
 /**
  * Valid workflow stages
  */
-const WORKFLOW_STAGES = [
-  'steering',
-  'requirements',
-  'design',
-  'implementation',
-  'validation'
-];
+const WORKFLOW_STAGES = ['steering', 'requirements', 'design', 'implementation', 'validation'];
 
 /**
  * Stage statuses
@@ -28,19 +22,19 @@ const STAGE_STATUS = {
   NOT_STARTED: 'not-started',
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',
-  BLOCKED: 'blocked'
+  BLOCKED: 'blocked',
 };
 
 /**
  * Default configuration
  */
 const DEFAULT_CONFIG = {
-  storageDir: 'storage/workflows'
+  storageDir: 'storage/workflows',
 };
 
 /**
  * WorkflowDashboard
- * 
+ *
  * Manages workflow state and progress for features.
  */
 class WorkflowDashboard {
@@ -60,13 +54,13 @@ class WorkflowDashboard {
    */
   async createWorkflow(featureId, options = {}) {
     const stages = {};
-    
+
     for (const stage of WORKFLOW_STAGES) {
       stages[stage] = {
         status: STAGE_STATUS.NOT_STARTED,
         startedAt: null,
         completedAt: null,
-        artifacts: []
+        artifacts: [],
       };
     }
 
@@ -83,7 +77,7 @@ class WorkflowDashboard {
       currentStage: 'steering',
       stages,
       blockers: [],
-      metadata: options.metadata || {}
+      metadata: options.metadata || {},
     };
 
     this.workflows.set(featureId, workflow);
@@ -165,7 +159,7 @@ class WorkflowDashboard {
       severity: blocker.severity || 'medium',
       createdAt: new Date().toISOString(),
       resolvedAt: null,
-      resolution: null
+      resolution: null,
     };
 
     workflow.blockers.push(blockerEntry);
@@ -203,9 +197,7 @@ class WorkflowDashboard {
     blocker.resolution = resolution;
 
     // Check if stage can be unblocked
-    const stageBlockers = workflow.blockers.filter(
-      b => b.stage === blocker.stage && !b.resolvedAt
-    );
+    const stageBlockers = workflow.blockers.filter(b => b.stage === blocker.stage && !b.resolvedAt);
 
     if (stageBlockers.length === 0 && workflow.stages[blocker.stage]) {
       workflow.stages[blocker.stage].status = STAGE_STATUS.IN_PROGRESS;
@@ -239,7 +231,7 @@ class WorkflowDashboard {
         type: 'resolve-blocker',
         priority: 'high',
         description: `${unresolvedBlockers.length}件のブロッカーを解決してください`,
-        blockers: unresolvedBlockers
+        blockers: unresolvedBlockers,
       });
     }
 
@@ -250,7 +242,7 @@ class WorkflowDashboard {
           type: 'create-artifact',
           priority: 'medium',
           description: 'プロジェクトメモリファイルを作成してください',
-          artifacts: ['structure.md', 'tech.md', 'product.md']
+          artifacts: ['structure.md', 'tech.md', 'product.md'],
         });
         break;
       case 'requirements':
@@ -258,7 +250,7 @@ class WorkflowDashboard {
           type: 'create-artifact',
           priority: 'medium',
           description: 'EARS形式の要件ドキュメントを作成してください',
-          artifacts: ['requirements.md']
+          artifacts: ['requirements.md'],
         });
         break;
       case 'design':
@@ -266,21 +258,21 @@ class WorkflowDashboard {
           type: 'create-artifact',
           priority: 'medium',
           description: 'C4設計ドキュメントとADRを作成してください',
-          artifacts: ['design.md', 'adr-*.md']
+          artifacts: ['design.md', 'adr-*.md'],
         });
         break;
       case 'implementation':
         actions.push({
           type: 'run-review',
           priority: 'medium',
-          description: 'レビューゲートを実行して実装を検証してください'
+          description: 'レビューゲートを実行して実装を検証してください',
         });
         break;
       case 'validation':
         actions.push({
           type: 'complete-validation',
           priority: 'medium',
-          description: '全てのテストが通過していることを確認してください'
+          description: '全てのテストが通過していることを確認してください',
         });
         break;
     }
@@ -336,8 +328,8 @@ class WorkflowDashboard {
       stages: Object.entries(workflow.stages).map(([name, data]) => ({
         name,
         status: data.status,
-        artifactCount: data.artifacts.length
-      }))
+        artifactCount: data.artifacts.length,
+      })),
     };
   }
 
@@ -362,11 +354,8 @@ class WorkflowDashboard {
    */
   async saveWorkflow(workflow) {
     await this.ensureStorageDir();
-    
-    const filePath = path.join(
-      this.config.storageDir,
-      `${workflow.featureId}.json`
-    );
+
+    const filePath = path.join(this.config.storageDir, `${workflow.featureId}.json`);
 
     await fs.writeFile(filePath, JSON.stringify(workflow, null, 2), 'utf-8');
     this.workflows.set(workflow.featureId, workflow);
@@ -398,7 +387,7 @@ class WorkflowDashboard {
       await this.ensureStorageDir();
       const files = await fs.readdir(this.config.storageDir);
       const workflows = [];
-      
+
       for (const file of files) {
         if (file.endsWith('.json')) {
           const featureId = file.replace('.json', '');
@@ -408,7 +397,7 @@ class WorkflowDashboard {
           }
         }
       }
-      
+
       return workflows;
     } catch {
       return [];
@@ -427,8 +416,8 @@ class WorkflowDashboard {
   }
 }
 
-module.exports = { 
-  WorkflowDashboard, 
-  WORKFLOW_STAGES, 
-  STAGE_STATUS 
+module.exports = {
+  WorkflowDashboard,
+  WORKFLOW_STAGES,
+  STAGE_STATUS,
 };

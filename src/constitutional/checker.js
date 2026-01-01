@@ -1,8 +1,8 @@
 /**
  * Constitutional Checker
- * 
+ *
  * Validates compliance with Constitutional Articles.
- * 
+ *
  * Requirement: IMP-6.2-005-01
  * Design: Section 5.1
  */
@@ -18,37 +18,37 @@ const ARTICLES = {
     id: 'I',
     name: 'Specification First',
     description: 'All changes must be traceable to specifications',
-    keywords: ['REQ-', 'IMP-', 'FEAT-', 'specification', 'requirement']
+    keywords: ['REQ-', 'IMP-', 'FEAT-', 'specification', 'requirement'],
   },
   II: {
     id: 'II',
     name: 'Quality Gate',
     description: 'Code must pass quality gates before merge',
-    keywords: ['test', 'coverage', 'lint', 'quality']
+    keywords: ['test', 'coverage', 'lint', 'quality'],
   },
   III: {
     id: 'III',
     name: 'Test-First',
     description: 'Tests should be written before or alongside implementation',
-    keywords: ['test', 'spec', 'describe', 'it(']
+    keywords: ['test', 'spec', 'describe', 'it('],
   },
   IV: {
     id: 'IV',
     name: 'Incremental Delivery',
     description: 'Features should be delivered incrementally',
-    keywords: ['sprint', 'iteration', 'milestone']
+    keywords: ['sprint', 'iteration', 'milestone'],
   },
   V: {
     id: 'V',
     name: 'Consistency',
     description: 'Code style and patterns must be consistent',
-    keywords: ['eslint', 'prettier', 'style']
+    keywords: ['eslint', 'prettier', 'style'],
   },
   VI: {
     id: 'VI',
     name: 'Change Tracking',
     description: 'All changes must be tracked and documented',
-    keywords: ['changelog', 'commit', 'version']
+    keywords: ['changelog', 'commit', 'version'],
   },
   VII: {
     id: 'VII',
@@ -58,25 +58,21 @@ const ARTICLES = {
       maxFileLines: 500,
       maxFunctionLines: 50,
       maxCyclomaticComplexity: 10,
-      maxDependencies: 10
-    }
+      maxDependencies: 10,
+    },
   },
   VIII: {
     id: 'VIII',
     name: 'Anti-Abstraction',
     description: 'Avoid premature abstraction',
-    patterns: [
-      /abstract\s+class/i,
-      /implements\s+\w+Factory/i,
-      /extends\s+Base\w+/i
-    ]
+    patterns: [/abstract\s+class/i, /implements\s+\w+Factory/i, /extends\s+Base\w+/i],
   },
   IX: {
     id: 'IX',
     name: 'Documentation',
     description: 'Code must be documented',
-    keywords: ['jsdoc', '@param', '@returns', '@description']
-  }
+    keywords: ['jsdoc', '@param', '@returns', '@description'],
+  },
 };
 
 /**
@@ -86,12 +82,12 @@ const SEVERITY = {
   CRITICAL: 'critical',
   HIGH: 'high',
   MEDIUM: 'medium',
-  LOW: 'low'
+  LOW: 'low',
 };
 
 /**
  * ConstitutionalChecker
- * 
+ *
  * Validates code against Constitutional Articles.
  */
 class ConstitutionalChecker {
@@ -101,7 +97,7 @@ class ConstitutionalChecker {
   constructor(config = {}) {
     this.config = {
       articleVII: ARTICLES.VII.thresholds,
-      ...config
+      ...config,
     };
   }
 
@@ -140,7 +136,7 @@ class ConstitutionalChecker {
       filePath,
       violations,
       passed: violations.length === 0,
-      checkedAt: new Date().toISOString()
+      checkedAt: new Date().toISOString(),
     };
   }
 
@@ -152,18 +148,10 @@ class ConstitutionalChecker {
    */
   checkArticleI(content, filePath) {
     // Check if file has requirement reference
-    const hasReqRef = ARTICLES.I.keywords.some(kw => 
-      content.includes(kw)
-    );
+    const hasReqRef = ARTICLES.I.keywords.some(kw => content.includes(kw));
 
     // Skip check for certain file types
-    const skipPatterns = [
-      /\.test\./,
-      /\.spec\./,
-      /\.config\./,
-      /index\./,
-      /package\.json/
-    ];
+    const skipPatterns = [/\.test\./, /\.spec\./, /\.config\./, /index\./, /package\.json/];
 
     if (skipPatterns.some(p => p.test(filePath))) {
       return null;
@@ -176,7 +164,7 @@ class ConstitutionalChecker {
         severity: SEVERITY.MEDIUM,
         message: 'ファイルに要件参照（REQ-XXX、IMP-XXX等）がありません',
         filePath,
-        suggestion: 'コードコメントまたはJSDocに関連する要件IDを追加してください'
+        suggestion: 'コードコメントまたはJSDocに関連する要件IDを追加してください',
       };
     }
 
@@ -193,12 +181,12 @@ class ConstitutionalChecker {
     const dir = path.dirname(filePath);
     const ext = path.extname(filePath);
     const base = path.basename(filePath, ext);
-    
+
     const testPaths = [
       path.join(dir, `${base}.test${ext}`),
       path.join(dir, `${base}.spec${ext}`),
       path.join(dir, '__tests__', `${base}.test${ext}`),
-      filePath.replace('/src/', '/tests/').replace(ext, `.test${ext}`)
+      filePath.replace('/src/', '/tests/').replace(ext, `.test${ext}`),
     ];
 
     for (const testPath of testPaths) {
@@ -216,7 +204,7 @@ class ConstitutionalChecker {
       severity: SEVERITY.HIGH,
       message: '対応するテストファイルがありません',
       filePath,
-      suggestion: `テストファイル（例: ${base}.test${ext}）を作成してください`
+      suggestion: `テストファイル（例: ${base}.test${ext}）を作成してください`,
     };
   }
 
@@ -239,12 +227,14 @@ class ConstitutionalChecker {
         severity: SEVERITY.HIGH,
         message: `ファイルが長すぎます（${lines.length}行 > ${thresholds.maxFileLines}行）`,
         filePath,
-        suggestion: 'ファイルを複数のモジュールに分割してください'
+        suggestion: 'ファイルを複数のモジュールに分割してください',
       });
     }
 
     // Check function length (simple heuristic)
-    const functionMatches = content.match(/(?:function\s+\w+|(?:async\s+)?(?:\w+\s*=\s*)?(?:async\s+)?(?:function|\([^)]*\)\s*=>|\w+\s*\([^)]*\)\s*{))/g);
+    const functionMatches = content.match(
+      /(?:function\s+\w+|(?:async\s+)?(?:\w+\s*=\s*)?(?:async\s+)?(?:function|\([^)]*\)\s*=>|\w+\s*\([^)]*\)\s*{))/g
+    );
     if (functionMatches && functionMatches.length > 0) {
       // Count functions with many lines (rough estimate)
       const longFunctions = this.findLongFunctions(content, thresholds.maxFunctionLines);
@@ -256,7 +246,7 @@ class ConstitutionalChecker {
           message: `関数 "${fn.name}" が長すぎます（約${fn.lines}行 > ${thresholds.maxFunctionLines}行）`,
           filePath,
           line: fn.startLine,
-          suggestion: '関数をより小さな関数に分割してください'
+          suggestion: '関数をより小さな関数に分割してください',
         });
       }
     }
@@ -270,7 +260,7 @@ class ConstitutionalChecker {
         severity: SEVERITY.MEDIUM,
         message: `依存関係が多すぎます（${imports.length}個 > ${thresholds.maxDependencies}個）`,
         filePath,
-        suggestion: '依存関係を見直し、必要に応じてモジュールを再構成してください'
+        suggestion: '依存関係を見直し、必要に応じてモジュールを再構成してください',
       });
     }
 
@@ -286,21 +276,22 @@ class ConstitutionalChecker {
   findLongFunctions(content, maxLines) {
     const longFunctions = [];
     const lines = content.split('\n');
-    
+
     // Simple bracket matching for function detection
-    const functionPattern = /(?:async\s+)?(?:function\s+(\w+)|(\w+)\s*(?:=|:)\s*(?:async\s+)?(?:function|\([^)]*\)\s*=>))/g;
+    const functionPattern =
+      /(?:async\s+)?(?:function\s+(\w+)|(\w+)\s*(?:=|:)\s*(?:async\s+)?(?:function|\([^)]*\)\s*=>))/g;
     let match;
 
     while ((match = functionPattern.exec(content)) !== null) {
       const fnName = match[1] || match[2] || 'anonymous';
       const startIndex = match.index;
       const startLine = content.substring(0, startIndex).split('\n').length;
-      
+
       // Find function end (simple brace counting)
       let braceCount = 0;
       let started = false;
       let endLine = startLine;
-      
+
       for (let i = startLine - 1; i < lines.length; i++) {
         const line = lines[i];
         for (const char of line) {
@@ -322,7 +313,7 @@ class ConstitutionalChecker {
         longFunctions.push({
           name: fnName,
           startLine,
-          lines: lineCount
+          lines: lineCount,
         });
       }
     }
@@ -348,7 +339,7 @@ class ConstitutionalChecker {
           severity: SEVERITY.HIGH,
           message: `早すぎる抽象化の可能性: "${match[0]}"`,
           filePath,
-          suggestion: '具体的な実装から始め、必要に応じて後から抽象化してください'
+          suggestion: '具体的な実装から始め、必要に応じて後から抽象化してください',
         });
       }
     }
@@ -379,7 +370,7 @@ class ConstitutionalChecker {
         severity: SEVERITY.LOW,
         message: 'ドキュメンテーションが不足しています',
         filePath,
-        suggestion: 'JSDocコメントを追加してください'
+        suggestion: 'JSDocコメントを追加してください',
       };
     }
 
@@ -413,7 +404,7 @@ class ConstitutionalChecker {
           filePath,
           error: error.message,
           violations: [],
-          passed: false
+          passed: false,
         });
       }
     }
@@ -425,9 +416,9 @@ class ConstitutionalChecker {
         filesPassed: results.filter(r => r.passed).length,
         filesFailed: results.filter(r => !r.passed).length,
         totalViolations,
-        violationsByArticle
+        violationsByArticle,
       },
-      checkedAt: new Date().toISOString()
+      checkedAt: new Date().toISOString(),
     };
   }
 
@@ -496,19 +487,23 @@ class ConstitutionalChecker {
     // Block on Article VII or VIII high violations
     const phaseMinusOneViolations = results.results
       .flatMap(r => r.violations)
-      .filter(v => (v.article === 'VII' || v.article === 'VIII') && 
-                   (v.severity === SEVERITY.HIGH || v.severity === SEVERITY.CRITICAL));
+      .filter(
+        v =>
+          (v.article === 'VII' || v.article === 'VIII') &&
+          (v.severity === SEVERITY.HIGH || v.severity === SEVERITY.CRITICAL)
+      );
 
     return {
       shouldBlock: criticalViolations.length > 0 || phaseMinusOneViolations.length > 0,
-      reason: criticalViolations.length > 0 
-        ? 'クリティカルな違反があります'
-        : phaseMinusOneViolations.length > 0
-          ? 'Article VII/VIII違反によりPhase -1 Gateレビューが必要です'
-          : null,
+      reason:
+        criticalViolations.length > 0
+          ? 'クリティカルな違反があります'
+          : phaseMinusOneViolations.length > 0
+            ? 'Article VII/VIII違反によりPhase -1 Gateレビューが必要です'
+            : null,
       criticalCount: criticalViolations.length,
       highCount: highViolations.length,
-      requiresPhaseMinusOne: phaseMinusOneViolations.length > 0
+      requiresPhaseMinusOne: phaseMinusOneViolations.length > 0,
     };
   }
 
@@ -557,7 +552,9 @@ class ConstitutionalChecker {
     lines.push('');
     for (const [article, count] of Object.entries(results.summary.violationsByArticle)) {
       const articleInfo = ARTICLES[article];
-      lines.push(`- **Article ${article}** (${articleInfo?.name || 'Unknown'}): ${count} violations`);
+      lines.push(
+        `- **Article ${article}** (${articleInfo?.name || 'Unknown'}): ${count} violations`
+      );
     }
     lines.push('');
 
@@ -571,9 +568,14 @@ class ConstitutionalChecker {
           lines.push(`### ${result.filePath}`);
           lines.push('');
           for (const v of result.violations) {
-            const emoji = v.severity === SEVERITY.CRITICAL ? '🔴' :
-                         v.severity === SEVERITY.HIGH ? '🟠' :
-                         v.severity === SEVERITY.MEDIUM ? '🟡' : '🟢';
+            const emoji =
+              v.severity === SEVERITY.CRITICAL
+                ? '🔴'
+                : v.severity === SEVERITY.HIGH
+                  ? '🟠'
+                  : v.severity === SEVERITY.MEDIUM
+                    ? '🟡'
+                    : '🟢';
             lines.push(`${emoji} **Article ${v.article}** (${v.severity}): ${v.message}`);
             if (v.line) {
               lines.push(`  - Line: ${v.line}`);
@@ -626,8 +628,8 @@ class ConstitutionalChecker {
   }
 }
 
-module.exports = { 
-  ConstitutionalChecker, 
-  ARTICLES, 
-  SEVERITY 
+module.exports = {
+  ConstitutionalChecker,
+  ARTICLES,
+  SEVERITY,
 };

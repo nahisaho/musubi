@@ -1,8 +1,8 @@
 /**
  * Steering Sync Tests
- * 
+ *
  * Tests for steering file synchronization.
- * 
+ *
  * Requirement: IMP-6.2-007-01, IMP-6.2-007-02
  */
 
@@ -16,33 +16,33 @@ describe('SteeringSync', () => {
   const steeringDir = `${testDir}/steering`;
 
   beforeEach(async () => {
-    sync = new SteeringSync({ 
+    sync = new SteeringSync({
       steeringDir,
-      backupDir: `${steeringDir}/backups`
+      backupDir: `${steeringDir}/backups`,
     });
-    
+
     // Setup test steering directory
     await fs.mkdir(steeringDir, { recursive: true });
-    
+
     // Create basic steering files
     await fs.writeFile(
       path.join(steeringDir, 'project.yml'),
       "name: 'Test Project'\nversion: '1.0.0'\nstatus: active\n",
       'utf-8'
     );
-    
+
     await fs.writeFile(
       path.join(steeringDir, 'product.md'),
       '# Product\n\n**Version**: 1.0.0\n\n## Changelog\n',
       'utf-8'
     );
-    
+
     await fs.writeFile(
       path.join(steeringDir, 'tech.md'),
       '# Technology\n\n## Dependencies\n- Node.js\n',
       'utf-8'
     );
-    
+
     await fs.writeFile(
       path.join(steeringDir, 'structure.md'),
       '# Structure\n\n- `src/`: Source code\n',
@@ -53,7 +53,9 @@ describe('SteeringSync', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -72,40 +74,31 @@ describe('SteeringSync', () => {
   describe('updateForVersion', () => {
     it('should update project.yml version', async () => {
       const result = await sync.updateForVersion({
-        version: '1.1.0'
+        version: '1.1.0',
       });
 
       expect(result.updates.length).toBeGreaterThan(0);
-      
-      const projectContent = await fs.readFile(
-        path.join(steeringDir, 'project.yml'),
-        'utf-8'
-      );
+
+      const projectContent = await fs.readFile(path.join(steeringDir, 'project.yml'), 'utf-8');
       expect(projectContent).toContain("version: '1.1.0'");
     });
 
     it('should update product.md version', async () => {
       await sync.updateForVersion({
-        version: '1.1.0'
+        version: '1.1.0',
       });
 
-      const productContent = await fs.readFile(
-        path.join(steeringDir, 'product.md'),
-        'utf-8'
-      );
+      const productContent = await fs.readFile(path.join(steeringDir, 'product.md'), 'utf-8');
       expect(productContent).toContain('**Version**: 1.1.0');
     });
 
     it('should add changelog entry', async () => {
       await sync.updateForVersion({
         version: '1.1.0',
-        features: ['New feature A', 'Bug fix B']
+        features: ['New feature A', 'Bug fix B'],
       });
 
-      const productContent = await fs.readFile(
-        path.join(steeringDir, 'product.md'),
-        'utf-8'
-      );
+      const productContent = await fs.readFile(path.join(steeringDir, 'product.md'), 'utf-8');
       expect(productContent).toContain('### v1.1.0');
       expect(productContent).toContain('New feature A');
     });
@@ -114,16 +107,11 @@ describe('SteeringSync', () => {
       await sync.updateForVersion({
         version: '1.1.0',
         techChanges: {
-          newDependencies: [
-            { name: 'Express', version: '4.x', description: 'Web framework' }
-          ]
-        }
+          newDependencies: [{ name: 'Express', version: '4.x', description: 'Web framework' }],
+        },
       });
 
-      const techContent = await fs.readFile(
-        path.join(steeringDir, 'tech.md'),
-        'utf-8'
-      );
+      const techContent = await fs.readFile(path.join(steeringDir, 'tech.md'), 'utf-8');
       expect(techContent).toContain('Express');
     });
 
@@ -131,16 +119,11 @@ describe('SteeringSync', () => {
       await sync.updateForVersion({
         version: '1.1.0',
         structureChanges: {
-          newDirectories: [
-            { path: 'lib', description: 'Library code' }
-          ]
-        }
+          newDirectories: [{ path: 'lib', description: 'Library code' }],
+        },
       });
 
-      const structureContent = await fs.readFile(
-        path.join(steeringDir, 'structure.md'),
-        'utf-8'
-      );
+      const structureContent = await fs.readFile(path.join(steeringDir, 'structure.md'), 'utf-8');
       expect(structureContent).toContain('lib');
     });
 
@@ -155,7 +138,7 @@ describe('SteeringSync', () => {
     it('should return update summary', async () => {
       const result = await sync.updateForVersion({
         version: '1.1.0',
-        status: 'released'
+        status: 'released',
       });
 
       expect(result.version).toBe('1.1.0');
@@ -174,11 +157,7 @@ describe('SteeringSync', () => {
 
     it('should detect version mismatch', async () => {
       // Update project.yml to different version
-      await fs.writeFile(
-        path.join(steeringDir, 'project.yml'),
-        "version: '2.0.0'\n",
-        'utf-8'
-      );
+      await fs.writeFile(path.join(steeringDir, 'project.yml'), "version: '2.0.0'\n", 'utf-8');
 
       const result = await sync.checkConsistency();
 
@@ -208,9 +187,7 @@ describe('SteeringSync', () => {
 
   describe('autoFix', () => {
     it('should return fixed and failed counts', async () => {
-      const issues = [
-        { type: 'version-mismatch', file: 'product.md', message: 'test' }
-      ];
+      const issues = [{ type: 'version-mismatch', file: 'product.md', message: 'test' }];
 
       const result = await sync.autoFix(issues);
 
@@ -219,9 +196,7 @@ describe('SteeringSync', () => {
     });
 
     it('should not auto-fix version mismatch', async () => {
-      const issues = [
-        { type: 'version-mismatch', file: 'product.md', message: 'test' }
-      ];
+      const issues = [{ type: 'version-mismatch', file: 'product.md', message: 'test' }];
 
       const result = await sync.autoFix(issues);
 
@@ -272,7 +247,10 @@ describe('SteeringSync', () => {
       const backupPath = await sync.backupFiles();
 
       expect(backupPath).toBeDefined();
-      const exists = await fs.access(backupPath).then(() => true).catch(() => false);
+      const exists = await fs
+        .access(backupPath)
+        .then(() => true)
+        .catch(() => false);
       expect(exists).toBe(true);
     });
 
@@ -316,11 +294,7 @@ describe('SteeringSync', () => {
     });
 
     it('should show issues when inconsistent', async () => {
-      await fs.writeFile(
-        path.join(steeringDir, 'project.yml'),
-        "version: '9.9.9'\n",
-        'utf-8'
-      );
+      await fs.writeFile(path.join(steeringDir, 'project.yml'), "version: '9.9.9'\n", 'utf-8');
 
       const report = await sync.generateReport();
 
@@ -345,10 +319,7 @@ describe('SteeringSync', () => {
     it('should update status in project.yml', async () => {
       await sync.updateProjectFile({ status: 'released' });
 
-      const content = await fs.readFile(
-        path.join(steeringDir, 'project.yml'),
-        'utf-8'
-      );
+      const content = await fs.readFile(path.join(steeringDir, 'project.yml'), 'utf-8');
       expect(content).toContain('status: released');
     });
 
@@ -365,23 +336,17 @@ describe('SteeringSync', () => {
     it('should update version header', async () => {
       await sync.updateProductFile({ version: '2.0.0' });
 
-      const content = await fs.readFile(
-        path.join(steeringDir, 'product.md'),
-        'utf-8'
-      );
+      const content = await fs.readFile(path.join(steeringDir, 'product.md'), 'utf-8');
       expect(content).toContain('**Version**: 2.0.0');
     });
 
     it('should add features to changelog', async () => {
       await sync.updateProductFile({
         version: '2.0.0',
-        features: ['Feature X', 'Feature Y']
+        features: ['Feature X', 'Feature Y'],
       });
 
-      const content = await fs.readFile(
-        path.join(steeringDir, 'product.md'),
-        'utf-8'
-      );
+      const content = await fs.readFile(path.join(steeringDir, 'product.md'), 'utf-8');
       expect(content).toContain('Feature X');
       expect(content).toContain('Feature Y');
     });
@@ -397,22 +362,19 @@ describe('SteeringSync', () => {
     it('should add new dependencies', async () => {
       await sync.updateTechFile({
         techChanges: {
-          newDependencies: [{ name: 'React', description: 'UI library' }]
-        }
+          newDependencies: [{ name: 'React', description: 'UI library' }],
+        },
       });
 
-      const content = await fs.readFile(
-        path.join(steeringDir, 'tech.md'),
-        'utf-8'
-      );
+      const content = await fs.readFile(path.join(steeringDir, 'tech.md'), 'utf-8');
       expect(content).toContain('React');
     });
 
     it('should skip existing dependencies', async () => {
       const result = await sync.updateTechFile({
         techChanges: {
-          newDependencies: [{ name: 'Node.js', description: 'Already exists' }]
-        }
+          newDependencies: [{ name: 'Node.js', description: 'Already exists' }],
+        },
       });
 
       expect(result).toBeNull();
@@ -423,22 +385,19 @@ describe('SteeringSync', () => {
     it('should add new directories', async () => {
       await sync.updateStructureFile({
         structureChanges: {
-          newDirectories: [{ path: 'tests', description: 'Test files' }]
-        }
+          newDirectories: [{ path: 'tests', description: 'Test files' }],
+        },
       });
 
-      const content = await fs.readFile(
-        path.join(steeringDir, 'structure.md'),
-        'utf-8'
-      );
+      const content = await fs.readFile(path.join(steeringDir, 'structure.md'), 'utf-8');
       expect(content).toContain('tests');
     });
 
     it('should skip existing directories', async () => {
       const result = await sync.updateStructureFile({
         structureChanges: {
-          newDirectories: [{ path: 'src', description: 'Already exists' }]
-        }
+          newDirectories: [{ path: 'src', description: 'Already exists' }],
+        },
       });
 
       expect(result).toBeNull();

@@ -13,7 +13,7 @@ describe('DashboardCLI', () => {
     recorderConfig: { storageDir: 'storage/test-cli-transitions' },
     plannerConfig: { storageDir: 'storage/test-cli-sprints' },
     reporterConfig: { storageDir: 'storage/test-cli-reports' },
-    matrixConfig: { storageDir: 'storage/test-cli-matrices' }
+    matrixConfig: { storageDir: 'storage/test-cli-matrices' },
   };
 
   beforeEach(() => {
@@ -27,9 +27,9 @@ describe('DashboardCLI', () => {
       testConfig.recorderConfig.storageDir,
       testConfig.plannerConfig.storageDir,
       testConfig.reporterConfig.storageDir,
-      testConfig.matrixConfig.storageDir
+      testConfig.matrixConfig.storageDir,
     ];
-    
+
     for (const dir of dirs) {
       try {
         const files = await fs.readdir(dir);
@@ -57,8 +57,7 @@ describe('DashboardCLI', () => {
 
   describe('execute', () => {
     it('should throw error for unknown command', async () => {
-      await expect(cli.execute('unknown:command'))
-        .rejects.toThrow('Unknown command');
+      await expect(cli.execute('unknown:command')).rejects.toThrow('Unknown command');
     });
 
     it('should show help', async () => {
@@ -78,8 +77,7 @@ describe('DashboardCLI', () => {
     });
 
     it('should throw error if featureId not provided', async () => {
-      await expect(cli.execute('workflow:create', []))
-        .rejects.toThrow('Feature ID is required');
+      await expect(cli.execute('workflow:create', [])).rejects.toThrow('Feature ID is required');
     });
 
     it('should get workflow status', async () => {
@@ -92,8 +90,9 @@ describe('DashboardCLI', () => {
     });
 
     it('should throw error for non-existent workflow', async () => {
-      await expect(cli.execute('workflow:status', ['NON-EXISTENT']))
-        .rejects.toThrow('Workflow not found');
+      await expect(cli.execute('workflow:status', ['NON-EXISTENT'])).rejects.toThrow(
+        'Workflow not found'
+      );
     });
 
     it('should list workflows', async () => {
@@ -121,7 +120,7 @@ describe('DashboardCLI', () => {
       const result = await cli.execute('sprint:create', [], {
         name: 'Sprint 1',
         featureId: 'FEAT-001',
-        goal: 'Implement feature'
+        goal: 'Implement feature',
       });
 
       expect(result.success).toBe(true);
@@ -159,7 +158,7 @@ describe('DashboardCLI', () => {
       const result = await cli.execute('sprint:add-task', [created.sprint.id], {
         title: 'Test Task',
         points: '5',
-        priority: 'high'
+        priority: 'high',
       });
 
       expect(result.success).toBe(true);
@@ -169,15 +168,16 @@ describe('DashboardCLI', () => {
 
     it('should throw error if task title not provided', async () => {
       const created = await cli.execute('sprint:create', [], { name: 'No Title Test' });
-      await expect(cli.execute('sprint:add-task', [created.sprint.id], {}))
-        .rejects.toThrow('Task title is required');
+      await expect(cli.execute('sprint:add-task', [created.sprint.id], {})).rejects.toThrow(
+        'Task title is required'
+      );
     });
 
     it('should generate sprint report', async () => {
       const created = await cli.execute('sprint:create', [], { name: 'Report Test' });
       await cli.execute('sprint:add-task', [created.sprint.id], {
         title: 'Task 1',
-        points: '3'
+        points: '3',
       });
 
       const result = await cli.execute('sprint:report', [created.sprint.id]);
@@ -214,7 +214,7 @@ describe('DashboardCLI', () => {
 
     it('should save matrix', async () => {
       const result = await cli.execute('trace:save', ['.'], {
-        name: 'Test Matrix'
+        name: 'Test Matrix',
       });
 
       expect(result.success).toBe(true);
@@ -225,7 +225,7 @@ describe('DashboardCLI', () => {
   describe('summary command', () => {
     it('should get summary', async () => {
       await cli.execute('workflow:create', ['FEAT-SUM-001']);
-      
+
       const result = await cli.execute('summary');
 
       expect(result.success).toBe(true);
@@ -236,7 +236,7 @@ describe('DashboardCLI', () => {
     it('should filter summary by feature', async () => {
       await cli.execute('workflow:create', ['FEAT-SUM-002']);
       await cli.execute('workflow:create', ['FEAT-SUM-003']);
-      
+
       const result = await cli.execute('summary', ['FEAT-SUM-002']);
 
       expect(result.success).toBe(true);
@@ -263,28 +263,23 @@ describe('DashboardCLI', () => {
 
   describe('error handling', () => {
     it('should throw error for sprint:start without ID', async () => {
-      await expect(cli.execute('sprint:start', []))
-        .rejects.toThrow('Sprint ID is required');
+      await expect(cli.execute('sprint:start', [])).rejects.toThrow('Sprint ID is required');
     });
 
     it('should throw error for sprint:complete without ID', async () => {
-      await expect(cli.execute('sprint:complete', []))
-        .rejects.toThrow('Sprint ID is required');
+      await expect(cli.execute('sprint:complete', [])).rejects.toThrow('Sprint ID is required');
     });
 
     it('should throw error for sprint:status without ID', async () => {
-      await expect(cli.execute('sprint:status', []))
-        .rejects.toThrow('Sprint ID is required');
+      await expect(cli.execute('sprint:status', [])).rejects.toThrow('Sprint ID is required');
     });
 
     it('should throw error for workflow:advance without ID', async () => {
-      await expect(cli.execute('workflow:advance', []))
-        .rejects.toThrow('Workflow ID is required');
+      await expect(cli.execute('workflow:advance', [])).rejects.toThrow('Workflow ID is required');
     });
 
     it('should throw error for sprint:report without ID', async () => {
-      await expect(cli.execute('sprint:report', []))
-        .rejects.toThrow('Sprint ID is required');
+      await expect(cli.execute('sprint:report', [])).rejects.toThrow('Sprint ID is required');
     });
   });
 });

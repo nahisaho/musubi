@@ -1,8 +1,8 @@
 /**
  * CI Reporter Tests
- * 
+ *
  * Tests for CI-friendly reporting.
- * 
+ *
  * Requirement: IMP-6.2-005-03
  */
 
@@ -23,7 +23,9 @@ describe('CIReporter', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -120,9 +122,9 @@ describe('CIReporter', () => {
           filesPassed: 4,
           filesFailed: 1,
           totalViolations: 2,
-          violationsByArticle: { VII: 2 }
+          violationsByArticle: { VII: 2 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false, requiresPhaseMinusOne: false };
 
@@ -141,9 +143,9 @@ describe('CIReporter', () => {
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { VII: 1 }
+          violationsByArticle: { VII: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: true, requiresPhaseMinusOne: true };
 
@@ -156,16 +158,19 @@ describe('CIReporter', () => {
     it('should show PASSED WITH WARNINGS status', () => {
       const results = {
         results: [
-          { filePath: 'test.js', violations: [{ article: 'IX', severity: 'low', message: 'test' }] }
+          {
+            filePath: 'test.js',
+            violations: [{ article: 'IX', severity: 'low', message: 'test' }],
+          },
         ],
         summary: {
           filesChecked: 1,
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { IX: 1 }
+          violationsByArticle: { IX: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false, requiresPhaseMinusOne: false };
 
@@ -184,9 +189,9 @@ describe('CIReporter', () => {
           filesPassed: 1,
           filesFailed: 0,
           totalViolations: 0,
-          violationsByArticle: {}
+          violationsByArticle: {},
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false, requiresPhaseMinusOne: false };
 
@@ -200,18 +205,20 @@ describe('CIReporter', () => {
 
     it('should include violations in JSON', () => {
       const results = {
-        results: [{ 
-          filePath: 'test.js', 
-          violations: [{ article: 'VII', message: 'Too long', severity: 'high' }] 
-        }],
+        results: [
+          {
+            filePath: 'test.js',
+            violations: [{ article: 'VII', message: 'Too long', severity: 'high' }],
+          },
+        ],
         summary: {
           filesChecked: 1,
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { VII: 1 }
+          violationsByArticle: { VII: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: true, requiresPhaseMinusOne: true };
 
@@ -232,9 +239,9 @@ describe('CIReporter', () => {
           filesPassed: 1,
           filesFailed: 0,
           totalViolations: 0,
-          violationsByArticle: {}
+          violationsByArticle: {},
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false, requiresPhaseMinusOne: false };
 
@@ -247,24 +254,28 @@ describe('CIReporter', () => {
 
     it('should create error annotations for violations', () => {
       const results = {
-        results: [{ 
-          filePath: 'src/test.js', 
-          violations: [{ 
-            article: 'VII', 
-            articleName: 'Simplicity',
-            message: 'File too long', 
-            severity: SEVERITY.HIGH,
-            line: 100
-          }] 
-        }],
+        results: [
+          {
+            filePath: 'src/test.js',
+            violations: [
+              {
+                article: 'VII',
+                articleName: 'Simplicity',
+                message: 'File too long',
+                severity: SEVERITY.HIGH,
+                line: 100,
+              },
+            ],
+          },
+        ],
         summary: {
           filesChecked: 1,
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { VII: 1 }
+          violationsByArticle: { VII: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: true, requiresPhaseMinusOne: true };
 
@@ -276,24 +287,28 @@ describe('CIReporter', () => {
 
     it('should create warning annotations for low severity', () => {
       const results = {
-        results: [{ 
-          filePath: 'test.js', 
-          violations: [{ 
-            article: 'IX', 
-            articleName: 'Documentation',
-            message: 'Missing docs', 
-            severity: SEVERITY.LOW,
-            line: 10
-          }] 
-        }],
+        results: [
+          {
+            filePath: 'test.js',
+            violations: [
+              {
+                article: 'IX',
+                articleName: 'Documentation',
+                message: 'Missing docs',
+                severity: SEVERITY.LOW,
+                line: 10,
+              },
+            ],
+          },
+        ],
         summary: {
           filesChecked: 1,
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { IX: 1 }
+          violationsByArticle: { IX: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false, requiresPhaseMinusOne: false };
 
@@ -312,9 +327,9 @@ describe('CIReporter', () => {
           filesPassed: 1,
           filesFailed: 0,
           totalViolations: 0,
-          violationsByArticle: {}
+          violationsByArticle: {},
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false, requiresPhaseMinusOne: false };
 
@@ -327,24 +342,28 @@ describe('CIReporter', () => {
 
     it('should include failures in JUnit XML', () => {
       const results = {
-        results: [{ 
-          filePath: 'test.js', 
-          violations: [{ 
-            article: 'VII', 
-            articleName: 'Simplicity',
-            message: 'Too long', 
-            severity: 'high',
-            suggestion: 'Split file'
-          }] 
-        }],
+        results: [
+          {
+            filePath: 'test.js',
+            violations: [
+              {
+                article: 'VII',
+                articleName: 'Simplicity',
+                message: 'Too long',
+                severity: 'high',
+                suggestion: 'Split file',
+              },
+            ],
+          },
+        ],
         summary: {
           filesChecked: 1,
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { VII: 1 }
+          violationsByArticle: { VII: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: true, requiresPhaseMinusOne: true };
 
@@ -357,24 +376,28 @@ describe('CIReporter', () => {
 
     it('should escape XML special characters', () => {
       const results = {
-        results: [{ 
-          filePath: 'test.js', 
-          violations: [{ 
-            article: 'I', 
-            articleName: 'Spec',
-            message: 'Missing <requirement> & "spec"', 
-            severity: 'medium',
-            suggestion: "Use 'REQ-XXX'"
-          }] 
-        }],
+        results: [
+          {
+            filePath: 'test.js',
+            violations: [
+              {
+                article: 'I',
+                articleName: 'Spec',
+                message: 'Missing <requirement> & "spec"',
+                severity: 'medium',
+                suggestion: "Use 'REQ-XXX'",
+              },
+            ],
+          },
+        ],
         summary: {
           filesChecked: 1,
           filesPassed: 0,
           filesFailed: 1,
           totalViolations: 1,
-          violationsByArticle: { I: 1 }
+          violationsByArticle: { I: 1 },
         },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
       const blockDecision = { shouldBlock: false };
 

@@ -1,8 +1,8 @@
 /**
  * SprintReporter Implementation
- * 
+ *
  * Generates sprint completion reports.
- * 
+ *
  * Requirement: IMP-6.2-003-04
  * Design: Section 4.4
  */
@@ -14,12 +14,12 @@ const path = require('path');
  * Default configuration
  */
 const DEFAULT_CONFIG = {
-  storageDir: 'storage/reports'
+  storageDir: 'storage/reports',
 };
 
 /**
  * SprintReporter
- * 
+ *
  * Generates and manages sprint reports.
  */
 class SprintReporter {
@@ -46,12 +46,12 @@ class SprintReporter {
         start: sprint.startDate,
         end: sprint.endDate,
         startedAt: sprint.startedAt,
-        completedAt: sprint.completedAt
+        completedAt: sprint.completedAt,
       },
       metrics: this.calculateMetrics(sprint),
       taskSummary: this.summarizeTasks(sprint),
       velocityAnalysis: this.analyzeVelocity(sprint),
-      recommendations: this.generateRecommendations(sprint)
+      recommendations: this.generateRecommendations(sprint),
     };
 
     await this.saveReport(report);
@@ -81,18 +81,14 @@ class SprintReporter {
       totalPoints,
       completedPoints,
       remainingPoints: totalPoints - completedPoints,
-      completionRate: tasks.length > 0 
-        ? Math.round((completedTasks.length / tasks.length) * 100) 
-        : 0,
-      pointsCompletionRate: totalPoints > 0 
-        ? Math.round((completedPoints / totalPoints) * 100) 
-        : 0,
+      completionRate:
+        tasks.length > 0 ? Math.round((completedTasks.length / tasks.length) * 100) : 0,
+      pointsCompletionRate: totalPoints > 0 ? Math.round((completedPoints / totalPoints) * 100) : 0,
       plannedVelocity,
       actualVelocity,
       velocityDiff,
-      velocityAccuracy: plannedVelocity > 0 
-        ? Math.round((actualVelocity / plannedVelocity) * 100) 
-        : 0
+      velocityAccuracy:
+        plannedVelocity > 0 ? Math.round((actualVelocity / plannedVelocity) * 100) : 0,
     };
   }
 
@@ -107,34 +103,34 @@ class SprintReporter {
     const byStatus = {
       todo: tasks.filter(t => t.status === 'todo'),
       inProgress: tasks.filter(t => t.status === 'in-progress'),
-      done: tasks.filter(t => t.status === 'done')
+      done: tasks.filter(t => t.status === 'done'),
     };
 
     const byPriority = {
       critical: tasks.filter(t => t.priority === 'critical'),
       high: tasks.filter(t => t.priority === 'high'),
       medium: tasks.filter(t => t.priority === 'medium'),
-      low: tasks.filter(t => t.priority === 'low')
+      low: tasks.filter(t => t.priority === 'low'),
     };
 
     const completedByPriority = {
       critical: byPriority.critical.filter(t => t.status === 'done').length,
       high: byPriority.high.filter(t => t.status === 'done').length,
       medium: byPriority.medium.filter(t => t.status === 'done').length,
-      low: byPriority.low.filter(t => t.status === 'done').length
+      low: byPriority.low.filter(t => t.status === 'done').length,
     };
 
     return {
       byStatus: {
         todo: byStatus.todo.length,
         inProgress: byStatus.inProgress.length,
-        done: byStatus.done.length
+        done: byStatus.done.length,
       },
       byPriority: {
         critical: byPriority.critical.length,
         high: byPriority.high.length,
         medium: byPriority.medium.length,
-        low: byPriority.low.length
+        low: byPriority.low.length,
       },
       completedByPriority,
       incompleteTasks: [...byStatus.todo, ...byStatus.inProgress].map(t => ({
@@ -142,8 +138,8 @@ class SprintReporter {
         title: t.title,
         priority: t.priority,
         storyPoints: t.storyPoints,
-        status: t.status
-      }))
+        status: t.status,
+      })),
     };
   }
 
@@ -154,7 +150,7 @@ class SprintReporter {
    */
   analyzeVelocity(sprint) {
     const metrics = this.calculateMetrics(sprint);
-    
+
     let status;
     if (metrics.velocityAccuracy >= 90 && metrics.velocityAccuracy <= 110) {
       status = 'on-target';
@@ -171,7 +167,7 @@ class SprintReporter {
       actual: metrics.actualVelocity,
       difference: metrics.velocityDiff,
       accuracy: metrics.velocityAccuracy,
-      status
+      status,
     };
   }
 
@@ -190,23 +186,26 @@ class SprintReporter {
       recommendations.push({
         type: 'velocity',
         severity: 'high',
-        message: 'スプリントの実績ベロシティが計画の70%未満でした。次のスプリントでは計画ベロシティを下げることを検討してください。'
+        message:
+          'スプリントの実績ベロシティが計画の70%未満でした。次のスプリントでは計画ベロシティを下げることを検討してください。',
       });
     } else if (metrics.velocityAccuracy > 130) {
       recommendations.push({
         type: 'velocity',
         severity: 'medium',
-        message: '計画以上のベロシティを達成しました。次のスプリントでは計画ベロシティを上げることを検討してください。'
+        message:
+          '計画以上のベロシティを達成しました。次のスプリントでは計画ベロシティを上げることを検討してください。',
       });
     }
 
     // Incomplete critical tasks
-    const incompleteCritical = taskSummary.byPriority.critical - taskSummary.completedByPriority.critical;
+    const incompleteCritical =
+      taskSummary.byPriority.critical - taskSummary.completedByPriority.critical;
     if (incompleteCritical > 0) {
       recommendations.push({
         type: 'priority',
         severity: 'critical',
-        message: `${incompleteCritical}件のクリティカルタスクが未完了です。次のスプリントで優先的に対応してください。`
+        message: `${incompleteCritical}件のクリティカルタスクが未完了です。次のスプリントで優先的に対応してください。`,
       });
     }
 
@@ -215,7 +214,8 @@ class SprintReporter {
       recommendations.push({
         type: 'planning',
         severity: 'high',
-        message: 'タスク完了率が50%未満です。タスクの見積もりや優先順位付けの改善を検討してください。'
+        message:
+          'タスク完了率が50%未満です。タスクの見積もりや優先順位付けの改善を検討してください。',
       });
     }
 
@@ -224,7 +224,8 @@ class SprintReporter {
       recommendations.push({
         type: 'wip',
         severity: 'medium',
-        message: '進行中のタスクが多すぎます。WIP制限を設けてフォーカスを高めることを検討してください。'
+        message:
+          '進行中のタスクが多すぎます。WIP制限を設けてフォーカスを高めることを検討してください。',
       });
     }
 
@@ -271,7 +272,7 @@ class SprintReporter {
       'on-target': '✅',
       'over-performing': '🚀',
       'slightly-under': '⚠️',
-      'under-performing': '❌'
+      'under-performing': '❌',
     };
     lines.push(`Status: ${statusEmoji[va.status] || '❓'} **${va.status}**`);
     lines.push('');
@@ -286,10 +287,18 @@ class SprintReporter {
     lines.push('');
 
     lines.push('### By Priority');
-    lines.push(`- 🔴 Critical: ${report.taskSummary.completedByPriority.critical}/${report.taskSummary.byPriority.critical}`);
-    lines.push(`- 🟠 High: ${report.taskSummary.completedByPriority.high}/${report.taskSummary.byPriority.high}`);
-    lines.push(`- 🟡 Medium: ${report.taskSummary.completedByPriority.medium}/${report.taskSummary.byPriority.medium}`);
-    lines.push(`- 🟢 Low: ${report.taskSummary.completedByPriority.low}/${report.taskSummary.byPriority.low}`);
+    lines.push(
+      `- 🔴 Critical: ${report.taskSummary.completedByPriority.critical}/${report.taskSummary.byPriority.critical}`
+    );
+    lines.push(
+      `- 🟠 High: ${report.taskSummary.completedByPriority.high}/${report.taskSummary.byPriority.high}`
+    );
+    lines.push(
+      `- 🟡 Medium: ${report.taskSummary.completedByPriority.medium}/${report.taskSummary.byPriority.medium}`
+    );
+    lines.push(
+      `- 🟢 Low: ${report.taskSummary.completedByPriority.low}/${report.taskSummary.byPriority.low}`
+    );
     lines.push('');
 
     // Incomplete Tasks
@@ -310,7 +319,7 @@ class SprintReporter {
         critical: '🔴',
         high: '🟠',
         medium: '🟡',
-        low: '🟢'
+        low: '🟢',
       };
       for (const rec of report.recommendations) {
         lines.push(`${severityEmoji[rec.severity] || '❓'} **${rec.type}**: ${rec.message}`);
@@ -327,7 +336,7 @@ class SprintReporter {
    */
   async saveReport(report) {
     await this.ensureStorageDir();
-    
+
     const filePath = path.join(this.config.storageDir, `${report.id}.json`);
     await fs.writeFile(filePath, JSON.stringify(report, null, 2), 'utf-8');
   }

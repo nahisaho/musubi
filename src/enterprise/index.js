@@ -26,21 +26,21 @@ const {
   ExperimentReportGenerator,
   createExperimentReportGenerator,
   REPORT_FORMAT,
-  TEST_STATUS
+  TEST_STATUS,
 } = require('./experiment-report');
 
 const {
   TechArticleGenerator,
   createTechArticleGenerator,
   PLATFORM,
-  ARTICLE_TYPE
+  ARTICLE_TYPE,
 } = require('./tech-article');
 
 const {
   ErrorRecoveryHandler,
   createErrorRecoveryHandler,
   ERROR_CATEGORY,
-  RECOVERY_ACTION
+  RECOVERY_ACTION,
 } = require('./error-recovery');
 
 const {
@@ -48,7 +48,7 @@ const {
   createRollbackManager,
   ROLLBACK_LEVEL,
   ROLLBACK_STATUS,
-  WORKFLOW_STAGE
+  WORKFLOW_STAGE,
 } = require('./rollback-manager');
 
 module.exports = {
@@ -89,5 +89,5 @@ module.exports = {
   createRollbackManager,
   ROLLBACK_LEVEL,
   ROLLBACK_STATUS,
-  WORKFLOW_STAGE
+  WORKFLOW_STAGE,
 };

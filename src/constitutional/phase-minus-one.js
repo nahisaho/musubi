@@ -1,8 +1,8 @@
 /**
  * Phase -1 Gate
- * 
+ *
  * Triggers Phase -1 Gate review for Article VII/VIII violations.
- * 
+ *
  * Requirement: IMP-6.2-005-02
  * Design: Section 5.2
  */
@@ -18,7 +18,7 @@ const DEFAULT_CONFIG = {
   storageDir: 'storage/phase-minus-one',
   requiredReviewers: ['system-architect'],
   optionalReviewers: ['project-manager'],
-  autoNotify: true
+  autoNotify: true,
 };
 
 /**
@@ -28,12 +28,12 @@ const GATE_STATUS = {
   PENDING: 'pending',
   APPROVED: 'approved',
   REJECTED: 'rejected',
-  WAIVED: 'waived'
+  WAIVED: 'waived',
 };
 
 /**
  * PhaseMinusOneGate
- * 
+ *
  * Manages Phase -1 Gate review process.
  */
 class PhaseMinusOneGate {
@@ -52,7 +52,7 @@ class PhaseMinusOneGate {
    */
   async trigger(options) {
     const gateId = `GATE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
-    
+
     const gate = {
       id: gateId,
       featureId: options.featureId,
@@ -65,7 +65,7 @@ class PhaseMinusOneGate {
       optionalReviewers: this.config.optionalReviewers,
       reviews: [],
       resolution: null,
-      resolvedAt: null
+      resolvedAt: null,
     };
 
     await this.saveGate(gate);
@@ -97,14 +97,14 @@ class PhaseMinusOneGate {
         featureId: options.featureId,
         triggeredBy: options.triggeredBy || 'auto-analysis',
         violations,
-        affectedFiles: filePaths
+        affectedFiles: filePaths,
       });
 
       return {
         triggered: true,
         gate,
         checkResults,
-        blockDecision
+        blockDecision,
       };
     }
 
@@ -112,7 +112,7 @@ class PhaseMinusOneGate {
       triggered: false,
       gate: null,
       checkResults,
-      blockDecision
+      blockDecision,
     };
   }
 
@@ -133,7 +133,7 @@ class PhaseMinusOneGate {
       reviewer: review.reviewer,
       decision: review.decision, // 'approve', 'reject', 'request-changes'
       comments: review.comments || '',
-      submittedAt: new Date().toISOString()
+      submittedAt: new Date().toISOString(),
     };
 
     gate.reviews.push(reviewEntry);
@@ -143,9 +143,7 @@ class PhaseMinusOneGate {
       .filter(r => r.decision === 'approve')
       .map(r => r.reviewer);
 
-    const allRequiredApproved = gate.requiredReviewers.every(
-      r => approvedReviewers.includes(r)
-    );
+    const allRequiredApproved = gate.requiredReviewers.every(r => approvedReviewers.includes(r));
 
     const hasRejection = gate.reviews.some(r => r.decision === 'reject');
 
@@ -181,7 +179,7 @@ class PhaseMinusOneGate {
     gate.waiver = {
       waivedBy: waiver.waivedBy,
       justification: waiver.justification,
-      waivedAt: new Date().toISOString()
+      waivedAt: new Date().toISOString(),
     };
     gate.resolvedAt = new Date().toISOString();
 
@@ -232,12 +230,12 @@ class PhaseMinusOneGate {
    */
   async getPendingForReviewer(reviewer) {
     const pendingGates = await this.listGates(GATE_STATUS.PENDING);
-    
+
     return pendingGates.filter(gate => {
       const hasReviewed = gate.reviews.some(r => r.reviewer === reviewer);
       const isRequired = gate.requiredReviewers.includes(reviewer);
       const isOptional = gate.optionalReviewers.includes(reviewer);
-      
+
       return !hasReviewed && (isRequired || isOptional);
     });
   }
@@ -258,7 +256,7 @@ class PhaseMinusOneGate {
         gateId: gate.id,
         message: `Phase -1 Gate review required for ${gate.featureId || 'unknown feature'}`,
         violations: gate.violations.length,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
     }
 
@@ -270,7 +268,7 @@ class PhaseMinusOneGate {
         gateId: gate.id,
         message: `Phase -1 Gate review available for ${gate.featureId || 'unknown feature'}`,
         violations: gate.violations.length,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
     }
 
@@ -326,8 +324,7 @@ class PhaseMinusOneGate {
       lines.push('| Reviewer | Decision | Date |');
       lines.push('|----------|----------|------|');
       for (const r of gate.reviews) {
-        const emoji = r.decision === 'approve' ? '✅' : 
-                     r.decision === 'reject' ? '❌' : '🔄';
+        const emoji = r.decision === 'approve' ? '✅' : r.decision === 'reject' ? '❌' : '🔄';
         lines.push(`| ${r.reviewer} | ${emoji} ${r.decision} | ${r.submittedAt} |`);
       }
       lines.push('');
@@ -356,7 +353,7 @@ class PhaseMinusOneGate {
       [GATE_STATUS.PENDING]: '⏳',
       [GATE_STATUS.APPROVED]: '✅',
       [GATE_STATUS.REJECTED]: '❌',
-      [GATE_STATUS.WAIVED]: '⚠️'
+      [GATE_STATUS.WAIVED]: '⚠️',
     };
     return emojis[status] || '❓';
   }
@@ -398,7 +395,7 @@ class PhaseMinusOneGate {
   }
 }
 
-module.exports = { 
-  PhaseMinusOneGate, 
-  GATE_STATUS 
+module.exports = {
+  PhaseMinusOneGate,
+  GATE_STATUS,
 };

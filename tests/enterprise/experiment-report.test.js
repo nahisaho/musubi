@@ -1,14 +1,14 @@
 /**
  * Experiment Report Generator Tests
- * 
+ *
  * Requirement: IMP-6.2-006-01
  */
 
-const { 
-  ExperimentReportGenerator, 
+const {
+  ExperimentReportGenerator,
   createExperimentReportGenerator,
   REPORT_FORMAT,
-  TEST_STATUS
+  TEST_STATUS,
 } = require('../../src/enterprise/experiment-report');
 const fs = require('fs').promises;
 
@@ -24,7 +24,9 @@ describe('ExperimentReportGenerator', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -60,13 +62,15 @@ describe('ExperimentReportGenerator', () => {
   describe('parseTestResults', () => {
     it('should parse Jest format', () => {
       const testResults = {
-        testResults: [{
-          name: 'Test Suite',
-          assertionResults: [
-            { title: 'test 1', status: 'passed', duration: 10 },
-            { title: 'test 2', status: 'failed', duration: 20, failureMessages: ['Error'] }
-          ]
-        }]
+        testResults: [
+          {
+            name: 'Test Suite',
+            assertionResults: [
+              { title: 'test 1', status: 'passed', duration: 10 },
+              { title: 'test 2', status: 'failed', duration: 20, failureMessages: ['Error'] },
+            ],
+          },
+        ],
       };
 
       const result = generator.parseTestResults(testResults);
@@ -81,8 +85,8 @@ describe('ExperimentReportGenerator', () => {
       const testResults = {
         tests: [
           { name: 'test 1', status: 'passed', duration: 10 },
-          { name: 'test 2', status: 'skipped', duration: 0 }
-        ]
+          { name: 'test 2', status: 'skipped', duration: 0 },
+        ],
       };
 
       const result = generator.parseTestResults(testResults);
@@ -106,13 +110,11 @@ describe('ExperimentReportGenerator', () => {
     it('should calculate performance metrics', () => {
       const testResults = {
         duration: 1000,
-        testResults: [{
-          assertionResults: [
-            { duration: 100 },
-            { duration: 200 },
-            { duration: 300 }
-          ]
-        }]
+        testResults: [
+          {
+            assertionResults: [{ duration: 100 }, { duration: 200 }, { duration: 300 }],
+          },
+        ],
       };
 
       const metrics = generator.calculateMetrics(testResults);
@@ -124,7 +126,7 @@ describe('ExperimentReportGenerator', () => {
     it('should extract coverage if available', () => {
       const testResults = {
         coverage: { lines: '80%', branches: '75%' },
-        tests: []
+        tests: [],
       };
 
       const metrics = generator.calculateMetrics(testResults);
@@ -136,11 +138,11 @@ describe('ExperimentReportGenerator', () => {
   describe('generateFromTestResults', () => {
     it('should generate complete report', async () => {
       const testResults = {
-        tests: [{ name: 'test', status: 'passed', duration: 10 }]
+        tests: [{ name: 'test', status: 'passed', duration: 10 }],
       };
 
       const result = await generator.generateFromTestResults(testResults, {
-        title: 'Test Report'
+        title: 'Test Report',
       });
 
       expect(result.report).toBeDefined();
@@ -150,11 +152,11 @@ describe('ExperimentReportGenerator', () => {
 
     it('should use specified format', async () => {
       const testResults = {
-        tests: [{ name: 'test', status: 'passed' }]
+        tests: [{ name: 'test', status: 'passed' }],
       };
 
       const result = await generator.generateFromTestResults(testResults, {
-        format: REPORT_FORMAT.JSON
+        format: REPORT_FORMAT.JSON,
       });
 
       expect(result.format).toBe(REPORT_FORMAT.JSON);
@@ -166,12 +168,17 @@ describe('ExperimentReportGenerator', () => {
   describe('formatMarkdown', () => {
     it('should generate markdown report', () => {
       const report = {
-        metadata: { title: 'Test', version: '1.0.0', generatedAt: new Date().toISOString(), author: 'Test' },
+        metadata: {
+          title: 'Test',
+          version: '1.0.0',
+          generatedAt: new Date().toISOString(),
+          author: 'Test',
+        },
         summary: { total: 10, passed: 8, failed: 2, skipped: 0, passRate: '80%', duration: 1000 },
         testResults: [],
         metrics: {},
         observations: [],
-        conclusions: []
+        conclusions: [],
       };
 
       const md = generator.formatMarkdown(report);
@@ -183,12 +190,17 @@ describe('ExperimentReportGenerator', () => {
 
     it('should include observations', () => {
       const report = {
-        metadata: { title: 'Test', version: '1.0.0', generatedAt: new Date().toISOString(), author: 'Test' },
+        metadata: {
+          title: 'Test',
+          version: '1.0.0',
+          generatedAt: new Date().toISOString(),
+          author: 'Test',
+        },
         summary: { total: 1, passed: 1, failed: 0, skipped: 0, passRate: '100%', duration: 100 },
         testResults: [],
         metrics: {},
         observations: ['First observation', 'Second observation'],
-        conclusions: []
+        conclusions: [],
       };
 
       const md = generator.formatMarkdown(report);
@@ -201,12 +213,17 @@ describe('ExperimentReportGenerator', () => {
   describe('formatHTML', () => {
     it('should generate HTML report', () => {
       const report = {
-        metadata: { title: 'HTML Test', version: '1.0.0', generatedAt: new Date().toISOString(), author: 'Test' },
+        metadata: {
+          title: 'HTML Test',
+          version: '1.0.0',
+          generatedAt: new Date().toISOString(),
+          author: 'Test',
+        },
         summary: { total: 5, passed: 5, failed: 0, skipped: 0, passRate: '100%', duration: 500 },
         testResults: [{ name: 'test', suite: 'Suite', status: TEST_STATUS.PASSED, duration: 10 }],
         metrics: {},
         observations: [],
-        conclusions: []
+        conclusions: [],
       };
 
       const html = generator.formatHTML(report);

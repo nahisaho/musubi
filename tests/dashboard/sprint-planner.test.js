@@ -36,9 +36,9 @@ describe('SprintPlanner', () => {
     });
 
     it('should accept custom config', () => {
-      const customPlanner = new SprintPlanner({ 
+      const customPlanner = new SprintPlanner({
         storageDir: 'custom/path',
-        defaultVelocity: 30 
+        defaultVelocity: 30,
       });
       expect(customPlanner.config.storageDir).toBe('custom/path');
       expect(customPlanner.config.defaultVelocity).toBe(30);
@@ -50,7 +50,7 @@ describe('SprintPlanner', () => {
       const sprint = await planner.createSprint({
         name: 'Sprint 1',
         featureId: 'FEAT-001',
-        goal: 'Implement feature X'
+        goal: 'Implement feature X',
       });
 
       expect(sprint.id).toBeDefined();
@@ -64,7 +64,7 @@ describe('SprintPlanner', () => {
     it('should use custom sprint ID if provided', async () => {
       const sprint = await planner.createSprint({
         sprintId: 'SPRINT-CUSTOM',
-        name: 'Custom Sprint'
+        name: 'Custom Sprint',
       });
 
       expect(sprint.id).toBe('SPRINT-CUSTOM');
@@ -73,7 +73,7 @@ describe('SprintPlanner', () => {
     it('should calculate end date from duration', async () => {
       const sprint = await planner.createSprint({
         name: 'Test Sprint',
-        startDate: '2024-01-01'
+        startDate: '2024-01-01',
       });
 
       expect(sprint.startDate).toBe('2024-01-01');
@@ -83,7 +83,7 @@ describe('SprintPlanner', () => {
     it('should persist sprint to storage', async () => {
       const sprint = await planner.createSprint({
         sprintId: 'PERSIST-TEST',
-        name: 'Persist Test'
+        name: 'Persist Test',
       });
 
       const loaded = await planner.loadSprint('PERSIST-TEST');
@@ -95,12 +95,12 @@ describe('SprintPlanner', () => {
     it('should add tasks to sprint', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-TASKS',
-        name: 'Tasks Sprint'
+        name: 'Tasks Sprint',
       });
 
       const updated = await planner.addTasks('SPRINT-TASKS', [
         { title: 'Task 1', storyPoints: 3 },
-        { title: 'Task 2', storyPoints: 5 }
+        { title: 'Task 2', storyPoints: 5 },
       ]);
 
       expect(updated.tasks).toHaveLength(2);
@@ -112,15 +112,15 @@ describe('SprintPlanner', () => {
     it('should add task with requirement ID', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-REQ',
-        name: 'Req Sprint'
+        name: 'Req Sprint',
       });
 
       const updated = await planner.addTasks('SPRINT-REQ', [
-        { 
-          title: 'Implement REQ-001', 
+        {
+          title: 'Implement REQ-001',
           requirementId: 'REQ-001',
-          priority: PRIORITY.HIGH
-        }
+          priority: PRIORITY.HIGH,
+        },
       ]);
 
       expect(updated.tasks[0].requirementId).toBe('REQ-001');
@@ -128,8 +128,7 @@ describe('SprintPlanner', () => {
     });
 
     it('should throw error for non-existent sprint', async () => {
-      await expect(planner.addTasks('NON-EXISTENT', []))
-        .rejects.toThrow('Sprint not found');
+      await expect(planner.addTasks('NON-EXISTENT', [])).rejects.toThrow('Sprint not found');
     });
   });
 
@@ -137,12 +136,10 @@ describe('SprintPlanner', () => {
     it('should update task status', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-STATUS',
-        name: 'Status Sprint'
+        name: 'Status Sprint',
       });
 
-      await planner.addTasks('SPRINT-STATUS', [
-        { id: 'T-001', title: 'Task 1' }
-      ]);
+      await planner.addTasks('SPRINT-STATUS', [{ id: 'T-001', title: 'Task 1' }]);
 
       const updated = await planner.updateTaskStatus('SPRINT-STATUS', 'T-001', 'in-progress');
       expect(updated.tasks[0].status).toBe('in-progress');
@@ -151,12 +148,10 @@ describe('SprintPlanner', () => {
     it('should set completedAt when status is done', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-DONE',
-        name: 'Done Sprint'
+        name: 'Done Sprint',
       });
 
-      await planner.addTasks('SPRINT-DONE', [
-        { id: 'T-002', title: 'Task 2' }
-      ]);
+      await planner.addTasks('SPRINT-DONE', [{ id: 'T-002', title: 'Task 2' }]);
 
       const updated = await planner.updateTaskStatus('SPRINT-DONE', 'T-002', 'done');
       expect(updated.tasks[0].completedAt).toBeDefined();
@@ -165,11 +160,12 @@ describe('SprintPlanner', () => {
     it('should throw error for non-existent task', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-NOTASK',
-        name: 'No Task Sprint'
+        name: 'No Task Sprint',
       });
 
-      await expect(planner.updateTaskStatus('SPRINT-NOTASK', 'FAKE', 'done'))
-        .rejects.toThrow('Task not found');
+      await expect(planner.updateTaskStatus('SPRINT-NOTASK', 'FAKE', 'done')).rejects.toThrow(
+        'Task not found'
+      );
     });
   });
 
@@ -177,7 +173,7 @@ describe('SprintPlanner', () => {
     it('should start sprint and update status', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-START',
-        name: 'Start Sprint'
+        name: 'Start Sprint',
       });
 
       const started = await planner.startSprint('SPRINT-START');
@@ -190,7 +186,7 @@ describe('SprintPlanner', () => {
     it('should complete sprint and update status', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-COMPLETE',
-        name: 'Complete Sprint'
+        name: 'Complete Sprint',
       });
 
       const completed = await planner.completeSprint('SPRINT-COMPLETE');
@@ -204,13 +200,13 @@ describe('SprintPlanner', () => {
       await planner.createSprint({
         sprintId: 'SPRINT-METRICS',
         name: 'Metrics Sprint',
-        velocity: 20
+        velocity: 20,
       });
 
       await planner.addTasks('SPRINT-METRICS', [
         { id: 'T-1', title: 'Task 1', storyPoints: 5 },
         { id: 'T-2', title: 'Task 2', storyPoints: 8 },
-        { id: 'T-3', title: 'Task 3', storyPoints: 3 }
+        { id: 'T-3', title: 'Task 3', storyPoints: 3 },
       ]);
 
       await planner.updateTaskStatus('SPRINT-METRICS', 'T-1', 'done');
@@ -232,12 +228,10 @@ describe('SprintPlanner', () => {
       await planner.createSprint({
         sprintId: 'SPRINT-OVERCAP',
         name: 'Over Capacity Sprint',
-        velocity: 10
+        velocity: 10,
       });
 
-      await planner.addTasks('SPRINT-OVERCAP', [
-        { title: 'Task 1', storyPoints: 15 }
-      ]);
+      await planner.addTasks('SPRINT-OVERCAP', [{ title: 'Task 1', storyPoints: 15 }]);
 
       const metrics = await planner.getMetrics('SPRINT-OVERCAP');
       expect(metrics.overCapacity).toBe(true);
@@ -251,12 +245,12 @@ describe('SprintPlanner', () => {
         name: 'Template Sprint',
         featureId: 'FEAT-001',
         goal: 'Test template generation',
-        velocity: 20
+        velocity: 20,
       });
 
       await planner.addTasks('SPRINT-TEMPLATE', [
         { id: 'T-1', title: 'Critical Task', priority: PRIORITY.CRITICAL, storyPoints: 5 },
-        { id: 'T-2', title: 'High Task', priority: PRIORITY.HIGH, storyPoints: 3 }
+        { id: 'T-2', title: 'High Task', priority: PRIORITY.HIGH, storyPoints: 3 },
       ]);
 
       const template = await planner.generateBacklogTemplate('SPRINT-TEMPLATE');
@@ -276,7 +270,7 @@ describe('SprintPlanner', () => {
         { id: 'T-1', priority: 'low' },
         { id: 'T-2', priority: 'critical' },
         { id: 'T-3', priority: 'medium' },
-        { id: 'T-4', priority: 'high' }
+        { id: 'T-4', priority: 'high' },
       ];
 
       const prioritized = planner.prioritizeTasks(tasks);
@@ -291,7 +285,7 @@ describe('SprintPlanner', () => {
       const tasks = [
         { id: 'T-1', priority: 'high', dependencies: ['T-2', 'T-3'] },
         { id: 'T-2', priority: 'high', dependencies: [] },
-        { id: 'T-3', priority: 'high', dependencies: ['T-2'] }
+        { id: 'T-3', priority: 'high', dependencies: ['T-2'] },
       ];
 
       const prioritized = planner.prioritizeTasks(tasks);
@@ -306,7 +300,7 @@ describe('SprintPlanner', () => {
     it('should return sprint by ID', async () => {
       await planner.createSprint({
         sprintId: 'SPRINT-GET',
-        name: 'Get Sprint'
+        name: 'Get Sprint',
       });
 
       const sprint = await planner.getSprint('SPRINT-GET');

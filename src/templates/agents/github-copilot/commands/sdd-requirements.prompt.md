@@ -67,36 +67,47 @@ steering/tech.md         # Technology stack
 **Question Sequence** (Ask ONE at a time, wait for answer before next):
 
 **Turn 1**: Start with the WHY question
+
 ```
 この機能で解決したい『本当の課題』は何ですか？
 ```
+
 → STOP HERE. Wait for user response.
 
 **Turn 2**: Based on answer, ask WHO question
+
 ```
 この機能を最も必要としているのは誰ですか？
 ```
+
 → STOP HERE. Wait for user response.
 
 **Turn 3**: Ask WHAT-IF question
+
 ```
 もしこの機能が完璧に動作したら、何が変わりますか？
 ```
+
 → STOP HERE. Wait for user response.
 
 **Turn 4**: Ask CONSTRAINT question
+
 ```
 この機能で『絶対にやってはいけないこと』はありますか？
 ```
+
 → STOP HERE. Wait for user response.
 
 **Turn 5**: Ask SUCCESS CRITERIA question
+
 ```
 この機能が『成功した』と言えるのはどんな状態ですか？
 ```
+
 → STOP HERE. Wait for user response.
 
 **After 5+ turns**: Summarize and confirm
+
 ```
 ここまでの理解を確認させてください：
 [Summary]
@@ -106,22 +117,25 @@ steering/tech.md         # Technology stack
 #### Example Dialogue Flow
 
 **AI Turn 1**:
+
 > まず、この機能について教えてください。
-> 
+>
 > **この機能で解決したい『本当の課題』は何ですか？**
 
 **User**: "CSVから社員データをインポートしたい"
 
 **AI Turn 2**:
+
 > なるほど、社員データのCSVインポートですね。
-> 
+>
 > **このインポート機能を最も必要としているのは誰ですか？**（人事部？IT管理者？）
 
 **User**: "人事部です"
 
 **AI Turn 3**:
+
 > 人事部の方が使うのですね。
-> 
+>
 > **もしこの機能が完璧に動作したら、人事部の業務はどう変わりますか？**
 
 ...(continues one question at a time)
@@ -167,6 +181,7 @@ steering/tech.md         # Technology stack
 | External | Any third-party APIs or services? |
 
 **MECE Completeness Check**:
+
 - [ ] All user types covered?
 - [ ] All states (normal, edge, error) covered?
 - [ ] All data flows covered?
@@ -226,18 +241,21 @@ Use template from `templates/requirements.md`:
 ## MECE Coverage Summary
 
 ### User Journey Coverage
+
 - [ ] Before: Entry/Discovery
 - [ ] During: Core Flow
 - [ ] After: Completion
 - [ ] Error: Exception Handling
 
 ### Data Lifecycle Coverage
+
 - [ ] Create
 - [ ] Read
 - [ ] Update
 - [ ] Delete
 
 ### Cross-Cutting Concerns
+
 - [ ] Security
 - [ ] Performance
 - [ ] Reliability
@@ -587,7 +605,7 @@ Present summary to user:
    - **表面的要求**: ユーザーがログインできること
    - **真の目的**: SOC2準拠でセキュアな顧客データ保護
    - **成功基準**: ログイン成功率99%以上、不正アクセスゼロ
-   この理解で正しいですか？」
+     この理解で正しいですか？」
 
 3. **MECE Analysis**:
    - User Journey: Login → Session → Logout → Error handling
@@ -690,6 +708,7 @@ If `storage/specs/{{feature-name}}-requirements.md` exists:
 ---
 
 **Output Directory Summary**:
+
 - Requirements documents: `storage/specs/{{feature-name}}-requirements.md`
 - Japanese version: `storage/specs/{{feature-name}}-requirements.ja.md`
 

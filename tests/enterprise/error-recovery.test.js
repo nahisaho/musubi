@@ -1,14 +1,14 @@
 /**
  * Error Recovery Handler Tests
- * 
+ *
  * Requirement: IMP-6.2-008-01
  */
 
-const { 
-  ErrorRecoveryHandler, 
+const {
+  ErrorRecoveryHandler,
   createErrorRecoveryHandler,
   ERROR_CATEGORY,
-  RECOVERY_ACTION
+  RECOVERY_ACTION,
 } = require('../../src/enterprise/error-recovery');
 const fs = require('fs').promises;
 
@@ -24,7 +24,9 @@ describe('ErrorRecoveryHandler', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -64,7 +66,7 @@ describe('ErrorRecoveryHandler', () => {
   describe('analyze', () => {
     it('should analyze Error object', () => {
       const error = new Error('expect(received).toEqual(expected)');
-      
+
       const analysis = handler.analyze(error, { stage: 'test' });
 
       expect(analysis.id).toBeDefined();
@@ -74,7 +76,7 @@ describe('ErrorRecoveryHandler', () => {
 
     it('should analyze plain object', () => {
       const error = { message: 'Cannot find module xyz', name: 'ModuleNotFoundError' };
-      
+
       const analysis = handler.analyze(error);
 
       expect(analysis.error.message).toContain('Cannot find module');
@@ -82,7 +84,7 @@ describe('ErrorRecoveryHandler', () => {
 
     it('should include remediation steps', () => {
       const error = new Error('timeout');
-      
+
       const analysis = handler.analyze(error, { stage: 'test' });
 
       expect(analysis.remediation.steps.length).toBeGreaterThan(0);
@@ -90,7 +92,7 @@ describe('ErrorRecoveryHandler', () => {
 
     it('should record in history', () => {
       const error = new Error('Test error');
-      
+
       handler.analyze(error);
 
       expect(handler.errorHistory.length).toBe(1);
@@ -100,23 +102,29 @@ describe('ErrorRecoveryHandler', () => {
   describe('categorizeError', () => {
     it('should categorize by context stage', () => {
       const error = { message: 'some error', name: 'Error' };
-      
+
       expect(handler.categorizeError(error, { stage: 'test' })).toBe(ERROR_CATEGORY.TEST_FAILURE);
       expect(handler.categorizeError(error, { stage: 'build' })).toBe(ERROR_CATEGORY.BUILD_ERROR);
       expect(handler.categorizeError(error, { stage: 'lint' })).toBe(ERROR_CATEGORY.LINT_ERROR);
     });
 
     it('should categorize by message content', () => {
-      expect(handler.categorizeError({ message: 'assert failed', name: 'Error' }, {})).toBe(ERROR_CATEGORY.TEST_FAILURE);
-      expect(handler.categorizeError({ message: 'type mismatch', name: 'Error' }, {})).toBe(ERROR_CATEGORY.TYPE_ERROR);
-      expect(handler.categorizeError({ message: 'npm error', name: 'Error' }, {})).toBe(ERROR_CATEGORY.DEPENDENCY_ERROR);
+      expect(handler.categorizeError({ message: 'assert failed', name: 'Error' }, {})).toBe(
+        ERROR_CATEGORY.TEST_FAILURE
+      );
+      expect(handler.categorizeError({ message: 'type mismatch', name: 'Error' }, {})).toBe(
+        ERROR_CATEGORY.TYPE_ERROR
+      );
+      expect(handler.categorizeError({ message: 'npm error', name: 'Error' }, {})).toBe(
+        ERROR_CATEGORY.DEPENDENCY_ERROR
+      );
     });
   });
 
   describe('identifyRootCause', () => {
     it('should match pattern and return cause', () => {
       const error = { message: 'expect(received).toEqual(expected)' };
-      
+
       const result = handler.identifyRootCause(error, ERROR_CATEGORY.TEST_FAILURE);
 
       expect(result.matched).toBe(true);
@@ -125,7 +133,7 @@ describe('ErrorRecoveryHandler', () => {
 
     it('should return default when no pattern matches', () => {
       const error = { message: 'unknown weird error xyz123' };
-      
+
       const result = handler.identifyRootCause(error, ERROR_CATEGORY.TEST_FAILURE);
 
       expect(result.matched).toBe(false);
@@ -135,7 +143,7 @@ describe('ErrorRecoveryHandler', () => {
   describe('generateRemediation', () => {
     it('should generate steps for FIX_CODE', () => {
       const rootCause = { cause: 'Test', action: RECOVERY_ACTION.FIX_CODE };
-      
+
       const remediation = handler.generateRemediation(ERROR_CATEGORY.TEST_FAILURE, rootCause, {});
 
       expect(remediation.steps.some(s => s.includes('Locate the error'))).toBe(true);
@@ -144,15 +152,19 @@ describe('ErrorRecoveryHandler', () => {
 
     it('should generate steps for INSTALL_DEPS', () => {
       const rootCause = { cause: 'Missing', action: RECOVERY_ACTION.INSTALL_DEPS };
-      
-      const remediation = handler.generateRemediation(ERROR_CATEGORY.DEPENDENCY_ERROR, rootCause, {});
+
+      const remediation = handler.generateRemediation(
+        ERROR_CATEGORY.DEPENDENCY_ERROR,
+        rootCause,
+        {}
+      );
 
       expect(remediation.commands).toContain('npm install');
     });
 
     it('should include estimated time', () => {
       const rootCause = { action: RECOVERY_ACTION.FIX_CODE };
-      
+
       const remediation = handler.generateRemediation(ERROR_CATEGORY.TEST_FAILURE, rootCause, {});
 
       expect(remediation.estimatedTime).toBeDefined();
@@ -192,7 +204,7 @@ describe('ErrorRecoveryHandler', () => {
   describe('saveAnalysis', () => {
     it('should save to file', async () => {
       const analysis = handler.analyze(new Error('Test'));
-      
+
       const filePath = await handler.saveAnalysis(analysis);
 
       expect(filePath).toContain(analysis.id);
@@ -220,7 +232,7 @@ describe('ErrorRecoveryHandler', () => {
   describe('generateReport', () => {
     it('should generate markdown report', () => {
       const analysis = handler.analyze(new Error('Test error'), { stage: 'test' });
-      
+
       const report = handler.generateReport(analysis);
 
       expect(report).toContain('# Error Recovery Report');
@@ -231,8 +243,9 @@ describe('ErrorRecoveryHandler', () => {
 
   describe('determinePriority', () => {
     it('should return critical for blocking', () => {
-      expect(handler.determinePriority(ERROR_CATEGORY.TEST_FAILURE, { blocking: true }))
-        .toBe('critical');
+      expect(handler.determinePriority(ERROR_CATEGORY.TEST_FAILURE, { blocking: true })).toBe(
+        'critical'
+      );
     });
 
     it('should return high for build/test errors', () => {

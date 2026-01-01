@@ -1,10 +1,10 @@
 /**
  * Tech Article Generator
- * 
+ *
  * Generates publication-ready technical articles for various platforms.
- * 
+ *
  * Requirement: IMP-6.2-006-02
- * 
+ *
  * @module enterprise/tech-article
  */
 
@@ -19,7 +19,7 @@ const PLATFORM = {
   ZENN: 'zenn',
   MEDIUM: 'medium',
   DEVTO: 'devto',
-  GENERIC: 'generic'
+  GENERIC: 'generic',
 };
 
 /**
@@ -31,7 +31,7 @@ const ARTICLE_TYPE = {
   ANNOUNCEMENT: 'announcement',
   COMPARISON: 'comparison',
   HOW_TO: 'how-to',
-  CASE_STUDY: 'case-study'
+  CASE_STUDY: 'case-study',
 };
 
 /**
@@ -49,7 +49,7 @@ class TechArticleGenerator {
       defaultLanguage: config.defaultLanguage || 'ja',
       includeTableOfContents: config.includeTableOfContents !== false,
       includeFrontMatter: config.includeFrontMatter !== false,
-      ...config
+      ...config,
     };
 
     this.templates = this.loadTemplates();
@@ -62,37 +62,38 @@ class TechArticleGenerator {
   loadTemplates() {
     return {
       [PLATFORM.QIITA]: {
-        frontMatter: (meta) => `---
+        frontMatter: meta => `---
 title: "${meta.title}"
 tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
 private: false
 ---`,
         codeBlock: (lang, code) => `\`\`\`${lang}\n${code}\n\`\`\``,
         note: (text, type = 'info') => `:::note ${type}\n${text}\n:::`,
-        link: (text, url) => `[${text}](${url})`
+        link: (text, url) => `[${text}](${url})`,
       },
       [PLATFORM.ZENN]: {
-        frontMatter: (meta) => `---
+        frontMatter: meta => `---
 title: "${meta.title}"
 emoji: "${meta.emoji || '📝'}"
 type: "${meta.articleType || 'tech'}"
 topics: [${meta.tags.map(t => `"${t}"`).join(', ')}]
 published: true
 ---`,
-        codeBlock: (lang, code, filename) => filename 
-          ? `\`\`\`${lang}:${filename}\n${code}\n\`\`\``
-          : `\`\`\`${lang}\n${code}\n\`\`\``,
+        codeBlock: (lang, code, filename) =>
+          filename
+            ? `\`\`\`${lang}:${filename}\n${code}\n\`\`\``
+            : `\`\`\`${lang}\n${code}\n\`\`\``,
         note: (text, type = 'info') => `:::message ${type === 'warn' ? 'alert' : ''}\n${text}\n:::`,
-        link: (text, url) => `[${text}](${url})`
+        link: (text, url) => `[${text}](${url})`,
       },
       [PLATFORM.MEDIUM]: {
         frontMatter: () => '', // Medium doesn't use front matter
         codeBlock: (lang, code) => `\`\`\`${lang}\n${code}\n\`\`\``,
-        note: (text) => `> **Note:** ${text}`,
-        link: (text, url) => `[${text}](${url})`
+        note: text => `> **Note:** ${text}`,
+        link: (text, url) => `[${text}](${url})`,
       },
       [PLATFORM.DEVTO]: {
-        frontMatter: (meta) => `---
+        frontMatter: meta => `---
 title: "${meta.title}"
 published: true
 description: "${meta.description || ''}"
@@ -100,20 +101,21 @@ tags: ${meta.tags.slice(0, 4).join(', ')}
 cover_image: ${meta.coverImage || ''}
 ---`,
         codeBlock: (lang, code) => `\`\`\`${lang}\n${code}\n\`\`\``,
-        note: (text, type = 'info') => `{% ${type === 'warn' ? 'warning' : type} %}\n${text}\n{% end${type === 'warn' ? 'warning' : type} %}`,
-        link: (text, url) => `[${text}](${url})`
+        note: (text, type = 'info') =>
+          `{% ${type === 'warn' ? 'warning' : type} %}\n${text}\n{% end${type === 'warn' ? 'warning' : type} %}`,
+        link: (text, url) => `[${text}](${url})`,
       },
       [PLATFORM.GENERIC]: {
-        frontMatter: (meta) => `---
+        frontMatter: meta => `---
 title: "${meta.title}"
 date: "${meta.date || new Date().toISOString()}"
 author: "${meta.author || 'MUSUBI SDD'}"
 tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
 ---`,
         codeBlock: (lang, code) => `\`\`\`${lang}\n${code}\n\`\`\``,
-        note: (text) => `> **Note:** ${text}`,
-        link: (text, url) => `[${text}](${url})`
-      }
+        note: text => `> **Note:** ${text}`,
+        link: (text, url) => `[${text}](${url})`,
+      },
     };
   }
 
@@ -135,7 +137,7 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
       date: new Date().toISOString(),
       emoji: content.emoji || '📝',
       articleType: content.articleType || ARTICLE_TYPE.TUTORIAL,
-      coverImage: content.coverImage || ''
+      coverImage: content.coverImage || '',
     };
 
     const sections = [];
@@ -186,7 +188,9 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
               sections.push(example.description);
               sections.push('');
             }
-            sections.push(template.codeBlock(example.language || 'javascript', example.code, example.filename));
+            sections.push(
+              template.codeBlock(example.language || 'javascript', example.code, example.filename)
+            );
             sections.push('');
           }
         }
@@ -259,7 +263,7 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
       filePath,
       platform,
       wordCount: this.countWords(article),
-      readingTime: this.estimateReadingTime(article)
+      readingTime: this.estimateReadingTime(article),
     };
   }
 
@@ -278,7 +282,7 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
       sections: this.generateExperimentSections(experimentReport),
       benchmarks: this.extractBenchmarks(experimentReport),
       conclusion: options.conclusion || this.generateExperimentConclusion(experimentReport),
-      references: options.references || []
+      references: options.references || [],
     };
 
     return this.generate(content, options);
@@ -291,9 +295,11 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
    */
   generateExperimentIntroduction(report) {
     const summary = report.summary || {};
-    return `本記事では、${report.metadata?.title || 'テスト'}の実験結果を報告します。` +
-           `合計${summary.total || 0}件のテストを実行し、` +
-           `${summary.passRate || '0%'}のパス率を達成しました。`;
+    return (
+      `本記事では、${report.metadata?.title || 'テスト'}の実験結果を報告します。` +
+      `合計${summary.total || 0}件のテストを実行し、` +
+      `${summary.passRate || '0%'}のパス率を達成しました。`
+    );
   }
 
   /**
@@ -315,14 +321,14 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
 | 失敗 | ${report.summary?.failed || 0} |
 | スキップ | ${report.summary?.skipped || 0} |
 | パス率 | ${report.summary?.passRate || '0%'} |
-      `.trim()
+      `.trim(),
     });
 
     // Metrics section (if available)
     if (report.metrics && Object.keys(report.metrics).length > 0) {
       sections.push({
         title: 'メトリクス',
-        content: this.formatMetricsSection(report.metrics)
+        content: this.formatMetricsSection(report.metrics),
       });
     }
 
@@ -330,7 +336,7 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
     if (report.observations && report.observations.length > 0) {
       sections.push({
         title: '観察結果',
-        content: report.observations.map(o => `- ${o}`).join('\n')
+        content: report.observations.map(o => `- ${o}`).join('\n'),
       });
     }
 
@@ -376,11 +382,11 @@ tags: [${meta.tags.map(t => `"${t}"`).join(', ')}]
    */
   extractBenchmarks(report) {
     const benchmarks = {};
-    
+
     if (report.metrics?.performance) {
       Object.assign(benchmarks, report.metrics.performance);
     }
-    
+
     if (report.summary?.duration) {
       benchmarks['Total Duration'] = `${report.summary.duration}ms`;
     }
@@ -505,5 +511,5 @@ module.exports = {
   TechArticleGenerator,
   createTechArticleGenerator,
   PLATFORM,
-  ARTICLE_TYPE
+  ARTICLE_TYPE,
 };

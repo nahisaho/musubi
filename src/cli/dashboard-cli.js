@@ -1,8 +1,8 @@
 /**
  * Dashboard CLI
- * 
+ *
  * Command-line interface for dashboard operations.
- * 
+ *
  * Requirement: IMP-6.2-003-05
  * Design: Section 4.5
  */
@@ -17,7 +17,7 @@ const { MatrixStorage } = require('../traceability/matrix-storage');
 
 /**
  * DashboardCLI
- * 
+ *
  * Provides CLI commands for dashboard operations.
  */
 class DashboardCLI {
@@ -49,7 +49,7 @@ class DashboardCLI {
       'workflow:status': () => this.getWorkflowStatus(args[0]),
       'workflow:advance': () => this.advanceWorkflow(args[0], options),
       'workflow:list': () => this.listWorkflows(),
-      
+
       // Sprint commands
       'sprint:create': () => this.createSprint(options),
       'sprint:start': () => this.startSprint(args[0]),
@@ -57,16 +57,16 @@ class DashboardCLI {
       'sprint:status': () => this.getSprintStatus(args[0]),
       'sprint:add-task': () => this.addSprintTask(args[0], options),
       'sprint:report': () => this.generateSprintReport(args[0]),
-      
+
       // Traceability commands
       'trace:scan': () => this.scanTraceability(args[0], options),
       'trace:gaps': () => this.detectGaps(args[0]),
       'trace:matrix': () => this.showMatrix(args[0]),
       'trace:save': () => this.saveMatrix(args[0], options),
-      
+
       // Summary commands
-      'summary': () => this.getSummary(args[0]),
-      'help': () => this.showHelp()
+      summary: () => this.getSummary(args[0]),
+      help: () => this.showHelp(),
     };
 
     const handler = commands[command];
@@ -90,13 +90,13 @@ class DashboardCLI {
 
     const workflow = await this.dashboard.createWorkflow(featureId, {
       title: options.name || featureId,
-      description: options.description || ''
+      description: options.description || '',
     });
 
     return {
       success: true,
       message: `Workflow created: ${workflow.featureId}`,
-      workflow
+      workflow,
     };
   }
 
@@ -120,7 +120,7 @@ class DashboardCLI {
     return {
       success: true,
       workflow,
-      summary
+      summary,
     };
   }
 
@@ -147,27 +147,19 @@ class DashboardCLI {
       fromStage: workflow.currentStage,
       toStage: nextStage,
       reviewer: options.reviewer,
-      status: 'approved'
+      status: 'approved',
     });
 
     // Complete current stage
-    await this.dashboard.updateStage(
-      workflowId,
-      workflow.currentStage,
-      'completed'
-    );
+    await this.dashboard.updateStage(workflowId, workflow.currentStage, 'completed');
 
     // Start next stage
-    const updated = await this.dashboard.updateStage(
-      workflowId,
-      nextStage,
-      'in-progress'
-    );
+    const updated = await this.dashboard.updateStage(workflowId, nextStage, 'in-progress');
 
     return {
       success: true,
       message: `Workflow advanced to ${updated.currentStage}`,
-      workflow: updated
+      workflow: updated,
     };
   }
 
@@ -186,14 +178,14 @@ class DashboardCLI {
         name: w.title,
         currentStage: w.currentStage,
         status: w.status || 'active',
-        completion
+        completion,
       });
     }
 
     return {
       success: true,
       count: workflows.length,
-      workflows: workflowSummaries
+      workflows: workflowSummaries,
     };
   }
 
@@ -208,13 +200,13 @@ class DashboardCLI {
       name: options.name,
       featureId: options.featureId,
       goal: options.goal,
-      velocity: options.velocity ? parseInt(options.velocity) : undefined
+      velocity: options.velocity ? parseInt(options.velocity) : undefined,
     });
 
     return {
       success: true,
       message: `Sprint created: ${sprint.id}`,
-      sprint
+      sprint,
     };
   }
 
@@ -233,7 +225,7 @@ class DashboardCLI {
     return {
       success: true,
       message: `Sprint started: ${sprint.id}`,
-      sprint
+      sprint,
     };
   }
 
@@ -252,7 +244,7 @@ class DashboardCLI {
     return {
       success: true,
       message: `Sprint completed: ${sprint.id}`,
-      sprint
+      sprint,
     };
   }
 
@@ -276,7 +268,7 @@ class DashboardCLI {
     return {
       success: true,
       sprint,
-      metrics
+      metrics,
     };
   }
 
@@ -295,19 +287,21 @@ class DashboardCLI {
       throw new Error('Task title is required');
     }
 
-    const sprint = await this.planner.addTasks(sprintId, [{
-      id: options.taskId,
-      title: options.title,
-      description: options.description,
-      requirementId: options.requirementId,
-      storyPoints: options.points ? parseInt(options.points) : 1,
-      priority: options.priority || PRIORITY.MEDIUM
-    }]);
+    const sprint = await this.planner.addTasks(sprintId, [
+      {
+        id: options.taskId,
+        title: options.title,
+        description: options.description,
+        requirementId: options.requirementId,
+        storyPoints: options.points ? parseInt(options.points) : 1,
+        priority: options.priority || PRIORITY.MEDIUM,
+      },
+    ]);
 
     return {
       success: true,
       message: 'Task added to sprint',
-      sprint
+      sprint,
     };
   }
 
@@ -331,7 +325,7 @@ class DashboardCLI {
     return {
       success: true,
       message: 'Report generated',
-      report: markdown
+      report: markdown,
     };
   }
 
@@ -343,7 +337,7 @@ class DashboardCLI {
    */
   async scanTraceability(directory = '.', options = {}) {
     const artifacts = await this.extractor.scanDirectory(directory, {
-      extensions: options.extensions ? options.extensions.split(',') : undefined
+      extensions: options.extensions ? options.extensions.split(',') : undefined,
     });
 
     return {
@@ -351,7 +345,7 @@ class DashboardCLI {
       directory,
       artifacts: artifacts.length,
       requirements: new Set(artifacts.map(a => a.requirementId)).size,
-      results: artifacts
+      results: artifacts,
     };
   }
 
@@ -363,11 +357,11 @@ class DashboardCLI {
   async detectGaps(directory = '.') {
     // Scan artifacts
     const codeArtifacts = await this.extractor.scanDirectory(directory, {
-      extensions: ['.js', '.ts']
+      extensions: ['.js', '.ts'],
     });
-    
+
     const testArtifacts = await this.extractor.scanDirectory(directory, {
-      extensions: ['.test.js', '.spec.js', '.test.ts', '.spec.ts']
+      extensions: ['.test.js', '.spec.js', '.test.ts', '.spec.ts'],
     });
 
     // Build matrix in format expected by GapDetector
@@ -382,7 +376,7 @@ class DashboardCLI {
           code: [],
           tests: [],
           design: [],
-          commits: []
+          commits: [],
         };
       }
       matrix[artifact.requirementId].code.push(artifact);
@@ -396,7 +390,7 @@ class DashboardCLI {
           code: [],
           tests: [],
           design: [],
-          commits: []
+          commits: [],
         };
       }
       matrix[artifact.requirementId].tests.push(artifact);
@@ -410,7 +404,7 @@ class DashboardCLI {
       success: true,
       requirements: allRequirements.size,
       gaps: report.gaps.length,
-      report
+      report,
     };
   }
 
@@ -427,14 +421,14 @@ class DashboardCLI {
       }
       return {
         success: true,
-        matrix
+        matrix,
       };
     }
 
     const matrices = await this.matrixStorage.list();
     return {
       success: true,
-      matrices
+      matrices,
     };
   }
 
@@ -446,14 +440,14 @@ class DashboardCLI {
    */
   async saveMatrix(directory = '.', options = {}) {
     const codeArtifacts = await this.extractor.scanDirectory(directory);
-    
+
     const entries = this.extractor.groupByRequirement(codeArtifacts);
-    
+
     const featureId = options.id || `MATRIX-${Date.now()}`;
     const matrix = {
       name: options.name || 'Traceability Matrix',
       entries,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     const filePath = await this.matrixStorage.save(featureId, matrix);
@@ -461,7 +455,7 @@ class DashboardCLI {
     return {
       success: true,
       message: `Matrix saved: ${featureId}`,
-      path: filePath
+      path: filePath,
     };
   }
 
@@ -472,7 +466,7 @@ class DashboardCLI {
    */
   async getSummary(featureId) {
     const workflows = await this.dashboard.listWorkflows();
-    const filteredWorkflows = featureId 
+    const filteredWorkflows = featureId
       ? workflows.filter(w => w.featureId === featureId)
       : workflows;
 
@@ -480,13 +474,13 @@ class DashboardCLI {
       workflows: {
         total: filteredWorkflows.length,
         active: filteredWorkflows.filter(w => w.status === 'active').length,
-        completed: filteredWorkflows.filter(w => w.status === 'completed').length
-      }
+        completed: filteredWorkflows.filter(w => w.status === 'completed').length,
+      },
     };
 
     return {
       success: true,
-      summary
+      summary,
     };
   }
 
@@ -513,8 +507,8 @@ class DashboardCLI {
         'trace:matrix [matrixId]': 'Show traceability matrix',
         'trace:save [directory]': 'Save traceability matrix',
         'summary [featureId]': 'Get overall summary',
-        'help': 'Show this help'
-      }
+        help: 'Show this help',
+      },
     };
   }
 

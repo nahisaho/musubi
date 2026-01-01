@@ -1,15 +1,15 @@
 /**
  * Rollback Manager Tests
- * 
+ *
  * Requirement: IMP-6.2-008-02
  */
 
-const { 
-  RollbackManager, 
+const {
+  RollbackManager,
   createRollbackManager,
   ROLLBACK_LEVEL,
   ROLLBACK_STATUS,
-  WORKFLOW_STAGE
+  WORKFLOW_STAGE,
 } = require('../../src/enterprise/rollback-manager');
 const fs = require('fs').promises;
 const path = require('path');
@@ -19,10 +19,10 @@ describe('RollbackManager', () => {
   const testDir = 'test-rollback-manager-temp';
 
   beforeEach(async () => {
-    manager = new RollbackManager({ 
-      storageDir: testDir, 
+    manager = new RollbackManager({
+      storageDir: testDir,
       gitEnabled: false,
-      requireConfirmation: false
+      requireConfirmation: false,
     });
     await fs.mkdir(testDir, { recursive: true });
   });
@@ -30,7 +30,9 @@ describe('RollbackManager', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -88,7 +90,7 @@ describe('RollbackManager', () => {
       await fs.writeFile(filePath, 'test content', 'utf-8');
 
       const checkpoint = await manager.createCheckpoint('with-files', {
-        files: [filePath]
+        files: [filePath],
       });
 
       expect(checkpoint.files.length).toBe(1);
@@ -97,7 +99,7 @@ describe('RollbackManager', () => {
 
     it('should handle non-existent files', async () => {
       const checkpoint = await manager.createCheckpoint('missing-files', {
-        files: ['/non/existent/file.txt']
+        files: ['/non/existent/file.txt'],
       });
 
       expect(checkpoint.files[0].exists).toBe(false);
@@ -131,7 +133,7 @@ describe('RollbackManager', () => {
 
       const checkpoint = await manager.createCheckpoint('rollback-test', {
         level: ROLLBACK_LEVEL.FILE,
-        files: [filePath]
+        files: [filePath],
       });
 
       // Modify file
@@ -141,7 +143,7 @@ describe('RollbackManager', () => {
       const result = await manager.rollback(checkpoint.id, { confirmed: true });
 
       expect(result.status).toBe(ROLLBACK_STATUS.COMPLETED);
-      
+
       const content = await fs.readFile(filePath, 'utf-8');
       expect(content).toBe('original content');
     });
@@ -157,8 +159,7 @@ describe('RollbackManager', () => {
     });
 
     it('should throw for non-existent checkpoint', async () => {
-      await expect(manager.rollback('non-existent'))
-        .rejects.toThrow('Checkpoint not found');
+      await expect(manager.rollback('non-existent')).rejects.toThrow('Checkpoint not found');
     });
 
     it('should capture before state', async () => {
@@ -167,7 +168,7 @@ describe('RollbackManager', () => {
 
       const checkpoint = await manager.createCheckpoint('before-test', {
         level: ROLLBACK_LEVEL.FILE,
-        files: [filePath]
+        files: [filePath],
       });
 
       await fs.writeFile(filePath, 'modified', 'utf-8');
@@ -182,12 +183,14 @@ describe('RollbackManager', () => {
   describe('rollbackFiles', () => {
     it('should restore file content', async () => {
       const filePath = path.join(testDir, 'restore-test.txt');
-      
+
       const checkpoint = {
-        files: [{
-          path: filePath,
-          content: 'restored content'
-        }]
+        files: [
+          {
+            path: filePath,
+            content: 'restored content',
+          },
+        ],
       };
 
       const changes = await manager.rollbackFiles(checkpoint);
@@ -200,12 +203,14 @@ describe('RollbackManager', () => {
     it('should delete files that did not exist', async () => {
       const filePath = path.join(testDir, 'delete-test.txt');
       await fs.writeFile(filePath, 'should be deleted', 'utf-8');
-      
+
       const checkpoint = {
-        files: [{
-          path: filePath,
-          exists: false
-        }]
+        files: [
+          {
+            path: filePath,
+            exists: false,
+          },
+        ],
       };
 
       const changes = await manager.rollbackFiles(checkpoint);
@@ -217,10 +222,14 @@ describe('RollbackManager', () => {
 
   describe('cancelRollback', () => {
     it('should cancel pending rollback', async () => {
-      const m = new RollbackManager({ storageDir: testDir, requireConfirmation: true, gitEnabled: false });
+      const m = new RollbackManager({
+        storageDir: testDir,
+        requireConfirmation: true,
+        gitEnabled: false,
+      });
       const checkpoint = await m.createCheckpoint('cancel-test');
       const result = await m.rollback(checkpoint.id);
-      
+
       // Manually add to history for testing (normally done by confirmed rollback)
       m.rollbackHistory.unshift(result);
 
@@ -241,7 +250,7 @@ describe('RollbackManager', () => {
     it('should return rollback history', async () => {
       const cp1 = await manager.createCheckpoint('history-1', { level: ROLLBACK_LEVEL.FILE });
       const cp2 = await manager.createCheckpoint('history-2', { level: ROLLBACK_LEVEL.STAGE });
-      
+
       await manager.rollback(cp1.id, { confirmed: true });
       await manager.rollback(cp2.id, { confirmed: true });
 
@@ -253,10 +262,10 @@ describe('RollbackManager', () => {
     it('should filter by status', async () => {
       const filePath = path.join(testDir, 'filter-file.txt');
       await fs.writeFile(filePath, 'content', 'utf-8');
-      
+
       const cp = await manager.createCheckpoint('filter-test', {
         level: ROLLBACK_LEVEL.FILE,
-        files: [filePath]
+        files: [filePath],
       });
       await manager.rollback(cp.id, { confirmed: true });
 
@@ -289,7 +298,7 @@ describe('RollbackManager', () => {
   describe('saveCheckpoint/loadCheckpoint', () => {
     it('should persist and load checkpoint', async () => {
       const checkpoint = await manager.createCheckpoint('persist-test');
-      
+
       // Clear in-memory
       manager.checkpoints.clear();
 
@@ -319,7 +328,7 @@ describe('RollbackManager', () => {
   describe('deleteCheckpoint', () => {
     it('should delete checkpoint', async () => {
       const checkpoint = await manager.createCheckpoint('delete-cp');
-      
+
       const deleted = await manager.deleteCheckpoint(checkpoint.id);
 
       expect(deleted).toBe(true);

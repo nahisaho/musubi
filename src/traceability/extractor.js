@@ -1,8 +1,8 @@
 /**
  * TraceabilityExtractor Implementation
- * 
+ *
  * Extracts requirement ID patterns from code, tests, commits, and documents.
- * 
+ *
  * Requirement: IMP-6.2-004-01
  * Design: Section 5.1
  */
@@ -18,10 +18,10 @@ const execAsync = promisify(exec);
  * Requirement ID patterns
  */
 const REQ_PATTERNS = [
-  /REQ-[A-Z0-9]+-\d{3}/g,              // REQ-XXX-NNN
-  /IMP-\d+\.\d+-\d{3}(?:-\d{2})?/g,    // IMP-6.2-001 or IMP-6.2-001-01
-  /FEAT-\d{3}/g,                        // FEAT-001
-  /TASK-\d{3}/g,                        // TASK-001
+  /REQ-[A-Z0-9]+-\d{3}/g, // REQ-XXX-NNN
+  /IMP-\d+\.\d+-\d{3}(?:-\d{2})?/g, // IMP-6.2-001 or IMP-6.2-001-01
+  /FEAT-\d{3}/g, // FEAT-001
+  /TASK-\d{3}/g, // TASK-001
 ];
 
 /**
@@ -34,12 +34,12 @@ const DEFAULT_CONFIG = {
   includePatterns: ['*.js', '*.ts', '*.tsx', '*.jsx', '*.md'],
   excludePatterns: ['node_modules/**', '*.test.js', '*.spec.js'],
   scanCommits: false,
-  maxCommits: 100
+  maxCommits: 100,
 };
 
 /**
  * TraceabilityExtractor
- * 
+ *
  * Extracts requirement references from various sources.
  */
 class TraceabilityExtractor {
@@ -60,7 +60,7 @@ class TraceabilityExtractor {
     try {
       await fs.access(filePath);
       const content = await fs.readFile(filePath, 'utf-8');
-      
+
       return this.extractFromContent(content, filePath, sourceType);
     } catch {
       return [];
@@ -85,7 +85,7 @@ class TraceabilityExtractor {
       for (const pattern of REQ_PATTERNS) {
         // Reset regex state
         pattern.lastIndex = 0;
-        
+
         let match;
         while ((match = pattern.exec(line)) !== null) {
           refs.push({
@@ -94,7 +94,7 @@ class TraceabilityExtractor {
             filePath,
             lineNumber: lineNum + 1,
             context: line.trim().substring(0, 100),
-            foundAt: now
+            foundAt: now,
           });
         }
       }
@@ -117,14 +117,17 @@ class TraceabilityExtractor {
         `git log -${maxCommits} --format="%H|%s|%ad|%ae" --date=short`
       );
 
-      const lines = stdout.trim().split('\n').filter(l => l.length > 0);
+      const lines = stdout
+        .trim()
+        .split('\n')
+        .filter(l => l.length > 0);
 
       for (const line of lines) {
         const [hash, message] = line.split('|');
 
         for (const pattern of REQ_PATTERNS) {
           pattern.lastIndex = 0;
-          
+
           let match;
           while ((match = pattern.exec(message)) !== null) {
             refs.push({
@@ -133,7 +136,7 @@ class TraceabilityExtractor {
               commitHash: hash,
               commitMessage: message,
               context: message,
-              foundAt: now
+              foundAt: now,
             });
           }
         }
@@ -164,7 +167,7 @@ class TraceabilityExtractor {
         if (stat.isDirectory()) {
           // Skip excluded directories
           if (this.isExcluded(entry)) continue;
-          
+
           const subRefs = await this.scanDirectory(fullPath, sourceType);
           refs.push(...subRefs);
         } else if (stat.isFile() && this.shouldInclude(entry)) {
@@ -263,7 +266,7 @@ class TraceabilityExtractor {
    */
   isExcluded(name) {
     const excludePatterns = this.config.excludePatterns || [];
-    
+
     for (const pattern of excludePatterns) {
       if (pattern.includes('**')) {
         // Glob pattern with directory
@@ -283,10 +286,8 @@ class TraceabilityExtractor {
    */
   matchPattern(filename, pattern) {
     // Convert glob pattern to regex
-    const regexPattern = pattern
-      .replace(/\./g, '\\.')
-      .replace(/\*/g, '.*');
-    
+    const regexPattern = pattern.replace(/\./g, '\\.').replace(/\*/g, '.*');
+
     return new RegExp(`^${regexPattern}$`).test(filename);
   }
 }

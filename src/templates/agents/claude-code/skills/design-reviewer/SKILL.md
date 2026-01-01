@@ -159,15 +159,15 @@ Legend: (Importance, Difficulty) - H=High, M=Medium, L=Low
 
 #### 4.1.3 ATAM Analysis Checklist
 
-| Quality Attribute | Key Questions |
-|-------------------|---------------|
-| **Performance** | Response time targets? Throughput requirements? Resource constraints? |
-| **Security** | Authentication method? Authorization model? Data protection? Audit requirements? |
-| **Availability** | Uptime SLA? Recovery time objective (RTO)? Recovery point objective (RPO)? |
-| **Modifiability** | Change scenarios? Extension points? Impact of changes? |
-| **Testability** | Component isolation? Mock capabilities? Test coverage goals? |
-| **Usability** | User workflow complexity? Error recovery? Learning curve? |
-| **Scalability** | Horizontal/vertical scaling? Load distribution? State management? |
+| Quality Attribute | Key Questions                                                                    |
+| ----------------- | -------------------------------------------------------------------------------- |
+| **Performance**   | Response time targets? Throughput requirements? Resource constraints?            |
+| **Security**      | Authentication method? Authorization model? Data protection? Audit requirements? |
+| **Availability**  | Uptime SLA? Recovery time objective (RTO)? Recovery point objective (RPO)?       |
+| **Modifiability** | Change scenarios? Extension points? Impact of changes?                           |
+| **Testability**   | Component isolation? Mock capabilities? Test coverage goals?                     |
+| **Usability**     | User workflow complexity? Error recovery? Learning curve?                        |
+| **Scalability**   | Horizontal/vertical scaling? Load distribution? State management?                |
 
 ---
 
@@ -365,13 +365,13 @@ Legend: (Importance, Difficulty) - H=High, M=Medium, L=Low
 
 #### 4.3.2 Pattern Checklist
 
-| Check Item | Questions |
-|------------|-----------|
+| Check Item          | Questions                                                            |
+| ------------------- | -------------------------------------------------------------------- |
 | **Appropriateness** | Is the pattern solving a real problem? Is simpler solution possible? |
-| **Implementation** | Is the pattern correctly implemented? Are all participants present? |
-| **Context Fit** | Does the pattern fit the technology stack and team experience? |
-| **Testability** | Does the pattern improve or hinder testability? |
-| **Performance** | Are there performance implications (e.g., Observer overhead)? |
+| **Implementation**  | Is the pattern correctly implemented? Are all participants present?  |
+| **Context Fit**     | Does the pattern fit the technology stack and team experience?       |
+| **Testability**     | Does the pattern improve or hinder testability?                      |
+| **Performance**     | Are there performance implications (e.g., Observer overhead)?        |
 
 ---
 
@@ -455,12 +455,12 @@ Legend: (Importance, Difficulty) - H=High, M=Medium, L=Low
 
 #### 4.4.3 Metrics
 
-| Metric | Description | Target |
-|--------|-------------|--------|
-| **Afferent Coupling (Ca)** | Number of classes that depend on this class | Lower is better |
-| **Efferent Coupling (Ce)** | Number of classes this class depends on | Lower is better |
-| **Instability (I)** | Ce / (Ca + Ce) | 0 = stable, 1 = unstable |
-| **LCOM** | Lack of Cohesion of Methods | Lower is better |
+| Metric                     | Description                                 | Target                   |
+| -------------------------- | ------------------------------------------- | ------------------------ |
+| **Afferent Coupling (Ca)** | Number of classes that depend on this class | Lower is better          |
+| **Efferent Coupling (Ce)** | Number of classes this class depends on     | Lower is better          |
+| **Instability (I)**        | Ce / (Ca + Ce)                              | 0 = stable, 1 = unstable |
+| **LCOM**                   | Lack of Cohesion of Methods                 | Lower is better          |
 
 ---
 
@@ -560,24 +560,24 @@ Legend: (Importance, Difficulty) - H=High, M=Medium, L=Low
 
 ### 5.1 Defect Types
 
-| Type | Description | Example |
-|------|-------------|---------|
-| **Architectural Risk** | Design decision with potential negative impact | Single point of failure |
-| **SOLID Violation** | Violation of SOLID principles | God class, tight coupling |
-| **Pattern Misuse** | Incorrect or unnecessary pattern application | Singleton abuse |
-| **Security Flaw** | Security vulnerability in design | Missing authorization |
-| **Performance Issue** | Design causing potential performance problems | N+1 query pattern |
-| **Maintainability Issue** | Design hindering future changes | High coupling |
-| **Missing Design** | Required design element not present | No error handling strategy |
+| Type                      | Description                                    | Example                    |
+| ------------------------- | ---------------------------------------------- | -------------------------- |
+| **Architectural Risk**    | Design decision with potential negative impact | Single point of failure    |
+| **SOLID Violation**       | Violation of SOLID principles                  | God class, tight coupling  |
+| **Pattern Misuse**        | Incorrect or unnecessary pattern application   | Singleton abuse            |
+| **Security Flaw**         | Security vulnerability in design               | Missing authorization      |
+| **Performance Issue**     | Design causing potential performance problems  | N+1 query pattern          |
+| **Maintainability Issue** | Design hindering future changes                | High coupling              |
+| **Missing Design**        | Required design element not present            | No error handling strategy |
 
 ### 5.2 Severity Levels
 
-| Level | Description | Action Required |
-|-------|-------------|-----------------|
-| 🔴 **Critical** | Fundamental architectural flaw | Must fix before implementation |
-| 🟠 **Major** | Significant design issue | Should fix before implementation |
-| 🟡 **Minor** | Design improvement opportunity | Fix during implementation |
-| 🟢 **Suggestion** | Best practice recommendation | Consider for future |
+| Level             | Description                    | Action Required                  |
+| ----------------- | ------------------------------ | -------------------------------- |
+| 🔴 **Critical**   | Fundamental architectural flaw | Must fix before implementation   |
+| 🟠 **Major**      | Significant design issue       | Should fix before implementation |
+| 🟡 **Minor**      | Design improvement opportunity | Fix during implementation        |
+| 🟢 **Suggestion** | Best practice recommendation   | Consider for future              |
 
 ---
 
@@ -617,15 +617,15 @@ Legend: (Importance, Difficulty) - H=High, M=Medium, L=Low
 
 ## 7. ADR Review Checklist
 
-| Check Item | Questions |
-|------------|-----------|
-| **Title** | Is the decision clearly named? |
-| **Status** | Is the status (proposed/accepted/deprecated) clear? |
-| **Context** | Is the problem/situation well explained? |
-| **Decision** | Is the decision clearly stated? |
-| **Alternatives** | Were alternatives considered and documented? |
-| **Consequences** | Are positive AND negative consequences listed? |
-| **Compliance** | Does the decision align with architecture principles? |
+| Check Item       | Questions                                             |
+| ---------------- | ----------------------------------------------------- |
+| **Title**        | Is the decision clearly named?                        |
+| **Status**       | Is the status (proposed/accepted/deprecated) clear?   |
+| **Context**      | Is the problem/situation well explained?              |
+| **Decision**     | Is the decision clearly stated?                       |
+| **Alternatives** | Were alternatives considered and documented?          |
+| **Consequences** | Are positive AND negative consequences listed?        |
+| **Compliance**   | Does the decision align with architecture principles? |
 
 ---
 
@@ -712,6 +712,7 @@ d) 修正提案付きドキュメント
 # Design Review Report
 
 ## Document Information
+
 - **Document**: [Document Name]
 - **Version**: [Version]
 - **Review Date**: [Date]
@@ -720,55 +721,63 @@ d) 修正提案付きドキュメント
 
 ## Executive Summary
 
-| Category | Issues Found | Critical | Major | Minor |
-|----------|--------------|----------|-------|-------|
-| ATAM/Architecture | X | X | X | X |
-| SOLID Principles | X | X | X | X |
-| Design Patterns | X | X | X | X |
-| Coupling/Cohesion | X | X | X | X |
-| Error Handling | X | X | X | X |
-| Security | X | X | X | X |
-| **Total** | **X** | **X** | **X** | **X** |
+| Category          | Issues Found | Critical | Major | Minor |
+| ----------------- | ------------ | -------- | ----- | ----- |
+| ATAM/Architecture | X            | X        | X     | X     |
+| SOLID Principles  | X            | X        | X     | X     |
+| Design Patterns   | X            | X        | X     | X     |
+| Coupling/Cohesion | X            | X        | X     | X     |
+| Error Handling    | X            | X        | X     | X     |
+| Security          | X            | X        | X     | X     |
+| **Total**         | **X**        | **X**    | **X** | **X** |
 
 ## Quality Gate Result
 
 **Status**: ✅ PASSED / ❌ FAILED
 
-| Criterion | Status | Notes |
-|-----------|--------|-------|
-| No Critical Issues | ✅/❌ | |
-| SOLID Compliance | ✅/❌ | |
-| Security Requirements | ✅/❌ | |
-| Error Handling Strategy | ✅/❌ | |
+| Criterion               | Status | Notes |
+| ----------------------- | ------ | ----- |
+| No Critical Issues      | ✅/❌  |       |
+| SOLID Compliance        | ✅/❌  |       |
+| Security Requirements   | ✅/❌  |       |
+| Error Handling Strategy | ✅/❌  |       |
 
 ## Detailed Findings
 
 ### ATAM Analysis
 
 #### Quality Attribute Utility Tree
+
 ...
 
 #### Sensitivity Points
+
 ...
 
 #### Tradeoff Points
+
 ...
 
 ### SOLID Principles Review
 
 #### SRP Compliance
+
 ...
 
 ### Design Pattern Assessment
+
 ...
 
 ### Coupling & Cohesion Analysis
+
 ...
 
 ### Error Handling Review
+
 ...
 
 ### Security Review
+
 ...
 
 ## Recommendations
@@ -778,9 +787,9 @@ d) 修正提案付きドキュメント
 
 ## Action Items
 
-| ID | Action | Owner | Due Date | Status |
-|----|--------|-------|----------|--------|
-| 1 | ... | ... | ... | Open |
+| ID  | Action | Owner | Due Date | Status |
+| --- | ------ | ----- | -------- | ------ |
+| 1   | ...    | ...   | ...      | Open   |
 ```
 
 ---
@@ -892,25 +901,28 @@ Design Reviewer AIはレビュー結果をユーザーに提示し、ユーザ�
 ## 📋 Design Review Results
 
 ### Summary
-| Category | Critical | Major | Minor | Suggestion |
-|----------|----------|-------|-------|------------|
-| SOLID | 1 | 2 | 0 | 1 |
-| Patterns | 0 | 1 | 2 | 0 |
-| Coupling | 1 | 0 | 1 | 0 |
-| Security | 2 | 1 | 0 | 1 |
-| Error Handling | 0 | 2 | 0 | 0 |
-| **Total** | **4** | **6** | **3** | **2** |
+
+| Category       | Critical | Major | Minor | Suggestion |
+| -------------- | -------- | ----- | ----- | ---------- |
+| SOLID          | 1        | 2     | 0     | 1          |
+| Patterns       | 0        | 1     | 2     | 0          |
+| Coupling       | 1        | 0     | 1     | 0          |
+| Security       | 2        | 1     | 0     | 1          |
+| Error Handling | 0        | 2     | 0     | 0          |
+| **Total**      | **4**    | **6** | **3** | **2**      |
 
 ### SOLID Compliance Matrix
-| Principle | Status | Issues |
-|-----------|--------|--------|
-| Single Responsibility | ❌ | DES-001 |
-| Open/Closed | ✅ | - |
-| Liskov Substitution | ✅ | - |
-| Interface Segregation | ⚠️ | DES-005 |
-| Dependency Inversion | ❌ | DES-008 |
+
+| Principle             | Status | Issues  |
+| --------------------- | ------ | ------- |
+| Single Responsibility | ❌     | DES-001 |
+| Open/Closed           | ✅     | -       |
+| Liskov Substitution   | ✅     | -       |
+| Interface Segregation | ⚠️     | DES-005 |
+| Dependency Inversion  | ❌     | DES-008 |
 
 ### Quality Gate: ❌ FAILED
+
 - 4 critical issues must be resolved before implementation
 
 ---
@@ -918,12 +930,14 @@ Design Reviewer AIはレビュー結果をユーザーに提示し、ユーザ�
 ### 🔴 Critical Issues
 
 #### DES-001: SRP Violation in UserManager Class
+
 **Location**: Section 4.2 - Component Design
 **Category**: SOLID (SRP)
 **Severity**: Critical
 
 **Current Design:**
 ```
+
 UserManager
 ├── authenticateUser()
 ├── registerUser()
@@ -931,6 +945,7 @@ UserManager
 ├── generateReport()
 ├── updateUserPreferences()
 └── backupUserData()
+
 ```
 
 **Issue:**
@@ -939,12 +954,14 @@ UserManager class has 6+ unrelated responsibilities. This violates SRP and creat
 **Recommendation:**
 Split into focused classes:
 ```
-AuthenticationService    → authenticateUser()
-UserRegistrationService  → registerUser()
-NotificationService      → sendNotificationEmail()
-ReportingService         → generateReport()
-UserPreferenceService    → updateUserPreferences()
-BackupService            → backupUserData()
+
+AuthenticationService → authenticateUser()
+UserRegistrationService → registerUser()
+NotificationService → sendNotificationEmail()
+ReportingService → generateReport()
+UserPreferenceService → updateUserPreferences()
+BackupService → backupUserData()
+
 ```
 
 **Your Decision:**
@@ -968,10 +985,12 @@ No input validation or sanitization design documented. Risk of injection attacks
 **Recommendation:**
 Add input validation layer:
 ```
+
 1. Define validation schema for each endpoint
 2. Implement sanitization before processing
 3. Return structured error responses for invalid input
 4. Log validation failures for security monitoring
+
 ```
 
 **Your Decision:**
@@ -1064,44 +1083,44 @@ console.log(correctionResult.updatedQualityGate);
 
 ### Changes Applied
 
-| Issue ID | Category | Action | Summary |
-|----------|----------|--------|---------|
-| DES-001 | SOLID/SRP | Accepted | Split UserManager into 6 services |
-| DES-002 | Security | Modified | Added custom validation layer |
-| DES-008 | SOLID/DIP | Accepted | Introduced interfaces for dependencies |
+| Issue ID | Category  | Action   | Summary                                |
+| -------- | --------- | -------- | -------------------------------------- |
+| DES-001  | SOLID/SRP | Accepted | Split UserManager into 6 services      |
+| DES-002  | Security  | Modified | Added custom validation layer          |
+| DES-008  | SOLID/DIP | Accepted | Introduced interfaces for dependencies |
 
 ### ADRs Created
 
-| ADR ID | Issue | Decision |
-|--------|-------|----------|
+| ADR ID  | Issue   | Decision                              |
+| ------- | ------- | ------------------------------------- |
 | ADR-015 | DES-005 | ISP violation accepted for simplicity |
-| ADR-016 | DES-007 | Synchronous design chosen over async |
+| ADR-016 | DES-007 | Synchronous design chosen over async  |
 
 ### Rejected Findings
 
-| Issue ID | Category | Justification | ADR |
-|----------|----------|---------------|-----|
-| DES-005 | SOLID/ISP | Simplicity preferred | ADR-015 |
-| DES-007 | Patterns | Performance reasons | ADR-016 |
+| Issue ID | Category  | Justification        | ADR     |
+| -------- | --------- | -------------------- | ------- |
+| DES-005  | SOLID/ISP | Simplicity preferred | ADR-015 |
+| DES-007  | Patterns  | Performance reasons  | ADR-016 |
 
 ### Updated SOLID Compliance
 
-| Principle | Before | After |
-|-----------|--------|-------|
-| Single Responsibility | ❌ | ✅ |
-| Open/Closed | ✅ | ✅ |
-| Liskov Substitution | ✅ | ✅ |
-| Interface Segregation | ⚠️ | ⚠️ (ADR-015) |
-| Dependency Inversion | ❌ | ✅ |
+| Principle             | Before | After        |
+| --------------------- | ------ | ------------ |
+| Single Responsibility | ❌     | ✅           |
+| Open/Closed           | ✅     | ✅           |
+| Liskov Substitution   | ✅     | ✅           |
+| Interface Segregation | ⚠️     | ⚠️ (ADR-015) |
+| Dependency Inversion  | ❌     | ✅           |
 
 ### Updated Quality Gate
 
-| Criterion | Before | After |
-|-----------|--------|-------|
-| Critical Issues | 4 | 0 ✅ |
-| Major Issues | 6 | 2 |
-| Security Score | 45% | 90% |
-| SOLID Compliance | 60% | 95% |
+| Criterion        | Before | After |
+| ---------------- | ------ | ----- |
+| Critical Issues  | 4      | 0 ✅  |
+| Major Issues     | 6      | 2     |
+| Security Score   | 45%    | 90%   |
+| SOLID Compliance | 60%    | 95%   |
 
 **Status**: ✅ PASSED (Ready for Implementation Phase)
 
@@ -1129,7 +1148,7 @@ This skill ensures compliance with:
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-27 | Initial release with ATAM, SOLID, patterns, and security review |
-| 1.1.0 | 2025-12-27 | Added interactive review and correction workflow |
+| Version | Date       | Changes                                                         |
+| ------- | ---------- | --------------------------------------------------------------- |
+| 1.0.0   | 2025-12-27 | Initial release with ATAM, SOLID, patterns, and security review |
+| 1.1.0   | 2025-12-27 | Added interactive review and correction workflow                |

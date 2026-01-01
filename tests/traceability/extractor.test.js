@@ -1,6 +1,6 @@
 /**
  * TraceabilityExtractor Tests
- * 
+ *
  * Requirement: IMP-6.2-004-01
  * Constitutional: Article III - Test-First
  */
@@ -14,13 +14,13 @@ jest.mock('fs', () => ({
     readFile: jest.fn(),
     readdir: jest.fn(),
     stat: jest.fn(),
-    access: jest.fn()
-  }
+    access: jest.fn(),
+  },
 }));
 
 // Mock child_process
 jest.mock('child_process', () => ({
-  exec: jest.fn()
+  exec: jest.fn(),
 }));
 
 const fs = require('fs');
@@ -44,7 +44,7 @@ describe('TraceabilityExtractor', () => {
           // Implementation for REQ-001-001
         }
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(codeContent);
 
@@ -64,7 +64,7 @@ describe('TraceabilityExtractor', () => {
         class ReviewGate {
         }
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(codeContent);
 
@@ -80,7 +80,7 @@ describe('TraceabilityExtractor', () => {
 line 2
 // REQ-002-001: Feature
 line 4`;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(codeContent);
 
@@ -94,7 +94,7 @@ line 4`;
         // FEAT-001: New dashboard feature
         function dashboard() {}
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(codeContent);
 
@@ -116,7 +116,7 @@ line 4`;
           });
         });
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(testContent);
 
@@ -128,7 +128,7 @@ line 4`;
 
     it('should include test file path', async () => {
       const testContent = `// REQ-001-001`;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(testContent);
 
@@ -142,7 +142,7 @@ line 4`;
     it('should extract requirement IDs from commit messages', async () => {
       const gitLog = `abc123|feat(REQ-001-001): implement authentication|2025-12-31|dev@example.com
 def456|fix(IMP-6.2-001): resolve gate issue|2025-12-30|dev@example.com`;
-      
+
       exec.mockImplementation((cmd, callback) => {
         callback(null, { stdout: gitLog, stderr: '' });
         return {};
@@ -157,7 +157,7 @@ def456|fix(IMP-6.2-001): resolve gate issue|2025-12-30|dev@example.com`;
 
     it('should include commit message and date', async () => {
       const gitLog = `abc123|feat(REQ-001-001): implement authentication|2025-12-31|dev@example.com`;
-      
+
       exec.mockImplementation((cmd, callback) => {
         callback(null, { stdout: gitLog, stderr: '' });
         return {};
@@ -182,7 +182,7 @@ This section describes REQ-001-001 implementation.
 - IMP-6.2-001
 - IMP-6.2-001-01
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(docContent);
 
@@ -196,24 +196,24 @@ This section describes REQ-001-001 implementation.
   describe('scanDirectory()', () => {
     it('should scan all files in a directory', async () => {
       const fileStructure = {
-        'src': ['auth.js', 'user.js'],
+        src: ['auth.js', 'user.js'],
         'src/auth.js': '// REQ-001-001\nfunction auth() {}',
-        'src/user.js': '// IMP-6.2-001\nclass User {}'
+        'src/user.js': '// IMP-6.2-001\nclass User {}',
       };
 
-      mockFs.readdir.mockImplementation(async (dir) => {
+      mockFs.readdir.mockImplementation(async dir => {
         return fileStructure[dir] || [];
       });
-      
+
       mockFs.stat.mockResolvedValue({
         isDirectory: () => false,
-        isFile: () => true
+        isFile: () => true,
       });
-      
-      mockFs.readFile.mockImplementation(async (path) => {
+
+      mockFs.readFile.mockImplementation(async path => {
         return fileStructure[path] || '';
       });
-      
+
       mockFs.access.mockResolvedValue(undefined);
 
       const refs = await extractor.scanDirectory('src', 'code');
@@ -224,13 +224,13 @@ This section describes REQ-001-001 implementation.
     it('should respect file patterns', async () => {
       const customExtractor = new TraceabilityExtractor({
         includePatterns: ['*.js'],
-        excludePatterns: ['*.test.js']
+        excludePatterns: ['*.test.js'],
       });
 
       mockFs.readdir.mockResolvedValue(['auth.js', 'auth.test.js', 'user.js']);
       mockFs.stat.mockResolvedValue({
         isDirectory: () => false,
-        isFile: () => true
+        isFile: () => true,
       });
       mockFs.readFile.mockResolvedValue('// REQ-001-001');
       mockFs.access.mockResolvedValue(undefined);
@@ -247,11 +247,11 @@ This section describes REQ-001-001 implementation.
       mockFs.readdir.mockResolvedValue(['file.js']);
       mockFs.stat.mockResolvedValue({
         isDirectory: () => false,
-        isFile: () => true
+        isFile: () => true,
       });
       mockFs.readFile.mockResolvedValue('// REQ-001-001');
       mockFs.access.mockResolvedValue(undefined);
-      
+
       exec.mockImplementation((cmd, callback) => {
         callback(null, { stdout: 'abc|REQ-001-001|2025-12-31|dev', stderr: '' });
         return {};
@@ -261,7 +261,7 @@ This section describes REQ-001-001 implementation.
         sourceDir: 'src',
         testDir: 'tests',
         docDir: 'docs',
-        scanCommits: true
+        scanCommits: true,
       });
 
       const refs = await customExtractor.extractAll();
@@ -280,7 +280,7 @@ This section describes REQ-001-001 implementation.
         FEAT-001
         TASK-001
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(content);
 
@@ -296,7 +296,7 @@ This section describes REQ-001-001 implementation.
         // REQ-001-001: First mention
         // REQ-001-001: Second mention
       `;
-      
+
       mockFs.access.mockResolvedValue(undefined);
       mockFs.readFile.mockResolvedValue(content);
 
@@ -314,7 +314,7 @@ This section describes REQ-001-001 implementation.
       const refs = [
         { requirementId: 'REQ-001-001', sourceType: 'code', filePath: 'a.js' },
         { requirementId: 'REQ-001-001', sourceType: 'test', filePath: 'a.test.js' },
-        { requirementId: 'REQ-001-002', sourceType: 'code', filePath: 'b.js' }
+        { requirementId: 'REQ-001-002', sourceType: 'code', filePath: 'b.js' },
       ];
 
       const grouped = extractor.groupByRequirement(refs);

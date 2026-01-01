@@ -1,10 +1,10 @@
 /**
  * Error Recovery Handler
- * 
+ *
  * Provides recovery guidance for workflow failures.
- * 
+ *
  * Requirement: IMP-6.2-008-01
- * 
+ *
  * @module enterprise/error-recovery
  */
 
@@ -23,7 +23,7 @@ const ERROR_CATEGORY = {
   DEPENDENCY_ERROR: 'dependency-error',
   CONFIGURATION_ERROR: 'configuration-error',
   RUNTIME_ERROR: 'runtime-error',
-  UNKNOWN: 'unknown'
+  UNKNOWN: 'unknown',
 };
 
 /**
@@ -36,7 +36,7 @@ const RECOVERY_ACTION = {
   UPDATE_CONFIG: 'update-config',
   ROLLBACK: 'rollback',
   MANUAL_REVIEW: 'manual-review',
-  RETRY: 'retry'
+  RETRY: 'retry',
 };
 
 /**
@@ -52,7 +52,7 @@ class ErrorRecoveryHandler {
       storageDir: config.storageDir || 'storage/errors',
       maxHistorySize: config.maxHistorySize || 100,
       enableAutoAnalysis: config.enableAutoAnalysis !== false,
-      ...config
+      ...config,
     };
 
     this.errorHistory = [];
@@ -67,68 +67,128 @@ class ErrorRecoveryHandler {
     return {
       [ERROR_CATEGORY.TEST_FAILURE]: {
         patterns: [
-          { match: /expect.*toEqual/i, cause: 'Assertion mismatch', action: RECOVERY_ACTION.FIX_CODE },
+          {
+            match: /expect.*toEqual/i,
+            cause: 'Assertion mismatch',
+            action: RECOVERY_ACTION.FIX_CODE,
+          },
           { match: /undefined is not/i, cause: 'Null reference', action: RECOVERY_ACTION.FIX_CODE },
           { match: /timeout/i, cause: 'Test timeout', action: RECOVERY_ACTION.UPDATE_TEST },
-          { match: /cannot find module/i, cause: 'Missing import', action: RECOVERY_ACTION.INSTALL_DEPS }
+          {
+            match: /cannot find module/i,
+            cause: 'Missing import',
+            action: RECOVERY_ACTION.INSTALL_DEPS,
+          },
         ],
-        defaultAction: RECOVERY_ACTION.MANUAL_REVIEW
+        defaultAction: RECOVERY_ACTION.MANUAL_REVIEW,
       },
       [ERROR_CATEGORY.VALIDATION_ERROR]: {
         patterns: [
-          { match: /ears.*format/i, cause: 'EARS format violation', action: RECOVERY_ACTION.FIX_CODE },
-          { match: /traceability/i, cause: 'Missing traceability', action: RECOVERY_ACTION.FIX_CODE },
-          { match: /constitutional/i, cause: 'Constitutional violation', action: RECOVERY_ACTION.MANUAL_REVIEW }
+          {
+            match: /ears.*format/i,
+            cause: 'EARS format violation',
+            action: RECOVERY_ACTION.FIX_CODE,
+          },
+          {
+            match: /traceability/i,
+            cause: 'Missing traceability',
+            action: RECOVERY_ACTION.FIX_CODE,
+          },
+          {
+            match: /constitutional/i,
+            cause: 'Constitutional violation',
+            action: RECOVERY_ACTION.MANUAL_REVIEW,
+          },
         ],
-        defaultAction: RECOVERY_ACTION.FIX_CODE
+        defaultAction: RECOVERY_ACTION.FIX_CODE,
       },
       [ERROR_CATEGORY.BUILD_ERROR]: {
         patterns: [
           { match: /syntax.*error/i, cause: 'Syntax error', action: RECOVERY_ACTION.FIX_CODE },
-          { match: /cannot resolve/i, cause: 'Module resolution failed', action: RECOVERY_ACTION.INSTALL_DEPS },
-          { match: /out of memory/i, cause: 'Memory limit exceeded', action: RECOVERY_ACTION.UPDATE_CONFIG }
+          {
+            match: /cannot resolve/i,
+            cause: 'Module resolution failed',
+            action: RECOVERY_ACTION.INSTALL_DEPS,
+          },
+          {
+            match: /out of memory/i,
+            cause: 'Memory limit exceeded',
+            action: RECOVERY_ACTION.UPDATE_CONFIG,
+          },
         ],
-        defaultAction: RECOVERY_ACTION.FIX_CODE
+        defaultAction: RECOVERY_ACTION.FIX_CODE,
       },
       [ERROR_CATEGORY.LINT_ERROR]: {
         patterns: [
           { match: /parsing error/i, cause: 'Parse error', action: RECOVERY_ACTION.FIX_CODE },
           { match: /no-unused/i, cause: 'Unused code', action: RECOVERY_ACTION.FIX_CODE },
-          { match: /prefer-const/i, cause: 'Style violation', action: RECOVERY_ACTION.FIX_CODE }
+          { match: /prefer-const/i, cause: 'Style violation', action: RECOVERY_ACTION.FIX_CODE },
         ],
-        defaultAction: RECOVERY_ACTION.FIX_CODE
+        defaultAction: RECOVERY_ACTION.FIX_CODE,
       },
       [ERROR_CATEGORY.TYPE_ERROR]: {
         patterns: [
-          { match: /type.*not assignable/i, cause: 'Type mismatch', action: RECOVERY_ACTION.FIX_CODE },
-          { match: /property.*does not exist/i, cause: 'Missing property', action: RECOVERY_ACTION.FIX_CODE },
-          { match: /cannot find name/i, cause: 'Undefined identifier', action: RECOVERY_ACTION.FIX_CODE }
+          {
+            match: /type.*not assignable/i,
+            cause: 'Type mismatch',
+            action: RECOVERY_ACTION.FIX_CODE,
+          },
+          {
+            match: /property.*does not exist/i,
+            cause: 'Missing property',
+            action: RECOVERY_ACTION.FIX_CODE,
+          },
+          {
+            match: /cannot find name/i,
+            cause: 'Undefined identifier',
+            action: RECOVERY_ACTION.FIX_CODE,
+          },
         ],
-        defaultAction: RECOVERY_ACTION.FIX_CODE
+        defaultAction: RECOVERY_ACTION.FIX_CODE,
       },
       [ERROR_CATEGORY.DEPENDENCY_ERROR]: {
         patterns: [
-          { match: /peer dep/i, cause: 'Peer dependency conflict', action: RECOVERY_ACTION.INSTALL_DEPS },
-          { match: /not found in npm registry/i, cause: 'Package not found', action: RECOVERY_ACTION.UPDATE_CONFIG },
-          { match: /version.*incompatible/i, cause: 'Version conflict', action: RECOVERY_ACTION.INSTALL_DEPS }
+          {
+            match: /peer dep/i,
+            cause: 'Peer dependency conflict',
+            action: RECOVERY_ACTION.INSTALL_DEPS,
+          },
+          {
+            match: /not found in npm registry/i,
+            cause: 'Package not found',
+            action: RECOVERY_ACTION.UPDATE_CONFIG,
+          },
+          {
+            match: /version.*incompatible/i,
+            cause: 'Version conflict',
+            action: RECOVERY_ACTION.INSTALL_DEPS,
+          },
         ],
-        defaultAction: RECOVERY_ACTION.INSTALL_DEPS
+        defaultAction: RECOVERY_ACTION.INSTALL_DEPS,
       },
       [ERROR_CATEGORY.CONFIGURATION_ERROR]: {
         patterns: [
-          { match: /invalid.*config/i, cause: 'Invalid configuration', action: RECOVERY_ACTION.UPDATE_CONFIG },
-          { match: /missing.*required/i, cause: 'Missing required field', action: RECOVERY_ACTION.UPDATE_CONFIG }
+          {
+            match: /invalid.*config/i,
+            cause: 'Invalid configuration',
+            action: RECOVERY_ACTION.UPDATE_CONFIG,
+          },
+          {
+            match: /missing.*required/i,
+            cause: 'Missing required field',
+            action: RECOVERY_ACTION.UPDATE_CONFIG,
+          },
         ],
-        defaultAction: RECOVERY_ACTION.UPDATE_CONFIG
+        defaultAction: RECOVERY_ACTION.UPDATE_CONFIG,
       },
       [ERROR_CATEGORY.RUNTIME_ERROR]: {
         patterns: [
           { match: /enoent/i, cause: 'File not found', action: RECOVERY_ACTION.FIX_CODE },
           { match: /eacces/i, cause: 'Permission denied', action: RECOVERY_ACTION.UPDATE_CONFIG },
-          { match: /econnrefused/i, cause: 'Connection refused', action: RECOVERY_ACTION.RETRY }
+          { match: /econnrefused/i, cause: 'Connection refused', action: RECOVERY_ACTION.RETRY },
         ],
-        defaultAction: RECOVERY_ACTION.MANUAL_REVIEW
-      }
+        defaultAction: RECOVERY_ACTION.MANUAL_REVIEW,
+      },
     };
   }
 
@@ -152,7 +212,7 @@ class ErrorRecoveryHandler {
       rootCause,
       remediation,
       context,
-      confidence: this.calculateConfidence(rootCause)
+      confidence: this.calculateConfidence(rootCause),
     };
 
     // Record in history
@@ -172,14 +232,14 @@ class ErrorRecoveryHandler {
         message: error.message,
         name: error.name,
         stack: error.stack,
-        code: error.code
+        code: error.code,
       };
     }
     return {
       message: error.message || String(error),
       name: error.name || 'Error',
       stack: error.stack || '',
-      code: error.code || ''
+      code: error.code || '',
     };
   }
 
@@ -221,24 +281,24 @@ class ErrorRecoveryHandler {
    */
   identifyRootCause(errorInfo, category) {
     const patterns = this.recoveryPatterns[category];
-    
+
     if (!patterns) {
       return {
         cause: 'Unknown error',
         action: RECOVERY_ACTION.MANUAL_REVIEW,
-        matched: false
+        matched: false,
       };
     }
 
     const message = errorInfo.message;
-    
+
     for (const pattern of patterns.patterns) {
       if (pattern.match.test(message)) {
         return {
           cause: pattern.cause,
           action: pattern.action,
           matched: true,
-          pattern: pattern.match.toString()
+          pattern: pattern.match.toString(),
         };
       }
     }
@@ -246,7 +306,7 @@ class ErrorRecoveryHandler {
     return {
       cause: 'Unrecognized error pattern',
       action: patterns.defaultAction,
-      matched: false
+      matched: false,
     };
   }
 
@@ -319,7 +379,7 @@ class ErrorRecoveryHandler {
       steps,
       commands,
       estimatedTime: this.estimateRecoveryTime(rootCause.action),
-      priority: this.determinePriority(category, context)
+      priority: this.determinePriority(category, context),
     };
   }
 
@@ -336,7 +396,7 @@ class ErrorRecoveryHandler {
       [RECOVERY_ACTION.UPDATE_CONFIG]: '5-15 minutes',
       [RECOVERY_ACTION.ROLLBACK]: '10-30 minutes',
       [RECOVERY_ACTION.RETRY]: '1-5 minutes',
-      [RECOVERY_ACTION.MANUAL_REVIEW]: '30-60 minutes'
+      [RECOVERY_ACTION.MANUAL_REVIEW]: '30-60 minutes',
     };
     return estimates[action] || 'Unknown';
   }
@@ -349,10 +409,10 @@ class ErrorRecoveryHandler {
    */
   determinePriority(category, context) {
     if (context.blocking) return 'critical';
-    
+
     const highPriority = [ERROR_CATEGORY.BUILD_ERROR, ERROR_CATEGORY.TEST_FAILURE];
     const mediumPriority = [ERROR_CATEGORY.TYPE_ERROR, ERROR_CATEGORY.LINT_ERROR];
-    
+
     if (highPriority.includes(category)) return 'high';
     if (mediumPriority.includes(category)) return 'medium';
     return 'low';
@@ -374,7 +434,7 @@ class ErrorRecoveryHandler {
    */
   recordError(analysis) {
     this.errorHistory.unshift(analysis);
-    
+
     // Trim history
     if (this.errorHistory.length > this.config.maxHistorySize) {
       this.errorHistory = this.errorHistory.slice(0, this.config.maxHistorySize);
@@ -410,10 +470,10 @@ class ErrorRecoveryHandler {
    */
   async saveAnalysis(analysis) {
     await this.ensureStorageDir();
-    
+
     const fileName = `error-${analysis.id}.json`;
     const filePath = path.join(this.config.storageDir, fileName);
-    
+
     await fs.writeFile(filePath, JSON.stringify(analysis, null, 2), 'utf-8');
     return filePath;
   }
@@ -426,7 +486,7 @@ class ErrorRecoveryHandler {
   async loadAnalysis(id) {
     const fileName = `error-${id}.json`;
     const filePath = path.join(this.config.storageDir, fileName);
-    
+
     try {
       const content = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(content);
@@ -520,5 +580,5 @@ module.exports = {
   ErrorRecoveryHandler,
   createErrorRecoveryHandler,
   ERROR_CATEGORY,
-  RECOVERY_ACTION
+  RECOVERY_ACTION,
 };

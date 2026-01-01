@@ -40,9 +40,9 @@ describe('SprintReporter', () => {
       { id: 'T-1', title: 'Task 1', priority: 'critical', storyPoints: 5, status: 'done' },
       { id: 'T-2', title: 'Task 2', priority: 'high', storyPoints: 8, status: 'done' },
       { id: 'T-3', title: 'Task 3', priority: 'medium', storyPoints: 3, status: 'in-progress' },
-      { id: 'T-4', title: 'Task 4', priority: 'low', storyPoints: 2, status: 'todo' }
+      { id: 'T-4', title: 'Task 4', priority: 'low', storyPoints: 2, status: 'todo' },
     ],
-    ...overrides
+    ...overrides,
   });
 
   describe('constructor', () => {
@@ -170,8 +170,8 @@ describe('SprintReporter', () => {
         velocity: 13, // actual is 13
         tasks: [
           { id: 'T-1', storyPoints: 8, status: 'done' },
-          { id: 'T-2', storyPoints: 5, status: 'done' }
-        ]
+          { id: 'T-2', storyPoints: 5, status: 'done' },
+        ],
       });
       const analysis = reporter.analyzeVelocity(sprint);
 
@@ -182,9 +182,7 @@ describe('SprintReporter', () => {
     it('should detect over-performing velocity', () => {
       const sprint = createTestSprint({
         velocity: 10,
-        tasks: [
-          { id: 'T-1', storyPoints: 12, status: 'done' }
-        ]
+        tasks: [{ id: 'T-1', storyPoints: 12, status: 'done' }],
       });
       const analysis = reporter.analyzeVelocity(sprint);
 
@@ -195,9 +193,7 @@ describe('SprintReporter', () => {
     it('should detect slightly-under velocity', () => {
       const sprint = createTestSprint({
         velocity: 20,
-        tasks: [
-          { id: 'T-1', storyPoints: 15, status: 'done' }
-        ]
+        tasks: [{ id: 'T-1', storyPoints: 15, status: 'done' }],
       });
       const analysis = reporter.analyzeVelocity(sprint);
 
@@ -208,9 +204,7 @@ describe('SprintReporter', () => {
     it('should detect under-performing velocity', () => {
       const sprint = createTestSprint({
         velocity: 20,
-        tasks: [
-          { id: 'T-1', storyPoints: 10, status: 'done' }
-        ]
+        tasks: [{ id: 'T-1', storyPoints: 10, status: 'done' }],
       });
       const analysis = reporter.analyzeVelocity(sprint);
 
@@ -223,9 +217,7 @@ describe('SprintReporter', () => {
     it('should recommend velocity reduction for under-performance', () => {
       const sprint = createTestSprint({
         velocity: 30,
-        tasks: [
-          { id: 'T-1', storyPoints: 10, status: 'done', priority: 'medium' }
-        ]
+        tasks: [{ id: 'T-1', storyPoints: 10, status: 'done', priority: 'medium' }],
       });
       const recommendations = reporter.generateRecommendations(sprint);
 
@@ -237,9 +229,7 @@ describe('SprintReporter', () => {
     it('should recommend velocity increase for over-performance', () => {
       const sprint = createTestSprint({
         velocity: 10,
-        tasks: [
-          { id: 'T-1', storyPoints: 15, status: 'done', priority: 'medium' }
-        ]
+        tasks: [{ id: 'T-1', storyPoints: 15, status: 'done', priority: 'medium' }],
       });
       const recommendations = reporter.generateRecommendations(sprint);
 
@@ -250,9 +240,7 @@ describe('SprintReporter', () => {
 
     it('should alert for incomplete critical tasks', () => {
       const sprint = createTestSprint({
-        tasks: [
-          { id: 'T-1', storyPoints: 5, status: 'todo', priority: 'critical' }
-        ]
+        tasks: [{ id: 'T-1', storyPoints: 5, status: 'todo', priority: 'critical' }],
       });
       const recommendations = reporter.generateRecommendations(sprint);
 
@@ -266,8 +254,8 @@ describe('SprintReporter', () => {
         tasks: [
           { id: 'T-1', storyPoints: 5, status: 'todo', priority: 'medium' },
           { id: 'T-2', storyPoints: 5, status: 'todo', priority: 'medium' },
-          { id: 'T-3', storyPoints: 5, status: 'todo', priority: 'medium' }
-        ]
+          { id: 'T-3', storyPoints: 5, status: 'todo', priority: 'medium' },
+        ],
       });
       const recommendations = reporter.generateRecommendations(sprint);
 
@@ -282,8 +270,8 @@ describe('SprintReporter', () => {
           { id: 'T-1', storyPoints: 5, status: 'in-progress', priority: 'medium' },
           { id: 'T-2', storyPoints: 5, status: 'in-progress', priority: 'medium' },
           { id: 'T-3', storyPoints: 5, status: 'in-progress', priority: 'medium' },
-          { id: 'T-4', storyPoints: 5, status: 'in-progress', priority: 'medium' }
-        ]
+          { id: 'T-4', storyPoints: 5, status: 'in-progress', priority: 'medium' },
+        ],
       });
       const recommendations = reporter.generateRecommendations(sprint);
 

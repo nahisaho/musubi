@@ -1,6 +1,6 @@
 /**
  * Traceability Module
- * 
+ *
  * Requirement: IMP-6.2-004
  */
 
@@ -11,5 +11,5 @@ const { MatrixStorage } = require('./matrix-storage');
 module.exports = {
   TraceabilityExtractor,
   GapDetector,
-  MatrixStorage
+  MatrixStorage,
 };

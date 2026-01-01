@@ -1,6 +1,6 @@
 /**
  * Dashboard Module
- * 
+ *
  * Requirement: IMP-6.2-003
  */
 
@@ -16,5 +16,5 @@ module.exports = {
   SprintReporter,
   WORKFLOW_STAGES,
   STAGE_STATUS,
-  PRIORITY
+  PRIORITY,
 };

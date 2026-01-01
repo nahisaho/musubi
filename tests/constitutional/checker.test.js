@@ -1,8 +1,8 @@
 /**
  * Constitutional Checker Tests
- * 
+ *
  * Tests for Article I-IX compliance checking.
- * 
+ *
  * Requirement: IMP-6.2-005-01
  */
 
@@ -23,7 +23,9 @@ describe('ConstitutionalChecker', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -74,7 +76,11 @@ describe('ConstitutionalChecker', () => {
   describe('checkFile', () => {
     it('should check a simple compliant file', async () => {
       const filePath = path.join(testDir, 'simple.js');
-      await fs.writeFile(filePath, '/** Requirement: REQ-001 */\nfunction simple() { return "hello"; }', 'utf-8');
+      await fs.writeFile(
+        filePath,
+        '/** Requirement: REQ-001 */\nfunction simple() { return "hello"; }',
+        'utf-8'
+      );
 
       const result = await checker.checkFile(filePath);
 
@@ -97,7 +103,11 @@ describe('ConstitutionalChecker', () => {
 
     it('should detect Article VIII violation (Factory pattern)', async () => {
       const filePath = path.join(testDir, 'factory.js');
-      await fs.writeFile(filePath, '// REQ-001\nclass Service implements ServiceFactory {}', 'utf-8');
+      await fs.writeFile(
+        filePath,
+        '// REQ-001\nclass Service implements ServiceFactory {}',
+        'utf-8'
+      );
 
       const result = await checker.checkFile(filePath);
 
@@ -167,16 +177,16 @@ describe('ConstitutionalChecker', () => {
       await fs.writeFile(testFile, 'test("x", () => {})', 'utf-8');
 
       const filePath = path.join(testDir, 'code.js');
-      
+
       const violation = await checker.checkArticleIII(filePath);
       expect(violation).toBeNull();
     });
 
     it('should fail when test file is missing', async () => {
       const filePath = path.join(testDir, 'no-test.js');
-      
+
       const violation = await checker.checkArticleIII(filePath);
-      
+
       expect(violation).not.toBeNull();
       expect(violation.article).toBe('III');
     });
@@ -202,10 +212,11 @@ describe('ConstitutionalChecker', () => {
     });
 
     it('should detect too many dependencies', () => {
-      const manyRequires = Array(15).fill(null)
+      const manyRequires = Array(15)
+        .fill(null)
         .map((_, i) => 'const m' + i + ' = require("module' + i + '");')
         .join('\n');
-      
+
       const violations = checker.checkArticleVII(manyRequires, 'test.js');
       expect(violations.length).toBeGreaterThan(0);
     });
@@ -284,7 +295,7 @@ describe('ConstitutionalChecker', () => {
   describe('shouldBlockMerge', () => {
     it('should not block when no violations', () => {
       const result = {
-        results: [{ violations: [] }]
+        results: [{ violations: [] }],
       };
 
       const decision = checker.shouldBlockMerge(result);
@@ -294,12 +305,16 @@ describe('ConstitutionalChecker', () => {
 
     it('should not block for low severity violations', () => {
       const result = {
-        results: [{
-          violations: [{
-            article: 'IX',
-            severity: SEVERITY.LOW
-          }]
-        }]
+        results: [
+          {
+            violations: [
+              {
+                article: 'IX',
+                severity: SEVERITY.LOW,
+              },
+            ],
+          },
+        ],
       };
 
       const decision = checker.shouldBlockMerge(result);
@@ -309,12 +324,16 @@ describe('ConstitutionalChecker', () => {
 
     it('should block for critical violations', () => {
       const result = {
-        results: [{
-          violations: [{
-            article: 'I',
-            severity: SEVERITY.CRITICAL
-          }]
-        }]
+        results: [
+          {
+            violations: [
+              {
+                article: 'I',
+                severity: SEVERITY.CRITICAL,
+              },
+            ],
+          },
+        ],
       };
 
       const decision = checker.shouldBlockMerge(result);
@@ -324,12 +343,16 @@ describe('ConstitutionalChecker', () => {
 
     it('should trigger Phase -1 for Article VII high severity', () => {
       const result = {
-        results: [{
-          violations: [{
-            article: 'VII',
-            severity: SEVERITY.HIGH
-          }]
-        }]
+        results: [
+          {
+            violations: [
+              {
+                article: 'VII',
+                severity: SEVERITY.HIGH,
+              },
+            ],
+          },
+        ],
       };
 
       const decision = checker.shouldBlockMerge(result);
@@ -339,12 +362,16 @@ describe('ConstitutionalChecker', () => {
 
     it('should trigger Phase -1 for Article VIII violations', () => {
       const result = {
-        results: [{
-          violations: [{
-            article: 'VIII',
-            severity: SEVERITY.HIGH
-          }]
-        }]
+        results: [
+          {
+            violations: [
+              {
+                article: 'VIII',
+                severity: SEVERITY.HIGH,
+              },
+            ],
+          },
+        ],
       };
 
       const decision = checker.shouldBlockMerge(result);
@@ -416,7 +443,7 @@ describe('ConstitutionalChecker', () => {
       const results = {
         results: [],
         summary: { totalViolations: 0 },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
 
       await checker.saveResults('feature-1', results);
@@ -432,7 +459,7 @@ describe('ConstitutionalChecker', () => {
       const results = {
         results: [],
         summary: { totalViolations: 5 },
-        checkedAt: new Date().toISOString()
+        checkedAt: new Date().toISOString(),
       };
 
       await checker.saveResults('feature-2', results);

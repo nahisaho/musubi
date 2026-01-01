@@ -161,13 +161,13 @@ Fagan Inspection is a formal, structured review process designed to identify def
 
 #### 4.1.2 Inspection Roles
 
-| Role | Responsibility |
-|------|---------------|
+| Role          | Responsibility                                                    |
+| ------------- | ----------------------------------------------------------------- |
 | **Moderator** | Facilitates inspection, ensures process is followed, manages time |
-| **Author** | Created the document, answers questions, performs rework |
-| **Reader** | Paraphrases requirements during meeting |
-| **Recorder** | Documents all defects, issues, and decisions |
-| **Inspector** | Reviews document, identifies defects |
+| **Author**    | Created the document, answers questions, performs rework          |
+| **Reader**    | Paraphrases requirements during meeting                           |
+| **Recorder**  | Documents all defects, issues, and decisions                      |
+| **Inspector** | Reviews document, identifies defects                              |
 
 ### 4.2 Perspective-Based Reading (PBR)
 
@@ -279,14 +279,14 @@ PBR assigns specific perspectives to reviewers to ensure comprehensive coverage.
 
 ### 5.1 Defect Types
 
-| Type | Description | Example |
-|------|-------------|---------|
-| **Missing** | Required information is absent | No error handling specified |
-| **Incorrect** | Information is factually wrong | Contradicts business rules |
-| **Ambiguous** | Information can be interpreted multiple ways | "System shall respond quickly" |
-| **Conflicting** | Contradicts another requirement | REQ-001 vs REQ-023 |
-| **Redundant** | Unnecessarily duplicated | Same requirement in multiple places |
-| **Untestable** | Cannot be verified | "System shall be user-friendly" |
+| Type            | Description                                  | Example                             |
+| --------------- | -------------------------------------------- | ----------------------------------- |
+| **Missing**     | Required information is absent               | No error handling specified         |
+| **Incorrect**   | Information is factually wrong               | Contradicts business rules          |
+| **Ambiguous**   | Information can be interpreted multiple ways | "System shall respond quickly"      |
+| **Conflicting** | Contradicts another requirement              | REQ-001 vs REQ-023                  |
+| **Redundant**   | Unnecessarily duplicated                     | Same requirement in multiple places |
+| **Untestable**  | Cannot be verified                           | "System shall be user-friendly"     |
 
 ### 5.2 Severity Levels
 
@@ -335,6 +335,7 @@ PBR assigns specific perspectives to reviewers to ensure comprehensive coverage.
 When reviewing EARS-formatted requirements:
 
 ### 6.1 Ubiquitous Requirements
+
 ```
 Pattern: "The <system> shall <action>."
 Checklist:
@@ -345,6 +346,7 @@ Checklist:
 ```
 
 ### 6.2 Event-Driven Requirements
+
 ```
 Pattern: "When <trigger>, the <system> shall <action>."
 Checklist:
@@ -355,6 +357,7 @@ Checklist:
 ```
 
 ### 6.3 State-Driven Requirements
+
 ```
 Pattern: "While <state>, the <system> shall <action>."
 Checklist:
@@ -365,6 +368,7 @@ Checklist:
 ```
 
 ### 6.4 Unwanted Behavior Requirements
+
 ```
 Pattern: "If <condition>, then the <system> shall <action>."
 Checklist:
@@ -375,6 +379,7 @@ Checklist:
 ```
 
 ### 6.5 Optional Feature Requirements
+
 ```
 Pattern: "Where <feature enabled>, the <system> shall <action>."
 Checklist:
@@ -469,6 +474,7 @@ d) 修正済みドキュメント出力
 # Requirements Review - Defect Log
 
 ## Document Information
+
 - **Document**: [Document Name]
 - **Version**: [Version]
 - **Review Date**: [Date]
@@ -478,7 +484,7 @@ d) 修正済みドキュメント出力
 ## Defect Summary
 
 | Severity | Count | Resolved | Remaining |
-|----------|-------|----------|-----------|
+| -------- | ----- | -------- | --------- |
 | Critical | X     | X        | X         |
 | Major    | X     | X        | X         |
 | Minor    | X     | X        | X         |
@@ -487,6 +493,7 @@ d) 修正済みドキュメント出力
 ## Detailed Defects
 
 ### DEF-001: [Title]
+
 - **Requirement ID**: REQ-XXX
 - **Section**: X.X.X
 - **Severity**: Critical/Major/Minor
@@ -498,6 +505,7 @@ d) 修正済みドキュメント出力
 - **Status**: Open/Resolved
 
 ### DEF-002: [Title]
+
 ...
 ```
 
@@ -507,6 +515,7 @@ d) 修正済みドキュメント出力
 # Perspective-Based Requirements Review Report
 
 ## Document: [Name]
+
 ## Review Date: [Date]
 
 ---
@@ -514,11 +523,13 @@ d) 修正済みドキュメント出力
 ## 👤 User Perspective Review
 
 ### Findings
-| ID | Issue | Severity | Recommendation |
-|----|-------|----------|----------------|
-| U-1 | ... | ... | ... |
+
+| ID  | Issue | Severity | Recommendation |
+| --- | ----- | -------- | -------------- |
+| U-1 | ...   | ...      | ...            |
 
 ### Coverage Assessment
+
 - User scenarios: X% covered
 - User tasks: X% complete
 - Error handling from user view: X/X items
@@ -528,11 +539,13 @@ d) 修正済みドキュメント出力
 ## 💻 Developer Perspective Review
 
 ### Findings
-| ID | Issue | Severity | Recommendation |
-|----|-------|----------|----------------|
-| D-1 | ... | ... | ... |
+
+| ID  | Issue | Severity | Recommendation |
+| --- | ----- | -------- | -------------- |
+| D-1 | ...   | ...      | ...            |
 
 ### Technical Feasibility
+
 - Implementation clarity: X/10
 - Edge cases specified: X%
 - API specifications: Complete/Partial/Missing
@@ -542,11 +555,13 @@ d) 修正済みドキュメント出力
 ## 🧪 Tester Perspective Review
 
 ### Findings
-| ID | Issue | Severity | Recommendation |
-|----|-------|----------|----------------|
-| T-1 | ... | ... | ... |
+
+| ID  | Issue | Severity | Recommendation |
+| --- | ----- | -------- | -------------- |
+| T-1 | ...   | ...      | ...            |
 
 ### Testability Assessment
+
 - Testable requirements: X%
 - Acceptance criteria quality: X/10
 - Test derivability: High/Medium/Low
@@ -556,11 +571,13 @@ d) 修正済みドキュメント出力
 ## 🏗️ Architect Perspective Review
 
 ### Findings
-| ID | Issue | Severity | Recommendation |
-|----|-------|----------|----------------|
-| A-1 | ... | ... | ... |
+
+| ID  | Issue | Severity | Recommendation |
+| --- | ----- | -------- | -------------- |
+| A-1 | ...   | ...      | ...            |
 
 ### Architectural Alignment
+
 - System boundary clarity: X/10
 - NFR completeness: X%
 - Integration requirements: Complete/Partial/Missing
@@ -570,11 +587,13 @@ d) 修正済みドキュメント出力
 ## 🔒 Security Perspective Review
 
 ### Findings
-| ID | Issue | Severity | Recommendation |
-|----|-------|----------|----------------|
-| S-1 | ... | ... | ... |
+
+| ID  | Issue | Severity | Recommendation |
+| --- | ----- | -------- | -------------- |
+| S-1 | ...   | ...      | ...            |
 
 ### Security Assessment
+
 - Authentication requirements: Complete/Partial/Missing
 - Authorization requirements: Complete/Partial/Missing
 - Data protection: Adequate/Insufficient
@@ -587,12 +606,14 @@ d) 修正済みドキュメント出力
 # Requirements Review Metrics
 
 ## Process Metrics
+
 - **Preparation Time**: X hours
 - **Meeting Time**: X hours
 - **Documents Reviewed**: X pages/sections
 - **Review Rate**: X requirements/hour
 
 ## Defect Metrics
+
 - **Total Defects Found**: X
 - **Defect Density**: X defects/requirement
 - **Defect Distribution**:
@@ -604,6 +625,7 @@ d) 修正済みドキュメント出力
   - Untestable: X%
 
 ## Perspective Coverage
+
 - User: X%
 - Developer: X%
 - Tester: X%
@@ -611,6 +633,7 @@ d) 修正済みドキュメント出力
 - Security: X%
 
 ## Quality Gate Result
+
 - [ ] All Critical defects resolved
 - [ ] Major defects < threshold (X%)
 - [ ] Testability score ≥ X
@@ -669,7 +692,7 @@ stages:
   requirements:
     skills: [requirements-analyst]
     quality-gate: requirements-review
-  
+
   requirements-review:
     skills: [requirements-reviewer]
     criteria:
@@ -830,14 +853,16 @@ Requirements Reviewer AIはレビュー結果をユーザーに提示し、ユ�
 ## 📋 Requirements Review Results
 
 ### Summary
-| Severity | Count | Status |
-|----------|-------|--------|
-| 🔴 Critical | 2 | Must fix before design |
-| 🟠 Major | 5 | Should fix before design |
-| 🟡 Minor | 3 | Should fix, can proceed |
-| 🟢 Suggestion | 4 | Consider for improvement |
+
+| Severity      | Count | Status                   |
+| ------------- | ----- | ------------------------ |
+| 🔴 Critical   | 2     | Must fix before design   |
+| 🟠 Major      | 5     | Should fix before design |
+| 🟡 Minor      | 3     | Should fix, can proceed  |
+| 🟢 Suggestion | 4     | Consider for improvement |
 
 ### Quality Gate: ❌ FAILED
+
 - Critical issues must be resolved before proceeding
 
 ---
@@ -845,20 +870,24 @@ Requirements Reviewer AIはレビュー結果をユーザーに提示し、ユ�
 ### 🔴 Critical Issues
 
 #### DEF-001: Missing Performance Requirement
+
 **Location**: Section 3.2, Line 45
 **Type**: Missing
 **Requirement**: REQ-FUNC-012
 
 **Current Text:**
+
 > "The system shall process user requests."
 
 **Issue:**
 Performance criteria not specified. Cannot verify implementation meets expectations.
 
 **Recommendation:**
+
 > "The system shall process user requests within 500ms for 95th percentile under normal load (up to 500 concurrent users)."
 
 **Your Decision:**
+
 - [ ] Accept recommendation
 - [ ] Modify (specify your changes)
 - [ ] Reject (provide reason)
@@ -943,27 +972,27 @@ console.log(correctionResult.updatedQualityGate);
 
 ### Changes Applied
 
-| Defect ID | Action | Original | Corrected |
-|-----------|--------|----------|-----------|
-| DEF-001 | Accepted | "process user requests" | "process within 500ms..." |
-| DEF-002 | Modified | "shall be fast" | "Custom: within 200ms..." |
-| DEF-004 | Accepted | (missing) | Added REQ-SEC-015 |
+| Defect ID | Action   | Original                | Corrected                 |
+| --------- | -------- | ----------------------- | ------------------------- |
+| DEF-001   | Accepted | "process user requests" | "process within 500ms..." |
+| DEF-002   | Modified | "shall be fast"         | "Custom: within 200ms..." |
+| DEF-004   | Accepted | (missing)               | Added REQ-SEC-015         |
 
 ### Rejected Findings
 
-| Defect ID | Reason |
-|-----------|--------|
-| DEF-003 | Intentionally vague for flexibility |
-| DEF-005 | Will be addressed in Phase 2 |
+| Defect ID | Reason                              |
+| --------- | ----------------------------------- |
+| DEF-003   | Intentionally vague for flexibility |
+| DEF-005   | Will be addressed in Phase 2        |
 
 ### Updated Quality Gate
 
-| Criterion | Before | After |
-|-----------|--------|-------|
-| Critical Issues | 2 | 0 ✅ |
-| Major Issues | 5 | 1 |
-| EARS Compliance | 45% | 85% |
-| Testability Score | 60% | 90% |
+| Criterion         | Before | After |
+| ----------------- | ------ | ----- |
+| Critical Issues   | 2      | 0 ✅  |
+| Major Issues      | 5      | 1     |
+| EARS Compliance   | 45%    | 85%   |
+| Testability Score | 60%    | 90%   |
 
 **Status**: ✅ PASSED (Ready for Design Phase)
 
@@ -991,7 +1020,7 @@ This skill ensures compliance with Article 3 (Quality Assurance) of the MUSUBI C
 
 ## Version History
 
-| Version | Date | Changes |
-|---------|------|---------|
-| 1.0.0 | 2025-12-27 | Initial release with Fagan Inspection and PBR support |
-| 1.1.0 | 2025-12-27 | Added interactive review and correction workflow |
+| Version | Date       | Changes                                               |
+| ------- | ---------- | ----------------------------------------------------- |
+| 1.0.0   | 2025-12-27 | Initial release with Fagan Inspection and PBR support |
+| 1.1.0   | 2025-12-27 | Added interactive review and correction workflow      |

@@ -1,10 +1,10 @@
 /**
  * Experiment Report Generator
- * 
+ *
  * Automatically generates experiment reports from test results.
- * 
+ *
  * Requirement: IMP-6.2-006-01
- * 
+ *
  * @module enterprise/experiment-report
  */
 
@@ -17,7 +17,7 @@ const path = require('path');
 const REPORT_FORMAT = {
   MARKDOWN: 'markdown',
   HTML: 'html',
-  JSON: 'json'
+  JSON: 'json',
 };
 
 /**
@@ -27,7 +27,7 @@ const TEST_STATUS = {
   PASSED: 'passed',
   FAILED: 'failed',
   SKIPPED: 'skipped',
-  PENDING: 'pending'
+  PENDING: 'pending',
 };
 
 /**
@@ -45,7 +45,7 @@ class ExperimentReportGenerator {
       includeMetrics: config.includeMetrics !== false,
       includeObservations: config.includeObservations !== false,
       includeCodeSnippets: config.includeCodeSnippets !== false,
-      ...config
+      ...config,
     };
   }
 
@@ -66,23 +66,27 @@ class ExperimentReportGenerator {
         version: options.version || '1.0.0',
         generatedAt: new Date().toISOString(),
         author: options.author || 'MUSUBI SDD',
-        environment: this.getEnvironment()
+        environment: this.getEnvironment(),
       },
       summary: reportData.summary,
       testResults: reportData.tests,
       metrics,
       observations,
-      conclusions: options.conclusions || []
+      conclusions: options.conclusions || [],
     };
 
     const formatted = this.formatReport(report, options.format || this.config.format);
-    const filePath = await this.saveReport(formatted, report.metadata, options.format || this.config.format);
+    const filePath = await this.saveReport(
+      formatted,
+      report.metadata,
+      options.format || this.config.format
+    );
 
     return {
       report,
       formatted,
       filePath,
-      format: options.format || this.config.format
+      format: options.format || this.config.format,
     };
   }
 
@@ -108,7 +112,7 @@ class ExperimentReportGenerator {
             suite: suite.name || path.basename(suite.testFilePath || ''),
             status,
             duration: test.duration || 0,
-            failureMessages: test.failureMessages || []
+            failureMessages: test.failureMessages || [],
           });
 
           if (status === TEST_STATUS.PASSED) passed++;
@@ -128,7 +132,7 @@ class ExperimentReportGenerator {
           suite: test.suite || 'Default',
           status,
           duration: test.duration || 0,
-          failureMessages: test.errors || []
+          failureMessages: test.errors || [],
         });
 
         if (status === TEST_STATUS.PASSED) passed++;
@@ -146,7 +150,7 @@ class ExperimentReportGenerator {
       skipped,
       pending,
       passRate: tests.length > 0 ? ((passed / tests.length) * 100).toFixed(2) + '%' : '0%',
-      duration: testResults.duration || tests.reduce((sum, t) => sum + t.duration, 0)
+      duration: testResults.duration || tests.reduce((sum, t) => sum + t.duration, 0),
     };
 
     return { tests, summary };
@@ -175,7 +179,7 @@ class ExperimentReportGenerator {
     const metrics = {
       performance: {},
       coverage: {},
-      quality: {}
+      quality: {},
     };
 
     // Performance metrics
@@ -190,7 +194,9 @@ class ExperimentReportGenerator {
         .filter(d => d > 0);
 
       if (durations.length > 0) {
-        metrics.performance.avgTestDuration = (durations.reduce((a, b) => a + b, 0) / durations.length).toFixed(2);
+        metrics.performance.avgTestDuration = (
+          durations.reduce((a, b) => a + b, 0) / durations.length
+        ).toFixed(2);
         metrics.performance.maxTestDuration = Math.max(...durations);
         metrics.performance.minTestDuration = Math.min(...durations);
       }
@@ -203,16 +209,15 @@ class ExperimentReportGenerator {
         lines: coverage.lines || coverage.line || 'N/A',
         branches: coverage.branches || coverage.branch || 'N/A',
         functions: coverage.functions || coverage.function || 'N/A',
-        statements: coverage.statements || coverage.statement || 'N/A'
+        statements: coverage.statements || coverage.statement || 'N/A',
       };
     }
 
     // Quality metrics
     const summary = this.parseTestResults(testResults).summary;
     metrics.quality.passRate = summary.passRate;
-    metrics.quality.failureRate = summary.total > 0 
-      ? ((summary.failed / summary.total) * 100).toFixed(2) + '%' 
-      : '0%';
+    metrics.quality.failureRate =
+      summary.total > 0 ? ((summary.failed / summary.total) * 100).toFixed(2) + '%' : '0%';
 
     return metrics;
   }
@@ -226,7 +231,7 @@ class ExperimentReportGenerator {
       node: process.version,
       platform: process.platform,
       arch: process.arch,
-      cwd: process.cwd()
+      cwd: process.cwd(),
     };
   }
 
@@ -433,34 +438,50 @@ class ExperimentReportGenerator {
     <tr><td>Duration</td><td>${this.formatDuration(summary.duration)}</td></tr>
   </table>
 
-  ${testResults.length > 0 ? `
+  ${
+    testResults.length > 0
+      ? `
   <h2>Test Results</h2>
   <table>
     <tr><th>Suite</th><th>Test</th><th>Status</th><th>Duration</th></tr>
-    ${testResults.map(t => `
+    ${testResults
+      .map(
+        t => `
     <tr>
       <td>${t.suite}</td>
       <td>${t.name}</td>
       <td class="${t.status}">${t.status}</td>
       <td>${t.duration}ms</td>
     </tr>
-    `).join('')}
+    `
+      )
+      .join('')}
   </table>
-  ` : ''}
+  `
+      : ''
+  }
 
-  ${observations.length > 0 ? `
+  ${
+    observations.length > 0
+      ? `
   <h2>Observations</h2>
   <ul>
     ${observations.map(o => `<li>${o}</li>`).join('')}
   </ul>
-  ` : ''}
+  `
+      : ''
+  }
 
-  ${conclusions.length > 0 ? `
+  ${
+    conclusions.length > 0
+      ? `
   <h2>Conclusions</h2>
   <ul>
     ${conclusions.map(c => `<li>${c}</li>`).join('')}
   </ul>
-  ` : ''}
+  `
+      : ''
+  }
 
   <hr>
   <p class="meta"><em>Generated by MUSUBI SDD Experiment Report Generator</em></p>
@@ -479,8 +500,8 @@ class ExperimentReportGenerator {
     await this.ensureOutputDir();
 
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const extension = format === REPORT_FORMAT.HTML ? 'html' : 
-                      format === REPORT_FORMAT.JSON ? 'json' : 'md';
+    const extension =
+      format === REPORT_FORMAT.HTML ? 'html' : format === REPORT_FORMAT.JSON ? 'json' : 'md';
     const fileName = `experiment-${timestamp}.${extension}`;
     const filePath = path.join(this.config.outputDir, fileName);
 
@@ -503,11 +524,16 @@ class ExperimentReportGenerator {
    */
   getStatusIcon(status) {
     switch (status) {
-      case TEST_STATUS.PASSED: return '✅';
-      case TEST_STATUS.FAILED: return '❌';
-      case TEST_STATUS.SKIPPED: return '⏭️';
-      case TEST_STATUS.PENDING: return '⏳';
-      default: return '❓';
+      case TEST_STATUS.PASSED:
+        return '✅';
+      case TEST_STATUS.FAILED:
+        return '❌';
+      case TEST_STATUS.SKIPPED:
+        return '⏭️';
+      case TEST_STATUS.PENDING:
+        return '⏳';
+      default:
+        return '❓';
     }
   }
 
@@ -569,5 +595,5 @@ module.exports = {
   ExperimentReportGenerator,
   createExperimentReportGenerator,
   REPORT_FORMAT,
-  TEST_STATUS
+  TEST_STATUS,
 };

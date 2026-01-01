@@ -1,8 +1,8 @@
 /**
  * MatrixStorage Implementation
- * 
+ *
  * YAML-based persistence for traceability matrices.
- * 
+ *
  * Requirement: IMP-6.2-004-03
  * Design: ADR-6.2-002
  */
@@ -15,12 +15,12 @@ const yaml = require('yaml');
  * Default configuration
  */
 const DEFAULT_CONFIG = {
-  storageDir: 'storage/traceability'
+  storageDir: 'storage/traceability',
 };
 
 /**
  * MatrixStorage
- * 
+ *
  * Persists traceability matrices as YAML files.
  */
 class MatrixStorage {
@@ -46,11 +46,11 @@ class MatrixStorage {
 
     const yamlContent = yaml.stringify(matrix, {
       indent: 2,
-      lineWidth: 0
+      lineWidth: 0,
     });
 
     await fs.writeFile(filePath, yamlContent, 'utf-8');
-    
+
     return filePath;
   }
 
@@ -62,7 +62,7 @@ class MatrixStorage {
   async load(filename) {
     try {
       let filePath;
-      
+
       if (filename.endsWith('.yaml') || filename.endsWith('.yml')) {
         filePath = path.join(this.config.storageDir, filename);
       } else {
@@ -74,7 +74,7 @@ class MatrixStorage {
 
       await fs.access(filePath);
       const content = await fs.readFile(filePath, 'utf-8');
-      
+
       return yaml.parse(content);
     } catch {
       return null;
@@ -88,15 +88,15 @@ class MatrixStorage {
    */
   async loadLatest(featureId) {
     const files = await this.list(featureId);
-    
+
     if (files.length === 0) return null;
 
     // Sort by date (newest first)
     files.sort().reverse();
-    
+
     const latestFile = files[0];
     const filePath = path.join(this.config.storageDir, latestFile);
-    
+
     const content = await fs.readFile(filePath, 'utf-8');
     return yaml.parse(content);
   }
@@ -109,9 +109,7 @@ class MatrixStorage {
   async list(prefix) {
     try {
       const files = await fs.readdir(this.config.storageDir);
-      const yamlFiles = files.filter(f => 
-        f.endsWith('.yaml') || f.endsWith('.yml')
-      );
+      const yamlFiles = files.filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
 
       if (prefix) {
         return yamlFiles.filter(f => f.startsWith(prefix));
@@ -145,7 +143,7 @@ class MatrixStorage {
     // Get all requirement IDs
     const allReqIds = new Set([
       ...Object.keys(matrix1.requirements),
-      ...Object.keys(matrix2.requirements)
+      ...Object.keys(matrix2.requirements),
     ]);
 
     for (const reqId of allReqIds) {
@@ -159,7 +157,7 @@ class MatrixStorage {
           design: this.mergeLinks(link1.design, link2.design),
           code: this.mergeLinks(link1.code, link2.code),
           tests: this.mergeLinks(link1.tests, link2.tests),
-          commits: this.mergeLinks(link1.commits, link2.commits)
+          commits: this.mergeLinks(link1.commits, link2.commits),
         };
       } else {
         requirements[reqId] = link1 || link2;
@@ -170,7 +168,7 @@ class MatrixStorage {
       version: matrix2.version,
       generatedAt: new Date().toISOString(),
       requirements,
-      summary: this.calculateSummary(requirements)
+      summary: this.calculateSummary(requirements),
     };
   }
 
@@ -182,7 +180,7 @@ class MatrixStorage {
    */
   mergeLinks(links1, links2) {
     const merged = [...links1];
-    
+
     for (const link of links2) {
       const exists = merged.some(l => {
         if (l.path && link.path) {
@@ -219,7 +217,7 @@ class MatrixStorage {
         withCode: 0,
         withTests: 0,
         gaps: 0,
-        coveragePercentage: 0
+        coveragePercentage: 0,
       };
     }
 
@@ -249,8 +247,8 @@ class MatrixStorage {
     }
 
     // Calculate coverage as percentage of requirements with full coverage
-    const fullyLinked = links.filter(l => 
-      l.design.length > 0 && l.code.length > 0 && l.tests.length > 0
+    const fullyLinked = links.filter(
+      l => l.design.length > 0 && l.code.length > 0 && l.tests.length > 0
     ).length;
 
     return {
@@ -260,7 +258,7 @@ class MatrixStorage {
       withCode,
       withTests,
       gaps: gapCount,
-      coveragePercentage: Math.round((fullyLinked / total) * 100)
+      coveragePercentage: Math.round((fullyLinked / total) * 100),
     };
   }
 

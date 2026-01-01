@@ -1,6 +1,6 @@
 /**
  * Constitutional Module
- * 
+ *
  * Requirement: IMP-6.2-005, IMP-6.2-007
  */
 
@@ -18,5 +18,5 @@ module.exports = {
   SEVERITY,
   GATE_STATUS,
   OUTPUT_FORMAT,
-  EXIT_CODE
+  EXIT_CODE,
 };

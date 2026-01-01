@@ -1,8 +1,8 @@
 /**
  * CI Reporter
- * 
+ *
  * Generates CI-friendly reports for Constitutional checks.
- * 
+ *
  * Requirement: IMP-6.2-005-03
  * Design: Section 5.4
  */
@@ -16,7 +16,7 @@ const OUTPUT_FORMAT = {
   TEXT: 'text',
   JSON: 'json',
   GITHUB: 'github',
-  JUNIT: 'junit'
+  JUNIT: 'junit',
 };
 
 /**
@@ -26,12 +26,12 @@ const EXIT_CODE = {
   SUCCESS: 0,
   WARNINGS: 0,
   FAILURES: 1,
-  ERROR: 2
+  ERROR: 2,
 };
 
 /**
  * CIReporter
- * 
+ *
  * Reports Constitutional check results for CI/CD systems.
  */
 class CIReporter {
@@ -42,7 +42,7 @@ class CIReporter {
     this.config = {
       format: OUTPUT_FORMAT.TEXT,
       failOnWarning: false,
-      ...config
+      ...config,
     };
     this.checker = new ConstitutionalChecker(config.checkerConfig);
   }
@@ -55,7 +55,7 @@ class CIReporter {
    */
   async runAndReport(filePaths, options = {}) {
     const format = options.format || this.config.format;
-    
+
     // Run checks
     const results = await this.checker.checkFiles(filePaths);
     const blockDecision = this.checker.shouldBlockMerge(results);
@@ -84,7 +84,7 @@ class CIReporter {
       exitCode,
       summary: results.summary,
       blockDecision,
-      format
+      format,
     };
   }
 
@@ -156,29 +156,33 @@ class CIReporter {
    * @returns {string} JSON report
    */
   formatJSON(results, blockDecision) {
-    return JSON.stringify({
-      version: '1.0.0',
-      timestamp: new Date().toISOString(),
-      summary: {
-        filesChecked: results.summary.filesChecked,
-        filesPassed: results.summary.filesPassed,
-        filesFailed: results.summary.filesFailed,
-        totalViolations: results.summary.totalViolations,
-        violationsByArticle: results.summary.violationsByArticle
+    return JSON.stringify(
+      {
+        version: '1.0.0',
+        timestamp: new Date().toISOString(),
+        summary: {
+          filesChecked: results.summary.filesChecked,
+          filesPassed: results.summary.filesPassed,
+          filesFailed: results.summary.filesFailed,
+          totalViolations: results.summary.totalViolations,
+          violationsByArticle: results.summary.violationsByArticle,
+        },
+        status: {
+          blocked: blockDecision.shouldBlock,
+          requiresPhaseMinusOne: blockDecision.requiresPhaseMinusOne,
+          reason: blockDecision.reason,
+        },
+        violations: results.results.flatMap(r =>
+          r.violations.map(v => ({
+            file: r.filePath,
+            ...v,
+          }))
+        ),
+        exitCode: this.determineExitCode(results, blockDecision),
       },
-      status: {
-        blocked: blockDecision.shouldBlock,
-        requiresPhaseMinusOne: blockDecision.requiresPhaseMinusOne,
-        reason: blockDecision.reason
-      },
-      violations: results.results.flatMap(r => 
-        r.violations.map(v => ({
-          file: r.filePath,
-          ...v
-        }))
-      ),
-      exitCode: this.determineExitCode(results, blockDecision)
-    }, null, 2);
+      null,
+      2
+    );
   }
 
   /**
@@ -194,7 +198,7 @@ class CIReporter {
     lines.push(`::group::Constitutional Compliance Summary`);
     lines.push(`Files Checked: ${results.summary.filesChecked}`);
     lines.push(`Violations: ${results.summary.totalViolations}`);
-    
+
     if (blockDecision.shouldBlock) {
       lines.push(`Status: BLOCKED`);
     } else {
@@ -205,10 +209,9 @@ class CIReporter {
     // Violations as annotations
     for (const result of results.results) {
       for (const v of result.violations) {
-        const command = v.severity === SEVERITY.CRITICAL || v.severity === SEVERITY.HIGH 
-          ? 'error' 
-          : 'warning';
-        
+        const command =
+          v.severity === SEVERITY.CRITICAL || v.severity === SEVERITY.HIGH ? 'error' : 'warning';
+
         const line = v.line || 1;
         const file = result.filePath;
         const title = `Article ${v.article}: ${v.articleName}`;
@@ -239,12 +242,16 @@ class CIReporter {
     const lines = [];
 
     lines.push('<?xml version="1.0" encoding="UTF-8"?>');
-    lines.push(`<testsuites name="Constitutional Compliance" tests="${results.summary.filesChecked}" failures="${results.summary.filesFailed}" errors="0">`);
+    lines.push(
+      `<testsuites name="Constitutional Compliance" tests="${results.summary.filesChecked}" failures="${results.summary.filesFailed}" errors="0">`
+    );
 
     for (const result of results.results) {
       const testName = result.filePath.replace(/[<>&'"]/g, '_');
-      
-      lines.push(`  <testsuite name="${testName}" tests="1" failures="${result.violations.length > 0 ? 1 : 0}" errors="0">`);
+
+      lines.push(
+        `  <testsuite name="${testName}" tests="1" failures="${result.violations.length > 0 ? 1 : 0}" errors="0">`
+      );
       lines.push(`    <testcase name="constitutional-check" classname="${testName}">`);
 
       if (result.violations.length > 0) {
@@ -252,7 +259,7 @@ class CIReporter {
           const type = `Article${v.article}Violation`;
           const message = this.escapeXml(v.message);
           const details = this.escapeXml(`${v.articleName}: ${v.suggestion}`);
-          
+
           lines.push(`      <failure type="${type}" message="${message}">`);
           lines.push(`        ${details}`);
           if (v.line) {
@@ -331,8 +338,8 @@ class CIReporter {
   }
 }
 
-module.exports = { 
-  CIReporter, 
-  OUTPUT_FORMAT, 
-  EXIT_CODE 
+module.exports = {
+  CIReporter,
+  OUTPUT_FORMAT,
+  EXIT_CODE,
 };

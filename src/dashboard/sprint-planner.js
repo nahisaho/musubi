@@ -1,8 +1,8 @@
 /**
  * SprintPlanner Implementation
- * 
+ *
  * Generates sprint planning templates based on tasks.
- * 
+ *
  * Requirement: IMP-6.2-003-03
  * Design: Section 4.3
  */
@@ -16,7 +16,7 @@ const path = require('path');
 const DEFAULT_CONFIG = {
   storageDir: 'storage/sprints',
   defaultSprintDuration: 14, // days
-  defaultVelocity: 20 // story points
+  defaultVelocity: 20, // story points
 };
 
 /**
@@ -26,12 +26,12 @@ const PRIORITY = {
   CRITICAL: 'critical',
   HIGH: 'high',
   MEDIUM: 'medium',
-  LOW: 'low'
+  LOW: 'low',
 };
 
 /**
  * SprintPlanner
- * 
+ *
  * Creates and manages sprint plans.
  */
 class SprintPlanner {
@@ -49,7 +49,7 @@ class SprintPlanner {
    */
   async createSprint(options) {
     const sprintId = options.sprintId || `SPRINT-${Date.now()}`;
-    
+
     const sprint = {
       id: sprintId,
       name: options.name || `Sprint ${sprintId}`,
@@ -62,7 +62,7 @@ class SprintPlanner {
       tasks: [],
       status: 'planning',
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
 
     await this.saveSprint(sprint);
@@ -94,7 +94,7 @@ class SprintPlanner {
         status: 'todo',
         dependencies: task.dependencies || [],
         acceptanceCriteria: task.acceptanceCriteria || [],
-        addedAt: new Date().toISOString()
+        addedAt: new Date().toISOString(),
       };
 
       sprint.tasks.push(sprintTask);
@@ -218,11 +218,9 @@ class SprintPlanner {
       completedPoints,
       inProgressPoints,
       remainingPoints: totalPoints - completedPoints,
-      completionPercentage: totalPoints > 0 
-        ? Math.round((completedPoints / totalPoints) * 100) 
-        : 0,
+      completionPercentage: totalPoints > 0 ? Math.round((completedPoints / totalPoints) * 100) : 0,
       velocity: sprint.velocity,
-      overCapacity: totalPoints > sprint.velocity
+      overCapacity: totalPoints > sprint.velocity,
     };
   }
 
@@ -264,16 +262,16 @@ class SprintPlanner {
     lines.push('');
 
     const priorityOrder = ['critical', 'high', 'medium', 'low'];
-    
+
     for (const priority of priorityOrder) {
       const priorityTasks = sprint.tasks.filter(t => t.priority === priority);
       if (priorityTasks.length > 0) {
         lines.push(`### ${priority.charAt(0).toUpperCase() + priority.slice(1)} Priority`);
         lines.push('');
-        
+
         for (const task of priorityTasks) {
-          const status = task.status === 'done' ? '✅' : 
-                        task.status === 'in-progress' ? '🔄' : '⬜';
+          const status =
+            task.status === 'done' ? '✅' : task.status === 'in-progress' ? '🔄' : '⬜';
           lines.push(`- ${status} **${task.id}**: ${task.title} (${task.storyPoints}pt)`);
           if (task.requirementId) {
             lines.push(`  - Requirement: ${task.requirementId}`);
@@ -296,14 +294,14 @@ class SprintPlanner {
       critical: 4,
       high: 3,
       medium: 2,
-      low: 1
+      low: 1,
     };
 
     // Sort by priority weight (descending) then by dependency count (ascending)
     return [...tasks].sort((a, b) => {
       const priorityDiff = priorityWeight[b.priority] - priorityWeight[a.priority];
       if (priorityDiff !== 0) return priorityDiff;
-      
+
       return (a.dependencies?.length || 0) - (b.dependencies?.length || 0);
     });
   }
@@ -326,7 +324,7 @@ class SprintPlanner {
    */
   async saveSprint(sprint) {
     await this.ensureStorageDir();
-    
+
     const filePath = path.join(this.config.storageDir, `${sprint.id}.json`);
     await fs.writeFile(filePath, JSON.stringify(sprint, null, 2), 'utf-8');
   }

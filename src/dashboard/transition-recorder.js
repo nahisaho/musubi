@@ -1,8 +1,8 @@
 /**
  * TransitionRecorder Implementation
- * 
+ *
  * Records stage transitions with timestamps and reviewers.
- * 
+ *
  * Requirement: IMP-6.2-003-02
  * Design: Section 4.2
  */
@@ -14,12 +14,12 @@ const path = require('path');
  * Default configuration
  */
 const DEFAULT_CONFIG = {
-  storageDir: 'storage/transitions'
+  storageDir: 'storage/transitions',
 };
 
 /**
  * TransitionRecorder
- * 
+ *
  * Records and manages workflow stage transitions.
  */
 class TransitionRecorder {
@@ -37,10 +37,10 @@ class TransitionRecorder {
    * @returns {Promise<Object>} Created transition record
    */
   async recordTransition(featureId, transition) {
-    const history = await this.getHistory(featureId) || {
+    const history = (await this.getHistory(featureId)) || {
       featureId,
       transitions: [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     const record = {
@@ -52,7 +52,7 @@ class TransitionRecorder {
       reviewResult: transition.reviewResult || null,
       artifacts: transition.artifacts || [],
       notes: transition.notes || null,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     };
 
     history.transitions.push(record);
@@ -70,10 +70,7 @@ class TransitionRecorder {
    */
   async getHistory(featureId) {
     try {
-      const filePath = path.join(
-        this.config.storageDir,
-        `${featureId}-transitions.json`
-      );
+      const filePath = path.join(this.config.storageDir, `${featureId}-transitions.json`);
       const content = await fs.readFile(filePath, 'utf-8');
       return JSON.parse(content);
     } catch {
@@ -146,7 +143,7 @@ class TransitionRecorder {
         successfulTransitions: 0,
         failedTransitions: 0,
         averageTime: 0,
-        stageTransitions: {}
+        stageTransitions: {},
       };
     }
 
@@ -174,7 +171,7 @@ class TransitionRecorder {
       successfulTransitions: successful,
       failedTransitions: failed,
       averageTime,
-      stageTransitions
+      stageTransitions,
     };
   }
 
@@ -185,11 +182,8 @@ class TransitionRecorder {
    */
   async saveHistory(featureId, history) {
     await this.ensureStorageDir();
-    
-    const filePath = path.join(
-      this.config.storageDir,
-      `${featureId}-transitions.json`
-    );
+
+    const filePath = path.join(this.config.storageDir, `${featureId}-transitions.json`);
 
     await fs.writeFile(filePath, JSON.stringify(history, null, 2), 'utf-8');
   }

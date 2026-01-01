@@ -1,10 +1,10 @@
 /**
  * Rollback Manager
- * 
+ *
  * Supports rollback to previous state with cleanup.
- * 
+ *
  * Requirement: IMP-6.2-008-02
- * 
+ *
  * @module enterprise/rollback-manager
  */
 
@@ -19,7 +19,7 @@ const ROLLBACK_LEVEL = {
   FILE: 'file',
   COMMIT: 'commit',
   STAGE: 'stage',
-  SPRINT: 'sprint'
+  SPRINT: 'sprint',
 };
 
 /**
@@ -30,7 +30,7 @@ const ROLLBACK_STATUS = {
   IN_PROGRESS: 'in-progress',
   COMPLETED: 'completed',
   FAILED: 'failed',
-  CANCELLED: 'cancelled'
+  CANCELLED: 'cancelled',
 };
 
 /**
@@ -41,7 +41,7 @@ const WORKFLOW_STAGE = {
   DESIGN: 'design',
   TASKS: 'tasks',
   IMPLEMENT: 'implement',
-  VALIDATE: 'validate'
+  VALIDATE: 'validate',
 };
 
 /**
@@ -59,7 +59,7 @@ class RollbackManager {
       maxHistory: config.maxHistory || 50,
       requireConfirmation: config.requireConfirmation !== false,
       gitEnabled: config.gitEnabled !== false,
-      ...config
+      ...config,
     };
 
     this.rollbackHistory = [];
@@ -82,7 +82,7 @@ class RollbackManager {
       description: options.description || '',
       files: [],
       gitRef: null,
-      metadata: options.metadata || {}
+      metadata: options.metadata || {},
     };
 
     // Capture current state
@@ -114,20 +114,20 @@ class RollbackManager {
       try {
         const content = await fs.readFile(filePath, 'utf-8');
         const stats = await fs.stat(filePath);
-        
+
         backups.push({
           path: filePath,
           content,
           mode: stats.mode,
           mtime: stats.mtime.toISOString(),
-          size: stats.size
+          size: stats.size,
         });
       } catch (error) {
         // File doesn't exist or can't be read
         backups.push({
           path: filePath,
           exists: false,
-          error: error.message
+          error: error.message,
         });
       }
     }
@@ -154,8 +154,9 @@ class RollbackManager {
    * @returns {Promise<Object>} Rollback result
    */
   async rollback(checkpointId, options = {}) {
-    const checkpoint = this.checkpoints.get(checkpointId) || await this.loadCheckpoint(checkpointId);
-    
+    const checkpoint =
+      this.checkpoints.get(checkpointId) || (await this.loadCheckpoint(checkpointId));
+
     if (!checkpoint) {
       throw new Error(`Checkpoint not found: ${checkpointId}`);
     }
@@ -169,7 +170,7 @@ class RollbackManager {
       level: checkpoint.level,
       beforeState: null,
       changes: [],
-      options
+      options,
     };
 
     // Require confirmation if enabled
@@ -178,7 +179,7 @@ class RollbackManager {
         ...rollback,
         status: ROLLBACK_STATUS.PENDING,
         requiresConfirmation: true,
-        checkpoint: this.summarizeCheckpoint(checkpoint)
+        checkpoint: this.summarizeCheckpoint(checkpoint),
       };
     }
 
@@ -187,9 +188,7 @@ class RollbackManager {
 
       // Capture current state before rollback
       if (checkpoint.files.length > 0) {
-        rollback.beforeState = await this.captureFiles(
-          checkpoint.files.map(f => f.path)
-        );
+        rollback.beforeState = await this.captureFiles(checkpoint.files.map(f => f.path));
       }
 
       // Perform rollback based on level
@@ -334,7 +333,7 @@ class RollbackManager {
    */
   cancelRollback(rollbackId) {
     const rollback = this.rollbackHistory.find(r => r.id === rollbackId);
-    
+
     if (!rollback) {
       throw new Error(`Rollback not found: ${rollbackId}`);
     }
@@ -402,7 +401,7 @@ class RollbackManager {
       stage: checkpoint.stage,
       description: checkpoint.description,
       fileCount: checkpoint.files.length,
-      hasGitRef: !!checkpoint.gitRef
+      hasGitRef: !!checkpoint.gitRef,
     };
   }
 
@@ -413,10 +412,10 @@ class RollbackManager {
    */
   async saveCheckpoint(checkpoint) {
     await this.ensureStorageDir();
-    
+
     const fileName = `checkpoint-${checkpoint.id}.json`;
     const filePath = path.join(this.config.storageDir, fileName);
-    
+
     await fs.writeFile(filePath, JSON.stringify(checkpoint, null, 2), 'utf-8');
     return filePath;
   }
@@ -429,7 +428,7 @@ class RollbackManager {
   async loadCheckpoint(id) {
     const fileName = `checkpoint-${id}.json`;
     const filePath = path.join(this.config.storageDir, fileName);
-    
+
     try {
       const content = await fs.readFile(filePath, 'utf-8');
       const checkpoint = JSON.parse(content);
@@ -447,10 +446,10 @@ class RollbackManager {
    */
   async saveRollback(rollback) {
     await this.ensureStorageDir();
-    
+
     const fileName = `rollback-${rollback.id}.json`;
     const filePath = path.join(this.config.storageDir, fileName);
-    
+
     await fs.writeFile(filePath, JSON.stringify(rollback, null, 2), 'utf-8');
     return filePath;
   }
@@ -479,7 +478,7 @@ class RollbackManager {
    */
   generateReport(rollbackId) {
     const rollback = this.rollbackHistory.find(r => r.id === rollbackId);
-    
+
     if (!rollback) {
       throw new Error(`Rollback not found: ${rollbackId}`);
     }
@@ -526,10 +525,10 @@ class RollbackManager {
    */
   async deleteCheckpoint(checkpointId) {
     this.checkpoints.delete(checkpointId);
-    
+
     const fileName = `checkpoint-${checkpointId}.json`;
     const filePath = path.join(this.config.storageDir, fileName);
-    
+
     try {
       await fs.unlink(filePath);
       return true;
@@ -580,5 +579,5 @@ module.exports = {
   createRollbackManager,
   ROLLBACK_LEVEL,
   ROLLBACK_STATUS,
-  WORKFLOW_STAGE
+  WORKFLOW_STAGE,
 };

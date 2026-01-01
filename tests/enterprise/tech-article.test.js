@@ -1,14 +1,14 @@
 /**
  * Tech Article Generator Tests
- * 
+ *
  * Requirement: IMP-6.2-006-02
  */
 
-const { 
-  TechArticleGenerator, 
+const {
+  TechArticleGenerator,
   createTechArticleGenerator,
   PLATFORM,
-  ARTICLE_TYPE
+  ARTICLE_TYPE,
 } = require('../../src/enterprise/tech-article');
 const fs = require('fs').promises;
 
@@ -24,7 +24,9 @@ describe('TechArticleGenerator', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -66,10 +68,8 @@ describe('TechArticleGenerator', () => {
       const content = {
         title: 'Test Article',
         introduction: 'This is a test article.',
-        sections: [
-          { title: 'Section 1', content: 'Content 1' }
-        ],
-        conclusion: 'In conclusion...'
+        sections: [{ title: 'Section 1', content: 'Content 1' }],
+        conclusion: 'In conclusion...',
       };
 
       const result = await generator.generate(content);
@@ -82,7 +82,7 @@ describe('TechArticleGenerator', () => {
     it('should generate for specific platform', async () => {
       const content = {
         title: 'Qiita Article',
-        tags: ['javascript', 'react']
+        tags: ['javascript', 'react'],
       };
 
       const result = await generator.generate(content, { platform: PLATFORM.QIITA });
@@ -94,14 +94,18 @@ describe('TechArticleGenerator', () => {
     it('should include code examples', async () => {
       const content = {
         title: 'Code Article',
-        sections: [{
-          title: 'Code Example',
-          codeExamples: [{
-            language: 'javascript',
-            code: 'const x = 1;',
-            description: 'A simple variable'
-          }]
-        }]
+        sections: [
+          {
+            title: 'Code Example',
+            codeExamples: [
+              {
+                language: 'javascript',
+                code: 'const x = 1;',
+                description: 'A simple variable',
+              },
+            ],
+          },
+        ],
       };
 
       const result = await generator.generate(content);
@@ -113,10 +117,7 @@ describe('TechArticleGenerator', () => {
     it('should include table of contents', async () => {
       const content = {
         title: 'TOC Article',
-        sections: [
-          { title: 'First Section' },
-          { title: 'Second Section' }
-        ]
+        sections: [{ title: 'First Section' }, { title: 'Second Section' }],
       };
 
       const result = await generator.generate(content);
@@ -130,8 +131,8 @@ describe('TechArticleGenerator', () => {
         title: 'Benchmark Article',
         benchmarks: {
           'Execution Time': '100ms',
-          'Memory': '50MB'
-        }
+          Memory: '50MB',
+        },
       };
 
       const result = await generator.generate(content);
@@ -147,7 +148,7 @@ describe('TechArticleGenerator', () => {
         metadata: { title: 'Test Experiment' },
         summary: { total: 10, passed: 9, failed: 1, passRate: '90%' },
         metrics: { performance: { avgDuration: '50ms' } },
-        observations: ['Test observation']
+        observations: ['Test observation'],
       };
 
       const result = await generator.generateFromExperiment(experimentReport);
@@ -162,7 +163,7 @@ describe('TechArticleGenerator', () => {
       const template = generator.templates[PLATFORM.QIITA];
       const frontMatter = template.frontMatter({
         title: 'Test',
-        tags: ['js', 'react']
+        tags: ['js', 'react'],
       });
 
       expect(frontMatter).toContain('title: "Test"');
@@ -174,7 +175,7 @@ describe('TechArticleGenerator', () => {
       const frontMatter = template.frontMatter({
         title: 'Test',
         tags: ['js'],
-        emoji: '🚀'
+        emoji: '🚀',
       });
 
       expect(frontMatter).toContain('emoji: "🚀"');
@@ -186,7 +187,7 @@ describe('TechArticleGenerator', () => {
       const frontMatter = template.frontMatter({
         title: 'Test',
         tags: ['js', 'react', 'node', 'test', 'extra'],
-        description: 'Test description'
+        description: 'Test description',
       });
 
       expect(frontMatter).toContain('published: true');
@@ -238,8 +239,8 @@ describe('TechArticleGenerator', () => {
       generator.registerTemplate('custom', {
         frontMatter: () => '---\ncustom: true\n---',
         codeBlock: (lang, code) => `<code>${code}</code>`,
-        note: (text) => `<note>${text}</note>`,
-        link: (text, url) => `<a href="${url}">${text}</a>`
+        note: text => `<note>${text}</note>`,
+        link: (text, url) => `<a href="${url}">${text}</a>`,
       });
 
       expect(generator.templates['custom']).toBeDefined();

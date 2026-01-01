@@ -1,6 +1,6 @@
 /**
  * MatrixStorage Tests
- * 
+ *
  * Requirement: IMP-6.2-004-03
  * Constitutional: Article III - Test-First
  */
@@ -16,14 +16,14 @@ jest.mock('fs', () => ({
     mkdir: jest.fn(),
     access: jest.fn(),
     readdir: jest.fn(),
-    unlink: jest.fn()
-  }
+    unlink: jest.fn(),
+  },
 }));
 
 // Mock yaml module
 jest.mock('yaml', () => ({
-  stringify: jest.fn((obj) => JSON.stringify(obj)),
-  parse: jest.fn((str) => JSON.parse(str))
+  stringify: jest.fn(obj => JSON.stringify(obj)),
+  parse: jest.fn(str => JSON.parse(str)),
 }));
 
 const fs = require('fs');
@@ -52,8 +52,8 @@ describe('MatrixStorage', () => {
             design: [{ path: 'docs/design.md' }],
             code: [{ path: 'src/auth.js' }],
             tests: [{ path: 'tests/auth.test.js' }],
-            commits: []
-          }
+            commits: [],
+          },
         },
         summary: {
           totalRequirements: 1,
@@ -62,8 +62,8 @@ describe('MatrixStorage', () => {
           withCode: 1,
           withTests: 1,
           gaps: 0,
-          coveragePercentage: 100
-        }
+          coveragePercentage: 100,
+        },
       };
 
       mockFs.access.mockRejectedValue(new Error('ENOENT'));
@@ -73,7 +73,7 @@ describe('MatrixStorage', () => {
 
       expect(mockFs.mkdir).toHaveBeenCalled();
       expect(mockFs.writeFile).toHaveBeenCalled();
-      
+
       const [filePath, content] = mockFs.writeFile.mock.calls[0];
       expect(filePath).toContain('feature-auth');
       expect(content).toBeDefined();
@@ -91,8 +91,8 @@ describe('MatrixStorage', () => {
           withCode: 0,
           withTests: 0,
           gaps: 0,
-          coveragePercentage: 0
-        }
+          coveragePercentage: 0,
+        },
       };
 
       mockFs.access.mockRejectedValue(new Error('ENOENT'));
@@ -116,8 +116,8 @@ describe('MatrixStorage', () => {
             design: [{ path: 'docs/design.md' }],
             code: [{ path: 'src/auth.js' }],
             tests: [{ path: 'tests/auth.test.js' }],
-            commits: []
-          }
+            commits: [],
+          },
         },
         summary: {
           totalRequirements: 1,
@@ -126,8 +126,8 @@ describe('MatrixStorage', () => {
           withCode: 1,
           withTests: 1,
           gaps: 0,
-          coveragePercentage: 100
-        }
+          coveragePercentage: 100,
+        },
       };
 
       mockFs.access.mockResolvedValue(undefined);
@@ -155,7 +155,7 @@ describe('MatrixStorage', () => {
       mockFs.readdir.mockResolvedValue([
         'feature-auth-2025-12-30.yaml',
         'feature-auth-2025-12-31.yaml',
-        'feature-auth-2025-12-29.yaml'
+        'feature-auth-2025-12-29.yaml',
       ]);
 
       const matrixData = {
@@ -169,8 +169,8 @@ describe('MatrixStorage', () => {
           withCode: 0,
           withTests: 0,
           gaps: 0,
-          coveragePercentage: 0
-        }
+          coveragePercentage: 0,
+        },
       };
 
       mockFs.access.mockResolvedValue(undefined);
@@ -180,10 +180,7 @@ describe('MatrixStorage', () => {
 
       expect(matrix).toBeDefined();
       // Should load the latest (2025-12-31) file
-      expect(mockFs.readFile).toHaveBeenCalledWith(
-        expect.stringContaining('2025-12-31'),
-        'utf-8'
-      );
+      expect(mockFs.readFile).toHaveBeenCalledWith(expect.stringContaining('2025-12-31'), 'utf-8');
     });
 
     it('should return null when no files exist', async () => {
@@ -199,7 +196,7 @@ describe('MatrixStorage', () => {
     it('should list all saved matrices', async () => {
       mockFs.readdir.mockResolvedValue([
         'feature-auth-2025-12-31.yaml',
-        'feature-user-2025-12-30.yaml'
+        'feature-user-2025-12-30.yaml',
       ]);
 
       const list = await storage.list();
@@ -211,7 +208,7 @@ describe('MatrixStorage', () => {
     it('should filter by feature prefix', async () => {
       mockFs.readdir.mockResolvedValue([
         'feature-auth-2025-12-31.yaml',
-        'feature-user-2025-12-30.yaml'
+        'feature-user-2025-12-30.yaml',
       ]);
 
       const list = await storage.list('feature-auth');
@@ -251,10 +248,10 @@ describe('MatrixStorage', () => {
             design: [{ path: 'docs/design.md' }],
             code: [],
             tests: [],
-            commits: []
-          }
+            commits: [],
+          },
         },
-        summary: {}
+        summary: {},
       };
 
       const matrix2 = {
@@ -266,10 +263,10 @@ describe('MatrixStorage', () => {
             design: [],
             code: [{ path: 'src/auth.js' }],
             tests: [{ path: 'tests/auth.test.js' }],
-            commits: []
-          }
+            commits: [],
+          },
         },
-        summary: {}
+        summary: {},
       };
 
       const merged = storage.merge(matrix1, matrix2);
@@ -289,10 +286,10 @@ describe('MatrixStorage', () => {
             design: [{ path: 'docs/design.md' }],
             code: [],
             tests: [],
-            commits: []
-          }
+            commits: [],
+          },
         },
-        summary: {}
+        summary: {},
       };
 
       const matrix2 = {
@@ -304,10 +301,10 @@ describe('MatrixStorage', () => {
             design: [],
             code: [{ path: 'src/user.js' }],
             tests: [],
-            commits: []
-          }
+            commits: [],
+          },
         },
-        summary: {}
+        summary: {},
       };
 
       const merged = storage.merge(matrix1, matrix2);
@@ -325,15 +322,15 @@ describe('MatrixStorage', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/auth.js' }],
           tests: [{ path: 'tests/auth.test.js' }],
-          commits: []
+          commits: [],
         },
         'REQ-001-002': {
           requirementId: 'REQ-001-002',
           design: [],
           code: [{ path: 'src/user.js' }],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       };
 
       const summary = storage.calculateSummary(requirements);
@@ -367,8 +364,8 @@ describe('MatrixStorage', () => {
           withCode: 0,
           withTests: 0,
           gaps: 0,
-          coveragePercentage: 0
-        }
+          coveragePercentage: 0,
+        },
       };
 
       const json = storage.exportAsJson(matrix);
@@ -388,8 +385,8 @@ describe('MatrixStorage', () => {
             design: [{ path: 'docs/design.md' }],
             code: [{ path: 'src/auth.js' }],
             tests: [{ path: 'tests/auth.test.js' }],
-            commits: []
-          }
+            commits: [],
+          },
         },
         summary: {
           totalRequirements: 1,
@@ -398,8 +395,8 @@ describe('MatrixStorage', () => {
           withCode: 1,
           withTests: 1,
           gaps: 0,
-          coveragePercentage: 100
-        }
+          coveragePercentage: 100,
+        },
       };
 
       const markdown = storage.exportAsMarkdown(matrix);
@@ -421,8 +418,8 @@ describe('MatrixStorage', () => {
           withCode: 0,
           withTests: 0,
           gaps: 0,
-          coveragePercentage: 0
-        }
+          coveragePercentage: 0,
+        },
       };
 
       const markdown = storage.exportAsMarkdown(matrix);

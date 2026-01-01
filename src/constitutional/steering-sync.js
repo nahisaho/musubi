@@ -1,8 +1,8 @@
 /**
  * Steering Sync
- * 
+ *
  * Automatically synchronizes steering files.
- * 
+ *
  * Requirement: IMP-6.2-007-01, IMP-6.2-007-02
  * Design: Section 5.3
  */
@@ -17,12 +17,12 @@ const DEFAULT_CONFIG = {
   steeringDir: 'steering',
   steeringFiles: ['tech.md', 'structure.md', 'product.md'],
   projectFile: 'project.yml',
-  backupDir: 'steering/backups'
+  backupDir: 'steering/backups',
 };
 
 /**
  * SteeringSync
- * 
+ *
  * Manages steering file synchronization.
  */
 class SteeringSync {
@@ -68,7 +68,7 @@ class SteeringSync {
       version: versionInfo.version,
       updatedAt: new Date().toISOString(),
       updates,
-      filesUpdated: updates.length
+      filesUpdated: updates.length,
     };
   }
 
@@ -88,13 +88,13 @@ class SteeringSync {
     // Check version consistency
     if (project) {
       const versionPattern = new RegExp(`v?${project.version?.replace('.', '\\.')}`, 'i');
-      
+
       if (product && !versionPattern.test(product)) {
         issues.push({
           type: 'version-mismatch',
           file: 'product.md',
           message: `product.mdのバージョン（${project.version}）が不整合です`,
-          suggestion: `product.mdを更新してバージョン${project.version}を反映してください`
+          suggestion: `product.mdを更新してバージョン${project.version}を反映してください`,
         });
       }
     }
@@ -113,7 +113,7 @@ class SteeringSync {
             type: 'missing-directory',
             file: 'structure.md',
             message: `structure.mdで参照されているディレクトリ "${dirName}" が存在しません`,
-            suggestion: `ディレクトリを作成するか、structure.mdから参照を削除してください`
+            suggestion: `ディレクトリを作成するか、structure.mdから参照を削除してください`,
           });
         }
       }
@@ -127,7 +127,7 @@ class SteeringSync {
             type: 'tech-mismatch',
             file: 'tech.md',
             message: `project.ymlの技術スタック "${techItem}" がtech.mdに記載されていません`,
-            suggestion: `tech.mdに "${techItem}" を追加してください`
+            suggestion: `tech.mdに "${techItem}" を追加してください`,
           });
         }
       }
@@ -136,7 +136,7 @@ class SteeringSync {
     return {
       consistent: issues.length === 0,
       issues,
-      checkedAt: new Date().toISOString()
+      checkedAt: new Date().toISOString(),
     };
   }
 
@@ -156,7 +156,7 @@ class SteeringSync {
             // Version updates require manual review
             failed.push({
               issue,
-              reason: 'バージョン更新は手動レビューが必要です'
+              reason: 'バージョン更新は手動レビューが必要です',
             });
             break;
 
@@ -169,13 +169,13 @@ class SteeringSync {
           default:
             failed.push({
               issue,
-              reason: '自動修正がサポートされていません'
+              reason: '自動修正がサポートされていません',
             });
         }
       } catch (error) {
         failed.push({
           issue,
-          reason: error.message
+          reason: error.message,
         });
       }
     }
@@ -184,7 +184,7 @@ class SteeringSync {
       fixed: fixed.length,
       failed: failed.length,
       details: { fixed, failed },
-      fixedAt: new Date().toISOString()
+      fixedAt: new Date().toISOString(),
     };
   }
 
@@ -195,10 +195,10 @@ class SteeringSync {
    */
   async updateProjectFile(versionInfo) {
     const filePath = path.join(this.config.steeringDir, this.config.projectFile);
-    
+
     try {
       let content = await fs.readFile(filePath, 'utf-8');
-      
+
       // Update version
       if (versionInfo.version) {
         content = content.replace(
@@ -209,17 +209,14 @@ class SteeringSync {
 
       // Update status if provided
       if (versionInfo.status) {
-        content = content.replace(
-          /status:\s*\w+/,
-          `status: ${versionInfo.status}`
-        );
+        content = content.replace(/status:\s*\w+/, `status: ${versionInfo.status}`);
       }
 
       await fs.writeFile(filePath, content, 'utf-8');
 
       return {
         file: this.config.projectFile,
-        changes: ['version', 'status'].filter(k => versionInfo[k])
+        changes: ['version', 'status'].filter(k => versionInfo[k]),
       };
     } catch {
       return null;
@@ -233,7 +230,7 @@ class SteeringSync {
    */
   async updateProductFile(versionInfo) {
     const filePath = path.join(this.config.steeringDir, 'product.md');
-    
+
     try {
       let content = await fs.readFile(filePath, 'utf-8');
       const changes = [];
@@ -251,14 +248,9 @@ class SteeringSync {
       if (versionInfo.features && versionInfo.features.length > 0) {
         const changelogMarker = '## Changelog';
         if (content.includes(changelogMarker)) {
-          const featureList = versionInfo.features
-            .map(f => `- ${f}`)
-            .join('\n');
+          const featureList = versionInfo.features.map(f => `- ${f}`).join('\n');
           const changelogEntry = `\n### v${versionInfo.version}\n${featureList}\n`;
-          content = content.replace(
-            changelogMarker,
-            `${changelogMarker}${changelogEntry}`
-          );
+          content = content.replace(changelogMarker, `${changelogMarker}${changelogEntry}`);
           changes.push('changelog');
         }
       }
@@ -281,7 +273,7 @@ class SteeringSync {
    */
   async updateTechFile(versionInfo) {
     const filePath = path.join(this.config.steeringDir, 'tech.md');
-    
+
     try {
       let content = await fs.readFile(filePath, 'utf-8');
       const changes = [];
@@ -294,10 +286,7 @@ class SteeringSync {
             const depsSection = '## Dependencies';
             if (content.includes(depsSection)) {
               const depEntry = `\n- **${dep.name}**: ${dep.description || dep.version || 'Added'}`;
-              content = content.replace(
-                depsSection,
-                `${depsSection}${depEntry}`
-              );
+              content = content.replace(depsSection, `${depsSection}${depEntry}`);
               changes.push(`added-dep:${dep.name}`);
             }
           }
@@ -322,7 +311,7 @@ class SteeringSync {
    */
   async updateStructureFile(versionInfo) {
     const filePath = path.join(this.config.steeringDir, 'structure.md');
-    
+
     try {
       let content = await fs.readFile(filePath, 'utf-8');
       const changes = [];
@@ -364,7 +353,7 @@ class SteeringSync {
       for (const file of this.config.steeringFiles) {
         const sourcePath = path.join(this.config.steeringDir, file);
         const destPath = path.join(backupPath, file);
-        
+
         try {
           const content = await fs.readFile(sourcePath, 'utf-8');
           await fs.writeFile(destPath, content, 'utf-8');
@@ -397,12 +386,12 @@ class SteeringSync {
     try {
       const filePath = path.join(this.config.steeringDir, this.config.projectFile);
       const content = await fs.readFile(filePath, 'utf-8');
-      
+
       // Simple YAML parsing for common fields
       const version = content.match(/version:\s*['"]?([\d.]+)['"]?/)?.[1];
       const name = content.match(/name:\s*['"]?([^'\n]+)['"]?/)?.[1];
       const status = content.match(/status:\s*(\w+)/)?.[1];
-      
+
       return { version, name, status };
     } catch {
       return null;
@@ -458,7 +447,7 @@ class SteeringSync {
     lines.push('');
     lines.push('| File | Status |');
     lines.push('|------|--------|');
-    
+
     for (const file of this.config.steeringFiles) {
       const content = await this.loadSteeringFile(file);
       const status = content ? '✅ Present' : '❌ Missing';

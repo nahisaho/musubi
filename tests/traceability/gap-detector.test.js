@@ -1,6 +1,6 @@
 /**
  * GapDetector Tests
- * 
+ *
  * Requirement: IMP-6.2-004-02
  * Constitutional: Article III - Test-First
  */
@@ -22,16 +22,15 @@ describe('GapDetector', () => {
           design: [], // No design
           code: [{ path: 'src/auth.js', line: 10 }],
           tests: [{ path: 'tests/auth.test.js', line: 5 }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
 
-      expect(gaps.some(g => 
-        g.requirementId === 'REQ-001-001' && 
-        g.gapType === 'no-design'
-      )).toBe(true);
+      expect(gaps.some(g => g.requirementId === 'REQ-001-001' && g.gapType === 'no-design')).toBe(
+        true
+      );
     });
 
     it('should detect requirements without code links', () => {
@@ -41,16 +40,15 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [], // No code
           tests: [{ path: 'tests/feature.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
 
-      expect(gaps.some(g => 
-        g.requirementId === 'REQ-001-002' && 
-        g.gapType === 'no-code'
-      )).toBe(true);
+      expect(gaps.some(g => g.requirementId === 'REQ-001-002' && g.gapType === 'no-code')).toBe(
+        true
+      );
     });
 
     it('should detect requirements without test links', () => {
@@ -60,16 +58,15 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/feature.js' }],
           tests: [], // No tests
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
 
-      expect(gaps.some(g => 
-        g.requirementId === 'REQ-001-003' && 
-        g.gapType === 'no-test'
-      )).toBe(true);
+      expect(gaps.some(g => g.requirementId === 'REQ-001-003' && g.gapType === 'no-test')).toBe(
+        true
+      );
     });
 
     it('should not report gap for fully linked requirements', () => {
@@ -79,8 +76,8 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/feature.js' }],
           tests: [{ path: 'tests/feature.test.js' }],
-          commits: [{ hash: 'abc123', message: 'feat', date: '2025-12-31' }]
-        }
+          commits: [{ hash: 'abc123', message: 'feat', date: '2025-12-31' }],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -95,8 +92,8 @@ describe('GapDetector', () => {
           design: [],
           code: [],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -114,8 +111,8 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/auth.js' }],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -131,8 +128,8 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [],
           tests: [{ path: 'tests/auth.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -148,8 +145,8 @@ describe('GapDetector', () => {
           design: [],
           code: [{ path: 'src/auth.js' }],
           tests: [{ path: 'tests/auth.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -167,8 +164,8 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/auth.js' }],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -184,8 +181,8 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [],
           tests: [{ path: 'tests/auth.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -206,15 +203,15 @@ describe('GapDetector', () => {
             design: [{ path: 'docs/design.md' }],
             code: [{ path: 'src/auth.js' }],
             tests: [],
-            commits: []
+            commits: [],
           },
           'REQ-001-002': {
             requirementId: 'REQ-001-002',
             design: [],
             code: [{ path: 'src/user.js' }],
             tests: [{ path: 'tests/user.test.js' }],
-            commits: []
-          }
+            commits: [],
+          },
         },
         summary: {
           totalRequirements: 2,
@@ -223,8 +220,8 @@ describe('GapDetector', () => {
           withCode: 2,
           withTests: 1,
           gaps: 2,
-          coveragePercentage: 50
-        }
+          coveragePercentage: 50,
+        },
       };
 
       const analysis = detector.analyzeMatrix(matrix);
@@ -244,15 +241,15 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/auth.js' }],
           tests: [],
-          commits: []
+          commits: [],
         },
         {
           requirementId: 'REQ-001-002',
           design: [],
           code: [{ path: 'src/user.js' }],
           tests: [{ path: 'tests/user.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const report = detector.getGapReport(links);
@@ -268,8 +265,8 @@ describe('GapDetector', () => {
           design: [],
           code: [],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const report = detector.getGapReport(links);
@@ -296,8 +293,8 @@ describe('GapDetector', () => {
           design: [],
           code: [],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -313,8 +310,8 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/auth.js' }],
           tests: [{ path: 'tests/auth.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const gaps = detector.detectGaps(links);
@@ -332,15 +329,15 @@ describe('GapDetector', () => {
           design: [],
           code: [],
           tests: [],
-          commits: []
+          commits: [],
         },
         {
           requirementId: 'REQ-001-002',
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/feature.js' }],
           tests: [{ path: 'tests/feature.test.js' }],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const reqsWithGaps = detector.getRequirementsWithGaps(links);
@@ -357,7 +354,7 @@ describe('GapDetector', () => {
         design: [{ path: 'docs/design.md' }],
         code: [{ path: 'src/auth.js' }],
         tests: [],
-        commits: []
+        commits: [],
       };
 
       expect(detector.hasCriticalGap(link)).toBe(true);
@@ -369,7 +366,7 @@ describe('GapDetector', () => {
         design: [],
         code: [],
         tests: [{ path: 'tests/auth.test.js' }],
-        commits: []
+        commits: [],
       };
 
       expect(detector.hasCriticalGap(link)).toBe(false);
@@ -389,15 +386,15 @@ describe('GapDetector', () => {
           design: [{ path: 'docs/design.md' }],
           code: [{ path: 'src/auth.js' }],
           tests: [{ path: 'tests/auth.test.js' }],
-          commits: []
+          commits: [],
         },
         {
           requirementId: 'REQ-001-002',
           design: [],
           code: [],
           tests: [],
-          commits: []
-        }
+          commits: [],
+        },
       ];
 
       const coverage = detector.getGapCoverage(links);

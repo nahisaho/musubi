@@ -2,9 +2,9 @@
 
 /**
  * MUSUBI Dashboard CLI
- * 
+ *
  * Workflow dashboard for progress visualization and management.
- * 
+ *
  * Usage:
  *   musubi-dashboard show <feature>      Show workflow status
  *   musubi-dashboard create <feature>    Create new workflow
@@ -12,7 +12,7 @@
  *   musubi-dashboard blocker <feature>   Manage blockers
  *   musubi-dashboard sprint <action>     Sprint management
  *   musubi-dashboard trace <action>      Traceability management
- * 
+ *
  * Requirement: IMP-6.2-003-05
  */
 
@@ -70,13 +70,13 @@ async function main() {
           result = await cli.execute('blocker:add', [subcommand], {
             stage: options.stage || 'current',
             description: options.add,
-            severity: options.severity || 'medium'
+            severity: options.severity || 'medium',
           });
           console.log(`\n✅ Blocker added: ${options.add}`);
         } else if (options.resolve) {
           result = await cli.execute('blocker:resolve', [subcommand], {
             blockerId: options.resolve,
-            resolution: options.resolution || 'Resolved'
+            resolution: options.resolution || 'Resolved',
           });
           console.log(`\n✅ Blocker resolved`);
         } else {
@@ -213,7 +213,7 @@ function formatWorkflowStatus(workflow) {
 
 function formatBlockers(result) {
   const blockers = result.blockers || [];
-  
+
   if (blockers.length === 0) {
     console.log('\n✅ No blockers');
     return;
@@ -241,10 +241,12 @@ function formatSprintStatus(sprint) {
   console.log('═'.repeat(50));
   console.log(`Status: ${sprint.status || 'unknown'}`);
   console.log(`Tasks: ${sprint.tasks?.length || 0}`);
-  
+
   if (sprint.metrics) {
     console.log(`Completion: ${sprint.metrics.completionPercentage || 0}%`);
-    console.log(`Points: ${sprint.metrics.completedPoints || 0}/${sprint.metrics.totalPoints || 0}`);
+    console.log(
+      `Points: ${sprint.metrics.completedPoints || 0}/${sprint.metrics.totalPoints || 0}`
+    );
   }
 }
 
@@ -268,7 +270,14 @@ function formatGaps(result) {
 
   Object.entries(bySeverity).forEach(([severity, items]) => {
     if (items.length > 0) {
-      const icon = severity === 'critical' ? '🔴' : severity === 'high' ? '🟠' : severity === 'medium' ? '🟡' : '🟢';
+      const icon =
+        severity === 'critical'
+          ? '🔴'
+          : severity === 'high'
+            ? '🟠'
+            : severity === 'medium'
+              ? '🟡'
+              : '🟢';
       console.log(`\n${icon} ${severity.toUpperCase()} (${items.length}):`);
       items.forEach(gap => {
         console.log(`  - ${gap.requirementId}: ${gap.gapType}`);
@@ -282,11 +291,11 @@ function formatGaps(result) {
 
 function getStatusIcon(status) {
   const icons = {
-    'completed': '✅',
+    completed: '✅',
     'in-progress': '🔄',
-    'blocked': '🚫',
-    'pending': '⬜',
-    'not-started': '⬜'
+    blocked: '🚫',
+    pending: '⬜',
+    'not-started': '⬜',
   };
   return icons[status] || '⬜';
 }

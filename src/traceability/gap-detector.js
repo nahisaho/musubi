@@ -1,8 +1,8 @@
 /**
  * GapDetector Implementation
- * 
+ *
  * Detects requirements without implementation or tests.
- * 
+ *
  * Requirement: IMP-6.2-004-02
  * Design: Section 5.2
  */
@@ -14,32 +14,35 @@ const SEVERITY_MAP = {
   'no-test': 'critical',
   'no-code': 'high',
   'no-design': 'medium',
-  'no-commit': 'low'
+  'no-commit': 'low',
 };
 
 /**
  * Severity ordering for sorting
  */
 const SEVERITY_ORDER = {
-  'critical': 0,
-  'high': 1,
-  'medium': 2,
-  'low': 3
+  critical: 0,
+  high: 1,
+  medium: 2,
+  low: 3,
 };
 
 /**
  * Suggestions for each gap type
  */
 const SUGGESTIONS = {
-  'no-test': 'この要件に対するテストを作成してください。Article III (Test-First) に従い、実装前にテストを書くことを推奨します。',
+  'no-test':
+    'この要件に対するテストを作成してください。Article III (Test-First) に従い、実装前にテストを書くことを推奨します。',
   'no-code': '要件の実装が必要です。設計ドキュメントを参照して実装を開始してください。',
-  'no-design': '設計ドキュメントを作成してください。C4モデルに従い、コンポーネント図とADRを追加することを推奨します。',
-  'no-commit': 'この要件に関連するコミットがありません。コミットメッセージに要件IDを含めてください。'
+  'no-design':
+    '設計ドキュメントを作成してください。C4モデルに従い、コンポーネント図とADRを追加することを推奨します。',
+  'no-commit':
+    'この要件に関連するコミットがありません。コミットメッセージに要件IDを含めてください。',
 };
 
 /**
  * GapDetector
- * 
+ *
  * Detects gaps in traceability between requirements and artifacts.
  */
 class GapDetector {
@@ -82,7 +85,7 @@ class GapDetector {
       requirementId,
       gapType,
       severity: SEVERITY_MAP[gapType],
-      suggestion: SUGGESTIONS[gapType]
+      suggestion: SUGGESTIONS[gapType],
     };
   }
 
@@ -117,8 +120,7 @@ class GapDetector {
       gapsByType[gap.gapType] = (gapsByType[gap.gapType] || 0) + 1;
 
       // Count by requirement
-      gapsByRequirement[gap.requirementId] = 
-        (gapsByRequirement[gap.requirementId] || 0) + 1;
+      gapsByRequirement[gap.requirementId] = (gapsByRequirement[gap.requirementId] || 0) + 1;
 
       // Count by severity
       switch (gap.severity) {
@@ -144,7 +146,7 @@ class GapDetector {
       mediumGaps,
       lowGaps,
       gapsByType,
-      gapsByRequirement
+      gapsByRequirement,
     };
   }
 
@@ -161,7 +163,7 @@ class GapDetector {
     return {
       generatedAt: new Date().toISOString(),
       gaps: sortedGaps,
-      summary
+      summary,
     };
   }
 
@@ -222,7 +224,7 @@ class GapDetector {
 
     const reqsWithGaps = this.getRequirementsWithGaps(links);
     const covered = links.length - reqsWithGaps.length;
-    
+
     return Math.round((covered / links.length) * 100);
   }
 }

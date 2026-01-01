@@ -1,6 +1,6 @@
 /**
  * WorkflowDashboard Tests
- * 
+ *
  * Requirement: IMP-6.2-003-01
  * Constitutional: Article III - Test-First
  */
@@ -14,8 +14,8 @@ jest.mock('fs', () => ({
     readFile: jest.fn(),
     writeFile: jest.fn(),
     mkdir: jest.fn(),
-    access: jest.fn()
-  }
+    access: jest.fn(),
+  },
 }));
 
 const fs = require('fs');
@@ -35,7 +35,7 @@ describe('WorkflowDashboard', () => {
   describe('createWorkflow()', () => {
     it('should create a new workflow with default stages', async () => {
       const workflow = await dashboard.createWorkflow('FEAT-001', {
-        title: 'Test Feature'
+        title: 'Test Feature',
       });
 
       expect(workflow.featureId).toBe('FEAT-001');
@@ -76,7 +76,7 @@ describe('WorkflowDashboard', () => {
       const savedWorkflow = {
         featureId: 'FEAT-006',
         title: 'Loaded Feature',
-        stages: {}
+        stages: {},
       };
 
       mockFs.readFile.mockResolvedValue(JSON.stringify(savedWorkflow));
@@ -98,11 +98,7 @@ describe('WorkflowDashboard', () => {
   describe('updateStage()', () => {
     it('should update stage status', async () => {
       await dashboard.createWorkflow('FEAT-007');
-      const workflow = await dashboard.updateStage(
-        'FEAT-007',
-        'steering',
-        STAGE_STATUS.COMPLETED
-      );
+      const workflow = await dashboard.updateStage('FEAT-007', 'steering', STAGE_STATUS.COMPLETED);
 
       expect(workflow.stages.steering.status).toBe(STAGE_STATUS.COMPLETED);
       expect(workflow.stages.steering.completedAt).toBeDefined();
@@ -118,12 +114,9 @@ describe('WorkflowDashboard', () => {
 
     it('should add artifacts when provided', async () => {
       await dashboard.createWorkflow('FEAT-009');
-      const workflow = await dashboard.updateStage(
-        'FEAT-009',
-        'steering',
-        STAGE_STATUS.COMPLETED,
-        { artifacts: ['structure.md', 'tech.md'] }
-      );
+      const workflow = await dashboard.updateStage('FEAT-009', 'steering', STAGE_STATUS.COMPLETED, {
+        artifacts: ['structure.md', 'tech.md'],
+      });
 
       expect(workflow.stages.steering.artifacts).toContain('structure.md');
       expect(workflow.stages.steering.artifacts).toContain('tech.md');
@@ -136,7 +129,7 @@ describe('WorkflowDashboard', () => {
       const workflow = await dashboard.addBlocker('FEAT-010', {
         stage: 'requirements',
         description: 'Missing stakeholder approval',
-        severity: 'high'
+        severity: 'high',
       });
 
       expect(workflow.blockers).toHaveLength(1);
@@ -147,7 +140,7 @@ describe('WorkflowDashboard', () => {
       await dashboard.createWorkflow('FEAT-011');
       const workflow = await dashboard.addBlocker('FEAT-011', {
         stage: 'steering',
-        description: 'Test blocker'
+        description: 'Test blocker',
       });
 
       expect(workflow.stages.steering.status).toBe(STAGE_STATUS.BLOCKED);
@@ -159,15 +152,11 @@ describe('WorkflowDashboard', () => {
       await dashboard.createWorkflow('FEAT-012');
       let workflow = await dashboard.addBlocker('FEAT-012', {
         stage: 'steering',
-        description: 'Test blocker'
+        description: 'Test blocker',
       });
 
       const blockerId = workflow.blockers[0].id;
-      workflow = await dashboard.resolveBlocker(
-        'FEAT-012',
-        blockerId,
-        'Stakeholder approved'
-      );
+      workflow = await dashboard.resolveBlocker('FEAT-012', blockerId, 'Stakeholder approved');
 
       expect(workflow.blockers[0].resolvedAt).toBeDefined();
       expect(workflow.blockers[0].resolution).toBe('Stakeholder approved');
@@ -177,7 +166,7 @@ describe('WorkflowDashboard', () => {
       await dashboard.createWorkflow('FEAT-013');
       let workflow = await dashboard.addBlocker('FEAT-013', {
         stage: 'steering',
-        description: 'Test blocker'
+        description: 'Test blocker',
       });
 
       const blockerId = workflow.blockers[0].id;
@@ -192,7 +181,7 @@ describe('WorkflowDashboard', () => {
       await dashboard.createWorkflow('FEAT-014');
       await dashboard.addBlocker('FEAT-014', {
         stage: 'steering',
-        description: 'Test blocker'
+        description: 'Test blocker',
       });
 
       const actions = await dashboard.suggestNextActions('FEAT-014');
@@ -232,7 +221,7 @@ describe('WorkflowDashboard', () => {
   describe('getSummary()', () => {
     it('should return workflow summary', async () => {
       await dashboard.createWorkflow('FEAT-018', {
-        title: 'Summary Test Feature'
+        title: 'Summary Test Feature',
       });
 
       const summary = await dashboard.getSummary('FEAT-018');
@@ -248,7 +237,7 @@ describe('WorkflowDashboard', () => {
       await dashboard.createWorkflow('FEAT-019');
       await dashboard.addBlocker('FEAT-019', {
         stage: 'steering',
-        description: 'Test blocker'
+        description: 'Test blocker',
       });
 
       const summary = await dashboard.getSummary('FEAT-019');

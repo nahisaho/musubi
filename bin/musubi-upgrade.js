@@ -88,7 +88,10 @@ async function migrateToV620(projectDir, _options) {
           const nextSectionIndex = content.indexOf('###', promptsIndex + 10);
           if (nextSectionIndex !== -1) {
             content =
-              content.slice(0, nextSectionIndex) + reviewPrompts + '\n' + content.slice(nextSectionIndex);
+              content.slice(0, nextSectionIndex) +
+              reviewPrompts +
+              '\n' +
+              content.slice(nextSectionIndex);
           } else {
             content += '\n' + reviewPrompts;
           }
@@ -380,7 +383,9 @@ program
 
     const comparison = compareVersions(currentVersion, packageJson.version);
     if (comparison < 0) {
-      console.log(chalk.yellow(`\n⚠️  Upgrade available: ${currentVersion} → ${packageJson.version}`));
+      console.log(
+        chalk.yellow(`\n⚠️  Upgrade available: ${currentVersion} → ${packageJson.version}`)
+      );
       console.log(chalk.gray('\nRun: npx musubi-sdd upgrade\n'));
     } else {
       console.log(chalk.green('\n✅ Project is up to date.\n'));

@@ -1,8 +1,8 @@
 /**
  * Phase -1 Gate Tests
- * 
+ *
  * Tests for Phase -1 Gate trigger and review process.
- * 
+ *
  * Requirement: IMP-6.2-005-02
  */
 
@@ -16,10 +16,10 @@ describe('PhaseMinusOneGate', () => {
   const storageDir = `${testDir}/storage/phase-minus-one`;
 
   beforeEach(async () => {
-    gate = new PhaseMinusOneGate({ 
+    gate = new PhaseMinusOneGate({
       storageDir,
       requiredReviewers: ['architect'],
-      optionalReviewers: ['pm']
+      optionalReviewers: ['pm'],
     });
     await fs.mkdir(testDir, { recursive: true });
   });
@@ -27,7 +27,9 @@ describe('PhaseMinusOneGate', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch { /* ignore cleanup errors */ }
+    } catch {
+      /* ignore cleanup errors */
+    }
   });
 
   describe('constructor', () => {
@@ -38,8 +40,8 @@ describe('PhaseMinusOneGate', () => {
     });
 
     it('should merge custom config', () => {
-      const g = new PhaseMinusOneGate({ 
-        requiredReviewers: ['custom-reviewer'] 
+      const g = new PhaseMinusOneGate({
+        requiredReviewers: ['custom-reviewer'],
       });
       expect(g.config.requiredReviewers).toContain('custom-reviewer');
     });
@@ -58,7 +60,7 @@ describe('PhaseMinusOneGate', () => {
     it('should create new gate', async () => {
       const result = await gate.trigger({
         featureId: 'FEAT-001',
-        triggeredBy: 'test'
+        triggeredBy: 'test',
       });
 
       expect(result.id).toMatch(/^GATE-/);
@@ -68,20 +70,18 @@ describe('PhaseMinusOneGate', () => {
 
     it('should set timestamp', async () => {
       const result = await gate.trigger({
-        featureId: 'FEAT-002'
+        featureId: 'FEAT-002',
       });
 
       expect(result.triggeredAt).toBeDefined();
     });
 
     it('should include violations', async () => {
-      const violations = [
-        { article: 'VII', message: 'File too long' }
-      ];
+      const violations = [{ article: 'VII', message: 'File too long' }];
 
       const result = await gate.trigger({
         featureId: 'FEAT-003',
-        violations
+        violations,
       });
 
       expect(result.violations.length).toBe(1);
@@ -89,7 +89,7 @@ describe('PhaseMinusOneGate', () => {
 
     it('should set reviewers from config', async () => {
       const result = await gate.trigger({
-        featureId: 'FEAT-004'
+        featureId: 'FEAT-004',
       });
 
       expect(result.requiredReviewers).toContain('architect');
@@ -98,7 +98,7 @@ describe('PhaseMinusOneGate', () => {
 
     it('should generate notifications when autoNotify is true', async () => {
       const result = await gate.trigger({
-        featureId: 'FEAT-005'
+        featureId: 'FEAT-005',
       });
 
       expect(result.notifications).toBeDefined();
@@ -107,7 +107,7 @@ describe('PhaseMinusOneGate', () => {
 
     it('should save gate to storage', async () => {
       const result = await gate.trigger({
-        featureId: 'FEAT-006'
+        featureId: 'FEAT-006',
       });
 
       const saved = await gate.loadGate(result.id);
@@ -122,7 +122,7 @@ describe('PhaseMinusOneGate', () => {
       await fs.writeFile(filePath, '/** Requirement: R */ const x = 1;', 'utf-8');
 
       const result = await gate.analyzeAndTrigger([filePath], {
-        featureId: 'FEAT-007'
+        featureId: 'FEAT-007',
       });
 
       expect(result.triggered).toBe(false);
@@ -135,7 +135,7 @@ describe('PhaseMinusOneGate', () => {
       await fs.writeFile(filePath, longContent, 'utf-8');
 
       const result = await gate.analyzeAndTrigger([filePath], {
-        featureId: 'FEAT-008'
+        featureId: 'FEAT-008',
       });
 
       expect(result.triggered).toBe(true);
@@ -165,7 +165,7 @@ describe('PhaseMinusOneGate', () => {
       const updated = await gate.submitReview(gateId, {
         reviewer: 'architect',
         decision: 'approve',
-        comments: 'Looks good'
+        comments: 'Looks good',
       });
 
       expect(updated.reviews.length).toBe(1);
@@ -175,7 +175,7 @@ describe('PhaseMinusOneGate', () => {
     it('should approve when all required reviewers approve', async () => {
       const updated = await gate.submitReview(gateId, {
         reviewer: 'architect',
-        decision: 'approve'
+        decision: 'approve',
       });
 
       expect(updated.status).toBe(GATE_STATUS.APPROVED);
@@ -186,7 +186,7 @@ describe('PhaseMinusOneGate', () => {
       const updated = await gate.submitReview(gateId, {
         reviewer: 'architect',
         decision: 'reject',
-        comments: 'Needs refactoring'
+        comments: 'Needs refactoring',
       });
 
       expect(updated.status).toBe(GATE_STATUS.REJECTED);
@@ -196,13 +196,13 @@ describe('PhaseMinusOneGate', () => {
       // Create gate with multiple required reviewers
       const g = new PhaseMinusOneGate({
         storageDir,
-        requiredReviewers: ['reviewer1', 'reviewer2']
+        requiredReviewers: ['reviewer1', 'reviewer2'],
       });
       const result = await g.trigger({ featureId: 'FEAT-MULTI' });
 
       const updated = await g.submitReview(result.id, {
         reviewer: 'reviewer1',
-        decision: 'approve'
+        decision: 'approve',
       });
 
       expect(updated.status).toBe(GATE_STATUS.PENDING);
@@ -221,7 +221,7 @@ describe('PhaseMinusOneGate', () => {
 
       const updated = await gate.waiveGate(result.id, {
         waivedBy: 'project-manager',
-        justification: 'Critical deadline, will fix in next sprint'
+        justification: 'Critical deadline, will fix in next sprint',
       });
 
       expect(updated.status).toBe(GATE_STATUS.WAIVED);
@@ -233,7 +233,7 @@ describe('PhaseMinusOneGate', () => {
 
       const updated = await gate.waiveGate(result.id, {
         waivedBy: 'admin',
-        justification: 'Test'
+        justification: 'Test',
       });
 
       expect(updated.resolvedAt).toBeDefined();
@@ -343,7 +343,7 @@ describe('PhaseMinusOneGate', () => {
     it('should generate markdown report', async () => {
       const result = await gate.trigger({
         featureId: 'FEAT-REPORT',
-        violations: [{ article: 'VII', message: 'Too long', severity: 'warning' }]
+        violations: [{ article: 'VII', message: 'Too long', severity: 'warning' }],
       });
 
       const report = await gate.generateReport(result.id);
@@ -355,14 +355,16 @@ describe('PhaseMinusOneGate', () => {
     it('should include violations section', async () => {
       const result = await gate.trigger({
         featureId: 'FEAT-REPORT2',
-        violations: [{ 
-          article: 'VII', 
-          articleName: 'Simplicity',
-          message: 'File exceeds 500 lines',
-          severity: 'warning',
-          filePath: 'test.js',
-          suggestion: 'Split the file'
-        }]
+        violations: [
+          {
+            article: 'VII',
+            articleName: 'Simplicity',
+            message: 'File exceeds 500 lines',
+            severity: 'warning',
+            filePath: 'test.js',
+            suggestion: 'Split the file',
+          },
+        ],
       });
 
       const report = await gate.generateReport(result.id);
@@ -375,7 +377,7 @@ describe('PhaseMinusOneGate', () => {
       const result = await gate.trigger({ featureId: 'FEAT-REPORT3' });
       await gate.submitReview(result.id, {
         reviewer: 'architect',
-        decision: 'approve'
+        decision: 'approve',
       });
 
       const report = await gate.generateReport(result.id);
@@ -388,7 +390,7 @@ describe('PhaseMinusOneGate', () => {
       const result = await gate.trigger({ featureId: 'FEAT-REPORT4' });
       await gate.waiveGate(result.id, {
         waivedBy: 'pm',
-        justification: 'Urgent release'
+        justification: 'Urgent release',
       });
 
       const report = await gate.generateReport(result.id);
