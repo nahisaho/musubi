@@ -30,7 +30,7 @@ program
 program
   .command('init <feature>')
   .description('Initialize requirements document for a feature')
-  .option('-o, --output <path>', 'Output directory', 'docs/requirements')
+  .option('-o, --output <path>', 'Output directory', 'storage/specs')
   .option('-a, --author <name>', 'Author name')
   .option('--project <name>', 'Project name')
   .option('--dry-run', 'Show what would be created without writing files')

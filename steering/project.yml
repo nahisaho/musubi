@@ -2,9 +2,9 @@
 name: musubi
 description: Ultimate Specification Driven Development Tool with Review Gate Engine
 locale: ja
-version: "6.2.0"
+version: "6.2.3"
 created: 2025-12-12
-updated: 2025-12-31
+updated: 2026-01-01
 
 # Technology Stack
 tech_stack:

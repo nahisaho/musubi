@@ -32,7 +32,7 @@ class RequirementsGenerator {
    * @returns {Promise<object>} Result with path
    */
   async init(feature, options = {}) {
-    const outputDir = path.join(this.rootDir, options.output || 'docs/requirements');
+    const outputDir = path.join(this.rootDir, options.output || 'storage/specs');
     await fs.ensureDir(outputDir);
 
     const fileName = `${this.slugify(feature)}.md`;
@@ -87,6 +87,8 @@ class RequirementsGenerator {
    */
   async findRequirementsFiles() {
     const patterns = [
+      'storage/specs/**/*-requirements.md',
+      'storage/specs/*-requirements.md',
       'docs/requirements/**/*.md',
       'docs/requirements/*.md',
       'requirements/**/*.md',
