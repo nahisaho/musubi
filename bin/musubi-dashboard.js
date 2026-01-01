@@ -21,7 +21,7 @@ const { DashboardCLI } = require('../src/cli/dashboard-cli');
 const args = process.argv.slice(2);
 const command = args[0];
 const subcommand = args[1];
-const feature = args[2] || args[1];
+const _feature = args[2] || args[1];
 
 // Parse options
 const options = {};

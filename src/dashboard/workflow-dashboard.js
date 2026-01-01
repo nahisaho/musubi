@@ -230,7 +230,7 @@ class WorkflowDashboard {
 
     const actions = [];
     const currentStage = workflow.currentStage;
-    const stageData = workflow.stages[currentStage];
+    const _stageData = workflow.stages[currentStage];
 
     // Check for blockers
     const unresolvedBlockers = workflow.blockers.filter(b => !b.resolvedAt);

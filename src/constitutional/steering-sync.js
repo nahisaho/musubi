@@ -102,7 +102,7 @@ class SteeringSync {
     // Check for orphaned references
     if (structure) {
       // Check if directories mentioned in structure.md exist
-      const dirPattern = /`([a-z\-]+\/)`/g;
+      const dirPattern = /`([a-z-]+\/)`/g;
       let match;
       while ((match = dirPattern.exec(structure)) !== null) {
         const dirName = match[1].replace('/', '');

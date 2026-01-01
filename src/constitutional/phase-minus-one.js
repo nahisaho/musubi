@@ -9,7 +9,7 @@
 
 const fs = require('fs').promises;
 const path = require('path');
-const { ConstitutionalChecker, SEVERITY } = require('./checker');
+const { ConstitutionalChecker } = require('./checker');
 
 /**
  * Default configuration

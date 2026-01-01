@@ -40,7 +40,7 @@ const MIGRATIONS = {
 // Migration Functions
 // ============================================================================
 
-async function migrateToV620(projectDir, options) {
+async function migrateToV620(projectDir, _options) {
   const results = { success: [], failed: [], skipped: [] };
 
   // 1. Create new storage directories
@@ -167,7 +167,7 @@ traceability:
   return results;
 }
 
-async function migrateToV621(projectDir, options) {
+async function migrateToV621(projectDir, _options) {
   const results = { success: [], failed: [], skipped: [] };
 
   // v6.2.1 is mainly bug fixes, just update version marker

@@ -53,7 +53,7 @@ describe('SteeringSync', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch {}
+    } catch { /* ignore cleanup errors */ }
   });
 
   describe('constructor', () => {
@@ -85,7 +85,7 @@ describe('SteeringSync', () => {
     });
 
     it('should update product.md version', async () => {
-      const result = await sync.updateForVersion({
+      await sync.updateForVersion({
         version: '1.1.0'
       });
 
@@ -97,7 +97,7 @@ describe('SteeringSync', () => {
     });
 
     it('should add changelog entry', async () => {
-      const result = await sync.updateForVersion({
+      await sync.updateForVersion({
         version: '1.1.0',
         features: ['New feature A', 'Bug fix B']
       });
@@ -111,7 +111,7 @@ describe('SteeringSync', () => {
     });
 
     it('should update tech.md when techChanges provided', async () => {
-      const result = await sync.updateForVersion({
+      await sync.updateForVersion({
         version: '1.1.0',
         techChanges: {
           newDependencies: [
@@ -128,7 +128,7 @@ describe('SteeringSync', () => {
     });
 
     it('should update structure.md when structureChanges provided', async () => {
-      const result = await sync.updateForVersion({
+      await sync.updateForVersion({
         version: '1.1.0',
         structureChanges: {
           newDirectories: [
@@ -343,7 +343,7 @@ describe('SteeringSync', () => {
     });
 
     it('should update status in project.yml', async () => {
-      const result = await sync.updateProjectFile({ status: 'released' });
+      await sync.updateProjectFile({ status: 'released' });
 
       const content = await fs.readFile(
         path.join(steeringDir, 'project.yml'),
@@ -363,7 +363,7 @@ describe('SteeringSync', () => {
 
   describe('updateProductFile', () => {
     it('should update version header', async () => {
-      const result = await sync.updateProductFile({ version: '2.0.0' });
+      await sync.updateProductFile({ version: '2.0.0' });
 
       const content = await fs.readFile(
         path.join(steeringDir, 'product.md'),
@@ -373,7 +373,7 @@ describe('SteeringSync', () => {
     });
 
     it('should add features to changelog', async () => {
-      const result = await sync.updateProductFile({
+      await sync.updateProductFile({
         version: '2.0.0',
         features: ['Feature X', 'Feature Y']
       });
@@ -395,7 +395,7 @@ describe('SteeringSync', () => {
 
   describe('updateTechFile', () => {
     it('should add new dependencies', async () => {
-      const result = await sync.updateTechFile({
+      await sync.updateTechFile({
         techChanges: {
           newDependencies: [{ name: 'React', description: 'UI library' }]
         }
@@ -421,7 +421,7 @@ describe('SteeringSync', () => {
 
   describe('updateStructureFile', () => {
     it('should add new directories', async () => {
-      const result = await sync.updateStructureFile({
+      await sync.updateStructureFile({
         structureChanges: {
           newDirectories: [{ path: 'tests', description: 'Test files' }]
         }

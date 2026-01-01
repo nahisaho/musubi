@@ -5,7 +5,7 @@
  * Constitutional: Article III - Test-First
  */
 
-const { WorkflowDashboard, WORKFLOW_STAGES, STAGE_STATUS } = require('../../src/dashboard/workflow-dashboard');
+const { WorkflowDashboard, STAGE_STATUS } = require('../../src/dashboard/workflow-dashboard');
 
 // Mock fs module
 jest.mock('fs', () => ({

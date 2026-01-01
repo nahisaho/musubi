@@ -11,7 +11,6 @@ const {
   ARTICLE_TYPE
 } = require('../../src/enterprise/tech-article');
 const fs = require('fs').promises;
-const path = require('path');
 
 describe('TechArticleGenerator', () => {
   let generator;
@@ -25,7 +24,7 @@ describe('TechArticleGenerator', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch {}
+    } catch { /* ignore cleanup errors */ }
   });
 
   describe('constructor', () => {

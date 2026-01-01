@@ -24,7 +24,7 @@ describe('ErrorRecoveryHandler', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch {}
+    } catch { /* ignore cleanup errors */ }
   });
 
   describe('constructor', () => {

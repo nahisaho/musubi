@@ -11,7 +11,6 @@ const {
   TEST_STATUS
 } = require('../../src/enterprise/experiment-report');
 const fs = require('fs').promises;
-const path = require('path');
 
 describe('ExperimentReportGenerator', () => {
   let generator;
@@ -25,7 +24,7 @@ describe('ExperimentReportGenerator', () => {
   afterEach(async () => {
     try {
       await fs.rm(testDir, { recursive: true, force: true });
-    } catch {}
+    } catch { /* ignore cleanup errors */ }
   });
 
   describe('constructor', () => {

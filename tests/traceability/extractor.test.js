@@ -235,7 +235,7 @@ This section describes REQ-001-001 implementation.
       mockFs.readFile.mockResolvedValue('// REQ-001-001');
       mockFs.access.mockResolvedValue(undefined);
 
-      const refs = await customExtractor.scanDirectory('src', 'code');
+      await customExtractor.scanDirectory('src', 'code');
 
       // Should only scan .js files, not .test.js
       expect(mockFs.readFile).toHaveBeenCalledTimes(2);

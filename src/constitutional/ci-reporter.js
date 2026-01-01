@@ -230,10 +230,10 @@ class CIReporter {
   /**
    * Format as JUnit XML
    * @param {Object} results - Check results
-   * @param {Object} blockDecision - Block decision
+   * @param {Object} _blockDecision - Block decision (unused, for interface compatibility)
    * @returns {string} JUnit XML
    */
-  formatJUnit(results, blockDecision) {
+  formatJUnit(results, _blockDecision) {
     const lines = [];
 
     lines.push('<?xml version="1.0" encoding="UTF-8"?>');

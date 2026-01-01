@@ -120,7 +120,7 @@ class TraceabilityExtractor {
       const lines = stdout.trim().split('\n').filter(l => l.length > 0);
 
       for (const line of lines) {
-        const [hash, message, date, author] = line.split('|');
+        const [hash, message] = line.split('|');
 
         for (const pattern of REQ_PATTERNS) {
           pattern.lastIndex = 0;

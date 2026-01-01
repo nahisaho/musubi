@@ -57,7 +57,7 @@ describe('TransitionRecorder', () => {
       };
       mockFs.readFile.mockResolvedValue(JSON.stringify(existingHistory));
 
-      const record = await recorder.recordTransition('FEAT-002', {
+      await recorder.recordTransition('FEAT-002', {
         fromStage: 'requirements',
         toStage: 'design'
       });

@@ -27,7 +27,7 @@ jest.mock('yaml', () => ({
 }));
 
 const fs = require('fs');
-const yaml = require('yaml');
+require('yaml');
 
 const mockFs = fs.promises;
 

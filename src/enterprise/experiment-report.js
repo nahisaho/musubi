@@ -393,7 +393,7 @@ class ExperimentReportGenerator {
    * @returns {string} HTML content
    */
   formatHTML(report) {
-    const { metadata, summary, testResults, metrics, observations, conclusions } = report;
+    const { metadata, summary, testResults, observations, conclusions } = report;
 
     return `<!DOCTYPE html>
 <html lang="en">
